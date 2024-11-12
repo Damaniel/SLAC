@@ -1,0 +1,30 @@
+{
+    "Dagger": {
+        "id": 0,
+        "handed": 1
+    },
+    "Sword": {
+        "id": 1,
+        "handed": 1
+    },
+    "Broadsword": {
+        "id": 2,
+        "handed": 2
+    },
+    "Axe": {
+        "id": 3,
+        "handed": 1
+    },
+    "Battleaxe": {
+        "id": 4,
+        "handed": 2
+    },
+    "Mace": {
+        "id": 5,
+        "handed": 1
+    },
+    "Maul": {
+        "id": 6,
+        "handed": 1
+    }
+}
