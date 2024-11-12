@@ -2,7 +2,9 @@
     "body_part": {
         "metadata": {
             "struct_name": "g_body_part_type_ids",
-            "struct_type": "BodyPartType"
+            "struct_type": "BodyPartType",
+            "description": "A list of body part types for equipment",
+            "fields": ["id", "name"]
         },
         "items":{
             "head": {
@@ -42,7 +44,9 @@
     "weapon": {
         "metadata": {
             "struct_name": "g_weapon_type_ids",
-            "struct_type": "WeaponType"
+            "struct_type": "WeaponType",
+            "description": "A list of weapon types",
+            "fields": ["id", "name", "handed"]
         },
         "items": {
             "Dagger": {
@@ -85,7 +89,9 @@
     "armor": {
         "metadata": {
             "struct_name": "g_armor_type_ids",
-            "struct_type": "ArmorType"
+            "struct_type": "ArmorType",
+            "description": "A list of armor types",
+            "fields": ["id", "body_part"]
         },
         "items": {
             "Helm": {
