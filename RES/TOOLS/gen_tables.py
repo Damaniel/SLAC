@@ -2,15 +2,17 @@ import json, os, sys
 
 types_json_file = os.path.join("..", "JSON", "types.json")
 bases_json_file = os.path.join("..", "JSON", "bases.json")
-output_file = "gen_data.c"
+output_file = "gen_data.cpp"
 header_file = "gen_data.h"
 
 # Given a field (either a number, string, or a list of some combination of the above),
-# expand it into a C-style array initializer, calling write_field recursively to
+# expand it into a C++-style array initializer, calling write_field recursively to
 # resolve internal lists of lists
 def write_field(field, outfile):
+    # If the field is a string, wrap it in quotes before writing it
     if isinstance(field, str):
         outfile.write(f'"{field}"')
+    # If the field is a list, recusrively call write_field to expand each element
     elif isinstance(field, list):
         outfile.write('{')
         for (list_idx, list_item) in enumerate(field):
@@ -19,11 +21,18 @@ def write_field(field, outfile):
                 outfile.write('}')
             else:
                 outfile.write(', ')
+    # If the field is a boolean set to True, write 'true' (all lowercase)
+    elif field is True:
+        outfile.write('true')
+    # If the field is a boolean set to False, write 'false' (all lowercase)
+    elif field is False:
+        outfile.write('false')
+    # For other cases (mainly numbers), just write it as-is
     else:
         outfile.write(f'{field}')
 
 # Given a struct type, struct name and a list of items, creates
-# an pre-defined C array using those items.  Prints to stdout by
+# an pre-defined C++ array using those items.  Prints to stdout by
 # default, but will output to <outfile> if specified
 def print_type_definition(s_type, s_name, items, outfile):
     outfile.write(f"{s_type} {s_name}[] = ")
@@ -102,6 +111,7 @@ def generate_source_file(outfile=None):
 
     print_header(out)
     process_item_file(types_json_file, out)
+    process_item_file(bases_json_file, out)
 
 # Create the header file from all of the JSON files
 def generate_header_file(outfile=None):

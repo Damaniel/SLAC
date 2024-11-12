@@ -4,11 +4,13 @@
             "struct_name": "g_weapon_base_ids",
             "struct_type": "WeaponBaseType",
             "description": "A list of weapon base types",
-            "fields": ["id", "type id", "attack", "rarity", "depth", "value", "cursed?", "prefix?", "suffix?", "stack?", "equip?", "drop?", "use?"]
+            "fields": ["id", "name", "gid", "type id", "attack", "rarity", "depth", "value", "cursed?", "prefix?", "suffix?", "stack?", "equip?", "drop?", "use?"]
         },
         "items": {
             "Wooden Dagger": {
                 "id": 0,
+                "name": "Wooden Dagger",
+                "gid": 0,
                 "type": 0,
                 "attack": 1,
                 "rarity": 255,
@@ -24,6 +26,8 @@
             },
             "Copper Dagger": {
                 "id": 1,
+                "name": "Copper Dagger",
+                "gid": 1,
                 "type": 0,
                 "attack": 3,
                 "rarity": 240,
@@ -39,6 +43,8 @@
             },
             "Bronze Dagger": {
                 "id": 2,
+                "name": "Bronze Dagger",
+                "gid": 2,
                 "type": 0,
                 "attack": 8,
                 "rarity": 200,
@@ -54,6 +60,8 @@
             },
             "Iron Dagger": {
                 "id": 3,
+                "name": "Iron Dagger",
+                "gid": 3,
                 "type": 0,
                 "attack": 18,
                 "rarity": 160,
@@ -69,6 +77,8 @@
             },
             "Steel Dagger": {
                 "id": 4,
+                "name": "Steel Dagger",
+                "gid": 4,
                 "type": 0,
                 "attack": 35,
                 "rarity": 120,
@@ -84,6 +94,8 @@
             },
             "Mythril Dagger": {
                 "id": 5,
+                "name": "Mythril Dagger",
+                "gid": 5,
                 "type": 0,
                 "attack": 80,
                 "rarity": 40,
@@ -99,6 +111,8 @@
             },
             "Wooden Sword": {
                 "id": 6,
+                "name": "Wooden Sword",
+                "gid": 6,
                 "type": 1,
                 "attack": 2,
                 "rarity": 255,
@@ -114,6 +128,8 @@
             },
             "Copper Sword": {
                 "id": 7,
+                "name": "Copper Sword",
+                "gid": 7,
                 "type": 1,
                 "attack": 8,
                 "rarity": 235,
@@ -129,6 +145,8 @@
             },
             "Bronze Sword": {
                 "id": 8,
+                "name": "Bronze Sword",
+                "gid": 8,
                 "type": 1,
                 "attack": 15,
                 "rarity": 195,
@@ -144,6 +162,8 @@
             },
             "Iron Sword": {
                 "id": 9,
+                "name": "Iron Sword",
+                "gid": 9,
                 "type": 1,
                 "attack": 38,
                 "rarity": 155,
@@ -159,6 +179,8 @@
             },
             "Steel Sword": {
                 "id": 10,
+                "name": "Steel Sword",
+                "gid": 10,
                 "type": 1,
                 "attack": 75,
                 "rarity": 110,
@@ -174,6 +196,8 @@
             },
             "Mythril Sword": {
                 "id": 11,
+                "name": "Mythril Sword",
+                "gid": 11,
                 "type": 1,
                 "attack": 130,
                 "rarity": 30,
@@ -189,6 +213,8 @@
             },
             "Wooden Broadsword": {
                 "id": 12,
+                "name": "Wooden Broadsword",
+                "gid": 12,
                 "type": 2,
                 "attack": 5,
                 "rarity": 255,
@@ -204,6 +230,8 @@
             },
             "Copper Broadsword": {
                 "id": 13,
+                "name": "Copper Broadsword",
+                "gid": 13,
                 "type": 2,
                 "attack": 15,
                 "rarity": 235,
@@ -219,6 +247,8 @@
             },
             "Bronze Broadsword": {
                 "id": 14,
+                "name": "Bronze Broadsword",
+                "gid": 14,
                 "type": 2,
                 "attack": 35,
                 "rarity": 195,
@@ -234,6 +264,8 @@
             },
             "Iron Broadsword": {
                 "id": 15,
+                "name": "Iron Broadsword",
+                "gid": 15,
                 "type": 2,
                 "attack": 80,
                 "rarity": 155,
@@ -249,6 +281,8 @@
             },
             "Steel Broadsword": {
                 "id": 16,
+                "name": "Steel Broadsword",
+                "gid": 16,
                 "type": 2,
                 "attack": 150,
                 "rarity": 110,
@@ -264,6 +298,8 @@
             },
             "Mythril Broadsword": {
                 "id": 17,
+                "name": "Mythril Broadsword",
+                "gid": 17,
                 "type": 2,
                 "attack": 255,
                 "rarity": 30,
@@ -279,6 +315,8 @@
             },
             "Wooden Axe": {
                 "id": 18,
+                "name": "Wooden Axe",
+                "gid": 18,
                 "type": 3,
                 "attack": 4,
                 "rarity": 255,
@@ -294,6 +332,8 @@
             },
             "Copper Axe": {
                 "id": 19,
+                "name": "Copper Axe",
+                "gid": 19,
                 "type": 3,
                 "attack": 12,
                 "rarity": 235,
@@ -309,6 +349,8 @@
             },
             "Bronze Axe": {
                 "id": 20,
+                "name": "Bronze Axe",
+                "gid": 20,
                 "type": 3,
                 "attack": 25,
                 "rarity": 195,
@@ -324,6 +366,8 @@
             },
             "Iron Axe": {
                 "id": 21,
+                "name": "Iron Axe",
+                "gid": 21,
                 "type": 3,
                 "attack": 50,
                 "rarity": 155,
@@ -339,6 +383,8 @@
             },
             "Steel Axe": {
                 "id": 22,
+                "name": "Steel Axe",
+                "gid": 22,
                 "type": 3,
                 "attack": 110,
                 "rarity": 110,
@@ -354,6 +400,8 @@
             },
             "Mythril Axe": {
                 "id": 23,
+                "name": "Mythril Axe",
+                "gid": 23,
                 "type": 3,
                 "attack": 160,
                 "rarity": 30,
@@ -369,6 +417,8 @@
             },
             "Wooden Battleaxe": {
                 "id": 24,
+                "name": "Wooden Battleaxe",
+                "gid": 24,
                 "type": 4,
                 "attack": 10,
                 "rarity": 240,
@@ -384,6 +434,8 @@
             },
             "Copper Battleaxe": {
                 "id": 25,
+                "name": "Copper Battleaxe",
+                "gid": 25,
                 "type": 4,
                 "attack": 30,
                 "rarity": 225,
@@ -399,6 +451,8 @@
             },
             "Bronze Battleaxe": {
                 "id": 26,
+                "name": "Bronze Battleaxe",
+                "gid": 26,
                 "type": 4,
                 "attack": 70,
                 "rarity": 180,
@@ -414,6 +468,8 @@
             },
             "Iron Battleaxe": {
                 "id": 27,
+                "name": "Iron Battleaxe",
+                "gid": 27,
                 "type": 4,
                 "attack": 120,
                 "rarity": 130,
@@ -429,6 +485,8 @@
             },
             "Steel Battleaxe": {
                 "id": 28,
+                "name": "Steel Battleaxe",
+                "gid": 28,
                 "type": 4,
                 "attack": 175,
                 "rarity": 100,
@@ -444,6 +502,8 @@
             },
             "Mythril Battleaxe": {
                 "id": 29,
+                "name": "Mythril Battleaxe",
+                "gid": 29,
                 "type": 4,
                 "attack": 255,
                 "rarity": 15,
@@ -459,6 +519,8 @@
             },
             "Wooden Mace": {
                 "id": 30,
+                "name": "Wooden Mace",
+                "gid": 30,
                 "type": 5,
                 "attack": 5,
                 "rarity": 255,
@@ -474,6 +536,8 @@
             },
             "Copper Mace": {
                 "id": 31,
+                "name": "Copper Mace",
+                "gid": 31,
                 "type": 5,
                 "attack": 15,
                 "rarity": 230,
@@ -489,6 +553,8 @@
             },
             "Bronze Mace": {
                 "id": 32,
+                "name": "Bronze Mace",
+                "gid": 32,
                 "type": 5,
                 "attack": 25,
                 "rarity": 185,
@@ -504,6 +570,8 @@
             },
             "Iron Mace": {
                 "id": 33,
+                "name": "Iron Mace",
+                "gid": 33,
                 "type": 5,
                 "attack": 45,
                 "rarity": 145,
@@ -519,6 +587,8 @@
             },
             "Steel Mace": {
                 "id": 34,
+                "name": "Steel Mace",
+                "gid": 34,
                 "type": 5,
                 "attack": 80,
                 "rarity": 100,
@@ -534,6 +604,8 @@
             },
             "Mythril Mace": {
                 "id": 35,
+                "name": "Mythril Mace",
+                "gid": 35,
                 "type": 5,
                 "attack": 120,
                 "rarity": 25,
@@ -549,6 +621,8 @@
             },
             "Wooden Maul": {
                 "id": 36,
+                "name": "Wooden Maul",
+                "gid": 36,
                 "type": 6,
                 "attack": 15,
                 "rarity": 230,
@@ -564,6 +638,8 @@
             },
             "Copper Maul": {
                 "id": 37,
+                "name": "Copper Maul",
+                "gid": 37,
                 "type": 6,
                 "attack": 40,
                 "rarity": 215,
@@ -579,6 +655,8 @@
             },
             "Bronze Maul": {
                 "id": 38,
+                "name": "Bronze Maul",
+                "gid": 38,
                 "type": 6,
                 "attack": 80,
                 "rarity": 170,
@@ -594,6 +672,8 @@
             },
             "Iron Maul": {
                 "id": 39,
+                "name": "Iron Maul",
+                "gid": 39,
                 "type": 6,
                 "attack": 130,
                 "rarity": 120,
@@ -609,6 +689,8 @@
             },
             "Steel Maul": {
                 "id": 40,
+                "name": "Steel Maul",
+                "gid": 40,
                 "type": 6,
                 "attack": 180,
                 "rarity": 95,
@@ -624,6 +706,8 @@
             },
             "Mythril Maul": {
                 "id": 41,
+                "name": "Mythril Maul",
+                "gid": 41,
                 "type": 6,
                 "attack": 255,
                 "rarity": 20,
@@ -641,10 +725,29 @@
     },
     "armor": {
         "metadata": {
-
+            "struct_name": "g_armor_base_ids",
+            "struct_type": "ArmorBaseType",
+            "description": "A list of armor base types",
+            "fields": ["id", "name", "gid", "type id", "defense", "rarity", "depth", "value", "cursed?", "prefix?", "suffix?", "stack?", "equip?", "drop?", "use?"]
         },
         "items": {
-
+            "Cloth Hat": {
+                "id": 0,
+                "name": "Cloth Hat",
+                "gid": 42,
+                "type": 0,
+                "defense": 1,
+                "rarity": 255,
+                "depth": [1, 1, 1], 
+                "value": 2,
+                "can_be_cursed": true,
+                "can_have_preix": true,
+                "can_have_suffix": true,
+                "can_stack": false,
+                "can_equip": true,
+                "can_drop": true,
+                "can_be_used": false             
+            }
         }
     }
 }
