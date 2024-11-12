@@ -1,0 +1,149 @@
+{
+    "body_part": {
+        "metadata": {
+            "struct_name": "g_body_part_type_ids",
+            "struct_type": "BodyPartType"
+        },
+        "items":{
+            "head": {
+                "id": 0,
+                "name": "head"
+            },
+            "hand": {
+                "id": 1,
+                "name": "hand"
+            },
+            "chest": {
+                "id": 2,
+                "name": "chest" 
+            },
+            "legs": {
+                "id": 3,
+                "name": "legs"
+            },
+            "feet": {
+                "id": 4,
+                "name": "feet"
+            },
+            "shield": {
+                "id": 5,
+                "name": "shield"
+            },
+            "ring": {
+                "id": 6,
+                "name": "ring"
+            },
+            "amulet": {
+                "id": 7,
+                "name": "amulet"
+            }
+        }
+    },
+    "weapon": {
+        "metadata": {
+            "struct_name": "g_weapon_type_ids",
+            "struct_type": "WeaponType"
+        },
+        "items": {
+            "Dagger": {
+                "id": 0,
+                "name": "Dagger",
+                "handed": 1
+            },
+            "Sword": {
+                "id": 1,
+                "name": "Sword",
+                "handed": 1
+            },
+            "Broadsword": {
+                "id": 2,
+                "name": "Broadsword",
+                "handed": 2
+            },
+            "Axe": {
+                "id": 3,
+                "name": "Axe",
+                "handed": 1
+            },
+            "Battleaxe": {
+                "id": 4,
+                "name": "Battleaxe",
+                "handed": 2
+            },
+            "Mace": {
+                "id": 5,
+                "name": "Mace",
+                "handed": 1
+            },
+            "Maul": {
+                "id": 6,
+                "name": "Maul",
+                "handed": 1
+            }
+        }
+    },
+    "armor": {
+        "metadata": {
+            "struct_name": "g_armor_type_ids",
+            "struct_type": "ArmorType"
+        },
+        "items": {
+            "Helm": {
+                "id": 0,
+                "body_part": 0
+            },
+            "Hat": {
+                "id": 1,
+                "body_part": 0
+            },
+            "Gloves": {
+                "id": 2,
+                "body_part": 1
+            },
+            "Gauntlets": {
+                "id": 3,
+                "body_part": 1
+            },
+            "Shirt": {
+                "id": 4,
+                "body_part": 2
+            },
+            "Mail": {
+                "id": 5,
+                "body_part": 2
+            },
+            "Pants": {
+                "id": 6,
+                "body_part": 3
+            },
+            "Leggings": {
+                "id": 7,
+                "body_part": 3
+            },
+            "Shoes": {
+                "id": 8,
+                "body_part": 4
+            },
+            "Boots": {
+                "id": 9,
+                "body_part": 4
+            },
+            "Buckler": {
+                "id": 10,
+                "body_part": 5
+            },
+            "Shield": {
+                "id": 11,
+                "body_part": 5
+            },
+            "Ring": {
+                "id": 12,
+                "body_part": 6
+            },
+            "Amulet": {
+                "id": 13,
+                "body_part": 7
+            }
+        }
+    }
+}
