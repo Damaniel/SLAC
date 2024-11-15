@@ -25,8 +25,6 @@
 #define __MAZE_H__
 #include <vector>
 
-using namespace std;
-
 // Directions used by the maze generator
 const int DIRECTION_NORTH = 0;
 const int DIRECTION_SOUTH = 1;
@@ -125,9 +123,9 @@ struct Square {
 //------------------------------------------------------------------------------
 class Maze {
 private:
-	vector<Square> m;
-	vector<Room> rooms;
-	vector<Stair> stairs;	
+	std::vector<Square> m;
+	std::vector<Room> rooms;
+	std::vector<Stair> stairs;	
 	int rows;
 	int cols;
     int roomId;
@@ -139,7 +137,7 @@ private:
 	bool create_room(int x, int y, int w, int h);
 	void generate_passages(int x, int y);
 	void generate_rooms(int numAttempts, int minSize, int maxSize);
-	void get_directions(vector<int> & directions, int x, int y);
+	void get_directions(std::vector<int> & directions, int x, int y);
 	void mark_walls(void);	
 	void open_room(Room &r);
 	void place_stairs(int roomId, int type);
@@ -153,7 +151,7 @@ public:
 	void change_room_lit_status(int room, bool lit);
 	void generate(void);
 	int get_height(void) { return rows; }
-	vector<int> get_random_stair(int direction);
+	std::vector<int> get_random_stair(int direction);
 	Room get_room(int roomId);	
 	int get_room_id_at(int x, int y);
 	Square get_square(int x, int y);

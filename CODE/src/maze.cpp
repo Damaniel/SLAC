@@ -70,12 +70,12 @@ void Maze::add_stairs(int numUpStairs, int numDownStairs) {
 	int numRooms = roomId - STARTING_ROOM - 1;
 	
 	if (numUpStairs + numDownStairs > numRooms) {
-		cout << "not enough rooms!" << endl;
+		std::cout << "not enough rooms!" << std::endl;
 		return;
 	}
 	
-	vector<int> selectedRooms;
-	vector<int>::iterator roomIt;
+	std::vector<int> selectedRooms;
+	std::vector<int>::iterator roomIt;
 	
 	// Iterate through up stairs
 	for (int i=0; i < numUpStairs; i++) {
@@ -85,7 +85,7 @@ void Maze::add_stairs(int numUpStairs, int numDownStairs) {
 		do {
 			valid = true;
 			candidateRoom = rand() % numRooms + STARTING_ROOM;
-			for(vector<int>::iterator it = selectedRooms.begin(); it != selectedRooms.end(); it++) {
+			for(std::vector<int>::iterator it = selectedRooms.begin(); it != selectedRooms.end(); it++) {
 				if (*it == candidateRoom) {
 					valid = false;
 				}
@@ -105,7 +105,7 @@ void Maze::add_stairs(int numUpStairs, int numDownStairs) {
 		do {
 			valid = true;
 			candidateRoom = rand() % numRooms + STARTING_ROOM;
-			for(vector<int>::iterator it = selectedRooms.begin(); it != selectedRooms.end(); it++) {
+			for(std::vector<int>::iterator it = selectedRooms.begin(); it != selectedRooms.end(); it++) {
 				if (*it == candidateRoom) {
 					valid = false;
 				}
@@ -251,11 +251,11 @@ void Maze::generate_passages(int x, int y) {
 	int curY = y;
 	int direction;
 	bool done = false;
-	vector<int> directions;
-	stack< pair<int, int> > visited;
+	std::vector<int> directions;
+	std::stack< std::pair<int, int> > visited;
 	
 	while (!done) {
-		pair<int, int> cur = make_pair(curX, curY);
+		std::pair<int, int> cur = std::make_pair(curX, curY);
 		
 		// Find uncarved adjacent spaces to the current one
 		get_directions(directions, curX, curY);
@@ -269,7 +269,7 @@ void Maze::generate_passages(int x, int y) {
 			else {
 				// Otherwise, pull one off the top of the stack and start 
 				// carving from there
-				pair<int, int> top = visited.top();
+				std::pair<int, int> top = visited.top();
 				visited.pop();
 				curX = top.first;
 				curY = top.second;
@@ -334,7 +334,7 @@ void Maze::generate_rooms(int numAttempts, int minSize, int maxSize) {
 // Notes:
 //   Used for maze generation, which requires such a list.
 //------------------------------------------------------------------------------
-void Maze::get_directions(vector<int> & directions, int x, int y) {
+void Maze::get_directions(std::vector<int> & directions, int x, int y) {
 	
 	if (x >= 3 && !is_carved(x-2 , y)) {
 		directions.push_back(DIRECTION_WEST);
@@ -418,7 +418,7 @@ void Maze::mark_walls(void) {
 //   of them to also open.
 //------------------------------------------------------------------------------
 void Maze::open_room(Room &r) {
-	vector<WallLoc> edges;
+	std::vector<WallLoc> edges;
 	
 	// Check all north and south walls to see if the adjacent spaces are passageways
 	for (int i = r.x; i < r.x + r.w; i+=2 ) {
@@ -494,7 +494,7 @@ void Maze::place_stairs(int roomId, int type) {
 					if(m[(y-1)*cols+x].tag == roomId || !is_carved(x, y-1)) {
 						// If so, good.  Now see if there's already stairs in this location
 						valid = true;
-						for(vector<Stair>::iterator it = stairs.begin(); it != stairs.end(); it++) {
+						for(std::vector<Stair>::iterator it = stairs.begin(); it != stairs.end(); it++) {
 							// If there is, start over
 							if (it->x == x && it->y == y) {
 								valid = false;
@@ -691,7 +691,7 @@ void Maze::generate(void) {
 	generate_passages(1, 1);
 	
 	// Open at least one connection between each room and a passage
-	for (vector<Room>::iterator it = rooms.begin(); it != rooms.end(); it++) {
+	for (std::vector<Room>::iterator it = rooms.begin(); it != rooms.end(); it++) {
 		open_room((*it));
 	}
 	
@@ -711,13 +711,13 @@ void Maze::generate(void) {
 //   Used to position the player when entering a new maze.  Players always
 //   spawn on a set of stairs.
 //------------------------------------------------------------------------------
-vector<int> Maze::get_random_stair(int direction) {
+std::vector<int> Maze::get_random_stair(int direction) {
 	// The vector contains an equal number of up and down stairs.  Just pick 
 	// them at random until we find one that goes the correct direction.
 	while(1) {
 		Stair s = stairs[rand() % stairs.size()];
 		if (s.direction == direction) {
-			vector<int> v;
+			std::vector<int> v;
 			v.push_back(s.x);
 			v.push_back(s.y);
 			return v;
@@ -731,14 +731,14 @@ vector<int> Maze::get_random_stair(int direction) {
 // Returns the Room specified by the room id.
 //------------------------------------------------------------------------------
 Room Maze::get_room(int roomId) {
-	for (vector<Room>::iterator it = rooms.begin(); it != rooms.end(); it++) {
+	for (std::vector<Room>::iterator it = rooms.begin(); it != rooms.end(); it++) {
 		if (it->id == roomId) {
 			return *it;
 		}
 	}
 	
 	// Just return the last room for now.  Should throw something.
-	cout << "Warning - room not found!" << endl;
+	std::cout << "Warning - room not found!" << std::endl;
 	return *(rooms.end());
 }
 
@@ -818,18 +818,18 @@ void Maze::print(void) {
 	for (int y=0; y<rows; y++) {
 		for (int x=0; x<cols; x++) {
 			if (m[y*cols + x].carved) {
-				cout << " ";
+				std::cout << " ";
 			}
 			else {
-				cout << (char)219;
+				std::cout << (char)219;
 			}
 		}
-		cout << endl;
+		std::cout << std::endl;
 	}
 	
-	for (vector<Stair>::iterator it = stairs.begin(); it != stairs.end(); it++) {
-		cout << (it->direction == STAIRS_UP ? "Up " : "Down ");
-		cout << "stairs at (" << it->x << ", " << it->y << ")" << endl;
+	for (std::vector<Stair>::iterator it = stairs.begin(); it != stairs.end(); it++) {
+		std::cout << (it->direction == STAIRS_UP ? "Up " : "Down ");
+		std::cout << "stairs at (" << it->x << ", " << it->y << ")" << std::endl;
 	}
 }
 
@@ -839,11 +839,11 @@ void Maze::print(void) {
 // Debug function that returns the total size used by a maze object.
 //------------------------------------------------------------------------------			
 void Maze::print_memory_usage(void) {	
-	cout << "Memory usage:" << endl;
-	cout << "Size of maze class: " << sizeof(Maze) << " bytes" << endl;
-	cout << "Size of square vector: " << m.size() * sizeof(Square) << " bytes" << endl;
-	cout << "Size of room vector: " << rooms.size() * sizeof(Room) << " bytes" << endl;
-	cout << "Size of stairs vector: " << stairs.size() * sizeof(Stair) << " bytes" << endl;
+	std::cout << "Memory usage:" << std::endl;
+	std::cout << "Size of maze class: " << sizeof(Maze) << " bytes" << std::endl;
+	std::cout << "Size of square vector: " << m.size() * sizeof(Square) << " bytes" << std::endl;
+	std::cout << "Size of room vector: " << rooms.size() * sizeof(Room) << " bytes" << std::endl;
+	std::cout << "Size of stairs vector: " << stairs.size() * sizeof(Stair) << " bytes" << std::endl;
 }
 
 //------------------------------------------------------------------------------
@@ -852,8 +852,8 @@ void Maze::print_memory_usage(void) {
 // Debug function that lists the ids of all rooms in a maze.
 //------------------------------------------------------------------------------
 void Maze::print_room_ids(void) {
-	for(vector<Room>::iterator it = rooms.begin(); it != rooms.end(); it++) {
-		cout << "Room id is " << it->id << endl;
+	for(std::vector<Room>::iterator it = rooms.begin(); it != rooms.end(); it++) {
+		std::cout << "Room id is " << it->id << std::endl;
 	}
 }
 
@@ -874,7 +874,7 @@ void Maze::set_room_as_entered(int roomId) {
 // type of stairs, or none if there aren't stairs there.
 //------------------------------------------------------------------------------
 int Maze::stairs_here(int x, int y) {
-	for (vector<Stair>::iterator it = stairs.begin(); it != stairs.end(); it++) {
+	for (std::vector<Stair>::iterator it = stairs.begin(); it != stairs.end(); it++) {
 		if (it->x == x && it->y == y) {
 			return it->direction;
 		}

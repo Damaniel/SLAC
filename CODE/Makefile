@@ -19,7 +19,7 @@ CFLAGS=-O2 -Iinc
 LIBS=-lalleg -lm
 
 TARGET=slac.exe
-OBJS=obj/maze.o obj/render.o obj/player.o obj/invntory.o obj/main.o 
+OBJS=obj/gen_data.o obj/maze.o obj/render.o obj/player.o obj/invntory.o obj/main.o 
 
 $(TARGET): $(OBJS)
 	$(CC) -o $(TARGET) $(OBJS) $(LIBS)
@@ -27,6 +27,9 @@ $(TARGET): $(OBJS)
 prod: $(TARGET) 
 	strip $(TARGET)
 	upx $(TARGET)
+
+obj/gen_data.o: src/gen_data.cpp inc/gen_data.h inc/itemstr.h
+	$(CC) -c $(CFLAGS) -o obj/gen_data.o src/gen_data.cpp
 
 obj/maze.o: src/maze.cpp inc/maze.h
 	$(CC) -c $(CFLAGS) -o obj/maze.o src/maze.cpp
@@ -37,10 +40,10 @@ obj/render.o: src/render.cpp inc/render.h inc/globals.h inc/maze.h
 obj/player.o: src/player.cpp inc/globals.h
 	$(CC) -c $(CFLAGS) -o obj/player.o src/player.cpp
 
-obj/invntory.o: src/invntory.cpp inc/invntory.h
+obj/invntory.o: src/invntory.cpp inc/invntory.h inc/itemstr.h
 	$(CC) -c $(CFLAGS) -o obj/invntory.o src/invntory.cpp
 
-obj/main.o: src/main.cpp inc/main.h inc/render.h inc/globals.h inc/maze.h inc/invntory.h
+obj/main.o: src/main.cpp inc/main.h inc/gen_data.h inc/render.h inc/globals.h inc/maze.h inc/invntory.h
 	$(CC) -c $(CFLAGS) -o obj/main.o src/main.cpp
 	
 clean:

@@ -23,54 +23,11 @@
 //==========================================================================================
 #ifndef __INVNTORY_H__
 #define __INVNTORY_H__
-
-#include <string>
 #include <vector>
+#include "itemstr.h"
 
-// The maximum size of the inventory
 #define INVENTORY_SIZE      48
 
-// An item in the item database.
-class DBItem {
-public:
-    std::string name;
-    std::string scrambled_name;
-    bool usable;
-    bool equippable;
-    
-};
+extern Inventory *g_inventory;
 
-// An instance of a DBItem (for example, an item on the ground or bought in a 
-// store)
-class Item {
-    DBItem i;
-};
-
-// An item in the player's inventory.  It's an instance of Item that has
-// additional information useful to the player (how many does the player have?
-// Is it identified or equipped?)
-class InventoryItem {
-public:
-    Item i;
-    int quantity;
-    bool identified;
-    bool equipped;
-};
-
-// The inventory as a whole (INVENTORY_SIZE slots of InventoryItem)
-class Inventory {
-public:
-    InventoryItem items[INVENTORY_SIZE];
-    void addItem(Item i);
-    void removeItem(int index);
-    void compactIventory(void);
-};
-
-// A database of all items in the game.
-class ItemList {
-public:
-    std::vector<DBItem> items;
-    void loadItemsFromFile(char *itemFile);
-};
-
-#endif 
+#endif

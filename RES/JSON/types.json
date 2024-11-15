@@ -94,14 +94,14 @@
             "fields": ["id", "name", "body_part"]
         },
         "items": {
-            "Helm": {
+            "Hat": {
                 "id": 0,
-                "name": "Helm",
+                "name": "Hat",
                 "body_part": 0
             },
-            "Hat": {
+            "Helm": {
                 "id": 1,
-                "name": "Hat",
+                "name": "Helm",
                 "body_part": 0
             },
             "Gloves": {

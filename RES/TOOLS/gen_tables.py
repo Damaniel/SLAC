@@ -4,6 +4,7 @@ types_json_file = os.path.join("..", "JSON", "types.json")
 bases_json_file = os.path.join("..", "JSON", "bases.json")
 output_file = "gen_data.cpp"
 header_file = "gen_data.h"
+header_guard = "__GEN_DATA_H__"
 
 # Given a field (either a number, string, or a list of some combination of the above),
 # expand it into a C++-style array initializer, calling write_field recursively to
@@ -85,8 +86,11 @@ def print_type_comment(metadata, outfile):
     outfile.write('//\n')
 
 # Prints a header at the top of an auto-generated file
-def print_header(outfile):
-    outfile.write('// Auto-generated file - do not edit!\n\n')
+def print_auto_generated_header(outfile):
+    outfile.write('// Auto-generated file - do not edit!\n')
+
+def print_includes(outfile):
+    outfile.write('#include "itemstr.h"\n\n')
 
 # Iterates through a JSON file and extracts the data into a C array initializer block
 def process_item_file(filename, outfile):
@@ -109,13 +113,35 @@ def generate_source_file(outfile=None):
     else:
         out = sys.stdout
 
-    print_header(out)
+    print_auto_generated_header(out)
+    print_includes(out)
     process_item_file(types_json_file, out)
     process_item_file(bases_json_file, out)
 
+def generate_prototypes(filename, outfile):
+    f = open(filename)
+    loaded_json = json.load(f)
+    for deftype in loaded_json:
+        struct_type = loaded_json[deftype]['metadata']['struct_type']
+        struct_name = loaded_json[deftype]['metadata']['struct_name']
+        outfile.write(f'extern {struct_type} {struct_name}[];\n')
+
 # Create the header file from all of the JSON files
 def generate_header_file(outfile=None):
-    pass
+    if outfile != None:
+        if os.path.exists(outfile):
+            os.remove(outfile)
+        out = open(outfile, 'w')
+    else:
+        out = sys.stdout
+
+    print_auto_generated_header(out)
+    out.write(f'#ifndef {header_guard}\n')
+    out.write(f'#define {header_guard}\n\n')
+    print_includes(out)
+    generate_prototypes(types_json_file, out)
+    generate_prototypes(bases_json_file, out)
+    out.write('\n#endif')
 
 generate_source_file(output_file)
 generate_header_file(header_file)

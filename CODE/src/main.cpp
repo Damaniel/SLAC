@@ -33,6 +33,20 @@
 #include "maze.h"
 #include "render.h"
 #include "globals.h"
+#include "invntory.h"
+#include "itemstr.h"
+#include "gen_data.h"
+
+BEGIN_GFX_DRIVER_LIST
+	GFX_DRIVER_MODEX
+END_GFX_DRIVER_LIST
+
+BEGIN_COLOR_DEPTH_LIST
+	COLOR_DEPTH_8
+END_COLOR_DEPTH_LIST
+
+BEGIN_JOYSTICK_DRIVER_LIST
+END_JOYSTICK_DRIVER_LIST
 
 // Globals used to hold game state.  External defines are in globals.h
 DATAFILE  	*g_game_data;
@@ -68,7 +82,7 @@ int load_resources(void) {
 //----------------------------------------------------------------------------------
 void init_resources(Render r) {	
 	r.copy_data_to_offscreen_vram();	
-	set_palette((PALETTE)g_game_data[DAMRL_DB16].dat);		
+	set_palette((RGB *)g_game_data[DAMRL_DB16].dat);		
 	g_back_buffer = create_sub_bitmap(screen, 0, 240, 320, 240);
 }
 
@@ -139,7 +153,7 @@ void update_display(void) {
 // Clean up hacks here... eventually.
 void initialize_state(void) {
 	// Place the player on a random set of up stairs
-	vector<int> stairLoc = g_maze.get_random_stair(STAIRS_UP);
+	std::vector<int> stairLoc = g_maze.get_random_stair(STAIRS_UP);
 
 	// Create a new player at the stair location
 	g_player = Player(stairLoc[0], stairLoc[1]);
@@ -241,53 +255,65 @@ void process_input(void) {
 //   loop of any kind yet, and stuff in here is subject to change and/or removal.
 //----------------------------------------------------------------------------------
 int main(void) {
+
+
+	// srand(time(NULL));
 	
-	srand(time(NULL));
+	// allegro_init();
+	// install_timer();
+	// install_keyboard();
+
+	// int mode_result = set_gfx_mode(GFX_MODEX, 320, 240, 320, 640);
+	// if (mode_result != 0) {
+	// 	set_gfx_mode(GFX_TEXT, 80, 25, 0, 0);
+	// 	printf("Unable to set graphics mode!\n");
+	// }
+
+	// clear(screen);
 	
-	allegro_init();
-	install_timer();
-	install_keyboard();
+	// int res_result = load_resources();
+	// if(res_result != 0) {
+	// 	printf("Failure while loading resources!\n");
+	// 	return 1;
+	// }
+	// init_resources(g_render);
 
-	int mode_result = set_gfx_mode(GFX_MODEX, 320, 240, 320, 640);
-	if (mode_result != 0) {
-		set_gfx_mode(GFX_TEXT, 80, 25, 0, 0);
-		printf("Unable to set graphics mode!\n");
-	}
+	// g_maze = Maze(30,30);
+	// g_maze.generate();
 
-	clear(screen);
-	
-	int res_result = load_resources();
-	if(res_result != 0) {
-		printf("Failure while loading resources!\n");
-		return 1;
-	}
-	init_resources(g_render);
+	// // TODO: Should be done on a per-floor basis!
+	// g_render.initialize_map_bitmap(g_maze);
 
-	g_maze = Maze(30,30);
-	g_maze.generate();
+	// initialize_state();
 
-	// TODO: Should be done on a per-floor basis!
-	g_render.initialize_map_bitmap(g_maze);
-
-	initialize_state();
-
-	// Main game loop
-	do {
+	// // Main game loop
+	// do {
 		
-		// Handle all input
-		process_input();
+	// 	// Handle all input
+	// 	process_input();
 
-		// Process all non-input actions
-		// process_non_player_actions();
+	// 	// Process all non-input actions
+	// 	// process_non_player_actions();
 
-		// update the display
-		if (g_state_flags.update_display == true) {
-			update_display();					
-		}
-	} while (g_state_flags.exit_game == false);
+	// 	// update the display
+	// 	if (g_state_flags.update_display == true) {
+	// 		update_display();					
+	// 	}
+	// } while (g_state_flags.exit_game == false);
 
-	unload_resources();
-	set_gfx_mode(GFX_TEXT, 80, 25, 0, 0);
+	// unload_resources();
+	// set_gfx_mode(GFX_TEXT, 80, 25, 0, 0);
+
+	g_inventory = new Inventory();
+
+	Item *w = new Weapon(2);
+
+	g_inventory->add_at_slot(w, 0);
+
+	std::cout << g_inventory->get_item_at_slot(0)->get_full_name() << std::endl;
+	std::cout << g_inventory->get_item_at_slot(5)->get_full_name() << std::endl;
+
+	delete g_inventory;
 
 	return 0;
 }
