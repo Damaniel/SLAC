@@ -152,12 +152,6 @@ public:
     void use();
 };
 
-class Empty: public Item {
-public:
-    std::string get_full_name();
-    std::string get_type_name();
-};
-
 // An inventory.  This consists of a list of Item pointers, plus
 // operations to manipulate the inventory (add, remove, find an empty spot, etc.)
 class Inventory {
@@ -166,19 +160,14 @@ private:
 public:
     Inventory();
     ~Inventory();
-    Item *get_item_at_slot(unsigned char slot);
-    unsigned char add_at_slot(Item *i, unsigned char slot);
-    unsigned char add_at_first_empty(Item *i);
-    unsigned char get_first_empty_slot();
-    bool is_inventory_full();
-    unsigned char get_num_slots_in_use();
-    void drop(Item *i);
-    void drop_item_at_slot(unsigned char slot);
-    std::string get_item_name_at_slot(unsigned char slot);
-    void equip_item_in_slot(unsigned char slot);
-    void unequip_item_in_slot(unsigned char slot);
-    void drop_item_in_slot(unsigned char slot);
-    void drop_item_qty_in_slot(unsigned char slot, unsigned short quantity);
+    Item *get_item_in_slot(int slot);
+    int add_at_slot(Item *i, int slot);
+    int add_at_first_empty(Item *i);
+    int get_first_empty_slot();
+    bool inventory_is_full();
+    int get_num_slots_in_use();
+    void drop_item_in_slot(int slot);
+    void drop_item_qty_in_slot(int slot, int quantity);
 };
 
 #endif

@@ -30,27 +30,80 @@ Inventory *g_inventory;
 Inventory::Inventory() {
     inv = std::vector<Item *>(INVENTORY_SIZE);
     for(int i=0;i<INVENTORY_SIZE;++i) {
-        inv[i] = new Empty;
+        inv[i] = NULL;
     }
 }
 
 Inventory::~Inventory() {
     for (std::vector<Item *>::iterator it = inv.begin(); it != inv.end(); ++it) {
-        delete *it;
+        if(*it != NULL)
+            delete *it;
     }
 }
 
-Item *Inventory::get_item_at_slot(unsigned char slot) {
+// Returns the item in the selected slot, or NULL otherwise
+Item *Inventory::get_item_in_slot(int slot) {
     return inv[slot];
 }
 
-unsigned char Inventory::add_at_slot(Item *i, unsigned char slot) {
-    if (inv[slot] != NULL) {
-        std::cout << "Deleting existing inventory item at slot " << slot << std::endl;
-        delete inv[slot];
-    }
+// Adds an item at the specified slot, removing any existing item from it
+int Inventory::add_at_slot(Item *i, int slot) {
+    drop_item_in_slot(slot);
     inv[slot] = i;
     return slot;
+}
+
+// Adds an item at the first empty inventory slot.  Returns the slot it was added to,
+// or -1 if there was no free slot.
+int Inventory::add_at_first_empty(Item *i) {
+    if (!inventory_is_full()) {
+        int slot = get_first_empty_slot();
+        add_at_slot(i, slot);
+        std::cout << "add_at_first_empty: added to slot " << slot << std::endl;
+        return slot;
+    }
+    return -1;
+}
+
+// Gets the location of the first empty inventory slot.  Returns that slot, or -1
+// if there are no empty slots.
+int Inventory::get_first_empty_slot() {
+    int first_empty = -1;
+    for(int i=0; i<INVENTORY_SIZE; ++i) {
+        if (inv[i] == NULL) {
+            first_empty = i;
+            break;
+        }
+    }
+
+    std::cout << "First empty slot was " << (int)first_empty << std::endl;
+    return first_empty;
+}
+
+int Inventory::get_num_slots_in_use() {
+    int slots_in_use = 0;
+
+    for (int i=0; i < INVENTORY_SIZE; i++) {
+        if (inv[i] != NULL)
+            ++slots_in_use;
+    }
+    return slots_in_use;
+}
+// Returns true if zero space remains in the inventory, false otherwise.
+bool Inventory::inventory_is_full() {
+    for (int i=0; i<INVENTORY_SIZE; i++) {
+        if (inv[i] == NULL)
+            return false;
+    }
+    return true;
+}
+
+//
+void Inventory::drop_item_in_slot(int slot) {
+    if (inv[slot] != NULL) { 
+        delete inv[slot];
+        inv[slot] = NULL;
+    }
 }
 
 // --------- Weapon ---------------------------
@@ -105,7 +158,25 @@ void Weapon::remove() {
 
 // -------- Armor ------------------------------
 void Armor::init(ArmorBaseType *b) {
-
+    // Assign the fields from the armor base type here
+    id = b->id;
+    name = b->name;
+    gid = b->gid;
+    type_id = b->type_id;
+    defense = b->defense;
+    rarity = b->rarity;
+    for(int i=0;i<NUM_CAVES;++i)
+        depth[i] = b->depth[i];
+    value = b->value;
+    can_be_cursed = b->can_be_cursed;
+    can_have_prefix = b->can_have_prefix;
+    can_have_suffix = b->can_have_suffix;
+    can_stack = b->can_stack;
+    can_equip = b->can_equip;
+    can_drop = b->can_drop;
+    can_use = b->can_use;
+    is_equipped = false;
+    is_cursed = false;
 }
 
 Armor::Armor(ArmorBaseType *b) {
@@ -113,7 +184,7 @@ Armor::Armor(ArmorBaseType *b) {
 }
 
 Armor::Armor(unsigned int idx) {
-    ArmorBaseType*b = &(g_armor_base_ids[idx]);
+    ArmorBaseType *b = &(g_armor_base_ids[idx]);
     init(b);
 }
 
@@ -131,12 +202,4 @@ void Armor::equip() {
 
 void Armor::remove() {
     is_equipped = false;
-}
-
-// ------- Empty --------------------------------
-std::string Empty::get_full_name() {
-    return "Empty";
-}
-std::string Empty::get_type_name() {
-    return "Empty";
 }

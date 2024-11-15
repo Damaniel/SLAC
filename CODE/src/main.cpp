@@ -307,12 +307,21 @@ int main(void) {
 	g_inventory = new Inventory();
 
 	Item *w = new Weapon(2);
+	Item *a = new Armor(&(g_armor_base_ids[7]));
 
-	g_inventory->add_at_slot(w, 0);
+	int first_empty = g_inventory->get_first_empty_slot();
+	if(first_empty >= 0) {
+		g_inventory->add_at_slot(w, first_empty);
+		std::cout << g_inventory->get_item_in_slot(first_empty)->get_full_name() << std::endl;
+	}
+	
+	int slot_used = g_inventory->add_at_first_empty(a);
+	if(slot_used >=0)
+		std::cout << g_inventory->get_item_in_slot(slot_used)->get_full_name() << std::endl;
+	else
+		std::cout << "Inventory is full!" << std::endl;
 
-	std::cout << g_inventory->get_item_at_slot(0)->get_full_name() << std::endl;
-	std::cout << g_inventory->get_item_at_slot(5)->get_full_name() << std::endl;
-
+	std::cout << "Slots in use = " << g_inventory->get_num_slots_in_use() << std::endl;
 	delete g_inventory;
 
 	return 0;
