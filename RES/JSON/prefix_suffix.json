@@ -78,6 +78,7 @@
         "metadata": {
             "struct_name": "g_item_prefix_ids",
             "struct_type": "ItemPrefixType",
+            "pool_struct_name": "g_item_prefix_pool",
             "description": "Item prefixes",
             "fields": ["id", "name", "gid", "rarity", "weapons?", "armor?", "shield?", "jewelry?", "modifier(s)"]
         },
@@ -111,12 +112,12 @@
                 "modifiers": {
                     "atk": {
                         "modifier_id": 3,
-                        "is_absolute": false,
+                        "modifier_mode": 0,
                         "amount": 1.25
                     },
                     "str": {
                         "modifier_id": 0,
-                        "is_absolute": true,
+                        "modifier_mode": 1,
                         "amount": 1
                     }
                 }
@@ -126,6 +127,7 @@
     "suffixes": {
         "metadata": {
             "struct_name": "g_item_suffix_ids",
+            "pool_struct_name": "g_item_suffix_pool",
             "struct_type": "ItemSuffixType",
             "description": "Item suffixes",
             "fields": ["id", "name", "gid", "rarity", "weapons?", "armor?", "shield?", "jewelry?", "modifier(s)"]

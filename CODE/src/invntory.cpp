@@ -160,6 +160,62 @@ void Inventory::drop_item_in_slot(int slot) {
 }
 
 //==================================================================
+// Item
+//==================================================================
+
+// Dumps information common to all Items to the console.
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   None
+void Item::dump_item_common(void) {
+    std::cout << "====== Common ============================" << std::endl;
+    std::cout << "Name:      " << get_full_name() << std::endl;
+    std::cout << "ID:        " << id << std::endl;
+    std::cout << "GID:       " << gid << std::endl;
+    std::cout << "Base name: " << name << std::endl;
+    std::cout << "Rarity:    " << (int)rarity << std::endl;
+    std::cout << "Avg Depth: [ ";
+    for (int i = 0; i < NUM_CAVES; ++i) {
+        std::cout << (int)depth[i] << " ";
+    }
+    std::cout << "] " << std::endl;
+    std::cout << "Value:     " << value << std::endl;
+    std::cout << "Flags:     ";
+    if (can_be_cursed)
+        std::cout << "C";
+    else
+        std::cout << "c";
+    if (can_have_prefix)
+        std::cout << "P";
+    else
+        std::cout << "p";
+    if (can_have_suffix) 
+        std::cout << "S";
+    else
+        std::cout << "s";
+    if (can_stack)
+        std::cout << "Q";
+    else
+        std::cout << "q";
+    if (can_equip)
+        std::cout << "E";
+    else
+        std::cout << "e";
+    if (can_drop)
+        std::cout << "D";
+    else
+        std::cout << "d";
+    if (can_use)
+        std::cout << "U";
+    else
+        std::cout << "u";
+    std::cout << std::endl;
+}
+
+//==================================================================
 // Equipment
 //==================================================================
 
@@ -193,6 +249,60 @@ std::string Equipment::get_full_name() {
     }
 
     return prefix_text + " " + name + " " + suffix_text;
+}
+
+// Dumps information about the item's prefix to the console.
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   None
+void Equipment::dump_prefix() {
+    if (can_have_prefix && prefix_id >= 0) {
+        ItemPrefixType *it = &(g_item_prefix_ids[prefix_id]);
+        std::cout << "====== Prefix info ===================" << std::endl;
+        std::cout << "Name:      " << it->name << std::endl;
+        std::cout << "Num mods:  " << (int)it->num_modifiers << std::endl;
+        for (int i = 0; i < it->num_modifiers; ++i) {
+            ModifierMagType *mt = &(it->modifiers[i]); 
+            std::cout << " Mod " << (i+1) << ":" << std::endl;
+            std::cout << "  Name:      " << g_modifier_ids[mt->modifier_id].name << std::endl;
+            std::cout << "  Absolute:  ";
+            if (mt->is_absolute)
+                std::cout << "true" << std::endl;
+            else
+                std::cout << "false" << std::endl;
+            std::cout << "  Magnitude: " << mt->magnitude << std::endl;
+        }
+    }
+}
+
+// Dumps information about the item's suffix to the console.
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   None
+void Equipment::dump_suffix() {
+    if (can_have_suffix && suffix_id >= 0) {
+        ItemSuffixType *it = &(g_item_suffix_ids[suffix_id]);
+        std::cout << "====== Suffix info ===================" << std::endl;
+        std::cout << "Name:      " << it->name << std::endl;
+        std::cout << "Num mods:  " << (int)it->num_modifiers << std::endl;
+        for (int i = 0; i < it->num_modifiers; ++i) {
+            ModifierMagType *mt = &(it->modifiers[i]); 
+            std::cout << " Mod " << (i+1) << ":" << std::endl;
+            std::cout << "  Name:      " << g_modifier_ids[mt->modifier_id].name << std::endl;
+            std::cout << "  Absolute:  ";
+            if (mt->is_absolute)
+                std::cout << "true" << std::endl;
+            else
+                std::cout << "false" << std::endl;
+            std::cout << "  Magnitude: " << mt->magnitude << std::endl;
+        }
+    }
 }
 
 //==================================================================
@@ -272,6 +382,22 @@ void Weapon::remove() {
     is_equipped = false;
 }
 
+// Dumps information specific to weapons to the console.
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   None
+void Weapon::dump_item() {
+    dump_item_common();
+    std::cout << "====== Weapon Specific ===================" << std::endl;
+    std::cout << "Type:      " << g_weapon_type_ids[type_id].name << std::endl;
+    std::cout << "Attack:    " << attack << std::endl;
+    dump_prefix();
+    dump_suffix();
+}
+
 //==================================================================
 // Armor
 //==================================================================
@@ -345,4 +471,20 @@ void Armor::equip() {
 //   None
 void Armor::remove() {
     is_equipped = false;
+}
+
+// Dumps information specific to armor to the console.
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   None
+void Armor::dump_item() {
+    dump_item_common();
+    std::cout << "====== Armor Specific ===================" << std::endl;
+    std::cout << "Type:      " << g_armor_type_ids[type_id].name << std::endl;
+    std::cout << "Defense:    " << defense << std::endl;
+    dump_prefix();
+    dump_suffix();
 }

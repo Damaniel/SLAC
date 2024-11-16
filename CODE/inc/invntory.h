@@ -143,8 +143,12 @@ protected:
     bool can_drop;
     bool can_use;
 public:
+    void dump_item_common();
     virtual std::string get_full_name() = 0;
     virtual std::string get_type_name() = 0;
+    virtual void dump_item() = 0;
+    virtual void dump_prefix() = 0;
+    virtual void dump_suffix() = 0;
     virtual void add_prefix(int pid) = 0;
     virtual void add_suffix(int sid) = 0;
     virtual void remove_prefix() = 0;
@@ -166,8 +170,11 @@ protected:
 public:
     virtual void equip() = 0;
     virtual void remove() = 0;
+    virtual void dump_item() = 0;
     std::string get_full_name();
     std::string get_type_name();
+    void dump_prefix();
+    void dump_suffix();
     void add_prefix(int pid) { can_have_prefix ? prefix_id = pid : prefix_id = -1; }
     void add_suffix(int sid) { can_have_suffix ? suffix_id = sid : suffix_id = -1; }
     void remove_prefix() { add_prefix(-1); }
@@ -183,6 +190,7 @@ private:
 public:
     Weapon(WeaponBaseType *b);
     Weapon(unsigned int idx);
+    void dump_item();
     void equip();
     void remove();
 };
@@ -195,6 +203,7 @@ private:
 public:
     Armor(ArmorBaseType *b);
     Armor(unsigned int idx);
+    void dump_item();
     void equip();
     void remove();
 };
@@ -206,6 +215,7 @@ class Consumable: public Item {
 public:
     virtual std::string get_full_name() = 0;
     virtual std::string get_type_name() = 0;
+    void dump_item();
     virtual void use() = 0;
     virtual ~Consumable();
 };

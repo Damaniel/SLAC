@@ -302,18 +302,19 @@ int main(void) {
 	a->add_suffix(0);
 	
 	int first_empty = g_inventory->get_first_empty_slot();
+	std::cout << std::endl;
 	if(first_empty >= 0) {
 		g_inventory->add_at_slot(w, first_empty);
-		std::cout << g_inventory->get_item_in_slot(first_empty)->get_full_name() << std::endl;
+		g_inventory->get_item_in_slot(first_empty)->dump_item();
 	}
-	
-	int slot_used = g_inventory->add_at_first_empty(a);
-	if(slot_used >=0)
-		std::cout << g_inventory->get_item_in_slot(slot_used)->get_full_name() << std::endl;
-	else
-		std::cout << "Inventory is full!" << std::endl;
 
-	std::cout << "Slots in use = " << g_inventory->get_num_slots_in_use() << std::endl;
+	std::cout << std::endl;
+	int slot_used = g_inventory->add_at_first_empty(a);
+	std::cout << std::endl;
+	if(slot_used >=0)
+		g_inventory->get_item_in_slot(slot_used)->dump_item();
+
+	std::cout << std::endl << "Slots in use = " << g_inventory->get_num_slots_in_use() << std::endl;
 	delete g_inventory;
 
 	return 0;
