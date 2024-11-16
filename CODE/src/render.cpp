@@ -21,11 +21,7 @@
 //   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //   SOFTWARE.
 //==========================================================================================
-#include <allegro.h>
-#include <vector>
-#include <cstdio>
 #include "globals.h"
-#include "render.h"
 
 //==================================================================================
 // Constructors

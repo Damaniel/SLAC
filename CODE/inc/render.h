@@ -24,12 +24,8 @@
 #ifndef __RENDER_H__
 #define __RENDER_H__
 
-// System includes
-#include <allegro.h>
-
 // Game-specific includes
 #include "globals.h"
-#include "maze.h"
 
 // Number of characters defined in each instance of a font
 #define FONT_ENTRIES       96

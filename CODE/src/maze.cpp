@@ -21,15 +21,7 @@
 //   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //   SOFTWARE.
 //==========================================================================================
-#include <cstdlib>
-#include <cstdio>
-#include <ctime>
-#include <stack>
-#include <iostream>
-#include <algorithm>
-#include <allegro.h>
 #include "globals.h"
-#include "maze.h"
 
 //------------------------------------------------------------------------------
 // Maze constructor

@@ -21,21 +21,9 @@
 //   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //   SOFTWARE.
 //==========================================================================================
-#include <cstdio>
-#include <cstdlib>
-#include <ctime>
-#include <vector>
-#include <allegro.h>
 
 // Game-specific include files
-#include "main.h"
-#include "player.h"
-#include "maze.h"
-#include "render.h"
 #include "globals.h"
-#include "invntory.h"
-#include "itemstr.h"
-#include "gen_data.h"
 
 BEGIN_GFX_DRIVER_LIST
 	GFX_DRIVER_MODEX

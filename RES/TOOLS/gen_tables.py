@@ -114,7 +114,7 @@ def print_auto_generated_header(outfile):
     outfile.write('// Auto-generated file - do not edit!\n')
 
 def print_includes(outfile):
-    outfile.write('#include "itemstr.h"\n\n')
+    outfile.write('#include "globals.h"\n\n')
 
 # Iterates through a JSON file and extracts the data into a C array initializer block
 def process_item_file(filename, outfile):

@@ -27,14 +27,26 @@
 // Used for the Allegro definitions
 #include <allegro.h>
 
+// C++ includes
+#include <vector>
+#include <string>
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
+#include <stack>
+#include <iostream>
+#include <algorithm>
+
 // Header for the datafile
 #include "dat.h"
 
 // Other includes
+#include "invntory.h"
+#include "gen_data.h"
 #include "player.h"
-#include "main.h"
-#include "render.h"
 #include "maze.h"
+#include "render.h"
+#include "main.h"
 
 // The datafile - contains all sprite, font and sound data.  
 // -- Defined in main.cpp

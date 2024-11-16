@@ -28,7 +28,7 @@ prod: $(TARGET)
 	strip $(TARGET)
 	upx $(TARGET)
 
-obj/gen_data.o: src/gen_data.cpp inc/gen_data.h inc/itemstr.h
+obj/gen_data.o: src/gen_data.cpp inc/gen_data.h inc/invntory.h
 	$(CC) -c $(CFLAGS) -o obj/gen_data.o src/gen_data.cpp
 
 obj/maze.o: src/maze.cpp inc/maze.h
@@ -40,7 +40,7 @@ obj/render.o: src/render.cpp inc/render.h inc/globals.h inc/maze.h
 obj/player.o: src/player.cpp inc/globals.h
 	$(CC) -c $(CFLAGS) -o obj/player.o src/player.cpp
 
-obj/invntory.o: src/invntory.cpp inc/invntory.h inc/itemstr.h
+obj/invntory.o: src/invntory.cpp inc/invntory.h inc/invntory.h
 	$(CC) -c $(CFLAGS) -o obj/invntory.o src/invntory.cpp
 
 obj/main.o: src/main.cpp inc/main.h inc/gen_data.h inc/render.h inc/globals.h inc/maze.h inc/invntory.h

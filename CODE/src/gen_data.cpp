@@ -1,5 +1,5 @@
 // Auto-generated file - do not edit!
-#include "itemstr.h"
+#include "globals.h"
 
 // BodyPartType g_body_part_type_ids
 //

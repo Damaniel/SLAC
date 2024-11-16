@@ -22,8 +22,7 @@
 //   SOFTWARE.
 //==========================================================================================
 
-#include "invntory.h"
-#include "gen_data.h"
+#include "globals.h"
 
 Inventory *g_inventory;
 

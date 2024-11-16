@@ -23,7 +23,8 @@
 //==========================================================================================
 #ifndef __MAZE_H__
 #define __MAZE_H__
-#include <vector>
+
+#include "globals.h"
 
 // Directions used by the maze generator
 const int DIRECTION_NORTH = 0;

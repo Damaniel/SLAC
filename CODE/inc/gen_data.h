@@ -2,7 +2,7 @@
 #ifndef __GEN_DATA_H__
 #define __GEN_DATA_H__
 
-#include "itemstr.h"
+#include "globals.h"
 
 extern BodyPartType g_body_part_type_ids[];
 extern WeaponType g_weapon_type_ids[];
