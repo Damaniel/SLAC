@@ -26,6 +26,14 @@
 
 Inventory *g_inventory;
 
+//==================================================================
+// Inventory
+//==================================================================
+
+
+// Inventory::Inventory
+//
+// Constructor.
 Inventory::Inventory() {
     inv = std::vector<Item *>(INVENTORY_SIZE);
     for(int i=0;i<INVENTORY_SIZE;++i) {
@@ -33,6 +41,9 @@ Inventory::Inventory() {
     }
 }
 
+// Inventory::~Inventory
+//
+// Destructor.  Frees any allocated Item objects along the way
 Inventory::~Inventory() {
     for (std::vector<Item *>::iterator it = inv.begin(); it != inv.end(); ++it) {
         if(*it != NULL)
@@ -40,20 +51,38 @@ Inventory::~Inventory() {
     }
 }
 
-// Returns the item in the selected slot, or NULL otherwise
+// Gets the item in the selected slot.
+//
+// Arguments:
+//   slot - the slot containing the item
+//
+// Returns:
+//   A pointer to the Item in the slot, or NULL if the slot is empty.
 Item *Inventory::get_item_in_slot(int slot) {
     return inv[slot];
 }
 
-// Adds an item at the specified slot, removing any existing item from it
+// Adds an item at the specified slot, removing any existing item from it.
+// 
+// Arguments:
+//   i - the item to be added to the inventory
+//   slot - the slot to add the item at
+//
+// Returns:
+//   The slot the item was added at.  This will be the same as the value of 'slot'.
 int Inventory::add_at_slot(Item *i, int slot) {
     drop_item_in_slot(slot);
     inv[slot] = i;
     return slot;
 }
 
-// Adds an item at the first empty inventory slot.  Returns the slot it was added to,
-// or -1 if there was no free slot.
+// Adds an item at the first empty inventory slot.
+//
+// Arguments:
+//   i - the item to be added to the inventory
+//
+// Returns:
+//   The index of the slot it was added at, or -1 if the inventory is full.
 int Inventory::add_at_first_empty(Item *i) {
     if (!inventory_is_full()) {
         int slot = get_first_empty_slot();
@@ -64,8 +93,13 @@ int Inventory::add_at_first_empty(Item *i) {
     return -1;
 }
 
-// Gets the location of the first empty inventory slot.  Returns that slot, or -1
-// if there are no empty slots.
+// Gets the location of the first empty inventory slot.  
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   The index of the empty slot, or -1 if the inventory is full.
 int Inventory::get_first_empty_slot() {
     int first_empty = -1;
     for(int i=0; i<INVENTORY_SIZE; ++i) {
@@ -79,6 +113,13 @@ int Inventory::get_first_empty_slot() {
     return first_empty;
 }
 
+// Gets the number of used inventory slots.  
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   The number of used inventory slots.
 int Inventory::get_num_slots_in_use() {
     int slots_in_use = 0;
 
@@ -88,7 +129,14 @@ int Inventory::get_num_slots_in_use() {
     }
     return slots_in_use;
 }
-// Returns true if zero space remains in the inventory, false otherwise.
+
+// Determines if the inventory is full.
+//
+// Arguments: 
+//   None
+//
+// Returns:
+//   true if inventory is full, false if not.
 bool Inventory::inventory_is_full() {
     for (int i=0; i<INVENTORY_SIZE; i++) {
         if (inv[i] == NULL)
@@ -97,7 +145,13 @@ bool Inventory::inventory_is_full() {
     return true;
 }
 
+// Removes an item from the specified inventory slot
 //
+// Arguments: 
+//   idx - the slot to delete the item from
+//
+// Returns:
+//   Nothing.
 void Inventory::drop_item_in_slot(int slot) {
     if (inv[slot] != NULL) { 
         delete inv[slot];
@@ -105,11 +159,28 @@ void Inventory::drop_item_in_slot(int slot) {
     }
 }
 
-// --------- Equipment ------------------------
+//==================================================================
+// Equipment
+//==================================================================
+
+// Gets the base name of the equipment type.
+//
+// Arguments: 
+//   None
+//
+// Returns:
+//   A string containing the base type name.
 std::string Equipment::get_type_name() {
     return name;
 }
 
+// Gets the full name (base+affixes) of the equipment type.
+//
+// Arguments: 
+//   None
+//
+// Returns:
+//   A string containing the full item name.
 std::string Equipment::get_full_name() {
     std::string prefix_text;
     std::string suffix_text;
@@ -124,7 +195,18 @@ std::string Equipment::get_full_name() {
     return prefix_text + " " + name + " " + suffix_text;
 }
 
-// --------- Weapon ---------------------------
+//==================================================================
+// Weapon
+//==================================================================
+
+// Initializes a Weapon using an entry from the weapon base type
+//  table.
+//
+// Arguments: 
+//   b - a pointer to an entry in the weapon base type table
+//
+// Returns:
+//   Nothing.
 void Weapon::init(WeaponBaseType *b) {
     // Assign the fields from the weapon base type here
     id = b->id;
@@ -147,25 +229,61 @@ void Weapon::init(WeaponBaseType *b) {
     is_cursed = false;
 }
 
+// Weapon::Weapon
+//
+// Constructor.
+//
+// Constructs using a pointer to an entry in the base types table
 Weapon::Weapon(WeaponBaseType *b) {
     init(b);
 }
 
+// Weapon::Weapon
+//
+// Constructor.
+//
+// Constructs using an offset (relative to to the base types table).
 Weapon::Weapon(unsigned int idx) {
     // Assign the fields from the weapon base type list at index idx here
     WeaponBaseType *b = &(g_weapon_base_ids[idx]);
     init(b);
 }
 
+
+// Equips a weapon.
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   None
 void Weapon::equip() {
     is_equipped = true;
 }
 
+// Removes a weapon.
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   None
 void Weapon::remove() {
     is_equipped = false;
 }
 
-// -------- Armor ------------------------------
+//==================================================================
+// Armor
+//==================================================================
+
+// Initializes an Armor using an entry from the armor base type
+//  table.
+//
+// Arguments: 
+//   b - a pointer to an entry in the armor base type table
+//
+// Returns:
+//   Nothing.
 void Armor::init(ArmorBaseType *b) {
     // Assign the fields from the armor base type here
     id = b->id;
@@ -188,19 +306,43 @@ void Armor::init(ArmorBaseType *b) {
     is_cursed = false;
 }
 
+// Armor::Armor
+//
+// Constructor.
+//
+// Constructs using a pointer to an entry in the base types table
 Armor::Armor(ArmorBaseType *b) {
     init(b);
 }
 
+// Armor::Armor
+//
+// Constructor.
+//
+// Constructs using an offset (relative to to the base types table).
 Armor::Armor(unsigned int idx) {
     ArmorBaseType *b = &(g_armor_base_ids[idx]);
     init(b);
 }
 
+// Equips a piece of armor.
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   None
 void Armor::equip() {
     is_equipped = true;
 }
 
+// Removes a piece of armor.
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   None
 void Armor::remove() {
     is_equipped = false;
 }
