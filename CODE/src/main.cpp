@@ -307,8 +307,12 @@ int main(void) {
 	g_inventory = new Inventory();
 
 	Item *w = new Weapon(2);
+	w->add_prefix(0);
+	w->add_suffix(0);
 	Item *a = new Armor(&(g_armor_base_ids[7]));
-
+	a->add_prefix(1);
+	a->add_suffix(0);
+	
 	int first_empty = g_inventory->get_first_empty_slot();
 	if(first_empty >= 0) {
 		g_inventory->add_at_slot(w, first_empty);

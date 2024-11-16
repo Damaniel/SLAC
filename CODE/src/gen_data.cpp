@@ -206,3 +206,49 @@ ArmorBaseType g_armor_base_ids[] = {
    {83, "Mythril Amulet", 125, 13, 6, 5, {25, 50, 40}, 5000, true, true, true, false, true, true, false}
 };
 
+// ModifierType g_modifier_ids
+//
+//   Equipment modifiers (stat and otherwise)
+//
+//   Fields:
+//   {id, name, abbrev_name}
+//
+ModifierType g_modifier_ids[] = {
+   {0, "Strength", "STR"},
+   {1, "Constitution", "CON"},
+   {2, "Dexterity", "DEX"},
+   {3, "Attack", "ATK"},
+   {4, "Defense", "DEF"},
+   {5, "Speed", "SPD"},
+   {6, "Fire Attack", "FAtk"},
+   {7, "Ice Attack", "IAtk"},
+   {8, "Lightning Attack", "LAtk"},
+   {9, "Fire Resist", "FRes"},
+   {10, "Ice Resist", "IRes"},
+   {11, "Lightning Resist", "LRes"},
+   {12, "Attacks Per Turn", "APT"}
+};
+
+// ItemPrefixType g_item_prefix_ids
+//
+//   Item prefixes
+//
+//   Fields:
+//   {id, name, gid, rarity, weapons?, armor?, shield?, jewelry?, modifier(s)}
+//
+ItemPrefixType g_item_prefix_ids[] = {
+   {0, "Strong", 0, 240, true, false, false, false, 1, {{3, false, 1.1}}},
+   {1, "Mighty", 1, 128, true, false, false, false, 2, {{3, false, 1.25}, {0, true, 1}}}
+};
+
+// ItemSuffixType g_item_suffix_ids
+//
+//   Item suffixes
+//
+//   Fields:
+//   {id, name, gid, rarity, weapons?, armor?, shield?, jewelry?, modifier(s)}
+//
+ItemSuffixType g_item_suffix_ids[] = {
+   {0, "of Strength", 0, 240, true, false, false, false, 1, {{3, true, 1}}}
+};
+

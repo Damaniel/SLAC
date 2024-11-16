@@ -2,6 +2,7 @@ import json, os, sys
 
 types_json_file = os.path.join("..", "JSON", "types.json")
 bases_json_file = os.path.join("..", "JSON", "bases.json")
+prefix_suffix_json_file = os.path.join('..', 'JSON', 'prefix_suffix.json')
 output_file = "gen_data.cpp"
 header_file = "gen_data.h"
 header_guard = "__GEN_DATA_H__"
@@ -13,6 +14,29 @@ def write_field(field, outfile):
     # If the field is a string, wrap it in quotes before writing it
     if isinstance(field, str):
         outfile.write(f'"{field}"')
+    # If the field is a dict, expand it term by term and wrap the whole thing in brackets
+    elif isinstance(field, dict):
+        # If the dictionary contains nothing but dictionaries, then we'll write out the
+        # number of entries in the dictionary before we write the data.  The assumption
+        # is that the data is being stuffed later into a fixed size array (so we can initialize
+        # directly from the static data), and the count is needed to know exactly how
+        # many elements are being used.  (And yeah, this code is wrought with potential
+        # for exceeding bounds checks down the road, but such is life when you're 
+        # writing code for an old platform that's trying not to be too heavy).
+        is_sub_dict = True
+        for subfield in field:
+            if not isinstance(field[subfield], dict):
+                is_sub_dict = False
+        if is_sub_dict:
+            outfile.write(f'{len(field)}, ')
+        # Then continue
+        outfile.write('{')
+        for (subfield_idx, subfield) in enumerate(field):
+            write_field(field[subfield], outfile)
+            if subfield_idx == len(field) - 1:
+                outfile.write('}')
+            else:
+                outfile.write(', ')
     # If the field is a list, recusrively call write_field to expand each element
     elif isinstance(field, list):
         outfile.write('{')
@@ -117,6 +141,7 @@ def generate_source_file(outfile=None):
     print_includes(out)
     process_item_file(types_json_file, out)
     process_item_file(bases_json_file, out)
+    process_item_file(prefix_suffix_json_file, out)
 
 def generate_prototypes(filename, outfile):
     f = open(filename)
@@ -141,6 +166,7 @@ def generate_header_file(outfile=None):
     print_includes(out)
     generate_prototypes(types_json_file, out)
     generate_prototypes(bases_json_file, out)
+    generate_prototypes(prefix_suffix_json_file, out)
     out.write('\n#endif')
 
 generate_source_file(output_file)

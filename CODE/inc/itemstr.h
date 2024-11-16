@@ -4,6 +4,7 @@
 #include <vector>
 
 #define NUM_CAVES       3
+#define MAX_MODIFIERS   4
 
 // Fundamental item/equipment types.  All base types (and rare versions of the base types) are all
 // assigned to one of these fundamental categories
@@ -23,6 +24,12 @@ typedef struct {
     std::string name;
     unsigned short body_part_id;
 } ArmorType;
+
+typedef struct {
+    unsigned short modifier_id;
+    bool is_absolute;
+    float magnitude;
+} ModifierMagType;
 
 // Base equipment types.  These are particular base versions of the fundamental types, used
 // to hold stats that are loaded into specific item objects
@@ -62,6 +69,38 @@ typedef struct {
     bool can_use;
 } ArmorBaseType;
 
+typedef struct {
+    unsigned short id;
+    std::string name;
+    unsigned short gid;
+    unsigned char rarity;
+    bool for_weapons;
+    bool for_all_armor;
+    bool for_shields;
+    bool for_jewelry;
+    unsigned char num_modifiers;
+    ModifierMagType modifiers[MAX_MODIFIERS];
+} ItemPrefixType;
+
+typedef struct {
+    unsigned short id;
+    std::string name;
+    unsigned short gid;
+    unsigned char rarity;
+    bool for_weapons;
+    bool for_all_armor;
+    bool for_shields;
+    bool for_jewelry;
+    unsigned char num_modifiers;
+    ModifierMagType modifiers[MAX_MODIFIERS];
+} ItemSuffixType;
+
+typedef struct {
+    unsigned short id;
+    std::string name;
+    std::string abbrev_name;
+} ModifierType;
+
 // An 'item'.  This represents anything that can be held in an inventory slot.
 class Item {
 protected:
@@ -82,6 +121,12 @@ protected:
 public:
     virtual std::string get_full_name() = 0;
     virtual std::string get_type_name() = 0;
+    virtual void add_prefix(int pid) = 0;
+    virtual void add_suffix(int sid) = 0;
+    virtual void remove_prefix() = 0;
+    virtual void remove_suffix() = 0;
+    virtual void equip() = 0;
+    virtual void remove() = 0;
     virtual ~Item() { }
 };
 
@@ -95,10 +140,14 @@ protected:
     bool is_cursed;
     bool is_equipped;
 public:
-    virtual std::string get_full_name() = 0;
-    virtual std::string get_type_name() = 0;
     virtual void equip() = 0;
     virtual void remove() = 0;
+    std::string get_full_name();
+    std::string get_type_name();
+    void add_prefix(int pid) { can_have_prefix ? prefix_id = pid : prefix_id = -1; }
+    void add_suffix(int sid) { can_have_suffix ? suffix_id = sid : suffix_id = -1; }
+    void remove_prefix() { add_prefix(-1); }
+    void remove_suffix() { add_suffix(-1); }
     virtual ~Equipment() {}
 };
 
@@ -110,8 +159,6 @@ private:
 public:
     Weapon(WeaponBaseType *b);
     Weapon(unsigned int idx);
-    std::string get_full_name();
-    std::string get_type_name();
     void equip();
     void remove();
 };
@@ -124,8 +171,6 @@ private:
 public:
     Armor(ArmorBaseType *b);
     Armor(unsigned int idx);
-    std::string get_full_name();
-    std::string get_type_name();
     void equip();
     void remove();
 };

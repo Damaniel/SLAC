@@ -1,0 +1,154 @@
+{
+    "modifiers": {
+        "metadata": {
+            "struct_name": "g_modifier_ids",
+            "struct_type": "ModifierType",
+            "description": "Equipment modifiers (stat and otherwise)",
+            "fields": ["id", "name", "abbrev_name"]
+        },
+        "items": {
+            "strength": {
+                "id": 0,
+                "name": "Strength",
+                "abbrev_name": "STR"
+            },
+            "constitution": {
+                "id": 1,
+                "name": "Constitution",
+                "abbrev_name": "CON"
+            },
+            "dexterity": {
+                "id": 2,
+                "name": "Dexterity",
+                "abbrev_name": "DEX"
+            },
+            "attack": {
+                "id": 3,
+                "name": "Attack",
+                "abbrev_name": "ATK"
+            },
+            "defense": {
+                "id": 4,
+                "name": "Defense",
+                "abbrev_name": "DEF"
+            },
+            "speed": {
+                "id": 5,
+                "name": "Speed",
+                "abbrev_name": "SPD"
+            },
+            "fire_attack": {
+                "id": 6,
+                "name": "Fire Attack",
+                "abbrev_name": "FAtk"
+            },
+            "ice_attack": {
+                "id": 7,
+                "name": "Ice Attack",
+                "abbrev_name": "IAtk"
+            },
+            "lightning_attack": {
+                "id": 8,
+                "name": "Lightning Attack",
+                "abbrev_name": "LAtk"
+            },
+            "fire_resist": {
+                "id": 9,
+                "name": "Fire Resist",
+                "abbrev_name": "FRes"
+            },
+            "ice_resist": {
+                "id": 10,
+                "name": "Ice Resist",
+                "abbrev_name": "IRes"
+            },
+            "lightning_resist": {
+                "id": 11,
+                "name": "Lightning Resist",
+                "abbrev_name": "LRes"
+            },
+            "attacks_per_turn": {
+                "id": 12,
+                "name": "Attacks Per Turn",
+                "abbrev_name": "APT"
+            }
+        }
+    },
+    "prefixes": {
+        "metadata": {
+            "struct_name": "g_item_prefix_ids",
+            "struct_type": "ItemPrefixType",
+            "description": "Item prefixes",
+            "fields": ["id", "name", "gid", "rarity", "weapons?", "armor?", "shield?", "jewelry?", "modifier(s)"]
+        },
+        "items": {
+            "Strong": {
+                "id": 0,
+                "name": "Strong",
+                "gid": 0,
+                "rarity": 240,
+                "for_weapons": true,
+                "for_all_armor": false,
+                "for_shields": false,
+                "for_jewelry": false,
+                "modifiers": {
+                    "atk": {
+                        "modifier_id": 3,
+                        "is_absolute": false,
+                        "amount": 1.1
+                    }
+                }
+            },
+            "Mighty": {
+                "id": 1,
+                "name": "Mighty",
+                "gid": 1,
+                "rarity": 128,
+                "for_weapons": true,
+                "for_all_armor": false,
+                "for_shields": false,
+                "for_jewelry": false,
+                "modifiers": {
+                    "atk": {
+                        "modifier_id": 3,
+                        "is_absolute": false,
+                        "amount": 1.25
+                    },
+                    "str": {
+                        "modifier_id": 0,
+                        "is_absolute": true,
+                        "amount": 1
+                    }
+                }
+            }
+        }
+    },
+    "suffixes": {
+        "metadata": {
+            "struct_name": "g_item_suffix_ids",
+            "struct_type": "ItemSuffixType",
+            "description": "Item suffixes",
+            "fields": ["id", "name", "gid", "rarity", "weapons?", "armor?", "shield?", "jewelry?", "modifier(s)"]
+        },
+        "items": {
+            "of_strength": {
+                "id": 0,
+                "name": "of Strength",
+                "gid": 0,
+                "rarity": 240,
+                "for_weapons": true,
+                "for_all_armor": false,
+                "for_shields": false,
+                "for_jewelry": false,
+                "modifiers": {
+                    "atk": {
+                        "modifier_id": 3,
+                        "is_absolute": true,
+                        "amount": 1
+                    }
+                }
+            }
+        }
+    }
+
+}

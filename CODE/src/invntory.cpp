@@ -106,6 +106,25 @@ void Inventory::drop_item_in_slot(int slot) {
     }
 }
 
+// --------- Equipment ------------------------
+std::string Equipment::get_type_name() {
+    return name;
+}
+
+std::string Equipment::get_full_name() {
+    std::string prefix_text;
+    std::string suffix_text;
+
+    if (can_have_prefix && prefix_id >= 0) {
+        prefix_text = g_item_prefix_ids[prefix_id].name;        
+    }
+    if (can_have_suffix && suffix_id >= 0) {
+        suffix_text = g_item_suffix_ids[suffix_id].name;
+    }
+
+    return prefix_text + " " + name + " " + suffix_text;
+}
+
 // --------- Weapon ---------------------------
 void Weapon::init(WeaponBaseType *b) {
     // Assign the fields from the weapon base type here
@@ -139,14 +158,6 @@ Weapon::Weapon(unsigned int idx) {
     init(b);
 }
 
-std::string Weapon::get_type_name() {
-    return name;
-}
-
-std::string Weapon::get_full_name() {
-    return "Test " + name + " of Testing";
-}
-
 void Weapon::equip() {
     is_equipped = true;
 }
@@ -154,7 +165,6 @@ void Weapon::equip() {
 void Weapon::remove() {
     is_equipped = false;
 }
-
 
 // -------- Armor ------------------------------
 void Armor::init(ArmorBaseType *b) {
@@ -186,14 +196,6 @@ Armor::Armor(ArmorBaseType *b) {
 Armor::Armor(unsigned int idx) {
     ArmorBaseType *b = &(g_armor_base_ids[idx]);
     init(b);
-}
-
-std::string Armor::get_type_name() {
-    return name;
-}
-
-std::string Armor::get_full_name() {
-    return "Test " + name + " of Testing";
 }
 
 void Armor::equip() {
