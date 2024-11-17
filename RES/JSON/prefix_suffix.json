@@ -82,7 +82,7 @@
             "pool_define": "g_item_prefix_pool_entries",
             "pool_count": "g_item_prefix_pool_count",
             "description": "Item prefixes",
-            "fields": ["id", "name", "gid", "rarity", "weapons?", "armor?", "shield?", "jewelry?", "modifier(s)"]
+            "fields": ["id", "name", "gid", "rarity", "modifier(s)"]
         },
         "items": {
             "Strong": {
@@ -90,10 +90,6 @@
                 "name": "Strong",
                 "gid": 0,
                 "rarity": 240,
-                "for_weapons": true,
-                "for_all_armor": false,
-                "for_shields": false,
-                "for_jewelry": false,
                 "modifiers": {
                     "atk": {
                         "modifier_id": 3,
@@ -107,10 +103,6 @@
                 "name": "Mighty",
                 "gid": 1,
                 "rarity": 128,
-                "for_weapons": true,
-                "for_all_armor": false,
-                "for_shields": false,
-                "for_jewelry": false,
                 "modifiers": {
                     "atk": {
                         "modifier_id": 3,
@@ -142,10 +134,6 @@
                 "name": "of Strength",
                 "gid": 0,
                 "rarity": 240,
-                "for_weapons": true,
-                "for_all_armor": false,
-                "for_shields": false,
-                "for_jewelry": false,
                 "modifiers": {
                     "atk": {
                         "modifier_id": 3,

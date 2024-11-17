@@ -42,6 +42,7 @@
 
 // Other includes
 #include "invntory.h"
+#include "itemgen.h"
 #include "gen_data.h"
 #include "player.h"
 #include "maze.h"

@@ -30,10 +30,6 @@
 #define NUM_CAVES       3
 #define MAX_MODIFIERS   4
 
-// Values that determine the odds that a particular action will be taken
-#define CHANCE_OF_PREFIX    30
-#define CHANCE_OF_SUFFIX    30
-
 // Fundamental item/equipment types.  All base types (and rare versions of the base types) are all
 // assigned to one of these fundamental categories
 typedef struct {
@@ -102,10 +98,6 @@ typedef struct {
     std::string name;
     unsigned short gid;
     unsigned char rarity;
-    bool for_weapons;
-    bool for_all_armor;
-    bool for_shields;
-    bool for_jewelry;
     unsigned char num_modifiers;
     ModifierMagType modifiers[MAX_MODIFIERS];
 } ItemPrefixType;
@@ -115,10 +107,6 @@ typedef struct {
     std::string name;
     unsigned short gid;
     unsigned char rarity;
-    bool for_weapons;
-    bool for_all_armor;
-    bool for_shields;
-    bool for_jewelry;
     unsigned char num_modifiers;
     ModifierMagType modifiers[MAX_MODIFIERS];
 } ItemSuffixType;
@@ -150,6 +138,7 @@ public:
     void dump_item_common();
     virtual std::string get_full_name() = 0;
     virtual std::string get_type_name() = 0;
+    virtual void init(int idx) = 0;
     virtual void dump_item() = 0;
     virtual void dump_prefix() = 0;
     virtual void dump_suffix() = 0;
@@ -159,7 +148,6 @@ public:
     virtual void remove_suffix() = 0;
     virtual void equip() = 0;
     virtual void remove() = 0;
-    virtual void generate() = 0;
     virtual ~Item() { }
 };
 
@@ -176,7 +164,7 @@ public:
     virtual void equip() = 0;
     virtual void remove() = 0;
     virtual void dump_item() = 0;
-    virtual void generate() = 0;
+    virtual void init(int idx) = 0;
     std::string get_full_name();
     std::string get_type_name();
     void dump_prefix();
@@ -197,10 +185,10 @@ public:
     Weapon();
     Weapon(WeaponBaseType *b);
     Weapon(unsigned int idx);
+    void init(int idx);
     void dump_item();
     void equip();
     void remove();
-    void generate();
 };
 
 // Armor - a piece of equipment that has a defense rating and is equipped in an armor slot
@@ -212,10 +200,10 @@ public:
     Armor();
     Armor(ArmorBaseType *b);
     Armor(unsigned int idx);
+    void init(int idx);
     void dump_item();
     void equip();
     void remove();
-    void generate();
 };
 
 // A 'consumable'.  This represents any kind of item which can be used
@@ -260,12 +248,5 @@ public:
 };
 
 extern Inventory *g_inventory;
-
-// The pool rolling function, used to draw item bases, prefixes and suffixes
-int roll_from_pool(int *pool, int pool_size, int max_val);
-
-// The parent generator function.  Picks an item type to generate and then calls
-// that type's item generator.
-Item *generate();
 
 #endif

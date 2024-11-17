@@ -295,10 +295,15 @@ int main(void) {
 	Item *it;
 	for (int i=0; i < 10; i++) {
 		std::cout << std::endl;
-		it = generate();
-		std::cout << "Roll " << (i+1) << ", item is now " << it->get_full_name() << std::endl;
-		it->dump_item();
-		delete it;
+		it = ItemGenerator::generate();
+		if (it != NULL) { 
+			std::cout << "Roll " << (i+1) << ", item is now " << it->get_full_name() << std::endl;
+			it->dump_item();
+			delete it;
+		}
+		else {
+			std::cout << "Roll " << (i+1) << ", <not defined yet>" << std::endl;
+		}
 	}
 
 	// g_inventory = new Inventory();

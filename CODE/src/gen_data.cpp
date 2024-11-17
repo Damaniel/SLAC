@@ -255,11 +255,11 @@ ModifierType g_modifier_ids[] = {
 //   Item prefixes
 //
 //   Fields:
-//   {id, name, gid, rarity, weapons?, armor?, shield?, jewelry?, modifier(s)}
+//   {id, name, gid, rarity, modifier(s)}
 //
 ItemPrefixType g_item_prefix_ids[] = {
-   {0, "Strong", 0, 240, true, false, false, false, 1, {{3, false, 1.1}}},
-   {1, "Mighty", 1, 128, true, false, false, false, 2, {{3, 0, 1.25}, {0, 1, 1}}}
+   {0, "Strong", 0, 240, 1, {{3, false, 1.1}}},
+   {1, "Mighty", 1, 128, 2, {{3, 0, 1.25}, {0, 1, 1}}}
 };
 
 // ItemSuffixType g_item_suffix_ids
@@ -270,6 +270,6 @@ ItemPrefixType g_item_prefix_ids[] = {
 //   {id, name, gid, rarity, weapons?, armor?, shield?, jewelry?, modifier(s)}
 //
 ItemSuffixType g_item_suffix_ids[] = {
-   {0, "of Strength", 0, 240, true, false, false, false, 1, {{3, true, 1}}}
+   {0, "of Strength", 0, 240, 1, {{3, true, 1}}}
 };
 
