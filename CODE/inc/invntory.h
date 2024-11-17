@@ -27,7 +27,6 @@
 #include "globals.h"
 
 #define INVENTORY_SIZE      48
-#define NUM_CAVES       3
 #define MAX_MODIFIERS   4
 
 // Fundamental item/equipment types.  All base types (and rare versions of the base types) are all
@@ -49,9 +48,16 @@ typedef struct {
     unsigned short body_part_id;
 } ArmorType;
 
+// A type for a modifier magnitude, i.e. the amount that something
+// can be adjusted.  The modifier modes are:
+//
+// 0 - relative (i.e. 'increase by 10%')
+// 1 - absoulte (i.e. 'increase by 1')
+// 2 - enable
+// 3 - disable
 typedef struct {
     unsigned short modifier_id;
-    bool is_absolute;
+    unsigned char modifier_mode;
     float magnitude;
 } ModifierMagType;
 
@@ -64,7 +70,7 @@ typedef struct {
     unsigned short type_id;
     unsigned short attack;
     unsigned char rarity;
-    unsigned char depth[NUM_CAVES];
+    unsigned char ilevel;
     unsigned short value;
     bool can_be_cursed;
     bool can_have_prefix;
@@ -82,7 +88,7 @@ typedef struct {
     unsigned short type_id;
     unsigned short defense;
     unsigned char rarity;
-    unsigned char depth[NUM_CAVES];
+    unsigned char ilevel;
     unsigned short value;
     bool can_be_cursed;
     bool can_have_prefix;
@@ -98,6 +104,7 @@ typedef struct {
     std::string name;
     unsigned short gid;
     unsigned char rarity;
+    unsigned char ilevel;
     unsigned char num_modifiers;
     ModifierMagType modifiers[MAX_MODIFIERS];
 } ItemPrefixType;
@@ -107,6 +114,7 @@ typedef struct {
     std::string name;
     unsigned short gid;
     unsigned char rarity;
+    unsigned char ilevel;
     unsigned char num_modifiers;
     ModifierMagType modifiers[MAX_MODIFIERS];
 } ItemSuffixType;
@@ -125,7 +133,7 @@ protected:
     unsigned short gid;
     unsigned short type_id;
     unsigned char rarity;
-    unsigned char depth[NUM_CAVES];
+    unsigned char ilevel;
     unsigned short value;
     bool can_be_cursed;
     bool can_have_prefix;

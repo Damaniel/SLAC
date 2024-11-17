@@ -177,11 +177,7 @@ void Item::dump_item_common(void) {
     std::cout << "GID:       " << gid << std::endl;
     std::cout << "Base name: " << name << std::endl;
     std::cout << "Rarity:    " << (int)rarity << std::endl;
-    std::cout << "Avg Depth: [ ";
-    for (int i = 0; i < NUM_CAVES; ++i) {
-        std::cout << (int)depth[i] << " ";
-    }
-    std::cout << "] " << std::endl;
+    std::cout << "iLevel:    " << (int)ilevel << std::endl;
     std::cout << "Value:     " << value << std::endl;
     std::cout << "Flags:     ";
     if (can_be_cursed)
@@ -274,11 +270,7 @@ void Equipment::dump_prefix() {
             ModifierMagType *mt = &(it->modifiers[i]); 
             std::cout << " Mod " << (i+1) << ":" << std::endl;
             std::cout << "  Name:      " << g_modifier_ids[mt->modifier_id].name << std::endl;
-            std::cout << "  Absolute:  ";
-            if (mt->is_absolute)
-                std::cout << "true" << std::endl;
-            else
-                std::cout << "false" << std::endl;
+            std::cout << "  Modifier mode:  " << (int)mt->modifier_mode << std::endl;
             std::cout << "  Magnitude: " << mt->magnitude << std::endl;
         }
     }
@@ -301,11 +293,7 @@ void Equipment::dump_suffix() {
             ModifierMagType *mt = &(it->modifiers[i]); 
             std::cout << " Mod " << (i+1) << ":" << std::endl;
             std::cout << "  Name:      " << g_modifier_ids[mt->modifier_id].name << std::endl;
-            std::cout << "  Absolute:  ";
-            if (mt->is_absolute)
-                std::cout << "true" << std::endl;
-            else
-                std::cout << "false" << std::endl;
+            std::cout << "  Modifier mode:  " << (int)mt->modifier_mode << std::endl;
             std::cout << "  Magnitude: " << mt->magnitude << std::endl;
         }
     }
@@ -331,8 +319,7 @@ void Weapon::init(WeaponBaseType *b) {
     type_id = b->type_id;
     attack = b->attack;
     rarity = b->rarity;
-    for(int i=0;i<NUM_CAVES;++i)
-        depth[i] = b->depth[i];
+    ilevel = b->ilevel;
     value = b->value;
     can_be_cursed = b->can_be_cursed;
     can_have_prefix = b->can_have_prefix;
@@ -441,8 +428,7 @@ void Armor::init(ArmorBaseType *b) {
     type_id = b->type_id;
     defense = b->defense;
     rarity = b->rarity;
-    for(int i=0;i<NUM_CAVES;++i)
-        depth[i] = b->depth[i];
+    ilevel = b->ilevel;
     value = b->value;
     can_be_cursed = b->can_be_cursed;
     can_have_prefix = b->can_have_prefix;

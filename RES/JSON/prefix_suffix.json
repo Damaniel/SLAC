@@ -82,7 +82,7 @@
             "pool_define": "g_item_prefix_pool_entries",
             "pool_count": "g_item_prefix_pool_count",
             "description": "Item prefixes",
-            "fields": ["id", "name", "gid", "rarity", "modifier(s)"]
+            "fields": ["id", "name", "gid", "rarity", "ilevel", "modifier(s)"]
         },
         "items": {
             "Strong": {
@@ -90,10 +90,11 @@
                 "name": "Strong",
                 "gid": 0,
                 "rarity": 240,
+                "ilevel": 5, 
                 "modifiers": {
                     "atk": {
                         "modifier_id": 3,
-                        "is_absolute": false,
+                        "modifier_mode": 0,
                         "amount": 1.1
                     }
                 }
@@ -103,6 +104,7 @@
                 "name": "Mighty",
                 "gid": 1,
                 "rarity": 128,
+                "ilevel": 20,
                 "modifiers": {
                     "atk": {
                         "modifier_id": 3,
@@ -126,7 +128,7 @@
             "pool_count": "g_item_suffix_pool_count",
             "struct_type": "ItemSuffixType",
             "description": "Item suffixes",
-            "fields": ["id", "name", "gid", "rarity", "weapons?", "armor?", "shield?", "jewelry?", "modifier(s)"]
+            "fields": ["id", "name", "gid", "rarity", "ilevel", "modifier(s)"]
         },
         "items": {
             "of_strength": {
@@ -134,10 +136,11 @@
                 "name": "of Strength",
                 "gid": 0,
                 "rarity": 240,
+                "ilevel": 5,
                 "modifiers": {
                     "atk": {
                         "modifier_id": 3,
-                        "is_absolute": true,
+                        "modifier_mode": 1,
                         "amount": 1
                     }
                 }
