@@ -310,6 +310,8 @@ int main(void) {
 		}
 	}
 
+	std::cout << std::endl;
+	
 	std::cout << "==========================================" << std::endl;
 	std::cout << "   Generating 5 random weapons..." << std::endl;
 	std::cout << "==========================================" << std::endl;

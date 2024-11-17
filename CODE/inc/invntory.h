@@ -146,6 +146,8 @@ public:
     virtual void add_suffix(int sid) = 0;
     virtual void remove_prefix() = 0;
     virtual void remove_suffix() = 0;
+    virtual bool can_have_a_prefix() { return can_have_prefix; }
+    virtual bool can_have_a_suffix() { return can_have_suffix; }
     virtual void equip() = 0;
     virtual void remove() = 0;
     virtual ~Item() { }

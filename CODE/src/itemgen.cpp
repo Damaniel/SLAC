@@ -89,8 +89,10 @@ Item *ItemGenerator::generate(int item_type) {
             rolled_base_type = ItemGenerator::roll_from_pool(base_pool, pool_count, pool_entries);            
         }
         i->init(rolled_base_type);
-        ItemGenerator::apply_prefix(i);
-        ItemGenerator::apply_suffix(i);
+        if (i->can_have_a_prefix()) 
+            ItemGenerator::apply_prefix(i);
+        if (i->can_have_a_suffix())
+            ItemGenerator::apply_suffix(i);
     }
     else {
         // Nothing else defined yet
