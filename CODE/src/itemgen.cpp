@@ -54,10 +54,24 @@ int ItemGenerator::roll_from_pool(const int *pool, int pool_size, int max_val) {
 //   A pointer to a randomly generated Item.
 Item *ItemGenerator::generate() {
     Item *i;
-    int *base_pool, pool_count, pool_entries, roll;
-    int rolled_base_type;
-
     int item_type = ItemGenerator::roll_from_pool(g_item_class_pool, g_item_class_pool_count, g_item_class_pool_entries);
+    i = ItemGenerator::generate(item_type);
+    return i;
+}
+
+// Generates an item of a particular item class, weighted by base type and mod types.
+//
+// Arguments:
+//   item_type - item to generate
+//
+// Returns:
+//   A pointer to a randomly generated Item of the item type.
+//
+// Valid item types are (WEAPON_CLASS, ARMOR_CLASS, CURRENCY_CLASS, CONSUMABLE_CLASS, ARTIFACT_CLASS).
+Item *ItemGenerator::generate(int item_type) {
+    Item *i;
+    int *base_pool, pool_count, pool_entries;
+    int rolled_base_type;
 
     if (item_type == WEAPON_CLASS || item_type == ARMOR_CLASS) {
         if (item_type == WEAPON_CLASS) {

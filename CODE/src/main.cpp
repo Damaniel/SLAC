@@ -293,6 +293,10 @@ int main(void) {
 	// set_gfx_mode(GFX_TEXT, 80, 25, 0, 0);
 
 	Item *it;
+	std::cout << "==========================================" << std::endl;
+	std::cout << "   Generating 10 random items..." << std::endl;
+	std::cout << "==========================================" << std::endl;
+
 	for (int i=0; i < 10; i++) {
 		std::cout << std::endl;
 		it = ItemGenerator::generate();
@@ -306,6 +310,22 @@ int main(void) {
 		}
 	}
 
+	std::cout << "==========================================" << std::endl;
+	std::cout << "   Generating 5 random weapons..." << std::endl;
+	std::cout << "==========================================" << std::endl;
+	for (int i=0; i < 5; i++) {
+		std::cout << std::endl;
+		it = ItemGenerator::generate(WEAPON_CLASS);
+		if (it != NULL) { 
+			std::cout << "Roll " << (i+1) << ", item is now " << it->get_full_name() << std::endl;
+			it->dump_item();
+			delete it;
+		}
+		else {
+			std::cout << "Roll " << (i+1) << ", <not defined yet>" << std::endl;
+		}
+	}
+	
 	// g_inventory = new Inventory();
 
 	// Item *w = new Weapon(2);

@@ -27,6 +27,7 @@ private:
     static void apply_suffix(Item *i);
 public:
     static Item *generate();
+    static Item *generate(int item_type);
 };
 
 #endif
