@@ -27,6 +27,46 @@
 Inventory *g_inventory;
 
 //==================================================================
+// non-class methods
+//==================================================================
+
+// Generates a random item index from the given pool
+//
+// Arguments:
+//  pool - the pool to draw from
+//  pool_size - the number of elements in the pool to consider
+//  max_val - the highest possible value in the pool
+//
+// Returns:
+//  The index from the pool selected, or -1 if something went wrong
+int roll_from_pool(int *pool, int pool_size, int max_val) {
+    int val = rand() % max_val;
+    //std::cout << "size = " << pool_size << ", max val =  " << max_val << ", rolled val = " << val << std::endl;
+    for (int i = 0; i < pool_size; ++i) {
+        //std::cout << "i = " << i << ", pool[i] = " << pool[i] << std::endl;
+        if (val < pool[i]) {
+            //std::cout << "Rolled " << val << " in a pool of " << max_val << ", index is " << i << std::endl;
+            return i;
+        }
+    }
+    return -1;
+}
+
+Item *generate() {
+    Item *i;
+    int r = rand() %2;
+    if (r == 0) {
+        i = new Weapon();
+        i->generate();
+    }
+    else {
+        i = new Armor();
+        i->generate();
+    }
+    return i;
+}
+
+//==================================================================
 // Inventory
 //==================================================================
 
@@ -242,13 +282,19 @@ std::string Equipment::get_full_name() {
     std::string suffix_text;
 
     if (can_have_prefix && prefix_id >= 0) {
-        prefix_text = g_item_prefix_ids[prefix_id].name;        
+        prefix_text = g_item_prefix_ids[prefix_id].name + " ";        
+    }
+    else {
+        prefix_text = "";
     }
     if (can_have_suffix && suffix_id >= 0) {
-        suffix_text = g_item_suffix_ids[suffix_id].name;
+        suffix_text = " " + g_item_suffix_ids[suffix_id].name;
+    }
+    else {
+        suffix_text = "";
     }
 
-    return prefix_text + " " + name + " " + suffix_text;
+    return prefix_text + name + suffix_text;
 }
 
 // Dumps information about the item's prefix to the console.
@@ -337,6 +383,19 @@ void Weapon::init(WeaponBaseType *b) {
     can_use = b->can_use;
     is_equipped = false;
     is_cursed = false;
+    prefix_id = -1;
+    suffix_id = -1;
+}
+
+// Weapon::Weapon
+//
+// Constructor.
+//
+// Constructs a dummy item with base id of zero.  This item will
+// generally be something modified later using generate(). 
+Weapon::Weapon() {
+    WeaponBaseType *b = &(g_weapon_base_ids[0]);
+    init(b);
 }
 
 // Weapon::Weapon
@@ -382,6 +441,48 @@ void Weapon::remove() {
     is_equipped = false;
 }
 
+// Generate a weapon using all relevant weighting rules
+//
+// No new item is created - the fields are just filled with prefix and suffix
+// values accordingly.
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   None
+void Weapon::generate() {
+    int rolled_base_type = roll_from_pool(g_weapon_base_pool, g_weapon_base_pool_count, g_weapon_base_pool_entries);
+    type_id = rolled_base_type;
+    init(&(g_weapon_base_ids[type_id]));
+    //std::cout << " - rolled type is " << rolled_base_type << std::endl;
+
+    if (can_have_prefix) {
+        int roll = rand() % 100;
+        //std::cout << " - Prefix roll was " << roll << std::endl;
+        if (roll < CHANCE_OF_PREFIX) {
+            //std::cout << "   - Generating prefix" << std::endl;
+            int rolled_prefix_type = roll_from_pool(g_item_prefix_pool, g_item_prefix_pool_count, g_item_prefix_pool_entries);
+            prefix_id = rolled_prefix_type;
+        } else
+        {
+            prefix_id = -1;
+        }
+    } 
+    if (can_have_suffix) {
+        int roll = rand() % 100;
+        //std::cout << " - Suffix roll was " << roll << std::endl;
+        if (roll < CHANCE_OF_SUFFIX) {
+            //std::cout << "  - Generating suffix" << std::endl;
+            int rolled_suffix_type = roll_from_pool(g_item_suffix_pool, g_item_suffix_pool_count, g_item_suffix_pool_entries);
+            suffix_id = rolled_suffix_type;
+        }
+        else {
+            suffix_id = -1;
+        }
+    }
+}
+
 // Dumps information specific to weapons to the console.
 //
 // Arguments:
@@ -392,7 +493,7 @@ void Weapon::remove() {
 void Weapon::dump_item() {
     dump_item_common();
     std::cout << "====== Weapon Specific ===================" << std::endl;
-    std::cout << "Type:      " << g_weapon_type_ids[type_id].name << std::endl;
+    std::cout << "Type:      " << g_weapon_type_ids[g_weapon_base_ids[id].type_id].name << std::endl;
     std::cout << "Attack:    " << attack << std::endl;
     dump_prefix();
     dump_suffix();
@@ -430,6 +531,19 @@ void Armor::init(ArmorBaseType *b) {
     can_use = b->can_use;
     is_equipped = false;
     is_cursed = false;
+    prefix_id = -1;
+    suffix_id = -1;
+}
+
+// Armor::Armor
+//
+// Constructor.
+//
+// Constructs a dummy item with base id of zero.  This item will
+// generally be something modified later using generate(). 
+Armor::Armor() {
+    ArmorBaseType *b = &(g_armor_base_ids[0]);
+    init(b);
 }
 
 // Armor::Armor
@@ -473,6 +587,48 @@ void Armor::remove() {
     is_equipped = false;
 }
 
+// Generate armor using all relevant weighting rules
+//
+// No new item is created - the fields are just filled with prefix and suffix
+// values accordingly.
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   None
+void Armor::generate() {
+    int rolled_base_type = roll_from_pool(g_armor_base_pool, g_armor_base_pool_count, g_armor_base_pool_entries);
+    type_id = rolled_base_type;
+    init(&(g_armor_base_ids[type_id]));
+    //std::cout << " - rolled type is " << rolled_base_type << std::endl;
+    
+    if (can_have_prefix) {
+        int roll = rand() % 100;
+        //std::cout << " - Prefix roll was " << roll << std::endl;
+        if (roll < CHANCE_OF_PREFIX) {
+            //std::cout << "   - Generating prefix" << std::endl;
+            int rolled_prefix_type = roll_from_pool(g_item_prefix_pool, g_item_prefix_pool_count, g_item_prefix_pool_entries);
+            prefix_id = rolled_prefix_type;
+        } else
+        {
+            prefix_id = -1;
+        }
+    } 
+    if (can_have_suffix) {
+        int roll = rand() % 100;
+        //std::cout << " - Suffix roll was " << roll << std::endl;
+        if (roll < CHANCE_OF_SUFFIX) {
+            //std::cout << "  - Generating suffix" << std::endl;
+            int rolled_suffix_type = roll_from_pool(g_item_suffix_pool, g_item_suffix_pool_count, g_item_suffix_pool_entries);
+            suffix_id = rolled_suffix_type;
+        }
+        else {
+            suffix_id = -1;
+        }
+    }
+}
+
 // Dumps information specific to armor to the console.
 //
 // Arguments:
@@ -483,7 +639,7 @@ void Armor::remove() {
 void Armor::dump_item() {
     dump_item_common();
     std::cout << "====== Armor Specific ===================" << std::endl;
-    std::cout << "Type:      " << g_armor_type_ids[type_id].name << std::endl;
+    std::cout << "Type:      " << g_armor_type_ids[g_armor_base_ids[id].type_id].name << std::endl;
     std::cout << "Defense:    " << defense << std::endl;
     dump_prefix();
     dump_suffix();

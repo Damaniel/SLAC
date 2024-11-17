@@ -245,7 +245,7 @@ void process_input(void) {
 int main(void) {
 
 
-	// srand(time(NULL));
+	srand(time(NULL));
 	
 	// allegro_init();
 	// install_timer();
@@ -292,30 +292,39 @@ int main(void) {
 	// unload_resources();
 	// set_gfx_mode(GFX_TEXT, 80, 25, 0, 0);
 
-	g_inventory = new Inventory();
-
-	Item *w = new Weapon(2);
-	w->add_prefix(0);
-	w->add_suffix(0);
-	Item *a = new Armor(&(g_armor_base_ids[7]));
-	a->add_prefix(1);
-	a->add_suffix(0);
-	
-	int first_empty = g_inventory->get_first_empty_slot();
-	std::cout << std::endl;
-	if(first_empty >= 0) {
-		g_inventory->add_at_slot(w, first_empty);
-		g_inventory->get_item_in_slot(first_empty)->dump_item();
+	Item *it;
+	for (int i=0; i < 10; i++) {
+		std::cout << std::endl;
+		it = generate();
+		std::cout << "Roll " << (i+1) << ", item is now " << it->get_full_name() << std::endl;
+		it->dump_item();
+		delete it;
 	}
 
-	std::cout << std::endl;
-	int slot_used = g_inventory->add_at_first_empty(a);
-	std::cout << std::endl;
-	if(slot_used >=0)
-		g_inventory->get_item_in_slot(slot_used)->dump_item();
+	// g_inventory = new Inventory();
 
-	std::cout << std::endl << "Slots in use = " << g_inventory->get_num_slots_in_use() << std::endl;
-	delete g_inventory;
+	// Item *w = new Weapon(2);
+	// w->add_prefix(0);
+	// w->add_suffix(0);
+	// Item *a = new Armor(&(g_armor_base_ids[7]));
+	// a->add_prefix(1);
+	// a->add_suffix(0);
+	
+	// int first_empty = g_inventory->get_first_empty_slot();
+	// std::cout << std::endl;
+	// if(first_empty >= 0) {
+	// 	g_inventory->add_at_slot(w, first_empty);
+	// 	g_inventory->get_item_in_slot(first_empty)->dump_item();
+	// }
+
+	// std::cout << std::endl;
+	// int slot_used = g_inventory->add_at_first_empty(a);
+	// std::cout << std::endl;
+	// if(slot_used >=0)
+	// 	g_inventory->get_item_in_slot(slot_used)->dump_item();
+
+	// std::cout << std::endl << "Slots in use = " << g_inventory->get_num_slots_in_use() << std::endl;
+	// delete g_inventory;
 
 	return 0;
 }

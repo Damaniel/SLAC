@@ -4,6 +4,8 @@
             "struct_name": "g_weapon_base_ids",
             "struct_type": "WeaponBaseType",
             "pool_struct_name": "g_weapon_base_pool",
+            "pool_define": "g_weapon_base_pool_entries",
+            "pool_count": "g_weapon_base_pool_count",
             "description": "A list of weapon base types",
             "fields": ["id", "name", "gid", "type id", "attack", "rarity", "depth", "value", "cursed?", "prefix?", "suffix?", "stack?", "equip?", "drop?", "use?"]
         },
@@ -729,6 +731,8 @@
             "struct_name": "g_armor_base_ids",
             "struct_type": "ArmorBaseType",
             "pool_struct_name": "g_armor_base_pool",
+            "pool_define": "g_armor_base_pool_entries",
+            "pool_count": "g_armor_base_pool_count",
             "description": "A list of armor base types",
             "fields": ["id", "name", "gid", "type id", "defense", "rarity", "depth", "value", "cursed?", "prefix?", "suffix?", "stack?", "equip?", "drop?", "use?"]
         },

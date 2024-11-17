@@ -1,6 +1,27 @@
 // Auto-generated file - do not edit!
 #include "globals.h"
 
+const int g_weapon_base_pool_entries = 6635;
+const int g_weapon_base_pool_count = 42;
+const int g_armor_base_pool_entries = 12025;
+const int g_armor_base_pool_count = 84;
+const int g_item_prefix_pool_entries = 368;
+const int g_item_prefix_pool_count = 2;
+const int g_item_suffix_pool_entries = 240;
+const int g_item_suffix_pool_count = 1;
+
+int g_weapon_base_pool [] = { 255, 495, 695, 855, 975, 1015, 1270, 1505, 1700, 1855, 1965, 1995, 2250, 2485, 2680, 2835, 2945, 
+      2975, 3230, 3465, 3660, 3815, 3925, 3955, 4195, 4420, 4600, 4730, 4830, 4845, 5100, 5330, 5515, 
+      5660, 5760, 5785, 6015, 6230, 6400, 6520, 6615, 6635 };
+int g_armor_base_pool [] = { 255, 475, 655, 805, 905, 955, 1210, 1420, 1590, 1720, 1800, 1830, 2085, 2305, 2485, 2635, 2735, 
+      2785, 3040, 3250, 3420, 3550, 3630, 3660, 3915, 4125, 4295, 4435, 4525, 4565, 4820, 5020, 5170, 
+      5270, 5315, 5325, 5580, 5800, 5980, 6130, 6230, 6280, 6535, 6745, 6915, 7045, 7125, 7155, 7410, 
+      7630, 7810, 7960, 8060, 8110, 8365, 8575, 8745, 8875, 8955, 8985, 9240, 9460, 9640, 9790, 9890, 
+      9940, 10195, 10405, 10575, 10705, 10785, 10815, 11015, 11175, 11295, 11375, 11415, 11420, 11620, 11780, 11900, 
+      11980, 12020, 12025 };
+int g_item_prefix_pool [] = { 240, 368 };
+int g_item_suffix_pool [] = { 240 };
+
 // BodyPartType g_body_part_type_ids
 //
 //   A list of body part types for equipment
@@ -238,7 +259,7 @@ ModifierType g_modifier_ids[] = {
 //
 ItemPrefixType g_item_prefix_ids[] = {
    {0, "Strong", 0, 240, true, false, false, false, 1, {{3, false, 1.1}}},
-   {1, "Mighty", 1, 128, true, false, false, false, 2, {{3, false, 1.25}, {0, true, 1}}}
+   {1, "Mighty", 1, 128, true, false, false, false, 2, {{3, 0, 1.25}, {0, 1, 1}}}
 };
 
 // ItemSuffixType g_item_suffix_ids
