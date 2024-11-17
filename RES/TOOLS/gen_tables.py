@@ -126,7 +126,50 @@ def process_item_file(filename, outfile):
         struct_name = loaded_json[deftype]['metadata']['struct_name']
 
         print_type_comment(loaded_json[deftype]['metadata'], outfile)
-        print_type_definition(struct_type, struct_name, loaded_json[deftype]['items'], outfile)                
+        print_type_definition(struct_type, struct_name, loaded_json[deftype]['items'], outfile)
+    f.close()
+
+def process_breakpoint_count(filename, outfile):
+    f = open(filename)
+    loaded_json = json.load(f)
+    pool_defines = []
+    for deftype in loaded_json:
+        try:
+            pool_offset = 0
+            pool_define = loaded_json[deftype]['metadata']['pool_define']
+            pool_count = loaded_json[deftype]['metadata']['pool_count']
+            items = loaded_json[deftype]['items']
+            for (idx, item) in enumerate(items):
+                pool_offset = pool_offset + items[item]['rarity']
+            outfile.write(f'const int {pool_define} = {pool_offset};\n')
+            outfile.write(f'const int {pool_count} = {len(items)};\n')
+        except KeyError:
+            pass
+    f.close()
+
+def process_breakpoints(filename, outfile):
+    f = open(filename)
+    loaded_json = json.load(f)
+    for deftype in loaded_json:
+        try:
+            pool_offset = 0
+            breakpoint_name = loaded_json[deftype]['metadata']['pool_struct_name']
+            pool_define = loaded_json[deftype]['metadata']['pool_define']
+            items = loaded_json[deftype]['items']
+            outfile.write(f'int {breakpoint_name} [] = ')
+            outfile.write('{ ')
+            for (idx, item) in enumerate(items):
+                pool_offset = pool_offset + items[item]['rarity']
+                outfile.write(f"{pool_offset}")
+                if idx == len(items) - 1:
+                    outfile.write(' };\n')
+                else:
+                    outfile.write(', ')
+                    if idx % 16 == 0 and idx > 0:
+                        outfile.write('\n      ')
+        except KeyError:
+            pass
+    f.close()
 
 # Create the source file from all of the JSON files
 def generate_source_file(outfile=None):
@@ -139,6 +182,15 @@ def generate_source_file(outfile=None):
 
     print_auto_generated_header(out)
     print_includes(out)
+    
+    process_breakpoint_count(types_json_file, out)
+    process_breakpoint_count(bases_json_file, out)
+    process_breakpoint_count(prefix_suffix_json_file, out)
+    out.write('\n')
+    process_breakpoints(types_json_file, out)
+    process_breakpoints(bases_json_file, out)
+    process_breakpoints(prefix_suffix_json_file, out)
+    out.write('\n')
     process_item_file(types_json_file, out)
     process_item_file(bases_json_file, out)
     process_item_file(prefix_suffix_json_file, out)
@@ -149,7 +201,17 @@ def generate_prototypes(filename, outfile):
     for deftype in loaded_json:
         struct_type = loaded_json[deftype]['metadata']['struct_type']
         struct_name = loaded_json[deftype]['metadata']['struct_name']
-        outfile.write(f'extern {struct_type} {struct_name}[];\n')
+        outfile.write(f'extern {struct_type} {struct_name}[];\n\n')
+        try:
+            pool_name = loaded_json[deftype]['metadata']['pool_struct_name']
+            pool_define = loaded_json[deftype]['metadata']['pool_define']
+            pool_count = loaded_json[deftype]['metadata']['pool_count']
+            outfile.write(f'extern const int {pool_define};\n\n')
+            outfile.write(f'extern const int {pool_count};\n\n')
+            outfile.write(f'extern int {pool_name}[];\n\n')
+        except KeyError:
+            pass
+    f.close()
 
 # Create the header file from all of the JSON files
 def generate_header_file(outfile=None):
