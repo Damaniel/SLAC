@@ -142,6 +142,7 @@ protected:
     bool can_equip;
     bool can_drop;
     bool can_use;
+    bool is_identified;
 public:
     void dump_item_common();
     virtual std::string get_full_name() = 0;
@@ -152,10 +153,14 @@ public:
     virtual void dump_suffix() = 0;
     virtual void add_prefix(int pid) = 0;
     virtual void add_suffix(int sid) = 0;
+    virtual void set_curse_state(bool curse) = 0;
     virtual void remove_prefix() = 0;
     virtual void remove_suffix() = 0;
     virtual bool can_have_a_prefix() { return can_have_prefix; }
     virtual bool can_have_a_suffix() { return can_have_suffix; }
+    virtual bool can_have_curse() { return can_be_cursed; }
+    virtual bool is_it_cursed() = 0;
+    void identify() { is_identified = true; }
     virtual void equip() = 0;
     virtual void remove() = 0;
     virtual ~Item() { }
@@ -179,8 +184,10 @@ public:
     std::string get_type_name();
     void dump_prefix();
     void dump_suffix();
+    void set_curse_state(bool curse) { is_cursed = curse; }
     void add_prefix(int pid) { can_have_prefix ? prefix_id = pid : prefix_id = -1; }
     void add_suffix(int sid) { can_have_suffix ? suffix_id = sid : suffix_id = -1; }
+    bool is_it_cursed() { return is_cursed; }
     void remove_prefix() { add_prefix(-1); }
     void remove_suffix() { add_suffix(-1); }
     virtual ~Equipment() {}

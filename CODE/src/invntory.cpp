@@ -237,17 +237,22 @@ std::string Equipment::get_full_name() {
     std::string prefix_text;
     std::string suffix_text;
 
-    if (can_have_prefix && prefix_id >= 0) {
-        prefix_text = g_item_prefix_ids[prefix_id].name + " ";        
+    if (is_identified) {
+        if (can_have_prefix && prefix_id >= 0) {
+            prefix_text = g_item_prefix_ids[prefix_id].name + " ";        
+        }
+        else {
+            prefix_text = "";
+        }
+        if (can_have_suffix && suffix_id >= 0) {
+            suffix_text = " " + g_item_suffix_ids[suffix_id].name;
+        }
+        else {
+            suffix_text = "";
+        }
     }
     else {
-        prefix_text = "";
-    }
-    if (can_have_suffix && suffix_id >= 0) {
-        suffix_text = " " + g_item_suffix_ids[suffix_id].name;
-    }
-    else {
-        suffix_text = "";
+        prefix_text = "(Unidentified) ";
     }
 
     return prefix_text + name + suffix_text;
@@ -330,6 +335,7 @@ void Weapon::init(WeaponBaseType *b) {
     can_use = b->can_use;
     is_equipped = false;
     is_cursed = false;
+    is_identified = false;
     prefix_id = -1;
     suffix_id = -1;
 }
@@ -404,6 +410,7 @@ void Weapon::dump_item() {
     std::cout << "====== Weapon Specific ===================" << std::endl;
     std::cout << "Type:      " << g_weapon_type_ids[g_weapon_base_ids[id].type_id].name << std::endl;
     std::cout << "Attack:    " << attack << std::endl;
+    std::cout << "Cursed:    " << is_cursed << std::endl;
     dump_prefix();
     dump_suffix();
 }
@@ -439,6 +446,7 @@ void Armor::init(ArmorBaseType *b) {
     can_use = b->can_use;
     is_equipped = false;
     is_cursed = false;
+    is_identified = false;
     prefix_id = -1;
     suffix_id = -1;
 }
@@ -511,6 +519,7 @@ void Armor::dump_item() {
     std::cout << "====== Armor Specific ===================" << std::endl;
     std::cout << "Type:      " << g_armor_type_ids[g_armor_base_ids[id].type_id].name << std::endl;
     std::cout << "Defense:    " << defense << std::endl;
+    std::cout << "Cursed:    " << is_cursed << std::endl;
     dump_prefix();
     dump_suffix();
 }

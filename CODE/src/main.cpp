@@ -292,33 +292,34 @@ int main(void) {
 	// unload_resources();
 	// set_gfx_mode(GFX_TEXT, 80, 25, 0, 0);
 
+	// std::cout << "===============================================" << std::endl;
+	// std::cout << "   Generating 10 random items (ilevel <= 40)..." << std::endl;
+	// std::cout << "===============================================" << std::endl;
+	// for (int i=0; i < 10; i++) {
+	// 	std::cout << std::endl;
+	// 	it = ItemGenerator::generate(40);
+	// 	if (it != NULL) { 
+	// 		std::cout << "Roll " << (i+1) << ", item is now " << it->get_full_name() << std::endl;
+	// 		it->dump_item();
+	// 		delete it;
+	// 	}
+	// 	else {
+	// 		std::cout << "Roll " << (i+1) << ", <not defined yet>" << std::endl;
+	// 	}
+	// }
+
+	// std::cout << std::endl;
+
 	Item *it;
-	std::cout << "===============================================" << std::endl;
-	std::cout << "   Generating 10 random items (ilevel <= 40)..." << std::endl;
-	std::cout << "===============================================" << std::endl;
-
-	for (int i=0; i < 10; i++) {
-		std::cout << std::endl;
-		it = ItemGenerator::generate(40);
-		if (it != NULL) { 
-			std::cout << "Roll " << (i+1) << ", item is now " << it->get_full_name() << std::endl;
-			it->dump_item();
-			delete it;
-		}
-		else {
-			std::cout << "Roll " << (i+1) << ", <not defined yet>" << std::endl;
-		}
-	}
-
-	std::cout << std::endl;
 
 	std::cout << "=================================================" << std::endl;
-	std::cout << "   Generating 10 random weapons (ilevel <= 20)..." << std::endl;
+	std::cout << "   Generating 10 random weapons                  " << std::endl;
 	std::cout << "=================================================" << std::endl;
 	for (int i=0; i < 10; i++) {
 		std::cout << std::endl;
 		it = ItemGenerator::generate(WEAPON_CLASS, 20);
 		if (it != NULL) { 
+			it->identify();
 			std::cout << "Roll " << (i+1) << ", item is now " << it->get_full_name() << std::endl;
 			it->dump_item();
 			delete it;
@@ -330,28 +331,32 @@ int main(void) {
 	
 	// g_inventory = new Inventory();
 
-	// Item *w = new Weapon(2);
-	// w->add_prefix(0);
-	// w->add_suffix(0);
-	// Item *a = new Armor(&(g_armor_base_ids[7]));
-	// a->add_prefix(1);
-	// a->add_suffix(0);
-	
+	// Item *i = ItemGenerator::generate(WEAPON_CLASS, 100);
+
 	// int first_empty = g_inventory->get_first_empty_slot();
 	// std::cout << std::endl;
 	// if(first_empty >= 0) {
-	// 	g_inventory->add_at_slot(w, first_empty);
+	// 	g_inventory->add_at_slot(i, first_empty);
 	// 	g_inventory->get_item_in_slot(first_empty)->dump_item();
 	// }
 
+	// i = ItemGenerator::generate(ARMOR_CLASS, 100);
+	// first_empty = g_inventory->get_first_empty_slot();
 	// std::cout << std::endl;
-	// int slot_used = g_inventory->add_at_first_empty(a);
-	// std::cout << std::endl;
-	// if(slot_used >=0)
-	// 	g_inventory->get_item_in_slot(slot_used)->dump_item();
+	// if(first_empty >= 0) {
+	// 	g_inventory->add_at_slot(i, first_empty);
+	// 	g_inventory->get_item_in_slot(first_empty)->dump_item();
+	// }
 
 	// std::cout << std::endl << "Slots in use = " << g_inventory->get_num_slots_in_use() << std::endl;
+
 	// delete g_inventory;
+
+	// Item *it = ItemGenerator::generate(WEAPON_CLASS, 100);
+	// std::cout << it->get_full_name() << std::endl;
+	// it->identify();
+	// std::cout << it->get_full_name() << std::endl;
+	// delete it;
 
 	return 0;
 }

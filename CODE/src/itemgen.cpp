@@ -104,7 +104,7 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
         // Roll (up to 'g_item_generate_max_cycles' times) for an item base.  Only keep it if it meets the ilevel requirements.  If no item is 
         // generated, make a default item (in this case, an item with id 0).
         do {
-            std::cout << "generator: ilevel roll attempt " << (attempt + 1) << " of " << MAX_GENERATOR_REROLLS << std::endl;
+            // std::cout << "generator: ilevel roll attempt " << (attempt + 1) << " of " << MAX_GENERATOR_REROLLS << std::endl;
             if (item_type == WEAPON_CLASS) {
                 rolled_base_type = ItemGenerator::roll_from_pool(g_weapon_base_pool, g_weapon_base_pool_count, g_weapon_base_pool_entries);
                 base_ilevel = g_weapon_base_ids[rolled_base_type].ilevel;
@@ -113,27 +113,27 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
                 rolled_base_type = ItemGenerator::roll_from_pool(g_armor_base_pool, g_armor_base_pool_count, g_armor_base_pool_entries);
                 base_ilevel = g_armor_base_ids[rolled_base_type].ilevel;
             }
-            std::cout << "  generator: ilevel is " << ilevel << ", base ilevel of item is " << base_ilevel << std::endl;
+            // std::cout << "  generator: ilevel is " << ilevel << ", base ilevel of item is " << base_ilevel << std::endl;
 
             // If the item is at or below the ilevel as-is, accept it immediately
             if (base_ilevel <= ilevel) {
-                std::cout <<  "  generator: item meets ilevel requirements, generating base" << std::endl;
+                // std::cout <<  "  generator: item meets ilevel requirements, generating base" << std::endl;
                 generated = true;
             } 
             else {
                 // Otherwise, do the 'level difference' roll to see if we generate it anyway
-                std::cout << "  generator: item doesn't meet ilevel requirement, rolling difference" << std::endl;
+                // std::cout << "  generator: item doesn't meet ilevel requirement, rolling difference" << std::endl;
                 int i = rand() % 100;
                 int ilevel_diff = base_ilevel - ilevel;
                 if (ilevel_diff > 10) {
                     ilevel_diff = 10;
                 }
-                std::cout << "    generator: level difference is " << ilevel_diff << ", chance of generation is " << (100 - 10 * ilevel_diff) << "%" << std::endl;
+                // std::cout << "    generator: level difference is " << ilevel_diff << ", chance of generation is " << (100 - 10 * ilevel_diff) << "%" << std::endl;
                 if (i >= (10 * ilevel_diff)) {
-                    std::cout << "    generator: level difference override passed, generating item base" << std::endl;
+                    // std::cout << "    generator: level difference override passed, generating item base" << std::endl;
                     generated = true;
                 } else {
-                    std::cout << "    generator: level difference override failed, not generating item base" << std::endl;
+                    // std::cout << "    generator: level difference override failed, not generating item base" << std::endl;
                     generated = false;
                 }
             }
@@ -143,21 +143,26 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
         // If the item was successfully generated, initialize it, otherwise create a 'default' item 
         // (that is, an item with id 0)
         if (generated) {
-            std::cout << "generator: generating the item" << std::endl;
+            // std::cout << "generator: generating the item" << std::endl;
             i->init(rolled_base_type);
         }
         else {
-            std::cout << "generator: item base roll failed, generating 'default' item" << std::endl;
+            // std::cout << "generator: item base roll failed, generating 'default' item" << std::endl;
             i->init(0);
+        }
+
+        // Attempt to apply a curse.  This will dictate what kinds of affixes can roll.
+        if (i->can_have_curse()) {
+            ItemGenerator::apply_curse(i);
         }
 
         // Attempt to add a prefix or suffix
         if (i->can_have_a_prefix()) {
-            std::cout << "generator: attempting to add prefix" << std::endl;
+            // std::cout << "generator: attempting to add prefix" << std::endl;
             ItemGenerator::apply_affix(i, PREFIX_CLASS, ilevel);
         }
         if (i->can_have_a_suffix()) {
-            std::cout << "generator: attempting to add suffix" << std::endl;
+            // std::cout << "generator: attempting to add suffix" << std::endl;
             ItemGenerator::apply_affix(i, SUFFIX_CLASS, ilevel);
         }
     }
@@ -166,7 +171,7 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
         return NULL;
     }
 
-    std::cout << std::endl;
+    // std::cout << std::endl;
     return i;
 }
 
@@ -186,7 +191,7 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
         attempt = 0;
         generated = false;
         do {
-            std::cout << "generator: ilevel roll attempt " << (attempt + 1) << " of " << MAX_GENERATOR_REROLLS << std::endl;
+            // std::cout << "generator: ilevel roll attempt " << (attempt + 1) << " of " << MAX_GENERATOR_REROLLS << std::endl;
             // generate the affix
             if (affix_type == PREFIX_CLASS) {
                 rolled_affix_type = roll_from_pool(g_item_prefix_pool, g_item_prefix_pool_count, g_item_prefix_pool_entries);
@@ -197,27 +202,27 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
                 base_ilevel = g_item_suffix_ids[rolled_affix_type].ilevel;
             }
 
-            std::cout << "  generator: ilevel is " << ilevel << ", base ilevel of item is " << base_ilevel << std::endl;
+            // std::cout << "  generator: ilevel is " << ilevel << ", base ilevel of item is " << base_ilevel << std::endl;
             // if the item level of the affix is lower than the passed in one, we're done
             if (base_ilevel <= ilevel) {
-                std::cout <<  "  generator: affix meets ilevel requirements, will apply to item" << std::endl;
+                // std::cout <<  "  generator: affix meets ilevel requirements, will apply to item" << std::endl;
                 generated = true;
             }
             else {
                 // otherwise, do the same ilevel difference check as for item bases, 
                 // and apply the affix if it passes
-                std::cout << "  generator: affix doesn't meet ilevel requirement, rolling difference" << std::endl;
+                // std::cout << "  generator: affix doesn't meet ilevel requirement, rolling difference" << std::endl;
                 int i = rand() % 100;
                 int ilevel_diff = base_ilevel - ilevel;
                 if (ilevel_diff > 10) {
                     ilevel_diff = 10;
                 }
-                std::cout << "    generator: level difference is " << ilevel_diff << ", chance of generation is " << (100 - 10 * ilevel_diff) << "%" << std::endl;
+                // std::cout << "    generator: level difference is " << ilevel_diff << ", chance of generation is " << (100 - 10 * ilevel_diff) << "%" << std::endl;
                 if (i >= (10 * ilevel_diff)) {
-                    std::cout << "    generator: level difference override passed, generating affix" << std::endl;
+                    // std::cout << "    generator: level difference override passed, generating affix" << std::endl;
                     generated = true;
                 } else {
-                    std::cout << "    generator: level difference override failed, not generating affix" << std::endl;
+                    // std::cout << "    generator: level difference override failed, not generating affix" << std::endl;
                     generated = false;
                 }
             }
@@ -226,14 +231,14 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
 
         // If an affix was generated, apply it, otherwise clear it
         if (generated) {
-            std::cout << "generator: applying the affix" << std::endl;
+            // std::cout << "generator: applying the affix" << std::endl;
             if (affix_type == PREFIX_CLASS)
                 i->add_prefix(rolled_affix_type);
             if (affix_type == SUFFIX_CLASS)
                 i->add_suffix(rolled_affix_type);
         }
         else {
-            std::cout << "generator: no affix was applied" << std::endl;
+            // std::cout << "generator: no affix was applied" << std::endl;
             if (affix_type == PREFIX_CLASS)
                 i->remove_prefix();
             if (affix_type == SUFFIX_CLASS)
@@ -242,10 +247,28 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
     }
     else
     {
-        std::cout << "generator: 'apply affix' roll failed, no affix was applied" << std::endl;
+        // std::cout << "generator: 'apply affix' roll failed, no affix was applied" << std::endl;
         if (affix_type == PREFIX_CLASS)
             i->remove_prefix();
         if (affix_type == SUFFIX_CLASS)
             i->remove_suffix();
     } 
+}
+
+// Attempts to curse an item according to a weighting factor.
+//
+// Arguments:
+//   i - the item to curse
+//
+// Returns:
+//   Nothing.
+void ItemGenerator::apply_curse(Item *i) {
+    int roll = rand() % 100;
+    if (roll < CHANCE_OF_CURSE) {
+        i->set_curse_state(true);
+        std::cout << "generator: Item was cursed" << std::endl;
+    }
+    else {
+        i->set_curse_state(false);
+    }
 }
