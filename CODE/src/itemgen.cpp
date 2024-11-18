@@ -266,7 +266,7 @@ void ItemGenerator::apply_curse(Item *i) {
     int roll = rand() % 100;
     if (roll < CHANCE_OF_CURSE) {
         i->set_curse_state(true);
-        std::cout << "generator: Item was cursed" << std::endl;
+        //std::cout << "generator: Item was cursed" << std::endl;
     }
     else {
         i->set_curse_state(false);

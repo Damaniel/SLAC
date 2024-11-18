@@ -126,7 +126,8 @@ class Maze {
 private:
 	std::vector<Square> m;
 	std::vector<Room> rooms;
-	std::vector<Stair> stairs;	
+	std::vector<Stair> stairs;
+	std::map <std::pair<int, int>, std::list<Item*> > items;
 	int rows;
 	int cols;
     int roomId;
@@ -138,6 +139,7 @@ private:
 	bool create_room(int x, int y, int w, int h);
 	void generate_passages(int x, int y);
 	void generate_rooms(int numAttempts, int minSize, int maxSize);
+	void generate_items(int minItems, int maxItems);
 	void get_directions(std::vector<int> & directions, int x, int y);
 	void mark_walls(void);	
 	void open_room(Room &r);
@@ -148,6 +150,10 @@ private:
 public:
 	Maze();
 	Maze(int x, int y);
+	~Maze();
+	void add_item(int x, int y, Item *i);
+	std::list<Item *> get_items_at(int x, int y);
+	int get_num_items_at(int x, int y);
 	void change_lit_status_around(int x, int y, bool lit);	
 	void change_room_lit_status(int room, bool lit);
 	void generate(void);

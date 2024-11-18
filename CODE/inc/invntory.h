@@ -163,7 +163,7 @@ public:
     void identify() { is_identified = true; }
     virtual void equip() = 0;
     virtual void remove() = 0;
-    virtual ~Item() { }
+    virtual ~Item() { /*std::cout << "    Deleting item" << std::endl;*/ }
 };
 
 // A piece of equipment.  This represents any item that can be equipped

@@ -46,6 +46,111 @@ Maze::Maze(int x, int y) {
 	init();
 }
 
+// Destructor.
+//
+// Since the maze can contain heap allocated items (i.e. the entries in the
+// lists attached to the items map), they all need to be deallocated before
+// the maze itself is destroyed.
+//
+Maze::~Maze() {
+	// An iterator for the entire map structure
+	std::map <std::pair<int, int>, std::list<Item*> >::iterator it;
+	// An iterator for a list in the structure
+	std::list<Item *>::iterator list_it;
+
+	// Iterate through the item map
+	for (it = items.begin(); it != items.end(); ++it) {
+		//std::cout << "Found a list" << std::endl;
+		// Iterate through the found list and delete any items found in it
+		for (list_it = it->second.begin(); list_it != it->second.end(); ++list_it) {
+			if (*list_it != NULL) {
+				//std::cout << "  Found an Item" << std::endl;
+				delete *list_it;
+			}
+		}
+	}	
+}
+
+// Populates the maze with a quantity of generated items
+//
+// Arguments:
+//	 minItems - the minimum number of items to create
+//   maxItems - the maximum number of items to create
+//
+// Returns:
+//   Nothing
+void Maze::generate_items(int minItems, int maxItems) {
+	int num_items = rand() % (minItems + maxItems) - minItems;
+	bool is_placed;
+	//std::cout << "maze_generator: Adding " << num_items << " items..." << std::endl;
+
+	for (int i = 0; i < num_items; ++i) {
+		is_placed = false;
+		do {
+			int x = rand() % get_width();
+			int y = rand() % get_height();
+			if (is_carved(x, y) && stairs_here(x, y) == NO_STAIRS) {
+				std::pair<int, int> p = std::make_pair(x, y);
+				// TODO: This should call the generic item generator with proper ilevel)
+				Item *item = ItemGenerator::generate(WEAPON_CLASS, 100);
+				add_item(x, y, item);
+				//std::cout << "maze_generator: Added item " << item->get_full_name() << " at position (" << x << ", " << y << ")" << std::endl;
+				is_placed = true;
+			}
+		} while (!is_placed);
+	}
+}
+
+// Adds an item to the maze at the specified location
+//
+// Arguments:
+//	 x, y - the coordinates of the location of the item
+//   i - the item to add
+//
+// Returns:
+//   Nothing
+void Maze::add_item(int x, int y, Item *i) {
+	std::pair<int, int> p = std::make_pair(x, y);
+	items[p].push_back(i);
+}
+
+// Gets a list of items at the specified location
+//
+// Arguments:
+//   x, y - the coordinates of the location to retreive items
+//
+// Returns:
+//   A list of Item* containing any items at that location.  Returns
+//   an empty list if there are no items.
+std::list<Item *> Maze::get_items_at(int x, int y) {
+	std::list<Item *> item_list;
+	std::map <std::pair<int, int>, std::list<Item*> >::iterator it;
+
+	std::pair<int, int> p = std::make_pair(x, y);
+	it = items.find(p);
+	if (it != items.end()) {
+		std::cout << "Found a list!" << std::endl;
+		item_list = it->second;
+	}
+	else {
+		std::cout << "Didn't find a list, will return the default" << std::endl;
+	}
+
+	return item_list;
+}
+
+// Gets the number of items sitting at the specified location
+//
+// Arguments:
+//   x, y - the coordinates of the item to check
+//
+// Returns:
+//   The number of items at the location
+int Maze::get_num_items_at(int x, int y) {
+	std::list<Item *> item_list = get_items_at(x, y);
+	return item_list.size();
+}
+
 //------------------------------------------------------------------------------
 // add_stairs
 //
@@ -691,6 +796,7 @@ void Maze::generate(void) {
 	remove_dead_ends();
 	mark_walls();
 	add_stairs(NUM_STAIRS, NUM_STAIRS);
+	generate_items(10, 30);
 	//knock_out_walls(100);
 }
 

@@ -36,6 +36,8 @@
 #include <stack>
 #include <iostream>
 #include <algorithm>
+#include <map>
+#include <list>
 
 // Header for the datafile
 #include "dat.h"

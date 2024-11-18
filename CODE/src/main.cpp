@@ -24,6 +24,8 @@
 
 // Game-specific include files
 #include "globals.h"
+#include <map>
+#include <list>
 
 BEGIN_GFX_DRIVER_LIST
 	GFX_DRIVER_MODEX
@@ -310,24 +312,24 @@ int main(void) {
 
 	// std::cout << std::endl;
 
-	Item *it;
+	// Item *it;
 
-	std::cout << "=================================================" << std::endl;
-	std::cout << "   Generating 10 random weapons                  " << std::endl;
-	std::cout << "=================================================" << std::endl;
-	for (int i=0; i < 10; i++) {
-		std::cout << std::endl;
-		it = ItemGenerator::generate(WEAPON_CLASS, 20);
-		if (it != NULL) { 
-			it->identify();
-			std::cout << "Roll " << (i+1) << ", item is now " << it->get_full_name() << std::endl;
-			it->dump_item();
-			delete it;
-		}
-		else {
-			std::cout << "Roll " << (i+1) << ", <not defined yet>" << std::endl;
-		}
-	}
+	// std::cout << "=================================================" << std::endl;
+	// std::cout << "   Generating 10 random weapons                  " << std::endl;
+	// std::cout << "=================================================" << std::endl;
+	// for (int i=0; i < 10; i++) {
+	// 	std::cout << std::endl;
+	// 	it = ItemGenerator::generate(WEAPON_CLASS, 20);
+	// 	if (it != NULL) { 
+	// 		it->identify();
+	// 		std::cout << "Roll " << (i+1) << ", item is now " << it->get_full_name() << std::endl;
+	// 		it->dump_item();
+	// 		delete it;
+	// 	}
+	// 	else {
+	// 		std::cout << "Roll " << (i+1) << ", <not defined yet>" << std::endl;
+	// 	}
+	// }
 	
 	// g_inventory = new Inventory();
 
@@ -357,6 +359,16 @@ int main(void) {
 	// it->identify();
 	// std::cout << it->get_full_name() << std::endl;
 	// delete it;
+
+	g_maze = Maze(30, 30);
+	g_maze.generate();
+
+	for(int j = 0; j < g_maze.get_height(); ++j) {
+		for (int i = 0; i < g_maze.get_width(); ++i) {
+			int num_items = g_maze.get_num_items_at(i, j);
+			std::cout << "Found " << num_items << " items at (" << i << ", " << j << ")" << std::endl;
+		}
+	}
 
 	return 0;
 }
