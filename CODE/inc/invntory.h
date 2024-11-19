@@ -161,9 +161,10 @@ public:
     virtual bool can_have_curse() { return can_be_cursed; }
     virtual bool is_it_cursed() = 0;
     void identify() { is_identified = true; }
+    unsigned short get_gid() { return gid; }
     virtual void equip() = 0;
     virtual void remove() = 0;
-    virtual ~Item() { /*std::cout << "    Deleting item" << std::endl;*/ }
+    virtual ~Item() { /*std::cout << "    Deleting item" << std::endl; */ }
 };
 
 // A piece of equipment.  This represents any item that can be equipped

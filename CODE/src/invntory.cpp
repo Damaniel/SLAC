@@ -351,6 +351,7 @@ void Weapon::init(int idx) {
 // Constructs a dummy item with base id of zero.  This item will
 // generally be something modified later using generate(). 
 Weapon::Weapon() {
+    //std::cout << "Creating weapon" << std::endl;
     WeaponBaseType *b = &(g_weapon_base_ids[0]);
     init(b);
 }
@@ -370,6 +371,7 @@ Weapon::Weapon(WeaponBaseType *b) {
 //
 // Constructs using an offset (relative to to the base types table).
 Weapon::Weapon(unsigned int idx) {
+    //std::cout << "Creating weapon" << std::endl;
     // Assign the fields from the weapon base type list at index idx here
     WeaponBaseType *b = &(g_weapon_base_ids[idx]);
     init(b);
@@ -462,6 +464,7 @@ void Armor::init(int idx) {
 // Constructs a dummy item with base id of zero.  This item will
 // generally be something modified later using generate(). 
 Armor::Armor() {
+    //std::cout << "Creating armor" << std::endl;
     ArmorBaseType *b = &(g_armor_base_ids[0]);
     init(b);
 }
@@ -472,6 +475,7 @@ Armor::Armor() {
 //
 // Constructs using a pointer to an entry in the base types table
 Armor::Armor(ArmorBaseType *b) {
+    //std::cout << "Creating armor" << std::endl;
     init(b);
 }
 

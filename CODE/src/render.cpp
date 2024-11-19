@@ -58,10 +58,10 @@ void Render::render_actors(BITMAP *destination, int maze_x, int maze_y) {
 // Draws the specified base tile (that is, wall, floor, or darkness) at the tile
 // location (x,y) relative to the top of the play area
 //----------------------------------------------------------------------------------
-void Render::render_base_tile(BITMAP *destination, int tileId, int x, int y) {
+void Render::render_base_tile(BITMAP *destination, int tile_id, int x, int y) {
 	blit((BITMAP *)g_game_data[DAMRL_MAZE_BASE_TILES_1].dat, 
 	     destination,
-	     tileId * TILE_PIXEL_WIDTH, 
+	     tile_id * TILE_PIXEL_WIDTH, 
 		 0, 
 		 x * TILE_PIXEL_WIDTH,
 		 y * TILE_PIXEL_HEIGHT,
@@ -69,6 +69,25 @@ void Render::render_base_tile(BITMAP *destination, int tileId, int x, int y) {
 		 TILE_PIXEL_HEIGHT);	
 }
 
+//----------------------------------------------------------------------------------
+// render_item
+//
+// Draws the specified item tile (specified by the Item value in 'gid') at the tile
+// location (x,y) relative to the top of the play area
+//----------------------------------------------------------------------------------
+void Render::render_item(BITMAP *destination, int gid, int x, int y) {
+	int tilex = gid % ITEM_TILE_ENTRY_WIDTH;
+	int tiley = gid / ITEM_TILE_ENTRY_WIDTH;
+
+	masked_blit((BITMAP *)g_game_data[DAMRL_ITEMS].dat, 
+	     destination,
+	     tilex * TILE_PIXEL_WIDTH, 
+		 tiley * TILE_PIXEL_HEIGHT, 
+		 x * TILE_PIXEL_WIDTH,
+		 y * TILE_PIXEL_HEIGHT,
+		 TILE_PIXEL_WIDTH,
+		 TILE_PIXEL_HEIGHT);	
+}
 //----------------------------------------------------------------------------------
 // render_statics
 //
@@ -96,7 +115,7 @@ void Render::render_statics(BITMAP *destination, int maze_x, int maze_y) {
 // I could cheat and just blit the fog of war color, but for now I want to do it
 // the same way that the update map function does.
 //----------------------------------------------------------------------------------
-void Render::initialize_map_bitmap(Maze m) {
+void Render::initialize_map_bitmap(Maze *m) {
 	for (int y=0; y <= MAP_NUM_Y_DOTS; y++) {
 		for (int x=0; x <= MAP_NUM_X_DOTS; x++) {
 			blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat,
@@ -112,8 +131,9 @@ void Render::initialize_map_bitmap(Maze m) {
 
 	// Calculate the center point for the maze on the map (so everything is
 	// nice and centered)
-    map_maze_xoffset = MAP_AREA_VMEM_X + ((m.get_width() / 2) + 1) * MAP_DOT_WIDTH;
-	map_maze_yoffset = MAP_AREA_VMEM_Y + ((m.get_height() / 2) + 1) * MAP_DOT_HEIGHT;
+	// The center location is map_x + (((the whole map width) - (2 * maze_width)) / 2)
+    map_maze_xoffset = MAP_AREA_VMEM_X + ((MAP_PIXEL_WIDTH - m->get_width() * MAP_DOT_WIDTH) / 2);
+	map_maze_yoffset = MAP_AREA_VMEM_Y + ((MAP_PIXEL_HEIGHT - m->get_height() * MAP_DOT_HEIGHT) / 2);
 }
 
 //----------------------------------------------------------------------------------
@@ -137,11 +157,13 @@ void Render::initialize_map_bitmap(Maze m) {
 //   - Non-player static objects (like items and stairs) aren't currently drawn
 //
 //----------------------------------------------------------------------------------
-void Render::add_area_to_map_bitmap(Maze m, int x, int y) {
+void Render::add_area_to_map_bitmap(Maze *m, int x, int y) {
 	for(int i=x-1; i<=x+1; i++) {
 		for(int j=y-1; j<=y+1; j++) {
-			if(i >=0 && i < m.get_width() && j >=0 && j < m.get_height()) {
-				if (m.is_carved(i, j) == false) {
+			//std::cout << "add_area_to_map_bitmap: processing (" << i << ", " << j << ")" << std::endl;
+			if(i >=0 && i < m->get_width() && j >=0 && j < m->get_height()) {
+				if (m->is_carved(i, j) == false) {
+					//std::cout << "  add_area_to_map_bitmap: not carved" << std::endl;
 					blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat,
 				     	screen,
 					 	MAP_DOT_WALL * MAP_DOT_WIDTH,
@@ -151,6 +173,7 @@ void Render::add_area_to_map_bitmap(Maze m, int x, int y) {
 					 	MAP_DOT_WIDTH,
 					 	MAP_DOT_HEIGHT);
 				} else {
+					//std::cout << "  add_area_to_map_bitmap: carved" << std::endl;
 					blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat,
 				     	screen,
 					 	MAP_DOT_FLOOR * MAP_DOT_WIDTH,
@@ -166,13 +189,16 @@ void Render::add_area_to_map_bitmap(Maze m, int x, int y) {
 
 	// If the player is in a room and hasn't been in the room before, 
 	// draw the room to the map area
-	int room = m.get_room_id_at(x, y);
+	int room = m->get_room_id_at(x, y);
+	//std::cout << "add_area_to_map_bitmap: room id = " << room << std::endl; 
 	if(room != -1) {
-		Room r = m.get_room(room);
-		if (r.hasBeenEntered == false) {
+		Room r = m->get_room(room);
+		//std::cout << "  add_area_to_map_bitmap: Got room" << std::endl;
+		if (r.has_been_entered == false) {
 			for(int i = r.x - 1; i < r.x + r.w + 1; i++) {
 				for (int j = r.y - 1; j < r.y + r.h + 1; j++) {
-					if(m.is_carved(i, j) == false) {
+					//std::cout << "  add_area_to_map_bitmap: Processing room at (" << i << ", " << j << ")" << std::endl;
+					if(m->is_carved(i, j) == false) {
 						blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat,
 					     	screen,
 					 		MAP_DOT_WALL * MAP_DOT_WIDTH,
@@ -194,7 +220,10 @@ void Render::add_area_to_map_bitmap(Maze m, int x, int y) {
 				}	
 			}
 		}	
+	} else {
+		//std::cout << "  add_area_to_map_bitmap: not in a room" << std::endl;
 	}
+	//std::cout << "add_area_to_map_bitmap: finished" << std::endl;
 }
 
 //----------------------------------------------------------------------------------
@@ -248,7 +277,7 @@ void Render::render_fixed_text(BITMAP *destination, char *text, int x_pos, int y
 // Notes: 
 //   The map dialog is stored in otherwise unused VGA memory.
 //----------------------------------------------------------------------------------
-void Render::render_map(BITMAP *destination, Maze m) {
+void Render::render_map(BITMAP *destination, Maze *m) {
 
 	// Blit the base map
 	blit(screen, destination, MAP_VMEM_X, MAP_VMEM_Y, MAP_X_POS, MAP_Y_POS, 
@@ -338,21 +367,21 @@ void Render::render_text_base(BITMAP *destination, bool extended) {
 //   always have a valid tile to the left and above any carved tile, so this shouldn't
 //   cause a problem.  If weird crashes happen, try looking here.
 //----------------------------------------------------------------------------------
-void Render::render_world_at(BITMAP *destination, Maze m, int maze_x, int maze_y) {
+void Render::render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_y) {
 	for (int screen_x = 0; screen_x < PLAY_AREA_TILE_WIDTH; screen_x++) {
 		for (int screen_y = 0; screen_y < PLAY_AREA_TILE_HEIGHT; screen_y++) {
 			int tile_to_render_x = maze_x + screen_x;
 			int tile_to_render_y = maze_y + screen_y;
-			int tileToUse;
-			bool carvedLeft = m.is_carved(tile_to_render_x -1, tile_to_render_y);
-			bool carvedUp = m.is_carved(tile_to_render_x, tile_to_render_y - 1);
+			int tile_to_use;
+			bool carved_left = m->is_carved(tile_to_render_x -1, tile_to_render_y);
+			bool carved_up = m->is_carved(tile_to_render_x, tile_to_render_y - 1);
 			
-			if(tile_to_render_x >=0 && tile_to_render_y >=0 && tile_to_render_x < m.get_width() && tile_to_render_y < m.get_height()) {
-				int stairs = m.stairs_here(tile_to_render_x, tile_to_render_y);				
+			if(tile_to_render_x >=0 && tile_to_render_y >=0 && tile_to_render_x < m->get_width() && tile_to_render_y < m->get_height()) {
+				int stairs = m->stairs_here(tile_to_render_x, tile_to_render_y);				
 				// Before checking any other status, draw darkness if the square isn't lit
-				if (m.is_square_lit(tile_to_render_x, tile_to_render_y) == false) { 
+				if (m->is_square_lit(tile_to_render_x, tile_to_render_y) == false) { 
 					// If the square has previously been seen and isn't carved, draw a darker wall
-					if (m.is_carved(tile_to_render_x, tile_to_render_y) == false && m.was_seen(tile_to_render_x, tile_to_render_y) == true) {
+					if (m->is_carved(tile_to_render_x, tile_to_render_y) == false && m->was_seen(tile_to_render_x, tile_to_render_y) == true) {
 						render_base_tile(destination, TILE_DARKER_WALL, screen_x, screen_y);
 					} else {
 						// Otherwise, draw darkness
@@ -369,20 +398,27 @@ void Render::render_world_at(BITMAP *destination, Maze m, int maze_x, int maze_y
 				// Render floor if present.  There are 4 different floor tiles - one with no
 				// highlighting and 3 with different types of highlighting
 				// If the location is a wall, render that instead.
-				else if (m.is_carved(tile_to_render_x, tile_to_render_y) == true) {
-					if (carvedLeft == false && carvedUp == true) {
-						tileToUse = TILE_FLOOR_LEFT_HIGHLIGHT;
+				else if (m->is_carved(tile_to_render_x, tile_to_render_y) == true) {
+					if (carved_left == false && carved_up == true) {
+						tile_to_use = TILE_FLOOR_LEFT_HIGHLIGHT;
 					}
-					else if (carvedLeft == true && carvedUp == false) {
-						tileToUse = TILE_FLOOR_TOP_HIGHLIGHT;
+					else if (carved_left == true && carved_up == false) {
+						tile_to_use = TILE_FLOOR_TOP_HIGHLIGHT;
 					}
-					else if (carvedLeft == false && carvedUp == false) {
-						tileToUse = TILE_FLOOR_BOTH_HIGHLIGHT;
+					else if (carved_left == false && carved_up == false) {
+						tile_to_use = TILE_FLOOR_BOTH_HIGHLIGHT;
 					}
 					else {
-						tileToUse = TILE_FLOOR;
+						tile_to_use = TILE_FLOOR;
 					}
-					render_base_tile(destination, tileToUse, screen_x, screen_y);
+					render_base_tile(destination, tile_to_use, screen_x, screen_y);
+					// Get any items at the location and draw the first on the list
+					int num_items_here = m->get_num_items_at(tile_to_render_x, tile_to_render_y);
+					if (num_items_here > 0) {
+						std::list<Item *> items = m->get_items_at(tile_to_render_x, tile_to_render_y);
+						Item *it = items.front();
+						render_item(destination, it->get_gid(), screen_x, screen_y);
+					}
 				} else {
 					render_base_tile(destination, TILE_WALL, screen_x, screen_y);
 				}		
@@ -406,7 +442,7 @@ void Render::render_world_at(BITMAP *destination, Maze m, int maze_x, int maze_y
 // This way, all rendering is done relative to the player, who sits in a fixed
 // location on the screen.
 //----------------------------------------------------------------------------------
-void Render::render_world_at_player(BITMAP *destination, Maze m, int maze_x, int maze_y) {
+void Render::render_world_at_player(BITMAP *destination, Maze *m, int maze_x, int maze_y) {
 	// Render the world with the tile at the player's position (7,6) equal to (maze_x, maze_y)
 	render_world_at(destination, m, maze_x - PLAYER_PLAY_AREA_X, maze_y - PLAYER_PLAY_AREA_Y);
 }

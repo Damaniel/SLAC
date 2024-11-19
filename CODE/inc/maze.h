@@ -65,8 +65,8 @@ struct Stair {
     int x;
 	int y;
 	int direction;
-	int roomId;
-	Stair(int x, int y, int direction, int roomId) : x(x), y(y), direction(direction), roomId(roomId) {}
+	int room_id;
+	Stair(int x, int y, int direction, int roomId) : x(x), y(y), direction(direction), room_id(room_id) {}
 };
 
 //------------------------------------------------------------------------------
@@ -96,9 +96,9 @@ struct Room {
 	int y;
 	int w;
 	int h;
-	bool hasBeenEntered;
+	bool has_been_entered;
 	Room(int id, int x, int y, int w, int h) : id(id), x(x), y(y), w(w), h(h) {
-		hasBeenEntered = false;
+		has_been_entered = false;
 	}
 };
 
@@ -111,8 +111,8 @@ struct Room {
 struct Square {
 	int tag;			// Contains the ID of the room it sits in, if any
 	bool carved;		// Is the square solid or has it been carved
-	bool isLit;			// Is the square currently lit?
-	bool wasSeen;		// The player has previously seen/lit this location but may or may not be in it now
+	bool is_lit;		// Is the square currently lit?
+	bool was_seen;		// The player has previously seen/lit this location but may or may not be in it now
 };
 
 //------------------------------------------------------------------------------
@@ -130,20 +130,20 @@ private:
 	std::map <std::pair<int, int>, std::list<Item*> > items;
 	int rows;
 	int cols;
-    int roomId;
+    int room_id;
 
-	void add_stairs(int numUpStairs, int numDownStairs);
+	void add_stairs(int num_up_stairs, int num_down_stairs);
 	void carve(int x, int y, int tag);
 	void carve_direction(int x, int y, int direction, int tag);	
 	void change_lit_status_at(int x, int y, bool lit);
 	bool create_room(int x, int y, int w, int h);
 	void generate_passages(int x, int y);
-	void generate_rooms(int numAttempts, int minSize, int maxSize);
-	void generate_items(int minItems, int maxItems);
+	void generate_rooms(int num_attempts, int min_size, int max_size);
+	void generate_items(int min_items, int max_items);
 	void get_directions(std::vector<int> & directions, int x, int y);
 	void mark_walls(void);	
 	void open_room(Room &r);
-	void place_stairs(int roomId, int type);
+	void place_stairs(int room_id, int type);
 	void remove_dead_ends(void); 	
 	void uncarve(int x, int y);
 	
@@ -158,8 +158,8 @@ public:
 	void change_room_lit_status(int room, bool lit);
 	void generate(void);
 	int get_height(void) { return rows; }
-	std::vector<int> get_random_stair(int direction);
-	Room get_room(int roomId);	
+	std::pair<int, int> get_random_stair(int direction);
+	Room get_room(int room_id);	
 	int get_room_id_at(int x, int y);
 	Square get_square(int x, int y);
 	int get_width(void) { return cols; }
@@ -170,7 +170,7 @@ public:
 	void print(void);
 	void print_memory_usage(void); 
 	void print_room_ids(void);
-	void set_room_as_entered(int roomID);
+	void set_room_as_entered(int room_id);
 	int stairs_here(int x, int y);
 	bool was_seen(int x, int y);
 };

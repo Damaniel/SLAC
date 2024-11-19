@@ -38,17 +38,39 @@
 #define MAP_VMEM_WIDTH   144
 #define MAP_VMEM_HEIGHT  160
 
-#define MAP_X_POS		  48
-#define MAP_Y_POS		  24
+
+// The size of the map area itself in offscreen memory
+#define MAP_PIXEL_WIDTH		128
+#define MAP_PIXEL_HEIGHT	128
+
+// The size (in pixels) of a single map dot.
+#define MAP_DOT_WIDTH				 2
+#define MAP_DOT_HEIGHT				 2
+
+// The maximum width and height of the map area in dots. This is the maximum
+// amount of displayable area inside the map.  Currently, the maze can be
+// no larger than these values below, but can be smaller.
+#define MAP_NUM_X_DOTS				64
+#define MAP_NUM_Y_DOTS				64
 
 // The offset of the actual map portion of the map screen stored in offscreen
 // memory
 #define MAP_AREA_VMEM_X  (MAP_VMEM_X + 7)
 #define MAP_AREA_VMEM_Y  (MAP_VMEM_Y + 16)
 
+#define MAP_AREA_VMEM_WIDTH 	(MAP_DOT_WIDTH * MAP_NUM_X_DOTS)
+#define MAP_AREA_VMEM_HEIGHT 	(MAP_DOT_HEIGHT * MAP_NUM_Y_DOTS)
+
+// The place on the screen where the map goes
+#define MAP_X_POS		48
+#define MAP_Y_POS		24
+
 //  The size of a dungeon tile in pixels
 #define TILE_PIXEL_WIDTH		  16
 #define TILE_PIXEL_HEIGHT	      16
+
+// The number of tiles in a row of the item spritesheet
+#define ITEM_TILE_ENTRY_WIDTH     32
 
 // The size of the visible play area (in tiles)
 // PLAY_AREA_TILE_HEIGHT_EXT measures the height in tiles when the extended message
@@ -77,16 +99,6 @@
 // will always be centered in the play area.
 #define PLAYER_PLAY_AREA_X			 7
 #define PLAYER_PLAY_AREA_Y			 6
-
-// The size (in pixels) of a single map dot.
-#define MAP_DOT_WIDTH				 2
-#define MAP_DOT_HEIGHT				 2
-
-// The maximum width and height of the map area in dots. This is the maximum
-// amount of displayable area inside the map.  Currently, the maze can be
-// no larger than these values below, but can be smaller.
-#define MAP_NUM_X_DOTS				64
-#define MAP_NUM_Y_DOTS				64
 
 // Each font has 5 different versions in different colors.  These are used to grab the correct
 // color font from the bitmaps
@@ -173,21 +185,22 @@ class Render {
 		int map_maze_yoffset;
 
 		void render_actors(BITMAP *destination, int maze_x, int maze_y);
-		void render_base_tile(BITMAP *destination, int tileId, int x, int y);
+		void render_base_tile(BITMAP *destination, int tile_id, int x, int y);
+		void render_item(BITMAP *destination, int gid, int x, int y);
 		void render_statics(BITMAP *destination, int maze_x, int maze_y);
 		
 	public:
 		Render();
-		void initialize_map_bitmap(Maze m);
-		void add_area_to_map_bitmap(Maze m, int x, int y);
+		void initialize_map_bitmap(Maze *m);
+		void add_area_to_map_bitmap(Maze *m, int x, int y);
 		void copy_data_to_offscreen_vram(void);		
 		void render_fixed_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx);		
-		void render_map(BITMAP *destination, Maze m);		
+		void render_map(BITMAP *destination, Maze *m);		
 		void render_prop_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx);
 		void render_status_base(BITMAP *destination);		
 		void render_text_base(BITMAP *destination, bool extended);		
-		void render_world_at(BITMAP *destination, Maze m, int maze_x, int maze_y);
-		void render_world_at_player(BITMAP *destination, Maze m, int maze_x, int maze_y);
+		void render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_y);
+		void render_world_at_player(BITMAP *destination, Maze *m, int maze_x, int maze_y);
 };
  
 #endif	
