@@ -283,14 +283,15 @@ void Render::render_map(BITMAP *destination, Maze *m) {
 	blit(screen, destination, MAP_VMEM_X, MAP_VMEM_Y, MAP_X_POS, MAP_Y_POS, 
 	     MAP_VMEM_WIDTH, MAP_VMEM_HEIGHT);
 
+	std::cout << "render_map: g_player.x_pos is (" << g_player.x_pos << ", " << g_player.y_pos << ")" << std::endl;
 	// Draw the player's position on the map
 	blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat, 
 	     destination, 
          MAP_DOT_PLAYER*MAP_DOT_WIDTH,
 		 0, 
-		 map_maze_xoffset + (g_player.x_pos*MAP_DOT_WIDTH),
-		 map_maze_yoffset + (g_player.y_pos*MAP_DOT_HEIGHT), 
-		 MAP_DOT_WIDTH,MAP_DOT_HEIGHT);
+		 MAP_X_POS + map_maze_xoffset - MAP_VMEM_X + (g_player.x_pos*MAP_DOT_WIDTH),
+		 MAP_Y_POS + map_maze_yoffset - MAP_VMEM_Y + (g_player.y_pos*MAP_DOT_HEIGHT), 
+		 MAP_DOT_WIDTH, MAP_DOT_HEIGHT);
 
 	// TODO - Draw actual relevant text.  Needs game state to do this.
 	render_fixed_text(destination, "Cave 1", 55, 30, FONT_YELLOW);

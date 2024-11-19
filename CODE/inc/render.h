@@ -53,10 +53,14 @@
 #define MAP_NUM_X_DOTS				64
 #define MAP_NUM_Y_DOTS				64
 
+// The position of the map area relative to the upper left of the map dialog
+#define MAP_AREA_START_X	7
+#define MAP_AREA_START_Y	16
+
 // The offset of the actual map portion of the map screen stored in offscreen
 // memory
-#define MAP_AREA_VMEM_X  (MAP_VMEM_X + 7)
-#define MAP_AREA_VMEM_Y  (MAP_VMEM_Y + 16)
+#define MAP_AREA_VMEM_X  (MAP_VMEM_X + MAP_AREA_START_X)
+#define MAP_AREA_VMEM_Y  (MAP_VMEM_Y + MAP_AREA_START_Y)
 
 #define MAP_AREA_VMEM_WIDTH 	(MAP_DOT_WIDTH * MAP_NUM_X_DOTS)
 #define MAP_AREA_VMEM_HEIGHT 	(MAP_DOT_HEIGHT * MAP_NUM_Y_DOTS)
