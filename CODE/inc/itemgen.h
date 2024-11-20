@@ -18,12 +18,13 @@ const int MAX_GENERATOR_REROLLS = 10;
 //
 //   weapon: 27% 
 //   armor 27%
-//   currency 10%
-//   consumable 35%
+//   currency 15%
+//   potion 15%
+//   scroll: 15%
 //   artifact 1% 
 // 
 // Note: key items will be handled separately.
-const int g_item_class_pool[]= {0, 27, 54, 64, 99, 100};
+const int g_item_class_pool[]= {0, 27, 54, 69, 84, 99, 100};
 const int g_item_class_pool_count = 6;
 const int g_item_class_pool_entries = 100;
 
@@ -33,7 +34,8 @@ enum {
     WEAPON_CLASS,
     ARMOR_CLASS,
     CURRENCY_CLASS,
-    CONSUMABLE_CLASS,
+    POTION_CLASS,
+    SCROLL_CLASS,
     ARTIFACT_CLASS,
     KEY_ITEM_CLASS
 };

@@ -55,6 +55,11 @@ typedef struct {
 // 1 - absoulte (i.e. 'increase by 1')
 // 2 - enable
 // 3 - disable
+//
+// This is mainly used for equipment prefixes and suffixes.
+// Effects provided by using items, or effects added through artifacts,
+// are handled with a seperate index into a jump table that applies
+// the effect accordingly.
 typedef struct {
     unsigned short modifier_id;
     unsigned char modifier_mode;
