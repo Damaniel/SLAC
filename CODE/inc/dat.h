@@ -1,6 +1,6 @@
 /* Allegro datafile object indexes, produced by grabber v3.12 */
 /* Datafile: c:\projects\slac\code\game.dat */
-/* Date: Mon Nov 18 09:17:17 2024 */
+/* Date: Tue Nov 19 19:22:44 2024 */
 /* Do not hand edit! */
 
 #define DAMRL_DB16                       0        /* PAL  */

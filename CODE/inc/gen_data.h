@@ -26,6 +26,38 @@ extern const int g_armor_base_pool_count;
 
 extern int g_armor_base_pool[];
 
+extern CurrencyType g_currency_ids[];
+
+extern const int g_currency_pool_entries;
+
+extern const int g_currency_pool_count;
+
+extern int g_currency_pool[];
+
+extern PotionType g_potion_ids[];
+
+extern const int g_potion_pool_entries;
+
+extern const int g_potion_pool_count;
+
+extern int g_potion_pool[];
+
+extern ScrollType g_scroll_ids[];
+
+extern const int g_scroll_pool_entries;
+
+extern const int g_scroll_pool_count;
+
+extern int g_scroll_pool[];
+
+extern ArtifactType g_artifact_ids[];
+
+extern const int g_artifact_pool_entries;
+
+extern const int g_artifact_pool_count;
+
+extern int g_artifact_pool[];
+
 extern ModifierType g_modifier_ids[];
 
 extern ItemPrefixType g_item_prefix_ids[];

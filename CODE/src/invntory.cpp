@@ -527,3 +527,444 @@ void Armor::dump_item() {
     dump_prefix();
     dump_suffix();
 }
+
+
+//==================================================================
+// Consumable
+//==================================================================
+
+// Consumable::~Consumable
+//
+// Destructor.
+Consumable::~Consumable() {
+
+}
+
+// Gets the full name
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   The j;
+std::string Consumable::get_full_name() {
+    return name;
+}
+
+//==================================================================
+// Currency
+//==================================================================
+
+// Initializes a Currency using an entry from the currency type table.
+//
+// Arguments: 
+//   b - a pointer to an entry in the currency type table
+//
+// Returns:
+//   Nothing.
+void Currency::init(CurrencyType *b) {
+    // Assign the fields from the armor base type here
+    id = b->id;
+    name = b->name;
+    gid = b->gid;
+    type_id = b->type_id;
+    rarity = b->rarity;
+    ilevel = b->ilevel;
+    value = b->value;
+    can_be_cursed = b->can_be_cursed;
+    can_have_prefix = b->can_have_prefix;
+    can_have_suffix = b->can_have_suffix;
+    can_stack = b->can_stack;
+    can_equip = b->can_equip;
+    can_drop = b->can_drop;
+    can_use = b->can_use;
+}
+
+void Currency::init(int idx) {
+    init(&(g_currency_ids[idx]));
+}
+
+// Currency::Currency
+//
+// Constructor.
+//
+// Constructs a dummy item with base id of zero.  This item will
+// generally be something modified later using generate(). 
+Currency::Currency() {
+    //std::cout << "Creating currency" << std::endl;
+    CurrencyType *b = &(g_currency_ids[0]);
+    init(b);
+}
+
+// Currency::Currency
+//
+// Constructor.
+//
+// Constructs using a pointer to an entry in the currency table
+Currency::Currency(CurrencyType *b) {
+    //std::cout << "Creating currency" << std::endl;
+    init(b);
+}
+
+// Currency::Currency
+//
+// Constructor.
+//
+// Constructs using an offset (relative to to the type table).
+Currency::Currency(unsigned int idx) {
+    CurrencyType *b = &(g_currency_ids[idx]);
+    init(b);
+}
+
+// Dumps information specific to currency to the console.
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   None
+void Currency::dump_item() {
+    dump_item_common();
+    std::cout << "====== Currency Specific ===================" << std::endl;
+    std::cout << "  Nothing yet" << std::endl;
+}
+
+// Gets the full name
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   The full name;
+std::string Currency::get_full_name() {
+    return get_type_name();
+}
+
+// Gets the type name
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   "Scroll";
+std::string Currency::get_type_name() {
+    return "Currency";
+}
+
+//==================================================================
+// Potion
+//==================================================================
+
+// Initializes a Potion using an entry from the potion type table
+//
+// Arguments: 
+//   b - a pointer to an entry in the potion type table
+//
+// Returns:
+//   Nothing.
+void Potion::init(PotionType *b) {
+    // Assign the fields from the potion type here
+    id = b->id;
+    name = b->name;
+    gid = b->gid;
+    type_id = b->type_id;
+    effect_id = b->effect_id;
+    rarity = b->rarity;
+    ilevel = b->ilevel;
+    value = b->value;
+    can_be_cursed = b->can_be_cursed;
+    can_have_prefix = b->can_have_prefix;
+    can_have_suffix = b->can_have_suffix;
+    can_stack = b->can_stack;
+    can_equip = b->can_equip;
+    can_drop = b->can_drop;
+    can_use = b->can_use;
+    is_identified = false;
+}
+
+void Potion::init(int idx) {
+    init(&(g_potion_ids[idx]));
+}
+
+// Potion::Potion
+//
+// Constructor.
+//
+// Constructs a dummy item with base id of zero.  This item will
+// generally be something modified later using generate(). 
+Potion::Potion() {
+    //std::cout << "Creating potion" << std::endl;
+    PotionType *b = &(g_potion_ids[0]);
+    init(b);
+}
+
+// Potion::Potion
+//
+// Constructor.
+//
+// Constructs using a pointer to an entry in the types table
+Potion::Potion(PotionType *b) {
+    //std::cout << "Creating potion" << std::endl;
+    init(b);
+}
+
+// Potion::Potion
+//
+// Constructor.
+//
+// Constructs using an offset (relative to to the types table).
+Potion::Potion(unsigned int idx) {
+    PotionType *b = &(g_potion_ids[idx]);
+    init(b);
+}
+
+// 'Uses' the potion; i.e. applies its effect
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+void Potion::use() {
+    std::cout << "potion used" << std::endl;
+}
+
+// Dumps information specific to potions to the console.
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   None
+void Potion::dump_item() {
+    dump_item_common();
+    std::cout << "====== Armor Specific ===================" << std::endl;
+    std::cout << "Type:      " << type_id << std::endl;
+    std::cout << "Effect ID: " << effect_id << " (expanded form TBD)" << std::endl;
+}
+
+// Gets the type name
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   "Potion";
+std::string Potion::get_type_name() {
+    return "Potion";
+}
+
+//==================================================================
+// Scroll
+//==================================================================
+
+// Initializes a Scroll using an entry from the scroll type table
+//
+// Arguments: 
+//   b - a pointer to an entry in the scroll type table
+//
+// Returns:
+//   Nothing.
+void Scroll::init(ScrollType *b) {
+    // Assign the fields from the potion type here
+    id = b->id;
+    name = b->name;
+    gid = b->gid;
+    type_id = b->type_id;
+    effect_id = b->effect_id;
+    rarity = b->rarity;
+    ilevel = b->ilevel;
+    value = b->value;
+    can_be_cursed = b->can_be_cursed;
+    can_have_prefix = b->can_have_prefix;
+    can_have_suffix = b->can_have_suffix;
+    can_stack = b->can_stack;
+    can_equip = b->can_equip;
+    can_drop = b->can_drop;
+    can_use = b->can_use;
+    is_identified = false;
+}
+
+void Scroll::init(int idx) {
+    init(&(g_scroll_ids[idx]));
+}
+
+// Scroll::Scroll
+//
+// Constructor.
+//
+// Constructs a dummy item with base id of zero.  This item will
+// generally be something modified later using generate(). 
+Scroll::Scroll() {
+    //std::cout << "Creating scroll" << std::endl;
+    ScrollType *b = &(g_scroll_ids[0]);
+    init(b);
+}
+
+// Scroll::Scroll
+//
+// Constructor.
+//
+// Constructs using a pointer to an entry in the types table
+Scroll::Scroll(ScrollType *b) {
+    //std::cout << "Creating scroll" << std::endl;
+    init(b);
+}
+
+// Scroll::Scroll
+//
+// Constructor.
+//
+// Constructs using an offset (relative to to the types table).
+Scroll::Scroll(unsigned int idx) {
+    ScrollType *b = &(g_scroll_ids[idx]);
+    init(b);
+}
+
+// 'Uses' the potion; i.e. applies its effect
+//
+// Arguments:
+//   None
+// 
+// Returns:
+//   Nothing
+void Scroll::use() {
+    std::cout << "scroll used" << std::endl;
+}
+
+// Dumps information specific to potions to the console.
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   None
+void Scroll::dump_item() {
+    dump_item_common();
+    std::cout << "====== Scroll Specific ===================" << std::endl;
+    std::cout << "Type:      " << type_id << std::endl;
+    std::cout << "Effect ID: " << effect_id << " (expanded form TBD)" << std::endl;
+}
+
+// Gets the type name
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   "Scroll";
+std::string Scroll::get_type_name() {
+    return "Scroll";
+}
+
+//==================================================================
+// Artifact
+//==================================================================
+
+// Initializes an Artifact using an entry from the artifact type table
+//
+// Arguments: 
+//   b - a pointer to an entry in the artifact type table
+//
+// Returns:
+//   Nothing.
+void Artifact::init(ArtifactType *b) {
+    // Assign the fields from the potion type here
+    id = b->id;
+    name = b->name;
+    gid = b->gid;
+    type_id = b->type_id;
+    pieces = b->pieces;
+    effect_id = b->effect_id;
+    rarity = b->rarity;
+    ilevel = b->ilevel;
+    can_be_cursed = b->can_be_cursed;
+    can_have_prefix = b->can_have_prefix;
+    can_have_suffix = b->can_have_suffix;
+    can_stack = b->can_stack;
+    can_equip = b->can_equip;
+    can_drop = b->can_drop;
+    can_use = b->can_use;
+    is_identified = false;
+}
+
+void Artifact::init(int idx) {
+    init(&(g_artifact_ids[idx]));
+}
+
+// Artifact::Artifact
+//
+// Constructor.
+//
+// Constructs a dummy item with base id of zero.  This item will
+// generally be something modified later using generate(). 
+Artifact::Artifact() {
+    //std::cout << "Creating artifact" << std::endl;
+    ArtifactType *b = &(g_artifact_ids[0]);
+    init(b);
+}
+
+// Artifact::Artifact
+//
+// Constructor.
+//
+// Constructs using a pointer to an entry in the artifacts table
+Artifact::Artifact(ArtifactType *b) {
+    //std::cout << "Creating artifact" << std::endl;
+    init(b);
+}
+
+// Artifact::Artifact
+//
+// Constructor.
+//
+// Constructs using an offset (relative to to the artifacts table).
+Artifact::Artifact(unsigned int idx) {
+    ArtifactType *b = &(g_artifact_ids[idx]);
+    init(b);
+}
+
+// Dumps information specific to artifacts to the console.
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   None
+void Artifact::dump_item() {
+    dump_item_common();
+    std::cout << "====== Artifact Specific ===================" << std::endl;
+    std::cout << "Type: ";
+    if(type_id == STANDARD_ARTIFACT) {
+        std::cout << "Standard" << std::endl;
+    } 
+    else if (type_id == MULTIPART_ARTIFACT) {
+        std::cout << "Multipart: (" << pieces << " parts)" << std::endl;
+    }
+    else if (type_id == MULTIGEN_ARTIFACT) {
+        std::cout << "Multi-generation (" << pieces << " generations)" << std::endl;
+    }
+    std::cout << "Effect ID: " << effect_id << " (expanded form TBD)" << std::endl;
+}
+
+// Gets the full name
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   The type name
+std::string Artifact::get_full_name() {
+    return get_type_name();
+}
+
+// Gets the type name
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   The type name
+std::string Artifact::get_type_name() {
+    return name;
+}

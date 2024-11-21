@@ -5,6 +5,14 @@ const int g_weapon_base_pool_entries = 6635;
 const int g_weapon_base_pool_count = 42;
 const int g_armor_base_pool_entries = 12025;
 const int g_armor_base_pool_count = 84;
+const int g_currency_pool_entries = 580;
+const int g_currency_pool_count = 4;
+const int g_potion_pool_entries = 1225;
+const int g_potion_pool_count = 12;
+const int g_scroll_pool_entries = 1553;
+const int g_scroll_pool_count = 12;
+const int g_artifact_pool_entries = 6056;
+const int g_artifact_pool_count = 63;
 const int g_item_prefix_pool_entries = 368;
 const int g_item_prefix_pool_count = 2;
 const int g_item_suffix_pool_entries = 240;
@@ -19,6 +27,13 @@ int g_armor_base_pool [] = { 255, 475, 655, 805, 905, 955, 1210, 1420, 1590, 172
       7630, 7810, 7960, 8060, 8110, 8365, 8575, 8745, 8875, 8955, 8985, 9240, 9460, 9640, 9790, 9890, 
       9940, 10195, 10405, 10575, 10705, 10785, 10815, 11015, 11175, 11295, 11375, 11415, 11420, 11620, 11780, 11900, 
       11980, 12020, 12025 };
+int g_currency_pool [] = { 255, 455, 555, 580 };
+int g_potion_pool [] = { 255, 405, 425, 625, 825, 875, 925, 975, 995, 1115, 1215, 1225 };
+int g_scroll_pool [] = { 255, 280, 480, 640, 790, 795, 975, 1200, 1328, 1478, 1528, 1553 };
+int g_artifact_pool [] = { 255, 510, 765, 1020, 1275, 1530, 1770, 1920, 2070, 2220, 2370, 2520, 2670, 2798, 2862, 2926, 2990, 
+      3054, 3118, 3182, 3214, 3406, 3598, 3790, 3886, 3982, 4078, 4110, 4142, 4174, 4238, 4254, 4258, 
+      4482, 4706, 4930, 5042, 5154, 5266, 5298, 5330, 5362, 5458, 5506, 5522, 5538, 5570, 5698, 5826, 
+      5858, 5890, 5894, 5898, 5906, 5914, 5946, 5962, 5966, 5970, 5974, 5976, 6040, 6056 };
 int g_item_prefix_pool [] = { 240, 368 };
 int g_item_suffix_pool [] = { 240 };
 
@@ -225,6 +240,137 @@ ArmorBaseType g_armor_base_ids[] = {
    {81, "Gold Amulet", 123, 13, 4, 80, 50, 1500, true, true, true, false, true, true, false},
    {82, "Electrum Amulet", 124, 13, 5, 40, 70, 2500, true, true, true, false, true, true, false},
    {83, "Mythril Amulet", 125, 13, 6, 5, 90, 5000, true, true, true, false, true, true, false}
+};
+
+// CurrencyType g_currency_ids
+//
+//   A list of currency types
+//
+//   Fields:
+//   {id, name, gid, type id, rarity, ilevel, value, cursed?, prefix?, suffix?, stack?, equip?, drop?, use?}
+//
+CurrencyType g_currency_ids[] = {
+   {0, "Copper Coins", 126, 0, 255, 1, 1, false, false, false, true, false, true, false},
+   {1, "Silver Coins", 127, 0, 200, 10, 10, false, false, false, true, false, true, false},
+   {2, "Gold Coins", 128, 0, 100, 30, 100, false, false, false, true, false, true, false},
+   {3, "Gems", 129, 0, 25, 70, 500, false, false, false, true, false, true, false}
+};
+
+// PotionType g_potion_ids
+//
+//   A list of potion types
+//
+//   Fields:
+//   {id, name, gid, type id, effect id, rarity, ilevel, value, cursed?, prefix?, suffix?, stack?, equip?, drop?, use?}
+//
+PotionType g_potion_ids[] = {
+   {0, "Potion of Light Healing", 130, 0, 0, 255, 1, 10, false, false, false, true, false, true, true},
+   {1, "Potion of Moderate Healing", 131, 0, 1, 150, 15, 100, false, false, false, true, false, true, true},
+   {2, "Potion of Full Healing", 132, 0, 2, 20, 70, 1000, false, false, false, true, false, true, true},
+   {3, "Potion of Cure Poison", 133, 0, 3, 200, 2, 50, false, false, false, true, false, true, true},
+   {4, "Potion of Cure Paralysis", 134, 0, 4, 200, 10, 50, false, false, false, true, false, true, true},
+   {5, "Potion of Berserk Strength", 135, 0, 5, 50, 50, 600, false, false, false, true, false, true, true},
+   {6, "Potion of Speed", 136, 0, 6, 50, 50, 600, false, false, false, true, false, true, true},
+   {7, "Potion of Hardiness", 137, 0, 7, 50, 50, 600, false, false, false, true, false, true, true},
+   {8, "Potion of Extra Attacks", 138, 0, 8, 20, 60, 1000, false, false, false, true, false, true, true},
+   {9, "Potion of Poison", 139, 0, 9, 120, 25, 20, false, false, false, true, false, true, true},
+   {10, "Potion of Paralysis", 140, 0, 10, 100, 60, 20, false, false, false, true, false, true, true},
+   {11, "Potion of Death", 141, 0, 11, 10, 75, 20, false, false, false, true, false, true, true}
+};
+
+// ScrollType g_scroll_ids
+//
+//   A list of scroll types
+//
+//   Fields:
+//   {id, name, gid, type id, effect id, rarity, ilevel, value, cursed?, prefix?, suffix?, stack?, equip?, drop?, use?}
+//
+ScrollType g_scroll_ids[] = {
+   {0, "Scroll of Identify", 142, 0, 12, 255, 1, 5, false, false, false, true, false, true, true},
+   {1, "Scroll of Identify All", 143, 0, 13, 25, 60, 500, false, false, false, true, false, true, true},
+   {2, "Scroll of Magic Map", 144, 0, 14, 200, 5, 25, false, false, false, true, false, true, true},
+   {3, "Scroll of Discovery", 145, 0, 15, 160, 20, 100, false, false, false, true, false, true, true},
+   {4, "Scroll of Decurse", 146, 0, 16, 150, 10, 200, false, false, false, true, false, true, true},
+   {5, "Scroll of Decurse All", 147, 0, 17, 5, 80, 1500, false, false, false, true, false, true, true},
+   {6, "Scroll of Teleport", 148, 0, 18, 180, 10, 30, false, false, false, true, false, true, true},
+   {7, "Scroll of Recall", 149, 0, 19, 225, 3, 15, false, false, false, true, false, true, true},
+   {8, "Scroll of Summon Item", 150, 0, 20, 128, 25, 250, false, false, false, true, false, true, true},
+   {9, "Scroll of Darkness", 151, 0, 21, 150, 15, 15, false, false, false, true, false, true, true},
+   {10, "Scroll of Forget Area", 152, 0, 22, 50, 30, 5, false, false, false, true, false, true, true},
+   {11, "Scroll of Curse", 153, 0, 23, 25, 50, 10, false, false, false, true, false, true, true}
+};
+
+// ArtifactType g_artifact_ids
+//
+//   A list of artifact types
+//
+//   Fields:
+//   {id, name, gid, artifact type, pieces, effect id, rarity, ilevel, cursed?, prefix?, suffix?, stack?, equip?, drop?, use?}
+//
+ArtifactType g_artifact_ids[] = {
+   {0, "Sign of Strength", 154, 0, 1, 24, 255, 5, false, false, false, true, false, false, false},
+   {1, "Sign of Constitution", 155, 0, 1, 25, 255, 5, false, false, false, true, false, false, false},
+   {2, "Sign of Dexterity", 156, 0, 1, 26, 255, 5, false, false, false, true, false, false, false},
+   {3, "Sign of Attack", 157, 0, 1, 27, 255, 5, false, false, false, true, false, false, false},
+   {4, "Sign of Defense", 158, 0, 1, 28, 255, 5, false, false, false, true, false, false, false},
+   {5, "Sign of Accuracy", 159, 0, 1, 29, 255, 10, false, false, false, true, false, false, false},
+   {6, "Sign of Speed", 160, 0, 1, 30, 240, 10, false, false, false, true, false, false, false},
+   {7, "Medal of Strength", 161, 0, 1, 31, 150, 30, false, false, false, true, false, false, false},
+   {8, "Medal of Constitution", 162, 0, 1, 32, 150, 30, false, false, false, true, false, false, false},
+   {9, "Medal of Dexterity", 163, 0, 1, 33, 150, 30, false, false, false, true, false, false, false},
+   {10, "Medal of Attack", 164, 0, 1, 34, 150, 30, false, false, false, true, false, false, false},
+   {11, "Medal of Defense", 165, 0, 1, 35, 150, 30, false, false, false, true, false, false, false},
+   {12, "Medal of Accuracy", 166, 0, 1, 36, 150, 35, false, false, false, true, false, false, false},
+   {13, "Medal of Speed", 167, 0, 1, 37, 128, 35, false, false, false, true, false, false, false},
+   {14, "Trophy of Strength", 168, 0, 1, 38, 64, 60, false, false, false, true, false, false, false},
+   {15, "Trophy of Constitution", 169, 0, 1, 39, 64, 60, false, false, false, true, false, false, false},
+   {16, "Trophy of Dexterity", 170, 0, 1, 40, 64, 60, false, false, false, true, false, false, false},
+   {17, "Trophy of Attack", 171, 0, 1, 41, 64, 60, false, false, false, true, false, false, false},
+   {18, "Trophy of Defense", 172, 0, 1, 42, 64, 60, false, false, false, true, false, false, false},
+   {19, "Trophy of Accuracy", 173, 0, 1, 43, 64, 65, false, false, false, true, false, false, false},
+   {20, "Trophy of Speed", 174, 0, 1, 44, 32, 65, false, false, false, true, false, false, false},
+   {21, "Ward of Fire", 175, 0, 1, 45, 192, 8, false, false, false, true, false, false, false},
+   {22, "Ward of Ice", 176, 0, 1, 46, 192, 8, false, false, false, true, false, false, false},
+   {23, "Ward of Lightning", 177, 0, 1, 47, 192, 8, false, false, false, true, false, false, false},
+   {24, "Sigil of Fire", 178, 0, 1, 48, 96, 35, false, false, false, true, false, false, false},
+   {25, "Sigil of Ice", 179, 0, 1, 49, 96, 35, false, false, false, true, false, false, false},
+   {26, "Sigil of Lightning", 180, 0, 1, 50, 96, 35, false, false, false, true, false, false, false},
+   {27, "Relic of Fire", 181, 0, 1, 51, 32, 60, false, false, false, true, false, false, false},
+   {28, "Relic of Ice", 182, 0, 1, 52, 32, 60, false, false, false, true, false, false, false},
+   {29, "Relic of Lightning", 183, 0, 1, 53, 32, 60, false, false, false, true, false, false, false},
+   {30, "Lucky Token", 184, 0, 1, 54, 64, 10, false, false, false, true, false, false, false},
+   {31, "Lucky Coin", 185, 0, 1, 55, 16, 30, false, false, false, true, false, false, false},
+   {32, "Lucky Pendant", 186, 0, 1, 56, 4, 50, false, false, false, true, false, false, false},
+   {33, "Book of the Warrior", 187, 1, 2, 57, 224, 15, false, false, false, true, false, false, false},
+   {34, "Book of the Thief", 188, 1, 2, 58, 224, 15, false, false, false, true, false, false, false},
+   {35, "Book of the Combatant", 189, 1, 2, 59, 224, 15, false, false, false, true, false, false, false},
+   {36, "Tome of the Warrior", 190, 1, 3, 60, 112, 40, false, false, false, true, false, false, false},
+   {37, "Tome of the Thief", 191, 1, 3, 61, 112, 40, false, false, false, true, false, false, false},
+   {38, "Tome of the Combatant", 192, 1, 3, 62, 112, 40, false, false, false, true, false, false, false},
+   {39, "Bible of the Warrior", 193, 1, 5, 63, 32, 70, false, false, false, true, false, false, false},
+   {40, "Bible of the Thief", 194, 1, 5, 64, 32, 70, false, false, false, true, false, false, false},
+   {41, "Bible of the Combatant", 195, 1, 5, 65, 32, 70, false, false, false, true, false, false, false},
+   {42, "Ward of the Elements", 196, 1, 2, 66, 96, 20, false, false, false, true, false, false, false},
+   {43, "Sigil of the Elements", 197, 1, 4, 67, 48, 40, false, false, false, true, false, false, false},
+   {44, "Relic of the Elements", 198, 1, 6, 68, 16, 65, false, false, false, true, false, false, false},
+   {45, "Cup of Wealth", 199, 1, 8, 69, 16, 25, false, false, false, true, false, false, false},
+   {46, "Puzzle Box of Frivolousness", 200, 1, 255, 70, 32, 1, false, false, false, true, false, false, false},
+   {47, "Book of the Polymath", 201, 2, 3, 71, 128, 20, false, false, false, true, false, false, false},
+   {48, "Book of the Gladiator", 202, 2, 3, 72, 128, 20, false, false, false, true, false, false, false},
+   {49, "Tome of the Polymath", 203, 2, 5, 73, 32, 50, false, false, false, true, false, false, false},
+   {50, "Tome of the Gladiator", 204, 2, 5, 74, 32, 50, false, false, false, true, false, false, false},
+   {51, "Bible of the Polymath", 205, 2, 8, 75, 4, 90, false, false, false, true, false, false, false},
+   {52, "Bible of the Gladiator", 206, 2, 8, 76, 4, 90, false, false, false, true, false, false, false},
+   {53, "Trickster Trinket", 207, 2, 4, 77, 8, 80, false, false, false, true, false, false, false},
+   {54, "Prismatic Mirror", 208, 2, 4, 78, 8, 75, false, false, false, true, false, false, false},
+   {55, "Glasses of Foresight", 209, 2, 6, 79, 32, 45, false, false, false, true, false, false, false},
+   {56, "Ethereal Barrier", 210, 2, 4, 80, 16, 70, false, false, false, true, false, false, false},
+   {57, "Righteous Fire", 211, 2, 6, 81, 4, 80, false, false, false, true, false, false, false},
+   {58, "Righteous Ice", 212, 2, 6, 82, 4, 80, false, false, false, true, false, false, false},
+   {59, "Righteous Lightning", 213, 2, 6, 83, 4, 80, false, false, false, true, false, false, false},
+   {60, "Ark of Enlightenment", 214, 2, 3, 84, 2, 85, false, false, false, true, false, false, false},
+   {61, "Chalice of Riches", 215, 2, 16, 85, 64, 60, false, false, false, true, false, false, false},
+   {62, "Amphora of Holy Water", 216, 2, 8, 86, 16, 40, false, false, false, true, false, false, false}
 };
 
 // ModifierType g_modifier_ids

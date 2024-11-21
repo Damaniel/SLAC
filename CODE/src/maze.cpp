@@ -97,7 +97,7 @@ void Maze::generate_items(int min_items, int max_items) {
 			if (is_carved(x, y) && stairs_here(x, y) == NO_STAIRS) {
 				std::pair<int, int> p = std::make_pair(x, y);
 				// TODO: This should call the generic item generator with proper ilevel)
-				Item *item = ItemGenerator::generate(WEAPON_CLASS, 100);
+				Item *item = ItemGenerator::generate();
 				add_item(x, y, item);
 				//std::cout << "maze_generator: Added item " << item->get_full_name() << " at position (" << x << ", " << y << ")" << std::endl;
 				is_placed = true;

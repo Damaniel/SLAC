@@ -16,15 +16,15 @@ const int MAX_GENERATOR_REROLLS = 10;
 
 // odds tables for generating main item classes.  Currently:
 //
-//   weapon: 27% 
-//   armor 27%
-//   currency 15%
+//   weapon: 20% 
+//   armor 20%
+//   currency 29%
 //   potion 15%
 //   scroll: 15%
 //   artifact 1% 
 // 
 // Note: key items will be handled separately.
-const int g_item_class_pool[]= {0, 27, 54, 69, 84, 99, 100};
+const int g_item_class_pool[]= {27, 54, 69, 84, 99, 100};
 const int g_item_class_pool_count = 6;
 const int g_item_class_pool_entries = 100;
 
@@ -43,6 +43,12 @@ enum {
 enum {
     PREFIX_CLASS,
     SUFFIX_CLASS
+};
+
+enum {
+    STANDARD_ARTIFACT,
+    MULTIPART_ARTIFACT,
+    MULTIGEN_ARTIFACT
 };
 
 // A class that generates instances of items according to weighting rules.  All

@@ -108,6 +108,77 @@ typedef struct {
     unsigned short id;
     std::string name;
     unsigned short gid;
+    unsigned short type_id;
+    unsigned char rarity;
+    unsigned char ilevel;
+    unsigned short value;
+    bool can_be_cursed;
+    bool can_have_prefix;
+    bool can_have_suffix;
+    bool can_stack;
+    bool can_equip;
+    bool can_drop;
+    bool can_use;
+} CurrencyType;
+
+typedef struct {
+    unsigned short id;
+    std::string name;
+    unsigned short gid;
+    unsigned short type_id;
+    unsigned short effect_id;
+    unsigned char rarity;
+    unsigned char ilevel;
+    unsigned short value;
+    bool can_be_cursed;
+    bool can_have_prefix;
+    bool can_have_suffix;
+    bool can_stack;
+    bool can_equip;
+    bool can_drop;
+    bool can_use;
+} PotionType;
+
+typedef struct {
+    unsigned short id;
+    std::string name;
+    unsigned short gid;
+    unsigned short type_id;
+    unsigned short effect_id;
+    unsigned char rarity;
+    unsigned char ilevel;
+    unsigned short value;
+    bool can_be_cursed;
+    bool can_have_prefix;
+    bool can_have_suffix;
+    bool can_stack;
+    bool can_equip;
+    bool can_drop;
+    bool can_use;
+} ScrollType;
+
+typedef struct {
+    unsigned short id;
+    std::string name;
+    unsigned short gid;
+    unsigned short type_id;
+    unsigned char pieces;
+    unsigned short effect_id;
+    unsigned char rarity;
+    unsigned char ilevel;
+    bool can_be_cursed;
+    bool can_have_prefix;
+    bool can_have_suffix;
+    bool can_stack;
+    bool can_equip;
+    bool can_drop;
+    bool can_use;
+} ArtifactType;
+
+typedef struct {
+    unsigned short id;
+    std::string name;
+    unsigned short gid;
     unsigned char rarity;
     unsigned char ilevel;
     unsigned char num_modifiers;
@@ -234,22 +305,100 @@ public:
 // and scrolls.
 class Consumable: public Item {
 public:
-    virtual std::string get_full_name() = 0;
+    virtual std::string get_full_name();
     virtual std::string get_type_name() = 0;
-    void dump_item();
+    virtual void dump_item() = 0;
     virtual void use() = 0;
+    virtual void init(int idx) = 0;
+    void dump_prefix() {}
+    void dump_suffix() {}
+    void add_prefix(int pid) {}
+    void add_suffix(int sid) {}
+    void set_curse_state(bool curse) {}
+    void remove_prefix() {}
+    void remove_suffix() {}
+    bool is_it_cursed() { return false; }
+    void equip() {}
+    void remove() {}
     virtual ~Consumable();
 };
 
 // Potions
 class Potion: public Consumable {
 private:
-    unsigned short id;
     unsigned short effect_id;
+    void init(PotionType *t);
 public:
+    Potion();
+    Potion(PotionType *t);
+    Potion(unsigned int idx);
+    void init(int idx);
+    std::string get_type_name();
+    void dump_item();
+    void use();
+};
+
+// Scroll
+class Scroll: public Consumable {
+private:
+    unsigned short effect_id;
+    void init(ScrollType *t);
+public:
+    Scroll();
+    Scroll(ScrollType *t);
+    Scroll(unsigned int idx);
+    void init(int idx);
+    std::string get_type_name();
+    void dump_item();
+    void use();
+};
+
+class Artifact: public Item {
+private:
+    unsigned short effect_id;
+    unsigned short type;
+    unsigned short pieces;
+    void init(ArtifactType *t);
+public:
+    Artifact();
+    Artifact(ArtifactType *t);
+    Artifact(unsigned int idx);
+    void init(int idx);
+    void dump_item();
+    void dump_prefix() {}
+    void dump_suffix() {}
+    void add_prefix(int pid) {}
+    void add_suffix(int sid) {}
+    void set_curse_state(bool curse) {}
+    void remove_prefix() {}
+    void remove_suffix() {}
+    bool is_it_cursed() {return false; }
+    void equip() {}
+    void remove() {}
     std::string get_full_name();
     std::string get_type_name();
-    void use();
+};
+
+class Currency: public Item {
+    void init(CurrencyType *t);
+public:
+    Currency();
+    Currency(CurrencyType *t);
+    Currency(unsigned int idx);
+    void init(int idx);
+    void dump_item();
+    void dump_prefix() {}
+    void dump_suffix() {}
+    void add_prefix(int pid) {}
+    void add_suffix(int sid) {}
+    void set_curse_state(bool curse) {}
+    void remove_prefix() {}
+    void remove_suffix() {}
+    bool is_it_cursed() {return false; }
+    void equip() {}
+    void remove() {}
+    std::string get_full_name();
+    std::string get_type_name();
 };
 
 // An inventory.  This consists of a list of Item pointers, plus
@@ -267,7 +416,7 @@ public:
     bool inventory_is_full();
     int get_num_slots_in_use();
     void drop_item_in_slot(int slot);
-    void drop_item_qty_in_slot(int slot, int quantity);
+    //void drop_item_qty_in_slot(int slot, int quantity);
 };
 
 extern Inventory *g_inventory;
