@@ -52,16 +52,17 @@ typedef struct {
 // can be adjusted.  The modifier modes are:
 //
 // 0 - relative (i.e. 'increase by 10%')
-// 1 - absoulte (i.e. 'increase by 1')
-// 2 - enable
-// 3 - disable
+// 1 - absolute (i.e. 'increase by 1')
+// 2 - secondary modifier relative to primary modifier (i.e. '10% of physical attack as fire damage')
+//     (the primary modifier is 'modifier_id', the secondary is 'secondary_id')
+// 3 - enable effect (i.e. applies poison to player)
+// 4 - 'special effect' - defined in a code block expressed by 'effect_id'
+//     (this captures effects that aren't otherwise trivial to express)
 //
 // This is mainly used for equipment prefixes and suffixes.
-// Effects provided by using items, or effects added through artifacts,
-// are handled with a seperate index into a jump table that applies
-// the effect accordingly.
 typedef struct {
     unsigned short modifier_id;
+    unsigned short secondary_id;
     unsigned char modifier_mode;
     float magnitude;
 } ModifierMagType;

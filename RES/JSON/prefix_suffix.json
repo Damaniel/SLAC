@@ -71,6 +71,41 @@
                 "id": 12,
                 "name": "Attacks Per Turn",
                 "abbrev_name": "APT"
+            },
+            "hp": {
+                "id": 13,
+                "name": "HP",
+                "abbrev_name": "HP"
+            },
+            "fire_dmg_taken": {
+                "id": 14,
+                "name": "Fire Damage Taken",
+                "abbrev_name": "FDam"
+            },
+            "ice_dmg_taken": {
+                "id": 15,
+                "name": "Ice Damage Taken",
+                "abbrev_name": "IDam"
+            },
+            "lightning_dmg_taken": {
+                "id": 16,
+                "name": "Lightning Damage Taken",
+                "abbrev_name": "LDam"
+            },
+            "poison": {
+                "id": 17,
+                "name": "Poisoned",
+                "abbrev_name": "Pois"
+            },
+            "chance_to_block": {
+                "id": 18,
+                "name": "Chance to block",
+                "abbrev_name": "CBlk"
+            },
+            "all_damage_taken": {
+                "id": 19,
+                "name": "All damage taken",
+                "abbrev_name": "ADmg"
             }
         }
     },
@@ -95,7 +130,8 @@
                     "atk": {
                         "modifier_id": 3,
                         "modifier_mode": 0,
-                        "amount": 1.1
+                        "amount": 1.1,
+                        "secondary_id": 0
                     }
                 }
             },
@@ -109,13 +145,714 @@
                     "atk": {
                         "modifier_id": 3,
                         "modifier_mode": 0,
-                        "amount": 1.25
+                        "amount": 1.25,
+                        "secondary_id": 0
                     },
                     "str": {
                         "modifier_id": 0,
                         "modifier_mode": 1,
-                        "amount": 1
+                        "amount": 1,
+                        "secondary_id": 0
                     }
+                }
+            },
+            "Herculean": {
+                "id": 2,
+                "name": "Herculean",
+                "gid": 2,
+                "rarity": 32,
+                "ilevel": 70,
+                "modifiers": {
+                    "atk": {
+                        "modifier_id": 3,
+                        "modifier_mode": 0,
+                        "amount": 1.5,
+                        "secondary_id": 0
+                    },
+                    "str": {
+                        "modifier_id": 0,
+                        "modifier_mode": 1,
+                        "amount": 4,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "Quick": {
+                "id": 3,
+                "name": "Quick",
+                "gid": 3,
+                "rarity": 240,
+                "ilevel": 5,
+                "modifiers": {
+                    "spd": {
+                        "modifier_id": 5,
+                        "modifier_mode": 0,
+                        "amount": 1.1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "Speedy": {
+                "id": 4,
+                "name": "Speedy",
+                "gid": 4,
+                "rarity": 128,
+                "ilevel": 20,
+                "modifiers": {
+                    "spd": {
+                        "modifier_id": 5,
+                        "modifier_mode": 0,
+                        "amount": 1.25,
+                        "secondary_id": 0
+                    },
+                    "dex": {
+                        "modifier_id": 2,
+                        "modifier_mode": 1,
+                        "amount": 1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "Supersonic": {
+                "id": 5,
+                "name": "Supersonic",
+                "gid": 5,
+                "rarity": 16,
+                "ilevel": 70,
+                "modifiers": {
+                    "spd": {
+                        "modifier_id": 5,
+                        "modifier_mode": 0,
+                        "amount": 1.5,
+                        "secondary_id": 0
+                    },
+                    "dex":{
+                        "modifier_id": 2,
+                        "modifier_mode": 1,
+                        "amount": 4,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "Stout": {
+                "id": 6,
+                "name": "Stout",
+                "gid": 6,
+                "rarity": 240,
+                "ilevel": 5,
+                "modifiers": {
+                    "def": {
+                        "modifier_id": 4,
+                        "modifier_mode": 0,
+                        "amount": 1.1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "Hardy": {
+                "id": 7,
+                "name": "Hardy",
+                "gid": 7,
+                "rarity": 128,
+                "ilevel": 20,
+                "modifiers": {
+                    "def": {
+                        "modifier_id": 4,
+                        "modifier_mode": 0,
+                        "amount": 1.25,
+                        "secondary_id": 0
+                    },
+                    "con": {
+                        "modifier_id": 1,
+                        "modifier_mode": 1,
+                        "amount": 1,
+                        "secondary_id": 0
+                    }
+                }
+            }
+        },
+        "Unbreakable": {
+            "id": 8,
+            "name": "Unbreakable",
+            "gid": 8,
+            "rarity": 16,
+            "ilevel": 70,
+            "modifiers": {
+                "def": {
+                    "modifier_id": 4,
+                    "modifier_mode": 0,
+                    "amount": 1.5,
+                    "secondary_id": 0
+                },
+                "con": {
+                    "modifier_id": 1,
+                    "modifier_mode": 1,
+                    "amount": 4,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Buffed": {
+            "id": 9,
+            "name": "Buffed",
+            "gid": 9,
+            "rarity": 128,
+            "ilevel": 25,
+            "modifiers": {
+                "hp": {
+                    "modifier_id": 13,
+                    "modifier_mode": 0,
+                    "amount": 1.2,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Healthy": {
+            "id": 10,
+            "name": "Healthy",
+            "gid": 10,
+            "rarity": 32,
+            "ilevel": 50,
+            "modifiers": {
+                "hp": {
+                    "modifier_id": 13,
+                    "modifier_mode": 0,
+                    "amount": 1.5,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Immortal": {
+            "id": 11,
+            "name": "Immortal",
+            "gid": 11,
+            "rarity": 2,
+            "ilevel": 80,
+            "modifiers": {
+                "hp": {
+                    "modifier_id": 13,
+                    "modifier_mode": 0,
+                    "amount": 2.0,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Ogre's": {
+            "id": 12,
+            "name": "Ogre's",
+            "gid": 12,
+            "rarity": 64,
+            "ilevel": 35,
+            "modifiers": {
+                "hp": {
+                    "modifier_id": 3,
+                    "modifier_mode": 0,
+                    "amount": 1.5,
+                    "secondary_id": 0
+                },
+                "spd": {
+                    "modifier_id": 5,
+                    "modifier_mode": 0,
+                    "amount": 0.8,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Flaming": {
+            "id": 13,
+            "name": "Flaming",
+            "gid": 13,
+            "rarity": 192,
+            "ilevel": 15,
+            "modifiers": {
+                "atk_as_fire": {
+                    "modifier_id": 3,
+                    "modifier_mode": 2,
+                    "amount": 0.1,
+                    "secondary_id": 6
+                }
+            }
+        },
+        "Infernous": {
+            "id": 14,
+            "name": "Infernous",
+            "gid": 14,
+            "rarity": 96,
+            "ilevel": 50,
+            "modifiers": {
+                "atk_as_fire": {
+                    "modifier_id": 3,
+                    "modifier_mode": 2,
+                    "amount": 0.5,
+                    "secondary_id": 6
+                }
+            }
+        },
+        "Icy": {
+            "id": 15,
+            "name": "Icy",
+            "gid": 15,
+            "rarity": 192,
+            "ilevel": 15,
+            "modifiers": {
+                "atk_as_ice": {
+                    "modifier_id": 3,
+                    "modifier_mode": 2,
+                    "amount": 0.1,
+                    "secondary_id": 7
+                }
+            }
+        },
+        "Freezing": {
+            "id": 16,
+            "name": "Freezing",
+            "gid": 16,
+            "rarity": 96,
+            "ilevel": 50,
+            "modifiers": {
+                "atk_as_ice": {
+                    "modifier_id": 3,
+                    "modifier_mode": 2,
+                    "amount": 0.5,
+                    "secondary_id": 7
+                }
+            }
+        },
+        "Sparking": {
+            "id": 17,
+            "name": "Sparking",
+            "gid": 17,
+            "rarity": 192,
+            "ilevel": 15,
+            "modifiers": {
+                "atk_as_lightning": {
+                    "modifier_id": 3,
+                    "modifier_mode": 2,
+                    "amount": 0.1,
+                    "secondary_id": 8
+                }
+            }
+        },
+        "Shocking": {
+            "id": 18,
+            "name": "Shocking",
+            "gid": 18,
+            "rarity": 96,
+            "ilevel": 50,
+            "modifiers": {
+                "atk_as_ice": {
+                    "modifier_id": 3,
+                    "modifier_mode": 2,
+                    "amount": 0.5,
+                    "secondary_id": 8
+                }
+            }
+        },
+        "Fire-shrouded": {
+            "id": 19,
+            "name": "Fire-shrouded",
+            "gid": 19,
+            "rarity": 128,
+            "ilevel": 15,
+            "modifiers": {
+                "fire_damage_taken": {
+                    "modifier_id": 14,
+                    "modifier_mode": 0,
+                    "amount": 0.8,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Fire-cloaked": {
+            "id": 20,
+            "name": "Fire-cloaked",
+            "gid": 20,
+            "rarity": 32,
+            "ilevel": 55,
+            "modifiers": {
+                "fire_damage_taken": {
+                    "modifier_id": 14,
+                    "modifier_mode": 0,
+                    "amount": 0.6,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Ice-shrouded": {
+            "id": 21,
+            "name": "Ice-shrouded",
+            "gid": 21,
+            "rarity": 128,
+            "ilevel": 15,
+            "modifiers": {
+                "ice_damage_taken": {
+                    "modifier_id": 15,
+                    "modifier_mode": 0,
+                    "amount": 0.8,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Ice-cloaked": {
+            "id": 22,
+            "name": "Ice-cloaked",
+            "gid": 22,
+            "rarity": 32,
+            "ilevel": 55,
+            "modifiers": {
+                "ice_damage_taken": {
+                    "modifier_id": 15,
+                    "modifier_mode": 0,
+                    "amount": 0.6,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Spark-shrouded": {
+            "id": 23,
+            "name": "Spark-shrouded",
+            "gid": 23,
+            "rarity": 128,
+            "ilevel": 15,
+            "modifiers": {
+                "lightning_damage_taken": {
+                    "modifier_id": 16,
+                    "modifier_mode": 0,
+                    "amount": 0.8,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Spark-cloaked": {
+            "id": 24,
+            "name": "Spark-cloaked",
+            "gid": 24,
+            "rarity": 32,
+            "ilevel": 55,
+            "modifiers": {
+                "lightning_damage_taken": {
+                    "modifier_id": 16,
+                    "modifier_mode": 0,
+                    "amount": 0.6,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Elemental-shrouded": {
+            "id": 25,
+            "name": "Elemental-shrouded",
+            "gid": 25,
+            "rarity": 64,
+            "ilevel": 15,
+            "modifiers": {
+                "fire_damage_taken": {
+                    "modifier_id": 14,
+                    "modifier_mode": 0,
+                    "amount": 0.9,
+                    "secondary_id": 0
+                },
+                "ice_damage_taken": {
+                    "modifier_id": 15,
+                    "modifier_mode": 0,
+                    "amount": 0.9,
+                    "secondary_id": 0
+                },
+                "lightning_damage_taken": {
+                    "modifier_id": 16,
+                    "modifier_mode": 0,
+                    "amount": 0.9,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Elemental-cloaked": {
+            "id": 26,
+            "name": "Elemental-cloaked",
+            "gid": 26,
+            "rarity": 8,
+            "ilevel": 55,
+            "modifiers": {
+                "fire_damage_taken": {
+                    "modifier_id": 14,
+                    "modifier_mode": 0,
+                    "amount": 0.8,
+                    "secondary_id": 0
+                },
+                "ice_damage_taken": {
+                    "modifier_id": 15,
+                    "modifier_mode": 0,
+                    "amount": 0.8,
+                    "secondary_id": 0
+                },
+                "lightning_damage_taken": {
+                    "modifier_id": 16,
+                    "modifier_mode": 0,
+                    "amount": 0.8,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Ignited": {
+            "id": 27,
+            "name": "Ignited",
+            "gid": 27,
+            "rarity": 192,
+            "ilevel": 10,
+            "modifiers": {
+                "fire_damage_taken": {
+                    "modifier_id": 14,
+                    "modifier_mode": 0,
+                    "amount": 1.2,
+                    "secondary_id": 0
+                }
+            }
+        }, 
+        "Engulfed": {
+            "id": 28,
+            "name": "Engulfed",
+            "gid": 28,
+            "rarity": 96,
+            "ilevel": 40,
+            "modifiers": {
+                "fire_damage_taken": {
+                    "modifier_id": 14,
+                    "modifier_mode": 0,
+                    "amount": 1.4,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Chilled": {
+            "id": 29,
+            "name": "Chilled",
+            "gid": 29,
+            "rarity": 192,
+            "ilevel": 10,
+            "modifiers": {
+                "ice_damage_taken": {
+                    "modifier_id": 15,
+                    "modifier_mode": 0,
+                    "amount": 1.2,
+                    "secondary_id": 0
+                }
+            }
+        }, 
+        "Frozen": {
+            "id": 30,
+            "name": "Chilled",
+            "gid": 30,
+            "rarity": 96,
+            "ilevel": 40,
+            "modifiers": {
+                "ice_damage_taken": {
+                    "modifier_id": 15,
+                    "modifier_mode": 0,
+                    "amount": 1.4,
+                    "secondary_id": 0
+                }
+            }
+        },  
+        "Shocked": {
+            "id": 31,
+            "name": "Shocked",
+            "gid": 31,
+            "rarity": 192,
+            "ilevel": 10,
+            "modifiers": {
+                "lightning_damage_taken": {
+                    "modifier_id": 16,
+                    "modifier_mode": 0,
+                    "amount": 1.2,
+                    "secondary_id": 0
+                }
+            }
+        }, 
+        "Electrified": {
+            "id": 32,
+            "name": "Electrified",
+            "gid": 32,
+            "rarity": 96,
+            "ilevel": 40,
+            "modifiers": {
+                "lightning_damage_taken": {
+                    "modifier_id": 16,
+                    "modifier_mode": 0,
+                    "amount": 1.4,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Element-touched": {
+            "id": 33,
+            "name": "Element-touched",
+            "gid": 33,
+            "rarity": 32,
+            "ilevel": 20,
+            "modifiers": {
+                "fire_damage_taken": {
+                    "modifier_id": 14,
+                    "modifier_mode": 0,
+                    "amount": 1.1,
+                    "secondary_id": 0
+                },
+                "ice_damage_taken": {
+                    "modifier_id": 15,
+                    "modifier_mode": 0,
+                    "amount": 1.1,
+                    "secondary_id": 0
+                },
+                "lightning_damage_taken": {
+                    "modifier_id": 16,
+                    "modifier_mode": 0,
+                    "amount": 1.1,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Element-tangled": {
+            "id": 34,
+            "name": "Element-tangled",
+            "gid": 34,
+            "rarity": 8,
+            "ilevel": 50,
+            "modifiers": {
+                "fire_damage_taken": {
+                    "modifier_id": 14,
+                    "modifier_mode": 0,
+                    "amount": 1.2,
+                    "secondary_id": 0
+                },
+                "ice_damage_taken": {
+                    "modifier_id": 15,
+                    "modifier_mode": 0,
+                    "amount": 1.2,
+                    "secondary_id": 0
+                },
+                "lightning_damage_taken": {
+                    "modifier_id": 16,
+                    "modifier_mode": 0,
+                    "amount": 1.2,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Weak": {
+            "id": 35,
+            "name": "Weak",
+            "gid": 35,
+            "rarity": 160,
+            "ilevel": 10,
+            "modifiers": {
+                "atk": {
+                    "modifier_id": 3,
+                    "modifier_mode": 0,
+                    "amount": 0.9,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Crippled": {
+            "id": 36,
+            "name": "Crippled",
+            "gid": 36,
+            "rarity": 64,
+            "ilevel": 30,
+            "modifiers": {
+                "atk": {
+                    "modifier_id": 3,
+                    "modifier_mode": 0,
+                    "amount": 0.75,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Slow": {
+            "id": 37,
+            "name": "Slow",
+            "gid": 37,
+            "rarity": 160,
+            "ilevel": 20,
+            "modifiers": {
+                "spd": {
+                    "modifier_id": 5,
+                    "modifier_mode": 0,
+                    "amount": 0.9,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Halting": {
+            "id": 38,
+            "name": "Halting",
+            "gid": 38,
+            "rarity": 64,
+            "ilevel": 45,
+            "modifiers": {
+                "spd": {
+                    "modifier_id": 5,
+                    "modifier_mode": 0,
+                    "amount": 0.75,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Frail": {
+            "id": 39,
+            "name": "Frail",
+            "gid": 39,
+            "rarity": 192,
+            "ilevel": 15,
+            "modifiers": {
+                "def": {
+                    "modifier_id": 4,
+                    "modifier_mode": 0,
+                    "amount": 0.9,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Defenseless": {
+            "id": 40,
+            "name": "Defenseless",
+            "gid": 40,
+            "rarity": 96,
+            "ilevel": 35,
+            "modifiers": {
+                "def": {
+                    "modifier_id": 4,
+                    "modifier_mode": 0,
+                    "amount": 0.75,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Infirm": {
+            "id": 41,
+            "name": "Infirm",
+            "gid": 41,
+            "rarity": 128,
+            "ilevel": 25,
+            "modifiers": {
+                "hp": {
+                    "modifier_id": 13,
+                    "modifier_mode": 0,
+                    "amount": 0.9,
+                    "secondary_id": 0
+                }
+            }
+        },
+        "Sickly": {
+            "id": 42,
+            "name": "Sickly",
+            "gid": 42,
+            "rarity": 32,
+            "ilevel": 50,
+            "modifiers": {
+                "hp": {
+                    "modifier_id": 13,
+                    "modifier_mode": 0,
+                    "amount": 0.75,
+                    "secondary_id": 0
                 }
             }
         }
@@ -138,14 +875,731 @@
                 "rarity": 240,
                 "ilevel": 5,
                 "modifiers": {
+                    "str": {
+                        "modifier_id": 0,
+                        "modifier_mode": 1,
+                        "amount": 1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_the_troll": {
+                "id": 1,
+                "name": "of the Troll",
+                "gid": 1,
+                "rarity": 128,
+                "ilevel": 20,
+                "modifiers": {
+                    "str": {
+                        "modifier_id": 0,
+                        "modifier_mode": 1,
+                        "amount": 3,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_the_giant": {
+                "id": 2,
+                "name": "of the Giant",
+                "gid": 2,
+                "rarity": 64,
+                "ilevel": 70,
+                "modifiers": {
+                    "str": {
+                        "modifier_id": 0,
+                        "modifier_mode": 1,
+                        "amount": 6,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_dexterity": {
+                "id": 3,
+                "name": "of Dexterity",
+                "gid": 3,
+                "rarity": 255,
+                "ilevel": 5,
+                "modifiers": {
+                    "dex": {
+                        "modifier_id": 2,
+                        "modifier_mode": 1,
+                        "amount": 1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_the_thief": {
+                "id": 4,
+                "name": "of the Thief",
+                "gid": 4,
+                "rarity": 128,
+                "ilevel": 20,
+                "modifiers": {
+                    "dex": {
+                        "modifier_id": 2,
+                        "modifier_mode": 1,
+                        "amount": 3,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_the_ninja": {
+                "id": 5,
+                "name": "of the Ninja",
+                "gid": 5,
+                "rarity": 64,
+                "ilevel": 70,
+                "modifiers": {
+                    "dex": {
+                        "modifier_id": 2,
+                        "modifier_mode": 1,
+                        "amount": 6,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_constitution": {
+                "id": 6,
+                "name": "of Constitution",
+                "gid": 6,
+                "rarity": 255,
+                "ilevel": 5,
+                "modifiers": {
+                    "con": {
+                        "modifier_id": 1,
+                        "modifier_mode": 1,
+                        "amount": 1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_the_athlete": {
+                "id": 7,
+                "name": "of the Athlete",
+                "gid": 7,
+                "rarity": 128,
+                "ilevel": 20,
+                "modifiers": {
+                    "con": {
+                        "modifier_id": 1,
+                        "modifier_mode": 1,
+                        "amount": 3,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_the_bodybuilder": {
+                "id": 8,
+                "name": "of the Bodybuilder",
+                "gid": 8,
+                "rarity": 64,
+                "ilevel": 70,
+                "modifiers": {
+                    "con": {
+                        "modifier_id": 1,
+                        "modifier_mode": 1,
+                        "amount": 6,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_attack": {
+                "id": 9,
+                "name": "of Attack",
+                "gid": 9,
+                "rarity": 240,
+                "ilevel": 7,
+                "modifiers": {
                     "atk": {
                         "modifier_id": 3,
                         "modifier_mode": 1,
-                        "amount": 1
+                        "amount": 1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_the_soldier": {
+                "id": 10,
+                "name": "of the Soldier",
+                "gid": 10,
+                "rarity": 112,
+                "ilevel": 22,
+                "modifiers": {
+                    "atk": {
+                        "modifier_id": 3,
+                        "modifier_mode": 1,
+                        "amount": 3,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_the_general": {
+                "id": 11,
+                "name": "of the General",
+                "gid": 11,
+                "rarity": 48,
+                "ilevel": 74,
+                "modifiers": {
+                    "atk": {
+                        "modifier_id": 3,
+                        "modifier_mode": 1,
+                        "amount": 6,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_speed": {
+                "id": 12,
+                "name": "of Speed",
+                "gid": 12,
+                "rarity": 240,
+                "ilevel": 7,
+                "modifiers": {
+                    "spd": {
+                        "modifier_id": 5,
+                        "modifier_mode": 1,
+                        "amount": 1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_the_runner": {
+                "id": 13,
+                "name": "of the Runner",
+                "gid": 13,
+                "rarity": 112,
+                "ilevel": 22,
+                "modifiers": {
+                    "spd": {
+                        "modifier_id": 5,
+                        "modifier_mode": 1,
+                        "amount": 3,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_the_sprinter": {
+                "id": 14,
+                "name": "of the Sprinter",
+                "gid": 14,
+                "rarity": 48,
+                "ilevel": 74,
+                "modifiers": {
+                    "spd": {
+                        "modifier_id": 5,
+                        "modifier_mode": 1,
+                        "amount": 6,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_defense": {
+                "id": 15,
+                "name": "of Defense",
+                "gid": 15,
+                "rarity": 255,
+                "ilevel": 5,
+                "modifiers": {
+                    "def": {
+                        "modifier_id": 4,
+                        "modifier_mode": 1,
+                        "amount": 1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_the_blocker": {
+                "id": 16,
+                "name": "of the Blocker",
+                "gid": 16,
+                "rarity": 128,
+                "ilevel": 20,
+                "modifiers": {
+                    "def": {
+                        "modifier_id": 4,
+                        "modifier_mode": 1,
+                        "amount": 3,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_the_guardian": {
+                "id": 17,
+                "name": "of the Guardian",
+                "gid": 17,
+                "rarity": 64,
+                "ilevel": 70,
+                "modifiers": {
+                    "def": {
+                        "modifier_id": 4,
+                        "modifier_mode": 1,
+                        "amount": 6,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_kings": {
+                "id": 18,
+                "name": "of Kings",
+                "gid": 18,
+                "rarity": 64,
+                "ilevel": 50,
+                "modifiers": {
+                    "str": {
+                        "modifier_id": 0,
+                        "modifier_mode": 1,
+                        "amount": 1,
+                        "secondary_id": 0
+                    },
+                    "con": {
+                        "modifier_id": 1,
+                        "modifier_mode": 1,
+                        "amount": 1,
+                        "secondary_id": 0
+                    },
+                    "dex": {
+                        "modifier_id": 2,
+                        "modifier_mode": 1,
+                        "amount": 1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_the_gods": {
+                "id": 19,
+                "name": "of the Gods",
+                "gid": 19,
+                "rarity": 20,
+                "ilevel": 65,
+                "modifiers": {
+                    "str": {
+                        "modifier_id": 0,
+                        "modifier_mode": 1,
+                        "amount": 3,
+                        "secondary_id": 0
+                    },
+                    "con": {
+                        "modifier_id": 1,
+                        "modifier_mode": 1,
+                        "amount": 3,
+                        "secondary_id": 0
+                    },
+                    "dex": {
+                        "modifier_id": 2,
+                        "modifier_mode": 1,
+                        "amount": 3,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_the_primordials": {
+                "id": 20,
+                "name": "of the Primordials",
+                "gid": 20,
+                "rarity": 8,
+                "ilevel": 80,
+                "modifiers": {
+                    "str": {
+                        "modifier_id": 0,
+                        "modifier_mode": 1,
+                        "amount": 6,
+                        "secondary_id": 0
+                    },
+                    "con": {
+                        "modifier_id": 1,
+                        "modifier_mode": 1,
+                        "amount": 6,
+                        "secondary_id": 0
+                    },
+                    "dex": {
+                        "modifier_id": 2,
+                        "modifier_mode": 1,
+                        "amount": 6,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_extra_attacks": {
+                "id": 21,
+                "name": "of Extra Attacks",
+                "gid": 21,
+                "rarity": 25,
+                "ilevel": 40,
+                "modifiers": {
+                    "extra_attacks": {
+                        "modifier_id": 12,
+                        "modifier_mode": 1,
+                        "amount": 1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_the_berserker": {
+                "id": 22,
+                "name": "of the Berserker",
+                "gid": 22,
+                "rarity": 5,
+                "ilevel": 65,
+                "modifiers": {
+                    "extra_attacks": {
+                        "modifier_id": 12,
+                        "modifier_mode": 1,
+                        "amount": 1,
+                        "secondary_id": 0
+                    },
+                    "str": {
+                        "modifier_id": 0,
+                        "modifier_mode": 1,
+                        "amount": 3,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_perfect_defense": {
+                "id": 23,
+                "name": "of Perfect Defense",
+                "gid": 23,
+                "rarity": 4,
+                "ilevel": 75,
+                "modifiers": {
+                    "block_chance": {
+                        "modifier_id": 18,
+                        "modifier_mode": 0,
+                        "amount": 0.15,
+                        "secondary_id": 0
+                    },
+                    "damage_reduction": {
+                        "modifier_id": 19,
+                        "modifier_mode": 0,
+                        "amount": 0.8,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_the_unstoppable": {
+                "id": 24,
+                "name": "of the Unstoppable",
+                "gid": 24,
+                "rarity": 1,
+                "ilevel": 100,
+                "modifiers": {
+                    "extra_attacks": {
+                        "modifier_id": 12,
+                        "modifier_mode": 1,
+                        "amount": 1,
+                        "secondary_id": 0
+                    },
+                    "str": {
+                        "modifier_id": 0,
+                        "modifier_mode": 1,
+                        "amount": 6,
+                        "secondary_id": 0
+                    },
+                    "con": {
+                        "modifier_id": 1,
+                        "modifier_mode": 1,
+                        "amount": 6,
+                        "secondary_id": 0
+                    },
+                    "dex": {
+                        "modifier_id": 2,
+                        "modifier_mode": 1,
+                        "amount": 6,
+                        "secondary_id": 0
+                    },
+                    "atk": {
+                        "modifier_id": 3,
+                        "modifier_mode": 1,
+                        "amount": 6,
+                        "secondary_id": 0
+                    },
+                    "def": {
+                        "modifier_id": 4,
+                        "modifier_mode": 1,
+                        "amount": 6,
+                        "secondary_id": 0
+                    },
+                    "spd": {
+                        "modifier_id": 5,
+                        "modifier_mode": 1,
+                        "amount": 6,
+                        "secondary_id": 0
+                    },
+                    "damage_reduction": {
+                        "modifier_id": 19,
+                        "modifier_mode": 0,
+                        "amount": 0.75,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_weakness": {
+                "id": 25,
+                "name": "of Weakness",
+                "gid": 25,
+                "rarity": 240,
+                "ilevel": 7,
+                "modifiers": {
+                    "str": {
+                        "modifier_id": 0,
+                        "modifier_mode": 1,
+                        "amount": -1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_fraility": {
+                "id": 26,
+                "name": "of Fraility",
+                "gid": 26,
+                "rarity": 112,
+                "ilevel": 24,
+                "modifiers": {
+                    "str": {
+                        "modifier_id": 0,
+                        "modifier_mode": 1,
+                        "amount": -3,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_clumsiness": {
+                "id": 27,
+                "name": "of Clumsiness",
+                "gid": 27,
+                "rarity": 240,
+                "ilevel": 7,
+                "modifiers": {
+                    "dex": {
+                        "modifier_id": 2,
+                        "modifier_mode": 1,
+                        "amount": -1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_fumbling": {
+                "id": 28,
+                "name": "of Fumbling",
+                "gid": 28,
+                "rarity": 112,
+                "ilevel": 24,
+                "modifiers": {
+                    "dex": {
+                        "modifier_id": 2,
+                        "modifier_mode": 1,
+                        "amount": -3,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_illness": {
+                "id": 29,
+                "name": "of Illness",
+                "gid": 29,
+                "rarity": 240,
+                "ilevel": 7,
+                "modifiers": {
+                    "con": {
+                        "modifier_id": 1,
+                        "modifier_mode": 1,
+                        "amount": -1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_sickliness": {
+                "id": 30,
+                "name": "of Sickliness",
+                "gid": 30,
+                "rarity": 112,
+                "ilevel": 224,
+                "modifiers": {
+                    "con": {
+                        "modifier_id": 1,
+                        "modifier_mode": 1,
+                        "amount": -3,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_slowness": {
+                "id": 31,
+                "name": "of Slowness",
+                "gid": 31,
+                "rarity": 224,
+                "ilevel": 96,
+                "modifiers": {
+                    "spd": {
+                        "modifier_id": 5,
+                        "modifier_mode": 1,
+                        "amount": -1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_halting": {
+                "id": 32,
+                "name": "of Halting",
+                "gid": 32,
+                "rarity": 96,
+                "ilevel": 27,
+                "modifiers": {
+                    "spd": {
+                        "modifier_id": 5,
+                        "modifier_mode": 1,
+                        "amount": -3,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_vulnerability": {
+                "id": 33,
+                "name": "of Vulnerability",
+                "gid": 33,
+                "rarity": 240,
+                "ilevel": 7,
+                "modifiers": {
+                    "def": {
+                        "modifier_id": 4,
+                        "modifier_mode": 1,
+                        "amount": -1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_defenselessness": {
+                "id": 34,
+                "name": "of Defenselessness",
+                "gid": 34,
+                "rarity": 112,
+                "ilevel": 24,
+                "modifiers": {
+                    "def": {
+                        "modifier_id": 4,
+                        "modifier_mode": 1,
+                        "amount": -3,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_cowardice": {
+                "id": 35,
+                "name": "of Cowardice",
+                "gid": 35,
+                "rarity": 224,
+                "ilevel": 10,
+                "modifiers": {
+                    "atk": {
+                        "modifier_id": 3,
+                        "modifier_mode": 1,
+                        "amount": -1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_surrender": {
+                "id": 36,
+                "name": "of Surrender",
+                "gid": 36,
+                "rarity": 96,
+                "ilevel": 27,
+                "modifiers": {
+                    "atk": {
+                        "modifier_id": 3,
+                        "modifier_mode": 1,
+                        "amount": -3,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_the_indecisive": {
+                "id": 37,
+                "name": "of the Indecisive",
+                "gid": 37,
+                "rarity": 96,
+                "ilevel": 27,
+                "modifiers": {
+                    "apt": {
+                        "modifier_id": 12,
+                        "modifier_mode": 1,
+                        "amount": -1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_the_envenomed": {
+                "id": 38,
+                "name": "of the Envenomed",
+                "gid": 38,
+                "rarity": 32,
+                "ilevel": 35,
+                "modifiers": {
+                    "poison": {
+                        "modifier_id": 17,
+                        "modifier_mode": 3,
+                        "amount": 1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "of_the_damned": {
+                "id": 39,
+                "name": "of the Damned",
+                "gid": 39,
+                "rarity": 1,
+                "ilevel": 100,
+                "modifiers": {
+                    "apt": {
+                        "modifier_id": 12,
+                        "modifier_mode": 1,
+                        "amount": -1,
+                        "secondary_id": 0
+                    },
+                    "str": {
+                        "modifier_id": 0,
+                        "modifier_mode": 1,
+                        "amount": -1,
+                        "secondary_id": 0
+                    },
+                    "con": {
+                        "modifier_id": 1,
+                        "modifier_mode": 1,
+                        "amount": -1,
+                        "secondary_id": 0
+                    },
+                    "dex": {
+                        "modifier_id": 2,
+                        "modifier_mode": 1,
+                        "amount": -1,
+                        "secondary_id": 0
+                    },
+                    "atk": {
+                        "modifier_id": 3,
+                        "modifier_mode": 1,
+                        "amount": -1,
+                        "secondary_id": 0
+                    },
+                    "def": {
+                        "modifier_id": 4,
+                        "modifier_mode": 1,
+                        "amount": -1,
+                        "secondary_id": 0
+                    },
+                    "spd": {
+                        "modifier_id": 5,
+                        "modifier_mode": 1,
+                        "amount": -1,
+                        "secondary_id": 0
+                    },
+                    "damage_taken": {
+                        "modifier_id": 19,
+                        "modifier_mode": 0,
+                        "amount": 1.25,
+                        "secondary_id": 0
                     }
                 }
             }
         }
     }
-
 }

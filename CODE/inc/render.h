@@ -191,7 +191,6 @@ class Render {
 		void render_actors(BITMAP *destination, int maze_x, int maze_y);
 		void render_base_tile(BITMAP *destination, int tile_id, int x, int y);
 		void render_item(BITMAP *destination, int gid, int x, int y);
-		void render_statics(BITMAP *destination, int maze_x, int maze_y);
 		
 	public:
 		Render();

@@ -88,19 +88,6 @@ void Render::render_item(BITMAP *destination, int gid, int x, int y) {
 		 TILE_PIXEL_WIDTH,
 		 TILE_PIXEL_HEIGHT);	
 }
-//----------------------------------------------------------------------------------
-// render_statics
-//
-// Renders all non-actor, non-architectural dungeon elements.  This includes 
-// items, traps, money, doors, and so on.
-//
-// Notes:
-//   maze_x and maze_y represent the maze tile position in the upper left corner of 
-//   the play area
-//----------------------------------------------------------------------------------
-void Render::render_statics(BITMAP *destination, int maze_x, int maze_y) {
-	
-}
 
 //==================================================================================
 // Public methods
@@ -430,8 +417,7 @@ void Render::render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_
 		}
 	}
 	
-	// Render the other world components
-	render_statics(destination, maze_x, maze_y);
+	// Render the player and any enemies
 	render_actors(destination, maze_x, maze_y);
 }
 
