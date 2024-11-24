@@ -1,7 +1,7 @@
 //==========================================================================================
 //   Secret Legacy of the Ancient Caves (SLAC)
 //
-//   Copyright (c) 2020-2021 Shaun Brandt / Holy Meatgoat Software
+//   Copyright (c) 2020-2024 Shaun Brandt / Holy Meatgoat Software
 //
 //   Permission is hereby granted, free of charge, to any person obtaining a copy
 //   of this software and associated documentation files (the "Software"), to deal
@@ -23,20 +23,24 @@
 //==========================================================================================
 #include "globals.h"
 
+//------------------------------------------------------------------------------
 // Maze::Maze
 //
 // Constructor.
+//------------------------------------------------------------------------------
 Maze::Maze() {
 
 }
 
+//------------------------------------------------------------------------------
 // Maze::Maze
 //
 // Constructor.  Generates a maze of size (x,y).
 //
 // Arguments:
 //   x - the width of the maze
-//   y - the height of the maze/
+//   y - the height of the maze
+//------------------------------------------------------------------------------
 Maze::Maze(int x, int y) {
 	if (x < MIN_MAZE_WIDTH) x = MIN_MAZE_WIDTH;
 	if (y < MIN_MAZE_HEIGHT) y = MIN_MAZE_HEIGHT;
@@ -50,11 +54,13 @@ Maze::Maze(int x, int y) {
 	init();
 }
 
+//------------------------------------------------------------------------------
 // Destructor.
 //
 // Since the maze can contain heap allocated items (i.e. the entries in the
 // lists attached to the items map), they all need to be deallocated before
 // the maze itself is destroyed.
+//------------------------------------------------------------------------------
 Maze::~Maze() {
 	//std::cout << "maze: in destructor" << std::endl;
 	// An iterator for the entire map structure
@@ -75,6 +81,7 @@ Maze::~Maze() {
 	}	
 }
 
+//------------------------------------------------------------------------------
 // Populates the maze with a quantity of generated items of appropriate item
 // level.
 //
@@ -84,6 +91,7 @@ Maze::~Maze() {
 //
 // Returns:
 //   Nothing
+//------------------------------------------------------------------------------
 void Maze::generate_items(int min_items, int max_items) {
 	int num_items = (rand() % (max_items - min_items)) + min_items;
 	bool is_placed;
@@ -107,6 +115,7 @@ void Maze::generate_items(int min_items, int max_items) {
 	//std::cout << "maze_generator:  Finished adding items" << std::endl;
 }
 
+//------------------------------------------------------------------------------
 // Adds an item to the maze at the specified location
 //
 // Arguments:
@@ -115,11 +124,13 @@ void Maze::generate_items(int min_items, int max_items) {
 //
 // Returns:
 //   Nothing
+//------------------------------------------------------------------------------
 void Maze::add_item(int x, int y, Item *i) {
 	std::pair<int, int> p = std::make_pair(x, y);
 	items[p].push_back(i);
 }
 
+//------------------------------------------------------------------------------
 // Gets a list of items at the specified location
 //
 // Arguments:
@@ -128,6 +139,7 @@ void Maze::add_item(int x, int y, Item *i) {
 // Returns:
 //   A list of Item* containing any items at that location.  Returns
 //   an empty list if there are no items.
+//------------------------------------------------------------------------------
 std::list<Item *> Maze::get_items_at(int x, int y) {
 	std::list<Item *> item_list;
 	std::map <std::pair<int, int>, std::list<Item*> >::iterator it;
@@ -145,6 +157,7 @@ std::list<Item *> Maze::get_items_at(int x, int y) {
 	return item_list;
 }
 
+//------------------------------------------------------------------------------
 // Gets the number of items sitting at the specified location
 //
 // Arguments:
@@ -152,11 +165,13 @@ std::list<Item *> Maze::get_items_at(int x, int y) {
 //
 // Returns:
 //   The number of items at the location
+//------------------------------------------------------------------------------
 int Maze::get_num_items_at(int x, int y) {
 	std::list<Item *> item_list = get_items_at(x, y);
 	return item_list.size();
 }
 
+//------------------------------------------------------------------------------
 // Adds stairs (both up and down) randomly to the maze
 //
 // Arguments:
@@ -167,8 +182,9 @@ int Maze::get_num_items_at(int x, int y) {
 //   None
 //
 // Notes:
-//   Stairs only spawn in rooms; one maximum per room.  All spaces surrounding the
-//   stairs must either be part of a room, or the walls of a room.
+//   Stairs only spawn in rooms; one maximum per room.  All spaces surrounding
+//   the stairs must either be part of a room, or the walls of a room.
+//------------------------------------------------------------------------------
 void Maze::add_stairs(int num_up_stairs, int num_down_stairs) {
 	int num_rooms = room_id - STARTING_ROOM - 1;
 	
@@ -220,6 +236,7 @@ void Maze::add_stairs(int num_up_stairs, int num_down_stairs) {
 	}	
 }
 
+//------------------------------------------------------------------------------
 // Carves a square out of the maze.
 //
 // Arguments:
@@ -232,11 +249,13 @@ void Maze::add_stairs(int num_up_stairs, int num_down_stairs) {
 //
 // Notes:
 //   A 'carved' square can either be a passageway, or part of a room.
+//------------------------------------------------------------------------------
 void Maze::carve(int x, int y, int tag) {
 	m[y*cols + x].tag = tag;
 	m[y*cols + x].carved = true;
 }
 
+//------------------------------------------------------------------------------
 // Carves the maze in a particular direction.
 //
 // Arguments:
@@ -251,6 +270,7 @@ void Maze::carve(int x, int y, int tag) {
 //   Due to the way that mazes are stored, carving in a direction requires 
 //   carving three squares - the source square, the target square, and the 
 //   square between them.
+//------------------------------------------------------------------------------
 void Maze::carve_direction(int x, int y, int direction, int tag) {
 	if (direction == DIRECTION_NORTH) {
 		carve(x, y, tag);
@@ -274,6 +294,7 @@ void Maze::carve_direction(int x, int y, int direction, int tag) {
 	}	
 }
 
+//------------------------------------------------------------------------------
 // Updates the 'lit' status of a square (and marks it as visited)
 //
 // Arguments:
@@ -283,13 +304,15 @@ void Maze::carve_direction(int x, int y, int direction, int tag) {
 //
 // Returns:
 //   Nothing	
+//------------------------------------------------------------------------------
 void Maze::change_lit_status_at(int x, int y, bool lit) {
 	m[y * cols + x].is_lit = lit;
 	m[y * cols + x].was_seen = true;
 }
 
-
-// Attempts to create a room in the maze, according to a specific set of criteria.
+//------------------------------------------------------------------------------
+// Attempts to create a room in the maze, according to a specific set of 
+// criteria.
 //
 // Arguments:
 //   x, y - the upper left corner of the candidate room
@@ -297,6 +320,7 @@ void Maze::change_lit_status_at(int x, int y, bool lit) {
 //
 // Returns:
 //   true if the room was created, false if it wasn't.
+//------------------------------------------------------------------------------
 bool Maze::create_room(int x, int y, int w, int h) {
 	// Notes:
 	//	 To fit in the maze, the room must:
@@ -347,7 +371,7 @@ bool Maze::create_room(int x, int y, int w, int h) {
 	return true;	
 }
 
-
+//------------------------------------------------------------------------------
 // Creates passageways in any uncarved non-room space using a standard maze
 // generation algorithm.
 //
@@ -356,6 +380,7 @@ bool Maze::create_room(int x, int y, int w, int h) {
 //
 // Returns:
 //   Nothing
+//------------------------------------------------------------------------------
 void Maze::generate_passages(int x, int y) {
 	// Notes:
 	//   Uses a recursive backtracker to generate a maze.  It starts by carving a 
@@ -419,12 +444,14 @@ void Maze::generate_passages(int x, int y) {
 	}
 }
 
+//------------------------------------------------------------------------------
 // Creates candidate rooms and attempts to add them to the maze
 //
 // Arguments:
 //   num_attempts - the number of times a room creation attempt will happen
 //   min_size     - the smallest size of the width or height of a room
 //   max_size     - the largest size of the width or height of a room
+//------------------------------------------------------------------------------
 void Maze::generate_rooms(int num_attempts, int min_size, int max_size) {
 	// Notes:
 	//   Since rooms need to have odd width and height, this method will ensure that
@@ -443,6 +470,7 @@ void Maze::generate_rooms(int num_attempts, int min_size, int max_size) {
 	}
 }
 
+//------------------------------------------------------------------------------
 // Given a square, returns a list of directions that contain an adjacent 
 // uncarved square.
 //
@@ -452,6 +480,7 @@ void Maze::generate_rooms(int num_attempts, int min_size, int max_size) {
 //
 // Returns
 //   Nothing.  Results are placed in the directions vector.
+//------------------------------------------------------------------------------
 void Maze::get_directions(std::vector<int> & directions, int x, int y) {
 	// Notes:
 	//   Used for maze generation, which requires such a list.
@@ -470,7 +499,7 @@ void Maze::get_directions(std::vector<int> & directions, int x, int y) {
 	}
 }
 
-
+//------------------------------------------------------------------------------
 // Find 'walls' in the maze and mark them as such.
 //
 // Arguments:
@@ -478,6 +507,7 @@ void Maze::get_directions(std::vector<int> & directions, int x, int y) {
 //
 // Returns:
 //   Nothing
+//------------------------------------------------------------------------------
 void Maze::mark_walls(void) {
 	// Notes:
 	//   Walls are found by finding uncarved spaces and checking to see what's
@@ -528,7 +558,7 @@ void Maze::mark_walls(void) {
 	}
 }
 
-
+//------------------------------------------------------------------------------
 // Connects a room to an adjacent passage by tearing down a wall between the
 // two.
 //
@@ -537,6 +567,7 @@ void Maze::mark_walls(void) {
 //
 // Returns:
 //   Nothing
+//------------------------------------------------------------------------------
 void Maze::open_room(Room &r) {
 	// Notes:
 	//   Finds all edges that could connect a room to a passage.  Picks one to 
@@ -588,6 +619,7 @@ void Maze::open_room(Room &r) {
 	}	
 }
 
+//------------------------------------------------------------------------------
 // Place a set of stairs somewhere in the specified room.
 //
 // Arguments:
@@ -596,6 +628,7 @@ void Maze::open_room(Room &r) {
 //
 // Returns:
 //   Nothing
+//------------------------------------------------------------------------------
 void Maze::place_stairs(int room_id, int type) {
 	// Notes:
 	//   Randomly picks spots in the room, and continues to do so until a valid 
@@ -635,13 +668,16 @@ void Maze::place_stairs(int room_id, int type) {
 	stairs.push_back(Stair(x, y, type, room_id));
 }
 
-// Finds and removes all dead ends (squares carved in only 1 direction) from the maze
+//------------------------------------------------------------------------------
+// Finds and removes all dead ends (squares carved in only 1 direction) from the 
+// maze
 //
 // Arguments:
 //   None
 //
 // Returns:
 //   Nothing
+//------------------------------------------------------------------------------
 void Maze::remove_dead_ends(void) {
 	// Notes:
 	//   This might be a slow process due to all the looping.  The general steps
@@ -713,7 +749,7 @@ void Maze::remove_dead_ends(void) {
 	while(num_dead_ends != 0);
 }
 
-
+//------------------------------------------------------------------------------
 // Randomly carves out walls from a finished maze.  
 //
 // Arguments:
@@ -721,6 +757,7 @@ void Maze::remove_dead_ends(void) {
 //
 // Returns:
 //   Nothing
+//------------------------------------------------------------------------------
 void Maze::knock_out_walls(int chance) {
 	// Notes:
 	//   Used to open up some of the longer passages a little more.  The 'chance'
@@ -747,20 +784,23 @@ void Maze::knock_out_walls(int chance) {
 	}
 }
 
-
-// Puts back a previously uncarved square.
+//------------------------------------------------------------------------------
+// Puts back a previously carved square.
 //
 // Arguments:
 //   x, y - the coordinates of the location to uncarve
 //
 // Returns:
 //   Nothing
+//------------------------------------------------------------------------------
 void Maze::uncarve(int x, int y) {
 	m[y*cols + x].tag = EMPTY;
 	m[y*cols + x].carved = false;
 }
 
-// Changes the light state of the maze square at (x,y), and each square adjacent to it.
+//------------------------------------------------------------------------------
+// Changes the light state of the maze square at (x,y), and each square adjacent
+// to it.
 //
 // Arguments:
 //   x, y - the location to change the light state
@@ -768,6 +808,7 @@ void Maze::uncarve(int x, int y) {
 //
 // Returns:
 //   Nothing
+//------------------------------------------------------------------------------
 void Maze::change_lit_status_around(int x, int y, bool lit) {
 	change_lit_status_at(x-1, y-1, lit);
 	change_lit_status_at(x  , y-1, lit);
@@ -780,6 +821,7 @@ void Maze::change_lit_status_around(int x, int y, bool lit) {
 	change_lit_status_at(x+1, y+1, lit);
 }
 
+//------------------------------------------------------------------------------
 // Marks every square in a room as lit or unlit.  This also marks the room
 // as visited, to enable fog of war.
 //
@@ -789,6 +831,7 @@ void Maze::change_lit_status_around(int x, int y, bool lit) {
 //
 // Returns:
 //   Nothing
+//------------------------------------------------------------------------------
 void Maze::change_room_lit_status(int room_id, bool lit) {
 	int room_offset = room_id - STARTING_ROOM;
 	Room r = rooms[room_offset];
@@ -803,6 +846,7 @@ void Maze::change_room_lit_status(int room_id, bool lit) {
 	}
 }
 
+//------------------------------------------------------------------------------
 // The primary maze generator.
 //
 // Arguments:
@@ -810,6 +854,7 @@ void Maze::change_room_lit_status(int room_id, bool lit) {
 //
 // Returns:
 //   Nothing
+//------------------------------------------------------------------------------
 void Maze::generate(void) {
 	// Notes:
 	//   Generating a maze includes the following steps:
@@ -845,7 +890,7 @@ void Maze::generate(void) {
 	//std::cout << "maze_generator: finished generating" << std::endl;
 }
 
-
+//------------------------------------------------------------------------------
 // Finds and returns the coordinates of a random up or down stair.
 //
 // Arguments:
@@ -853,6 +898,7 @@ void Maze::generate(void) {
 //
 // Returns:
 //   A pair containing the location of the requested stair
+//------------------------------------------------------------------------------
 std::pair<int, int> Maze::get_random_stair(int direction) {
 	// Notes:
 	//   Used to position the player when entering a new maze.  Players always
@@ -869,6 +915,7 @@ std::pair<int, int> Maze::get_random_stair(int direction) {
 	}
 }
 
+//------------------------------------------------------------------------------
 // Returns the Room specified by the room id.
 // 
 // Arguments:
@@ -876,6 +923,7 @@ std::pair<int, int> Maze::get_random_stair(int direction) {
 //
 // Returns:
 //   The room data.
+//------------------------------------------------------------------------------
 Room Maze::get_room(int room_id) {
 	for (std::vector<Room>::iterator it = rooms.begin(); it != rooms.end(); it++) {
 		if (it->id == room_id) {
@@ -888,7 +936,7 @@ Room Maze::get_room(int room_id) {
 	return *(rooms.end());
 }
 
-
+//------------------------------------------------------------------------------
 // Returns the room id associated with a particular location in the maze.  
 //
 // Arguments:
@@ -896,6 +944,7 @@ Room Maze::get_room(int room_id) {
 //
 // Returns:
 //   The id of the room corresponding to the location, or -1 if not a room
+//------------------------------------------------------------------------------
 int Maze::get_room_id_at(int x, int y) {
 	int room = m[y * cols + x].tag;
 	if(room < STARTING_ROOM) {
@@ -906,6 +955,7 @@ int Maze::get_room_id_at(int x, int y) {
 	}
 }
 
+//------------------------------------------------------------------------------
 // Returns the square at the specified location
 //
 // Arguments:
@@ -913,10 +963,12 @@ int Maze::get_room_id_at(int x, int y) {
 // 
 // Returns:
 //   The Square at the specified location
+//------------------------------------------------------------------------------
 Square Maze::get_square(int x, int y) {
 	return m[y*cols+x];
 }
 
+//------------------------------------------------------------------------------
 // Initializes a maze structure, setting the status of each square and room.
 // 
 // Arguments:
@@ -924,6 +976,7 @@ Square Maze::get_square(int x, int y) {
 //
 // Returns:
 //   Nothing
+//------------------------------------------------------------------------------
 void Maze::init(void) {
 	room_id = STARTING_ROOM;
 	for (int i = 0; i < rows * cols; ++i) {
@@ -940,7 +993,7 @@ void Maze::init(void) {
 	stairs.clear();
 }
 
-
+//------------------------------------------------------------------------------
 // Determines whether a square at a particular location is carved or not.
 //
 // Arguments:
@@ -948,10 +1001,12 @@ void Maze::init(void) {
 //
 // Returns:
 //   true if the location is carved, false otherwise
+//------------------------------------------------------------------------------
 bool Maze::is_carved(int x, int y) {
 	return m[y*cols + x].carved;
 }
 
+//------------------------------------------------------------------------------
 // Determines whether a square is currently lit or not.
 //
 // Arguments:
@@ -959,10 +1014,12 @@ bool Maze::is_carved(int x, int y) {
 //
 // Returns:
 //   true if the square is lit, false if not
+//------------------------------------------------------------------------------
 bool Maze::is_square_lit(int x, int y) {
 	return m[y*cols + x].is_lit;
 }
 
+//------------------------------------------------------------------------------
 // Debug - prints out a ASCII representation of the maze.
 // 
 // Arguments:
@@ -970,6 +1027,7 @@ bool Maze::is_square_lit(int x, int y) {
 // 
 // Returns:
 //   Nothing
+//------------------------------------------------------------------------------
 void Maze::print(void) {
 	for (int y = 0; y < rows; ++y) {
 		for (int x = 0; x < cols; ++x) {
@@ -989,6 +1047,7 @@ void Maze::print(void) {
 	}
 }
 
+//------------------------------------------------------------------------------
 // Debug - returns the total size used by a maze object.
 //
 // Arguments:
@@ -996,6 +1055,7 @@ void Maze::print(void) {
 // 
 // Returns:
 //   Nothing
+//------------------------------------------------------------------------------
 void Maze::print_memory_usage(void) {	
 	std::cout << "Memory usage:" << std::endl;
 	std::cout << "Size of maze class: " << sizeof(Maze) << " bytes" << std::endl;
@@ -1004,6 +1064,7 @@ void Maze::print_memory_usage(void) {
 	std::cout << "Size of stairs vector: " << stairs.size() * sizeof(Stair) << " bytes" << std::endl;
 }
 
+//------------------------------------------------------------------------------
 // Debug - lists the ids of all rooms in a maze.
 //
 // Arguments:
@@ -1011,12 +1072,14 @@ void Maze::print_memory_usage(void) {
 //
 // Returns:
 //   Nothing
+//------------------------------------------------------------------------------
 void Maze::print_room_ids(void) {
 	for(std::vector<Room>::iterator it = rooms.begin(); it != rooms.end(); it++) {
 		std::cout << "Room id is " << it->id << std::endl;
 	}
 }
 
+//------------------------------------------------------------------------------
 // Flags an entire room as having been entered.
 //
 // Arguments:
@@ -1024,10 +1087,12 @@ void Maze::print_room_ids(void) {
 //
 // Returns:
 //   Nothing
+//------------------------------------------------------------------------------
 void Maze::set_room_as_entered(int room_id) {
 	rooms[room_id - STARTING_ROOM].has_been_entered = true;
 }
 
+//------------------------------------------------------------------------------
 // Determines what kind of stairs (if any) are in a location
 //
 // Arguments:
@@ -1035,6 +1100,7 @@ void Maze::set_room_as_entered(int room_id) {
 // 
 // Returns:
 //   STAIRS_UP, STAIRS_DOWN, or NO_STAIRS
+//------------------------------------------------------------------------------
 int Maze::stairs_here(int x, int y) {
 	for (std::vector<Stair>::iterator it = stairs.begin(); it != stairs.end(); it++) {
 		if (it->x == x && it->y == y) {
@@ -1044,6 +1110,7 @@ int Maze::stairs_here(int x, int y) {
 	return NO_STAIRS;
 }
 
+//------------------------------------------------------------------------------
 // Checks if the specified location has been seen by the player before
 //
 // Arguments:
@@ -1051,6 +1118,7 @@ int Maze::stairs_here(int x, int y) {
 // 
 // Returns:
 //   true if the player has seen it, false otherwise
+//------------------------------------------------------------------------------
 bool Maze::was_seen(int x, int y) {
 	return m[y * cols + x].was_seen;
 }

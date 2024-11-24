@@ -112,6 +112,9 @@
 #define INVENTORY_DIALOG_X			 9
 #define INVENTORY_DIALOG_Y			32
 
+#define INVENTORY_DIALOG_WIDTH	   224
+#define INVENTORY_DIALOG_HEIGHT    143
+
 // Each font has 5 different versions in different colors.  These are used to grab the correct
 // color font from the bitmaps
 enum {
@@ -220,6 +223,7 @@ class Render {
 		void render_actors(BITMAP *destination, int maze_x, int maze_y);
 		void render_base_tile(BITMAP *destination, int tile_id, int x, int y);
 		void render_item(BITMAP *destination, int gid, int x, int y);
+		void render_inventory_content(BITMAP *destination);
 		
 	public:
 		Render();
@@ -227,7 +231,8 @@ class Render {
 		void add_area_to_map_bitmap(Maze *m, int x, int y);
 		void copy_data_to_offscreen_vram(void);		
 		void render_fixed_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx);		
-		void render_map(BITMAP *destination, Maze *m);		
+		void render_map(BITMAP *destination);
+		void render_inventory(BITMAP *destination);
 		void render_prop_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx);
 		void render_prop_narrow_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx);
 		void render_status_base(BITMAP *destination);		

@@ -1,7 +1,7 @@
 //==========================================================================================
 //   Secret Legacy of the Ancient Caves (SLAC)
 //
-//   Copyright (c) 2020-2021 Shaun Brandt / Holy Meatgoat Software
+//   Copyright (c) 2020-2024 Shaun Brandt / Holy Meatgoat Software
 //
 //   Permission is hereby granted, free of charge, to any person obtaining a copy
 //   of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,7 @@
 #include <map>
 #include <list>
 
+// Some Allegro defines to remove unused graphics and joystick modes
 BEGIN_GFX_DRIVER_LIST
 	GFX_DRIVER_MODEX
 END_GFX_DRIVER_LIST
@@ -49,12 +50,15 @@ Render       g_render;
 // TODO: This will be part of a larger dungeon state object later on.
 Maze      *g_maze;
 
-//----------------------------------------------------------------------------------
-// load_resources
+//------------------------------------------------------------------------------
+// Loads and prepares all game resources from the data file
 //
-// Loads and processes all game resources.  Most are stored in the global 
-// datafile, so that's all that gets loaded right now.
-//----------------------------------------------------------------------------------
+// Arguments:
+//   None
+//
+// Returns:
+//   0 if data was loaded successfully, non-zero otherwise
+//------------------------------------------------------------------------------
 int load_resources(void) {
 	
 	g_game_data = load_datafile("game.dat");
@@ -65,33 +69,54 @@ int load_resources(void) {
 	return 0;
 }
 
-//----------------------------------------------------------------------------------
-// init_resources
-//
+//------------------------------------------------------------------------------
 // Perform any initializtion tasks that need to be done with game data.
-//----------------------------------------------------------------------------------
-void init_resources(Render r) {	
+// 
+// Arguments:
+//   r - a reference to the Render object to init
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void init_resources(Render &r) {	
 	r.copy_data_to_offscreen_vram();	
 	set_palette((RGB *)g_game_data[DAMRL_DB16].dat);		
 	g_back_buffer = create_sub_bitmap(screen, 0, 240, 320, 240);
 }
 
 //----------------------------------------------------------------------------------
-// unload_resources
-//
 // Free up any game related resources.
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
 //----------------------------------------------------------------------------------
 void unload_resources(void) {
 	unload_datafile(g_game_data);
 }
 
+//------------------------------------------------------------------------------
+// Updates the main display
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//
+// TODO: Move this to render.cpp
+//------------------------------------------------------------------------------
 void update_display(void) {
 	if (g_state_flags.cur_substate == GAME_SUBSTATE_MAP) {
-		g_render.render_map(g_back_buffer, g_maze);
+		g_render.render_map(g_back_buffer);
+	}
+	else if (g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY) {
+		g_render.render_inventory(g_back_buffer);
 	}
 	else {		
 		if (g_state_flags.update_maze_area == true) {
-			// TODO: move elsewhere
 			// Add the areas around the player to the map bitmap
 			//std::cout << "update_display: adding area to map bitmap" << std::endl;
 			g_render.add_area_to_map_bitmap(g_maze, g_player.x_pos, g_player.y_pos);
@@ -143,19 +168,41 @@ void update_display(void) {
 	g_state_flags.update_display = false;
 }
 
+//------------------------------------------------------------------------------
+// Creates a new maze floor, deleting any existing one first.
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
 void create_new_maze_floor(void) {
+	if (g_maze != NULL) {
+		delete g_maze;
+	}
+
 	g_maze = new Maze(30, 30);
 	g_maze->generate();
 
 	//std::cout << "main: generate() completed" << std::endl;
-	// TODO: Should be done on a per-floor basis!
 	g_render.initialize_map_bitmap(g_maze);
 	//std::cout << "Map bitmap is initialized" << std::endl;
 }
 
-// TODO: some things in here shouldn't be handled by the main state
-// initialization.  We're just doing it for now.
+//------------------------------------------------------------------------------
+// Do any initialization tasks required when moving into the new game state
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
 void initialize_main_game_state(void) {
+
+	// TODO: some things in here shouldn't be handled by the main state
+	// initialization.  We're just doing it for now.
 
 	// Make a new maze floor
 	create_new_maze_floor();
@@ -195,6 +242,15 @@ void initialize_main_game_state(void) {
 	update_display();
 }
 
+//------------------------------------------------------------------------------
+// Moves the state machine to a new state and initializes accordingly
+//
+// Arguments:
+//   new_state - the state to change to
+//
+// Returns:
+//   Nothing.
+//------------------------------------------------------------------------------
 void change_state(int new_state) {
     g_state_flags.prev_state = g_state_flags.cur_state;
     g_state_flags.cur_state = new_state;
@@ -207,6 +263,15 @@ void change_state(int new_state) {
     }
 }
 
+//------------------------------------------------------------------------------
+// Adds log entries for any item(s) sitting at the player's current position
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
 void add_items_at_player_to_log(void) {
 	int item_count = g_maze->get_num_items_at(g_player.x_pos, g_player.y_pos);
 	int idx = 0;
@@ -255,6 +320,7 @@ int main(void) {
 	}
 	init_resources(g_render);
 
+	g_maze = NULL;
 	change_state(STATE_MAIN_GAME);
 
 	//std::cout << "State initialized" << std::endl;
@@ -277,72 +343,6 @@ int main(void) {
 	set_gfx_mode(GFX_TEXT, 80, 25, 0, 0);
 
 	delete g_maze;
-
-	// std::cout << "===============================================" << std::endl;
-	// std::cout << "   Generating 10 random items (ilevel <= 40)..." << std::endl;
-	// std::cout << "===============================================" << std::endl;
-	// for (int i=0; i < 10; i++) {
-	// 	std::cout << std::endl;
-	// 	it = ItemGenerator::generate(40);
-	// 	if (it != NULL) { 
-	// 		std::cout << "Roll " << (i+1) << ", item is now " << it->get_full_name() << std::endl;
-	// 		it->dump_item();
-	// 		delete it;
-	// 	}
-	// 	else {
-	// 		std::cout << "Roll " << (i+1) << ", <not defined yet>" << std::endl;
-	// 	}
-	// }
-
-	// std::cout << std::endl;
-
-	// Item *it;
-
-	// std::cout << "=================================================" << std::endl;
-	// std::cout << "   Generating 10 random weapons                  " << std::endl;
-	// std::cout << "=================================================" << std::endl;
-	// for (int i=0; i < 10; i++) {
-	// 	std::cout << std::endl;
-	// 	it = ItemGenerator::generate(WEAPON_CLASS, 20);
-	// 	if (it != NULL) { 
-	// 		it->identify();
-	// 		std::cout << "Roll " << (i+1) << ", item is now " << it->get_full_name() << std::endl;
-	// 		it->dump_item();
-	// 		delete it;
-	// 	}
-	// 	else {
-	// 		std::cout << "Roll " << (i+1) << ", <not defined yet>" << std::endl;
-	// 	}
-	// }
-	
-	// g_inventory = new Inventory();
-
-	// Item *i = ItemGenerator::generate(WEAPON_CLASS, 100);
-
-	// int first_empty = g_inventory->get_first_empty_slot();
-	// std::cout << std::endl;
-	// if(first_empty >= 0) {
-	// 	g_inventory->add_at_slot(i, first_empty);
-	// 	g_inventory->get_item_in_slot(first_empty)->dump_item();
-	// }
-
-	// i = ItemGenerator::generate(ARMOR_CLASS, 100);
-	// first_empty = g_inventory->get_first_empty_slot();
-	// std::cout << std::endl;
-	// if(first_empty >= 0) {
-	// 	g_inventory->add_at_slot(i, first_empty);
-	// 	g_inventory->get_item_in_slot(first_empty)->dump_item();
-	// }
-
-	// std::cout << std::endl << "Slots in use = " << g_inventory->get_num_slots_in_use() << std::endl;
-
-	// delete g_inventory;
-
-	// Item *it = ItemGenerator::generate(WEAPON_CLASS, 100);
-	// std::cout << it->get_full_name() << std::endl;
-	// it->identify();
-	// std::cout << it->get_full_name() << std::endl;
-	// delete it;
 
 	return 0;
 }

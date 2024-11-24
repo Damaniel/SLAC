@@ -31,9 +31,11 @@ Inventory *g_inventory;
 //==================================================================
 
 
+//----------------------------------------------------------------------------
 // Inventory::Inventory
 //
 // Constructor.
+//----------------------------------------------------------------------------
 Inventory::Inventory() {
     inv = std::vector<Item *>(INVENTORY_SIZE);
     for(int i=0;i<INVENTORY_SIZE;++i) {
@@ -41,9 +43,11 @@ Inventory::Inventory() {
     }
 }
 
+//----------------------------------------------------------------------------
 // Inventory::~Inventory
 //
 // Destructor.  Frees any allocated Item objects along the way
+//----------------------------------------------------------------------------    
 Inventory::~Inventory() {
     for (std::vector<Item *>::iterator it = inv.begin(); it != inv.end(); ++it) {
         if(*it != NULL)
@@ -51,6 +55,7 @@ Inventory::~Inventory() {
     }
 }
 
+//----------------------------------------------------------------------------
 // Gets the item in the selected slot.
 //
 // Arguments:
@@ -58,10 +63,12 @@ Inventory::~Inventory() {
 //
 // Returns:
 //   A pointer to the Item in the slot, or NULL if the slot is empty.
+//----------------------------------------------------------------------------
 Item *Inventory::get_item_in_slot(int slot) {
     return inv[slot];
 }
 
+//----------------------------------------------------------------------------
 // Adds an item at the specified slot, removing any existing item from it.
 // 
 // Arguments:
@@ -69,13 +76,16 @@ Item *Inventory::get_item_in_slot(int slot) {
 //   slot - the slot to add the item at
 //
 // Returns:
-//   The slot the item was added at.  This will be the same as the value of 'slot'.
+//   The slot the item was added at.  This will be the same as the value of 
+//   'slot'.
+//----------------------------------------------------------------------------
 int Inventory::add_at_slot(Item *i, int slot) {
     drop_item_in_slot(slot);
     inv[slot] = i;
     return slot;
 }
 
+//----------------------------------------------------------------------------
 // Adds an item at the first empty inventory slot.
 //
 // Arguments:
@@ -83,6 +93,7 @@ int Inventory::add_at_slot(Item *i, int slot) {
 //
 // Returns:
 //   The index of the slot it was added at, or -1 if the inventory is full.
+//----------------------------------------------------------------------------
 int Inventory::add_at_first_empty(Item *i) {
     if (!inventory_is_full()) {
         int slot = get_first_empty_slot();
@@ -93,6 +104,7 @@ int Inventory::add_at_first_empty(Item *i) {
     return -1;
 }
 
+//----------------------------------------------------------------------------
 // Gets the location of the first empty inventory slot.  
 //
 // Arguments:
@@ -100,6 +112,7 @@ int Inventory::add_at_first_empty(Item *i) {
 //
 // Returns:
 //   The index of the empty slot, or -1 if the inventory is full.
+//----------------------------------------------------------------------------
 int Inventory::get_first_empty_slot() {
     int first_empty = -1;
     for(int i=0; i<INVENTORY_SIZE; ++i) {
@@ -113,6 +126,7 @@ int Inventory::get_first_empty_slot() {
     return first_empty;
 }
 
+//----------------------------------------------------------------------------
 // Gets the number of used inventory slots.  
 //
 // Arguments:
@@ -120,6 +134,7 @@ int Inventory::get_first_empty_slot() {
 //
 // Returns:
 //   The number of used inventory slots.
+//----------------------------------------------------------------------------
 int Inventory::get_num_slots_in_use() {
     int slots_in_use = 0;
 
@@ -130,6 +145,7 @@ int Inventory::get_num_slots_in_use() {
     return slots_in_use;
 }
 
+//----------------------------------------------------------------------------
 // Determines if the inventory is full.
 //
 // Arguments: 
@@ -137,6 +153,7 @@ int Inventory::get_num_slots_in_use() {
 //
 // Returns:
 //   true if inventory is full, false if not.
+//----------------------------------------------------------------------------
 bool Inventory::inventory_is_full() {
     for (int i=0; i<INVENTORY_SIZE; i++) {
         if (inv[i] == NULL)
@@ -145,6 +162,7 @@ bool Inventory::inventory_is_full() {
     return true;
 }
 
+//----------------------------------------------------------------------------
 // Removes an item from the specified inventory slot
 //
 // Arguments: 
@@ -152,6 +170,7 @@ bool Inventory::inventory_is_full() {
 //
 // Returns:
 //   Nothing.
+//----------------------------------------------------------------------------
 void Inventory::drop_item_in_slot(int slot) {
     if (inv[slot] != NULL) { 
         delete inv[slot];
@@ -163,6 +182,7 @@ void Inventory::drop_item_in_slot(int slot) {
 // Item
 //==================================================================
 
+//----------------------------------------------------------------------------
 // Dumps information common to all Items to the console.
 //
 // Arguments:
@@ -170,6 +190,7 @@ void Inventory::drop_item_in_slot(int slot) {
 //
 // Returns:
 //   None
+//----------------------------------------------------------------------------
 void Item::dump_item_common(void) {
     std::cout << "====== Common ============================" << std::endl;
     std::cout << "Name:      " << get_full_name() << std::endl;
@@ -215,6 +236,7 @@ void Item::dump_item_common(void) {
 // Equipment
 //==================================================================
 
+//----------------------------------------------------------------------------
 // Gets the base name of the equipment type.
 //
 // Arguments: 
@@ -222,10 +244,12 @@ void Item::dump_item_common(void) {
 //
 // Returns:
 //   A string containing the base type name.
+//----------------------------------------------------------------------------
 std::string Equipment::get_type_name() {
     return name;
 }
 
+//----------------------------------------------------------------------------
 // Gets the full name (base+affixes) of the equipment type.
 //
 // Arguments: 
@@ -233,6 +257,7 @@ std::string Equipment::get_type_name() {
 //
 // Returns:
 //   A string containing the full item name.
+//----------------------------------------------------------------------------
 std::string Equipment::get_full_name() {
     std::string prefix_text;
     std::string suffix_text;
@@ -258,6 +283,7 @@ std::string Equipment::get_full_name() {
     return prefix_text + name + suffix_text;
 }
 
+//----------------------------------------------------------------------------
 // Dumps information about the item's prefix to the console.
 //
 // Arguments:
@@ -265,6 +291,7 @@ std::string Equipment::get_full_name() {
 //
 // Returns:
 //   None
+//----------------------------------------------------------------------------
 void Equipment::dump_prefix() {
     if (can_have_prefix && prefix_id >= 0) {
         ItemPrefixType *it = &(g_item_prefix_ids[prefix_id]);
@@ -281,6 +308,7 @@ void Equipment::dump_prefix() {
     }
 }
 
+//----------------------------------------------------------------------------
 // Dumps information about the item's suffix to the console.
 //
 // Arguments:
@@ -288,6 +316,7 @@ void Equipment::dump_prefix() {
 //
 // Returns:
 //   None
+//----------------------------------------------------------------------------
 void Equipment::dump_suffix() {
     if (can_have_suffix && suffix_id >= 0) {
         ItemSuffixType *it = &(g_item_suffix_ids[suffix_id]);
@@ -308,6 +337,7 @@ void Equipment::dump_suffix() {
 // Weapon
 //==================================================================
 
+//----------------------------------------------------------------------------
 // Initializes a Weapon using an entry from the weapon base type
 //  table.
 //
@@ -316,6 +346,7 @@ void Equipment::dump_suffix() {
 //
 // Returns:
 //   Nothing.
+//----------------------------------------------------------------------------
 void Weapon::init(WeaponBaseType *b) {
     // Assign the fields from the weapon base type here
     id = b->id;
@@ -340,36 +371,51 @@ void Weapon::init(WeaponBaseType *b) {
     suffix_id = -1;
 }
 
+//----------------------------------------------------------------------------
+// Initializes a weapon using an index into the weapon base type table
+//
+// Arguments:
+//   idx - the index into the weapon base type table
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
 void Weapon::init(int idx) {
     init(&(g_weapon_base_ids[idx]));
 }
 
+//----------------------------------------------------------------------------
 // Weapon::Weapon
 //
 // Constructor.
 //
 // Constructs a dummy item with base id of zero.  This item will
 // generally be something modified later using generate(). 
+//----------------------------------------------------------------------------
 Weapon::Weapon() {
     //std::cout << "Creating weapon" << std::endl;
     WeaponBaseType *b = &(g_weapon_base_ids[0]);
     init(b);
 }
 
+//----------------------------------------------------------------------------
 // Weapon::Weapon
 //
 // Constructor.
 //
 // Constructs using a pointer to an entry in the base types table
+//----------------------------------------------------------------------------
 Weapon::Weapon(WeaponBaseType *b) {
     init(b);
 }
 
+//----------------------------------------------------------------------------
 // Weapon::Weapon
 //
 // Constructor.
 //
 // Constructs using an offset (relative to to the base types table).
+//----------------------------------------------------------------------------
 Weapon::Weapon(unsigned int idx) {
     //std::cout << "Creating weapon" << std::endl;
     // Assign the fields from the weapon base type list at index idx here
@@ -377,7 +423,7 @@ Weapon::Weapon(unsigned int idx) {
     init(b);
 }
 
-
+//----------------------------------------------------------------------------
 // Equips a weapon.
 // 
 // Arguments:
@@ -385,10 +431,12 @@ Weapon::Weapon(unsigned int idx) {
 //
 // Returns:
 //   None
+//----------------------------------------------------------------------------
 void Weapon::equip() {
     is_equipped = true;
 }
 
+//----------------------------------------------------------------------------
 // Removes a weapon.
 // 
 // Arguments:
@@ -396,10 +444,12 @@ void Weapon::equip() {
 //
 // Returns:
 //   None
+//----------------------------------------------------------------------------
 void Weapon::remove() {
     is_equipped = false;
 }
 
+//----------------------------------------------------------------------------
 // Dumps information specific to weapons to the console.
 //
 // Arguments:
@@ -407,6 +457,7 @@ void Weapon::remove() {
 //
 // Returns:
 //   None
+//----------------------------------------------------------------------------
 void Weapon::dump_item() {
     dump_item_common();
     std::cout << "====== Weapon Specific ===================" << std::endl;
@@ -421,6 +472,7 @@ void Weapon::dump_item() {
 // Armor
 //==================================================================
 
+//----------------------------------------------------------------------------
 // Initializes an Armor using an entry from the armor base type
 //  table.
 //
@@ -429,6 +481,7 @@ void Weapon::dump_item() {
 //
 // Returns:
 //   Nothing.
+//----------------------------------------------------------------------------
 void Armor::init(ArmorBaseType *b) {
     // Assign the fields from the armor base type here
     id = b->id;
@@ -453,42 +506,58 @@ void Armor::init(ArmorBaseType *b) {
     suffix_id = -1;
 }
 
+//----------------------------------------------------------------------------
+// Initializes an Armor using an index into the armor base type table
+//
+// Arguments:
+//   idx - the index into the armor base types table
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
 void Armor::init(int idx) {
     init(&(g_armor_base_ids[idx]));
 }
 
+//----------------------------------------------------------------------------
 // Armor::Armor
 //
 // Constructor.
 //
 // Constructs a dummy item with base id of zero.  This item will
 // generally be something modified later using generate(). 
+//----------------------------------------------------------------------------
 Armor::Armor() {
     //std::cout << "Creating armor" << std::endl;
     ArmorBaseType *b = &(g_armor_base_ids[0]);
     init(b);
 }
 
+//----------------------------------------------------------------------------
 // Armor::Armor
 //
 // Constructor.
 //
 // Constructs using a pointer to an entry in the base types table
+//----------------------------------------------------------------------------
 Armor::Armor(ArmorBaseType *b) {
     //std::cout << "Creating armor" << std::endl;
     init(b);
 }
 
+//----------------------------------------------------------------------------
 // Armor::Armor
 //
 // Constructor.
 //
 // Constructs using an offset (relative to to the base types table).
+//----------------------------------------------------------------------------
 Armor::Armor(unsigned int idx) {
     ArmorBaseType *b = &(g_armor_base_ids[idx]);
     init(b);
 }
 
+//----------------------------------------------------------------------------
 // Equips a piece of armor.
 // 
 // Arguments:
@@ -496,10 +565,12 @@ Armor::Armor(unsigned int idx) {
 //
 // Returns:
 //   None
+//----------------------------------------------------------------------------
 void Armor::equip() {
     is_equipped = true;
 }
 
+//----------------------------------------------------------------------------
 // Removes a piece of armor.
 // 
 // Arguments:
@@ -507,10 +578,12 @@ void Armor::equip() {
 //
 // Returns:
 //   None
+//----------------------------------------------------------------------------
 void Armor::remove() {
     is_equipped = false;
 }
 
+//----------------------------------------------------------------------------
 // Dumps information specific to armor to the console.
 //
 // Arguments:
@@ -518,6 +591,7 @@ void Armor::remove() {
 //
 // Returns:
 //   None
+//----------------------------------------------------------------------------
 void Armor::dump_item() {
     dump_item_common();
     std::cout << "====== Armor Specific ===================" << std::endl;
@@ -533,20 +607,25 @@ void Armor::dump_item() {
 // Consumable
 //==================================================================
 
+//----------------------------------------------------------------------------
 // Consumable::~Consumable
 //
 // Destructor.
+//----------------------------------------------------------------------------
 Consumable::~Consumable() {
 
 }
 
-// Gets the full name
+//----------------------------------------------------------------------------
+// Gets the full name of the consumable, depending on whether it has been
+// identified or not
 // 
 // Arguments:
 //   None
 //
 // Returns:
-//   The j;
+//   The full name of the item
+//----------------------------------------------------------------------------
 std::string Consumable::get_full_name() {
     if (is_identified) {
         return name;
@@ -560,6 +639,7 @@ std::string Consumable::get_full_name() {
 // Currency
 //==================================================================
 
+//----------------------------------------------------------------------------
 // Initializes a Currency using an entry from the currency type table.
 //
 // Arguments: 
@@ -567,6 +647,7 @@ std::string Consumable::get_full_name() {
 //
 // Returns:
 //   Nothing.
+//----------------------------------------------------------------------------
 void Currency::init(CurrencyType *b) {
     // Assign the fields from the armor base type here
     id = b->id;
@@ -586,42 +667,58 @@ void Currency::init(CurrencyType *b) {
     is_identified = true;
 }
 
+//----------------------------------------------------------------------------
+// Initializes a Currency using an index into the currency type table
+//
+// Arguments:
+//   idx - the index into the currency type table
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
 void Currency::init(int idx) {
     init(&(g_currency_ids[idx]));
 }
 
+//----------------------------------------------------------------------------
 // Currency::Currency
 //
 // Constructor.
 //
 // Constructs a dummy item with base id of zero.  This item will
 // generally be something modified later using generate(). 
+//----------------------------------------------------------------------------
 Currency::Currency() {
     //std::cout << "Creating currency" << std::endl;
     CurrencyType *b = &(g_currency_ids[0]);
     init(b);
 }
 
+//----------------------------------------------------------------------------
 // Currency::Currency
 //
 // Constructor.
 //
 // Constructs using a pointer to an entry in the currency table
+//----------------------------------------------------------------------------
 Currency::Currency(CurrencyType *b) {
     //std::cout << "Creating currency" << std::endl;
     init(b);
 }
 
+//----------------------------------------------------------------------------
 // Currency::Currency
 //
 // Constructor.
 //
 // Constructs using an offset (relative to to the type table).
+//----------------------------------------------------------------------------
 Currency::Currency(unsigned int idx) {
     CurrencyType *b = &(g_currency_ids[idx]);
     init(b);
 }
 
+//----------------------------------------------------------------------------
 // Dumps information specific to currency to the console.
 //
 // Arguments:
@@ -629,30 +726,35 @@ Currency::Currency(unsigned int idx) {
 //
 // Returns:
 //   None
+//----------------------------------------------------------------------------
 void Currency::dump_item() {
     dump_item_common();
     std::cout << "====== Currency Specific ===================" << std::endl;
     std::cout << "  Nothing yet" << std::endl;
 }
 
-// Gets the full name
+//----------------------------------------------------------------------------
+// Gets the currency's full name
 // 
 // Arguments:
 //   None
 //
 // Returns:
-//   The full name;
+//   A string containing the full name
+//----------------------------------------------------------------------------
 std::string Currency::get_full_name() {
     return g_currency_ids[id].name;
 }
 
-// Gets the type name
+//----------------------------------------------------------------------------
+// Gets the currency's type name
 // 
 // Arguments:
 //   None
 //
 // Returns:
-//   "Scroll";
+//   A string containing the type name
+//----------------------------------------------------------------------------
 std::string Currency::get_type_name() {
     return "Currency";
 }
@@ -661,6 +763,7 @@ std::string Currency::get_type_name() {
 // Potion
 //==================================================================
 
+//----------------------------------------------------------------------------
 // Initializes a Potion using an entry from the potion type table
 //
 // Arguments: 
@@ -668,6 +771,7 @@ std::string Currency::get_type_name() {
 //
 // Returns:
 //   Nothing.
+//----------------------------------------------------------------------------
 void Potion::init(PotionType *b) {
     // Assign the fields from the potion type here
     id = b->id;
@@ -688,42 +792,58 @@ void Potion::init(PotionType *b) {
     is_identified = false;
 }
 
+//----------------------------------------------------------------------------
+// Initializes a Potion using an index into the potion type table
+//
+// Arguments:
+//   idx - an index into the potion type table
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
 void Potion::init(int idx) {
     init(&(g_potion_ids[idx]));
 }
 
+//----------------------------------------------------------------------------
 // Potion::Potion
 //
 // Constructor.
 //
 // Constructs a dummy item with base id of zero.  This item will
 // generally be something modified later using generate(). 
+//----------------------------------------------------------------------------
 Potion::Potion() {
     //std::cout << "Creating potion" << std::endl;
     PotionType *b = &(g_potion_ids[0]);
     init(b);
 }
 
+//----------------------------------------------------------------------------
 // Potion::Potion
 //
 // Constructor.
 //
 // Constructs using a pointer to an entry in the types table
+//----------------------------------------------------------------------------
 Potion::Potion(PotionType *b) {
     //std::cout << "Creating potion" << std::endl;
     init(b);
 }
 
+//----------------------------------------------------------------------------
 // Potion::Potion
 //
 // Constructor.
 //
 // Constructs using an offset (relative to to the types table).
+//----------------------------------------------------------------------------
 Potion::Potion(unsigned int idx) {
     PotionType *b = &(g_potion_ids[idx]);
     init(b);
 }
 
+//----------------------------------------------------------------------------
 // 'Uses' the potion; i.e. applies its effect
 //
 // Arguments:
@@ -731,10 +851,12 @@ Potion::Potion(unsigned int idx) {
 //
 // Returns:
 //   Nothing
+//----------------------------------------------------------------------------
 void Potion::use() {
     std::cout << "potion used" << std::endl;
 }
 
+//----------------------------------------------------------------------------
 // Dumps information specific to potions to the console.
 //
 // Arguments:
@@ -742,6 +864,7 @@ void Potion::use() {
 //
 // Returns:
 //   None
+//----------------------------------------------------------------------------
 void Potion::dump_item() {
     dump_item_common();
     std::cout << "====== Armor Specific ===================" << std::endl;
@@ -749,13 +872,15 @@ void Potion::dump_item() {
     std::cout << "Effect ID: " << effect_id << " (expanded form TBD)" << std::endl;
 }
 
-// Gets the type name
+//----------------------------------------------------------------------------
+// Gets the item's type name
 // 
 // Arguments:
 //   None
 //
 // Returns:
 //   "Potion";
+//----------------------------------------------------------------------------
 std::string Potion::get_type_name() {
     return "Potion";
 }
@@ -764,6 +889,7 @@ std::string Potion::get_type_name() {
 // Scroll
 //==================================================================
 
+//----------------------------------------------------------------------------
 // Initializes a Scroll using an entry from the scroll type table
 //
 // Arguments: 
@@ -771,6 +897,7 @@ std::string Potion::get_type_name() {
 //
 // Returns:
 //   Nothing.
+//----------------------------------------------------------------------------
 void Scroll::init(ScrollType *b) {
     // Assign the fields from the potion type here
     id = b->id;
@@ -790,43 +917,58 @@ void Scroll::init(ScrollType *b) {
     can_use = b->can_use;
     is_identified = false;
 }
-
+//----------------------------------------------------------------------------
+// Initializes a Scroll using an index into the scroll type table
+//
+// Arguments:
+//   idx - an index into the scroll type table
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
 void Scroll::init(int idx) {
     init(&(g_scroll_ids[idx]));
 }
 
+//----------------------------------------------------------------------------
 // Scroll::Scroll
 //
 // Constructor.
 //
 // Constructs a dummy item with base id of zero.  This item will
 // generally be something modified later using generate(). 
+//----------------------------------------------------------------------------
 Scroll::Scroll() {
     //std::cout << "Creating scroll" << std::endl;
     ScrollType *b = &(g_scroll_ids[0]);
     init(b);
 }
 
+//----------------------------------------------------------------------------
 // Scroll::Scroll
 //
 // Constructor.
 //
 // Constructs using a pointer to an entry in the types table
+//----------------------------------------------------------------------------
 Scroll::Scroll(ScrollType *b) {
     //std::cout << "Creating scroll" << std::endl;
     init(b);
 }
 
+//----------------------------------------------------------------------------
 // Scroll::Scroll
 //
 // Constructor.
 //
 // Constructs using an offset (relative to to the types table).
+//----------------------------------------------------------------------------
 Scroll::Scroll(unsigned int idx) {
     ScrollType *b = &(g_scroll_ids[idx]);
     init(b);
 }
 
+//----------------------------------------------------------------------------
 // 'Uses' the potion; i.e. applies its effect
 //
 // Arguments:
@@ -834,10 +976,12 @@ Scroll::Scroll(unsigned int idx) {
 // 
 // Returns:
 //   Nothing
+//----------------------------------------------------------------------------
 void Scroll::use() {
     std::cout << "scroll used" << std::endl;
 }
 
+//----------------------------------------------------------------------------
 // Dumps information specific to potions to the console.
 //
 // Arguments:
@@ -845,6 +989,7 @@ void Scroll::use() {
 //
 // Returns:
 //   None
+//----------------------------------------------------------------------------
 void Scroll::dump_item() {
     dump_item_common();
     std::cout << "====== Scroll Specific ===================" << std::endl;
@@ -852,13 +997,15 @@ void Scroll::dump_item() {
     std::cout << "Effect ID: " << effect_id << " (expanded form TBD)" << std::endl;
 }
 
-// Gets the type name
+//----------------------------------------------------------------------------
+// Gets the scroll's type name
 // 
 // Arguments:
 //   None
 //
 // Returns:
-//   "Scroll";
+//   A string containing the scroll type ('Scroll')
+//----------------------------------------------------------------------------
 std::string Scroll::get_type_name() {
     return "Scroll";
 }
@@ -867,6 +1014,7 @@ std::string Scroll::get_type_name() {
 // Artifact
 //==================================================================
 
+//----------------------------------------------------------------------------
 // Initializes an Artifact using an entry from the artifact type table
 //
 // Arguments: 
@@ -874,6 +1022,7 @@ std::string Scroll::get_type_name() {
 //
 // Returns:
 //   Nothing.
+//----------------------------------------------------------------------------
 void Artifact::init(ArtifactType *b) {
     // Assign the fields from the potion type here
     id = b->id;
@@ -894,42 +1043,58 @@ void Artifact::init(ArtifactType *b) {
     is_identified = false;
 }
 
+//----------------------------------------------------------------------------
+// Initializes an Artifact using an index into the artifact type table
+//
+// Arguments:
+//   idx - the index into the artifact type table
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
 void Artifact::init(int idx) {
     init(&(g_artifact_ids[idx]));
 }
 
+//----------------------------------------------------------------------------
 // Artifact::Artifact
 //
 // Constructor.
 //
 // Constructs a dummy item with base id of zero.  This item will
 // generally be something modified later using generate(). 
+//----------------------------------------------------------------------------
 Artifact::Artifact() {
     //std::cout << "Creating artifact" << std::endl;
     ArtifactType *b = &(g_artifact_ids[0]);
     init(b);
 }
 
+//----------------------------------------------------------------------------
 // Artifact::Artifact
 //
 // Constructor.
 //
 // Constructs using a pointer to an entry in the artifacts table
+//----------------------------------------------------------------------------
 Artifact::Artifact(ArtifactType *b) {
     //std::cout << "Creating artifact" << std::endl;
     init(b);
 }
 
+//----------------------------------------------------------------------------
 // Artifact::Artifact
 //
 // Constructor.
 //
 // Constructs using an offset (relative to to the artifacts table).
+//----------------------------------------------------------------------------
 Artifact::Artifact(unsigned int idx) {
     ArtifactType *b = &(g_artifact_ids[idx]);
     init(b);
 }
 
+//----------------------------------------------------------------------------
 // Dumps information specific to artifacts to the console.
 //
 // Arguments:
@@ -937,6 +1102,7 @@ Artifact::Artifact(unsigned int idx) {
 //
 // Returns:
 //   None
+//----------------------------------------------------------------------------
 void Artifact::dump_item() {
     dump_item_common();
     std::cout << "====== Artifact Specific ===================" << std::endl;
@@ -953,24 +1119,29 @@ void Artifact::dump_item() {
     std::cout << "Effect ID: " << effect_id << " (expanded form TBD)" << std::endl;
 }
 
-// Gets the full name
+//----------------------------------------------------------------------------
+// Gets the arftifact's full name
 // 
 // Arguments:
 //   None
 //
 // Returns:
-//   The type name
+//   A string containing the full name of the artifact (which is just the 
+//   type name)
+//----------------------------------------------------------------------------
 std::string Artifact::get_full_name() {
     return get_type_name();
 }
 
-// Gets the type name
+//----------------------------------------------------------------------------
+// Gets the artifact's type name
 // 
 // Arguments:
 //   None
 //
 // Returns:
-//   The type name
+//   A string containing the type name
+//----------------------------------------------------------------------------
 std::string Artifact::get_type_name() {
     return name;
 }

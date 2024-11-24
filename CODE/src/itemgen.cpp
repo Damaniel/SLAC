@@ -23,6 +23,7 @@
 //==========================================================================================
 #include "globals.h"
 
+//----------------------------------------------------------------------------
 // Generates a random item index from the given pool
 //
 // Arguments:
@@ -31,7 +32,9 @@
 //  max_val - the highest possible value in the pool
 //
 // Returns:
-//  The index from the pool selected, or 0 (the default item) if something went wrong
+//  The index from the pool selected, or 0 (the default item) if something
+//  went wrong
+//----------------------------------------------------------------------------
 int ItemGenerator::roll_from_pool(const int *pool, int pool_size, int max_val) {
     int val = rand() % max_val;
     //std::cout << "size = " << pool_size << ", max val =  " << max_val << ", rolled val = " << val << std::endl;
@@ -45,26 +48,32 @@ int ItemGenerator::roll_from_pool(const int *pool, int pool_size, int max_val) {
     return 0;
 }
 
-// Generates an item.  This can be anything, weighted by overall item class, item base type and mod types, 
-// assuming a max item level of 100
+//----------------------------------------------------------------------------
+// Generates an item.  This can be anything, weighted by overall item class, 
+// item base type and mod types, assuming a max item level of 100
 //
 // Arguments:
 //   None
 //
 // Returns:
 //   A pointer to a randomly generated Item.
+//----------------------------------------------------------------------------
 Item *ItemGenerator::generate() {
     return ItemGenerator::generate(100);
 }
 
-// Generates an item based on a specified item level.  Within that constraint, this can be anything, 
-// weighted by overall item class, item base type and mod types.
+//----------------------------------------------------------------------------
+// Generates an item based on a specified item level.  Within that constraint, 
+// this can be anything, weighted by overall item class, item base type and 
+// mod types.
 //
 // Arguments:
 //   ilevel - the target item level to use for item generation
 //
 // Returns:
-//   A pointer to a randomly generated Item.
+//   A pointer to a randomly generated Item.  The memory for this will need
+//   to be freed later since it's heap allocated.
+//----------------------------------------------------------------------------
 Item *ItemGenerator::generate(int ilevel) {
     Item *i;
     int item_type = ItemGenerator::roll_from_pool(g_item_class_pool, g_item_class_pool_count, g_item_class_pool_entries);
@@ -76,7 +85,9 @@ Item *ItemGenerator::generate(int ilevel) {
     return i;
 }
 
-// Generates an item of a particular item class, weighted by base type and mod types.
+//----------------------------------------------------------------------------
+// Generates an item of a particular item class, weighted by base type and mod 
+// types.
 //
 // Arguments:
 //   item_type - item to generate
@@ -85,7 +96,9 @@ Item *ItemGenerator::generate(int ilevel) {
 // Returns:
 //   A pointer to a randomly generated Item of the item type.
 //
-// Valid item types are (WEAPON_CLASS, ARMOR_CLASS, CURRENCY_CLASS, CONSUMABLE_CLASS, ARTIFACT_CLASS).
+// Valid item types are (WEAPON_CLASS, ARMOR_CLASS, CURRENCY_CLASS, 
+// CONSUMABLE_CLASS, ARTIFACT_CLASS).
+//----------------------------------------------------------------------------
 Item *ItemGenerator::generate(int item_type, int ilevel) {
     Item *i;
     int attempt, base_ilevel;
@@ -187,11 +200,14 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
         // std::cout << "generator: item base roll failed, generating 'default' item" << std::endl;
         i->init(0);
     }
-
+        
     // Attempt to apply a curse to items that can be.  This will dictate what kinds of affixes can roll.
     if (i->can_have_curse()) {
         ItemGenerator::apply_curse(i);
     }
+
+    // TODO: curses need to ensure that if prefixes and suffixes are generated, that they
+    // only apply 'cursed' ones.
 
     // Attempt to add a prefix or suffix to items that can have them
     if (i->can_have_a_prefix()) {
@@ -207,13 +223,18 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
     return i;
 }
 
-// Generates and applies a random affix to an item, if the item is capable of taking one
+//----------------------------------------------------------------------------
+// Generates and applies a random affix to an item, if the item is capable of 
+// taking one
 //
 // Arguments:
 //   i - the Item to augment
+//   affix_type - the type of affix to apply (PREFIX_CLASS or SUFFIX_CLASS)
+//   ilevel - the maximum ilevel to use when pulling from the affix pools
 //
 // Returns:
 //   Nothing
+//----------------------------------------------------------------------------
 void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
     int roll, rolled_affix_type, attempt, base_ilevel;
     bool generated;
@@ -287,6 +308,7 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
     } 
 }
 
+//----------------------------------------------------------------------------
 // Attempts to curse an item according to a weighting factor.
 //
 // Arguments:
@@ -294,6 +316,7 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
 //
 // Returns:
 //   Nothing.
+//----------------------------------------------------------------------------
 void ItemGenerator::apply_curse(Item *i) {
     int roll = rand() % 100;
     if (roll < CHANCE_OF_CURSE) {

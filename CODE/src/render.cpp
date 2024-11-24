@@ -1,7 +1,7 @@
 //==========================================================================================
 //   Secret Legacy of the Ancient Caves (SLAC)
 //
-//   Copyright (c) 2020-2021 Shaun Brandt / Holy Meatgoat Software
+//   Copyright (c) 2020-2024 Shaun Brandt / Holy Meatgoat Software
 //
 //   Permission is hereby granted, free of charge, to any person obtaining a copy
 //   of this software and associated documentation files (the "Software"), to deal
@@ -23,41 +23,51 @@
 //==========================================================================================
 #include "globals.h"
 
-//==================================================================================
-// Constructors
-//==================================================================================
+//------------------------------------------------------------------------------
+// Render::Render
+//
+// Constructor.
+//------------------------------------------------------------------------------
 Render::Render() {
 
 }
 
-//==================================================================================
-// Private methods
-//==================================================================================
-
-//----------------------------------------------------------------------------------
-// render_actors
-//
+//------------------------------------------------------------------------------
 // Renders all non-static dungeon elements.  This includes the player and all
 // enemies.  
 //
+// Arguments:
+//   destination - the bitmap to render to
+//   maze_x, maze_y - the position to draw from
+//  
+// Returns:
+//   Nothing
+//
 // Notes:
-//   maze_x and maze_y represent the maze tile position in the upper left corner of 
-//   the play area
-//----------------------------------------------------------------------------------
+//   maze_x and maze_y represent the maze tile position in the upper left 
+//   cornerof the play area
+//------------------------------------------------------------------------------
 void Render::render_actors(BITMAP *destination, int maze_x, int maze_y) {
 	BITMAP *bpc = (BITMAP *)g_game_data[DAMRL_PLAYER_SPRITES].dat;
-	// For now, just draw the player
+
+	// For now, just draw the player.  He's always centered in the play area.
 	masked_blit(bpc, destination, PLAYER_TILE_OFFSET * TILE_PIXEL_WIDTH, 0, 
 	            PLAYER_PLAY_AREA_X * TILE_PIXEL_WIDTH, PLAYER_PLAY_AREA_Y * TILE_PIXEL_HEIGHT,
 		        TILE_PIXEL_WIDTH, TILE_PIXEL_HEIGHT);
 }
 
-//----------------------------------------------------------------------------------
-// render_base_tile
+//------------------------------------------------------------------------------
+// Draws the specified base tile (that is, wall, floor, or darkness) at the 
+// specified position relative to the top of the play area
 //
-// Draws the specified base tile (that is, wall, floor, or darkness) at the tile
-// location (x,y) relative to the top of the play area
-//----------------------------------------------------------------------------------
+// Arguments:
+//   destination - the bitmap to render to
+//   tile_id - the index of the ground tile to draw
+//   x, y - the position to draw the tile
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
 void Render::render_base_tile(BITMAP *destination, int tile_id, int x, int y) {
 	blit((BITMAP *)g_game_data[DAMRL_MAZE_BASE_TILES_1].dat, 
 	     destination,
@@ -69,12 +79,15 @@ void Render::render_base_tile(BITMAP *destination, int tile_id, int x, int y) {
 		 TILE_PIXEL_HEIGHT);	
 }
 
-//----------------------------------------------------------------------------------
-// render_item
+//------------------------------------------------------------------------------
+// Draws the specified item tile (specified by the Item value in 'gid') at the 
+// tile location (x,y) relative to the top of the play area
 //
-// Draws the specified item tile (specified by the Item value in 'gid') at the tile
-// location (x,y) relative to the top of the play area
-//----------------------------------------------------------------------------------
+// Arguments:
+//   destination - the bitmap to render to
+//   gid - the tile id of the item
+//   x, y - the position to draw the tile
+//------------------------------------------------------------------------------
 void Render::render_item(BITMAP *destination, int gid, int x, int y) {
 	int tilex = gid % ITEM_TILE_ENTRY_WIDTH;
 	int tiley = gid / ITEM_TILE_ENTRY_WIDTH;
@@ -89,19 +102,15 @@ void Render::render_item(BITMAP *destination, int gid, int x, int y) {
 		 TILE_PIXEL_HEIGHT);	
 }
 
-//==================================================================================
-// Public methods
-//==================================================================================
-
-//----------------------------------------------------------------------------------
-// initialize_map_bitmap
-//
+//------------------------------------------------------------------------------
 // Clears the entire backround of the map area to the 'fog of war' color.
-// Called every time the player enters a new maze.
 //
-// I could cheat and just blit the fog of war color, but for now I want to do it
-// the same way that the update map function does.
-//----------------------------------------------------------------------------------
+// Arguments:
+//   None
+//
+// Returns:
+//   
+//------------------------------------------------------------------------------
 void Render::initialize_map_bitmap(Maze *m) {
 	for (int y=0; y <= MAP_NUM_Y_DOTS; y++) {
 		for (int x=0; x <= MAP_NUM_X_DOTS; x++) {
@@ -123,27 +132,17 @@ void Render::initialize_map_bitmap(Maze *m) {
 	map_maze_yoffset = MAP_AREA_VMEM_Y + ((MAP_PIXEL_HEIGHT - m->get_height() * MAP_DOT_HEIGHT) / 2);
 }
 
-//----------------------------------------------------------------------------------
-// add_area_to_map_bitmap
-//
-// Debug function (for now).  TODO: investigate a better way to do this
-//
+//------------------------------------------------------------------------------
 // Adds small squares to the map bitmap corresponding to the area in the 
 // immediate vicinity of the location specified by (x, y)
 //
-// Notes:
-//   This method will probably change dramatically since many features are 
-//   missing and this function can be pretty slow.
-//  
-//   - Currently, walls and floors will be redrawn even if they've been drawn 
-//     previously - keeping track of what's already done can reduce the blitting
-//   - xOff and yOff should be precomputed somewhere since it only changes once
-//     per generated maze
-//   - A 3x3 area centered on the player is always used.  The player may have
-//     a larger light radius than that
-//   - Non-player static objects (like items and stairs) aren't currently drawn
+// Arguments:
+//   m - the maze to use to determine what squares to draw
+//   x, y - the 'center' of the portion of the maze to render on the map
 //
-//----------------------------------------------------------------------------------
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
 void Render::add_area_to_map_bitmap(Maze *m, int x, int y) {
 	for(int i=x-1; i<=x+1; i++) {
 		for(int j=y-1; j<=y+1; j++) {
@@ -213,35 +212,39 @@ void Render::add_area_to_map_bitmap(Maze *m, int x, int y) {
 	//std::cout << "add_area_to_map_bitmap: finished" << std::endl;
 }
 
-//----------------------------------------------------------------------------------
-// copy_data_to_offscreen_vram
-//
-// Takes any bitmap data that we plan to stuff in unused video RAM and load it
+//------------------------------------------------------------------------------
+// Takes any bitmap data that we plan to stuff in unused video RAM and loads it
 // into a free spot
 //
-// Notes:
-//   The only bitmap data being put into video memory right now is the map dialog.
-//   The map will be constructed as the player explores, and by doing this as 
-//   exploration occurs, there's no need to generate it at the time the map is
-//   displayed (which would be a very slow operation).
-//----------------------------------------------------------------------------------
+// Arguments:
+//   None
+// 
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
 void Render::copy_data_to_offscreen_vram(void) {
+	//   The only bitmap data being put into video memory right now is the map dialog.
+	//   The map will be constructed as the player explores, and by doing this as 
+	//   exploration occurs, there's no need to generate it at the time the map is
+	//   displayed (which would be a very slow operation).
 	BITMAP *b = (BITMAP *)g_game_data[DAMRL_MAIN_MAP].dat;	
 	blit(b, screen, 0, 0, MAP_VMEM_X, MAP_VMEM_Y, MAP_VMEM_WIDTH, MAP_VMEM_HEIGHT);
 }
 
-//----------------------------------------------------------------------------------
-// render_fixed_text
+//------------------------------------------------------------------------------
+// Writes a string to the screen in the specified location using the specified 
+// color (0-4) using a fixed width font.
 //
-// Writes a string to the screen in the specified location using the specified color
-// using a fixed width font.
+// Arguments:
+//   destination - the bitmap to draw to
+//   text - the text to render
+//   x_pos, y_pos - the location to render the text
+//   font_idx - the 'color (0-4) to use for the text
 //
-// Notes: 
-//   The font bitmap contains all characters in the ASCII range 32-128.  To find the
-//   correct offset into the bitmap, the ASCII value needs to be subtracted by 32.
-//----------------------------------------------------------------------------------
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
 void Render::render_fixed_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx) {
-
 	int x = x_pos;
 	int y = y_pos;
 	int offset;
@@ -256,15 +259,16 @@ void Render::render_fixed_text(BITMAP *destination, char *text, int x_pos, int y
 	}
 }
 
-//----------------------------------------------------------------------------------
-// render_map
-//
+//------------------------------------------------------------------------------
 // Displays the map dialog in the play area.
 //
-// Notes: 
-//   The map dialog is stored in otherwise unused VGA memory.
-//----------------------------------------------------------------------------------
-void Render::render_map(BITMAP *destination, Maze *m) {
+// Arguments:
+//   destination - the bitmap to draw the map dialog to
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Render::render_map(BITMAP *destination) {
 
 	// Blit the base map
 	blit(screen, destination, MAP_VMEM_X, MAP_VMEM_Y, MAP_X_POS, MAP_Y_POS, 
@@ -286,16 +290,55 @@ void Render::render_map(BITMAP *destination, Maze *m) {
 	render_fixed_text(destination, "Y:18", 137, 171, FONT_YELLOW);
 }
 
-//----------------------------------------------------------------------------------
-// render_prop_text
+//------------------------------------------------------------------------------
+// Draws inventory content (the items, descriptions, etc) on the inventory 
+// screen
 //
-// Writes a string to the screen in the specified location using the specified color
-// using a proportional font.
+// Arguments:
+//   destination - the place to draw the inventory
 //
-// Notes: 
-//   The font bitmap contains all characters in the ASCII range 32-128.  To find the
-//   correct offset into the bitmap, the ASCII value needs to be subtracted by 32.
-//----------------------------------------------------------------------------------
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Render::render_inventory_content(BITMAP *destination) {
+	// Draw the items
+
+	// Draw the active item cursor (if any)
+
+	// Draw the active item description
+}
+
+//------------------------------------------------------------------------------
+// Draws the inventory screen
+//
+// Arguments:
+//   destination - the place to draw the inventory
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Render::render_inventory(BITMAP *destination) {
+	// Draw the background
+	blit((BITMAP *)g_game_data[DAMRL_INVENTORY].dat,
+	     destination, 0, 0, INVENTORY_DIALOG_X, INVENTORY_DIALOG_Y, 
+		 INVENTORY_DIALOG_WIDTH, INVENTORY_DIALOG_HEIGHT);
+
+	render_inventory_content(destination);
+}
+
+//------------------------------------------------------------------------------
+// Writes a string to the screen in the specified location using the specified 
+// color (0-4) using a proportional font.
+//
+// Arguments:
+//   destination - the bitmap to write the text to
+//   text - the text to write
+//   x_pos, y_pos - the location to place the text
+//   font_idx - the 'color' (0-4) to draw the text with
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
 void Render::render_prop_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx) {
 	int x = x_pos;
 	int y = y_pos;
@@ -310,15 +353,18 @@ void Render::render_prop_text(BITMAP *destination, char *text, int x_pos, int y_
 	}
 }
 
+//------------------------------------------------------------------------------
 // Draws a line of text in the narrow proportional font to the screen
 //
 // Arguments:
 //   destination - the place to render the text to
+//   text - the text to write
 //   x_pos, y_pos - the upper left corner of the location to place the text
 //   font_idx     - which color offet (0-4) to use 
 //
 // Returns:
 //   Nothing
+//------------------------------------------------------------------------------
 void Render::render_prop_narrow_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx) {
 	int x = x_pos;
 	int y = y_pos;
@@ -333,24 +379,30 @@ void Render::render_prop_narrow_text(BITMAP *destination, char *text, int x_pos,
 	}
 }
 
-//----------------------------------------------------------------------------------
-// render_status_base
-//
+//------------------------------------------------------------------------------
 // Draws the status background graphic to the screen.
-//----------------------------------------------------------------------------------
+//
+// Arguments:
+//   destination - the bitmap to write to
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
 void Render::render_status_base(BITMAP *destination) {
 	BITMAP *b = (BITMAP *)g_game_data[DAMRL_MAIN_STATUS].dat;
 	blit(b, destination, 0, 0, STATUS_AREA_X, STATUS_AREA_Y, b->w, b->h);
 }
 
-//----------------------------------------------------------------------------------
-// render_text_base
-//
+//------------------------------------------------------------------------------
 // Draws the text area graphic to the screen.
 //
-// Note:
-//   If extended is true, the larger extended text dialog will be used.
-//----------------------------------------------------------------------------------
+// Arguments:
+//	 destination - the bitmap to write to
+//   extended - if true, draws the 7 line version of the dialog
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
 void Render::render_text_base(BITMAP *destination, bool extended) {
 	BITMAP *bstd = (BITMAP *)g_game_data[DAMRL_MAIN_TEXT].dat;
 	BITMAP *bext = (BITMAP *)g_game_data[DAMRL_MAIN_TEXT_EXT].dat;
@@ -363,9 +415,18 @@ void Render::render_text_base(BITMAP *destination, bool extended) {
 	}
 }
 
+//------------------------------------------------------------------------------
+// Renders the contents of the text log to the log area.
+//
+// Arguments:
+//	 destination - the bitmap to write to
+//   extended - if true, use the 7 line version of the dialog
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
 void Render::render_text_log(BITMAP *destination, bool extended) {
 	int size, x_off, y_off, lines_to_draw, log_start;
-	int counter;
 
 	// Notes:
 	// - For both regular and extended, the first line offset is based on the position of the window
@@ -398,28 +459,32 @@ void Render::render_text_log(BITMAP *destination, bool extended) {
 		}
 	}
 
-	counter = 0;
 	for(int idx = log_start; idx < lines_to_draw; ++idx) {
-		render_prop_narrow_text(destination, (char *)g_text_log.get_line(idx).c_str(), x_off, y_off + ((prop_font_height + 1) * counter), 0);
-		++counter;
+		render_prop_narrow_text(destination, (char *)g_text_log.get_line(idx).c_str(), x_off, y_off + ((prop_font_height + 1) * (idx-log_start)), 0);
 	}
 }
 
-//----------------------------------------------------------------------------------
-// render_world_at
+//------------------------------------------------------------------------------
+// Render the world with the tile at screen position (0, 0) position equal to 
+// (maze_x, maze_y).  
 //
-// Render the world with the tile at screen position (0, 0) position equal to (maze_x, maze_y).  
+// Arguments:
+//  destination - the bitmap to draw to
+//  m - the maze to draw
+//  maze_x, maze_y - the maze position corresponding to the upper left corner
 //
-// Notes:
-//   Negative values for maze_x and maze_y are allowed, as are values outside of the 
-//   positive end of the range - maze tiles just won't be drawn for invalid locations	
-//   Also note that the code that draws the floor (that is, where is_carved == true),
-//   checks tiles to the left and above it when deciding what to draw.  There isn't 
-//   any check done to see if those tiles are valid, but the default Maze class will 
-//   always have a valid tile to the left and above any carved tile, so this shouldn't
-//   cause a problem.  If weird crashes happen, try looking here.
-//----------------------------------------------------------------------------------
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
 void Render::render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_y) {
+	// Notes:
+	//   Negative values for maze_x and maze_y are allowed, as are values outside of the 
+	//   positive end of the range - maze tiles just won't be drawn for invalid locations	
+	//   Also note that the code that draws the floor (that is, where is_carved == true),
+	//   checks tiles to the left and above it when deciding what to draw.  There isn't 
+	//   any check done to see if those tiles are valid, but the default Maze class will 
+	//   always have a valid tile to the left and above any carved tile, so this shouldn't
+	//   cause a problem.  If weird crashes happen, try looking here.
 	for (int screen_x = 0; screen_x < PLAY_AREA_TILE_WIDTH; screen_x++) {
 		for (int screen_y = 0; screen_y < PLAY_AREA_TILE_HEIGHT; screen_y++) {
 			int tile_to_render_x = maze_x + screen_x;
@@ -486,12 +551,16 @@ void Render::render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_
 }
 
 //----------------------------------------------------------------------------------
-// render_world_at_player
+// Equivalent to render_world_at, but renders using the player's location at the
+// center of the play area (rather than (0, 0)) as the top left of the play area.
 //
-// Equivalent to render_world_at, but renders using the player's location as the
-// center of the play area rather than (0, 0) as the top left of the play area.
-// This way, all rendering is done relative to the player, who sits in a fixed
-// location on the screen.
+// Arguments:
+//   destination - the bitmap to draw to
+//   m - the maze to render
+//   maze_x, maze_y - the position of the maze at the player's current location
+//
+// Returns:
+//   Nothing
 //----------------------------------------------------------------------------------
 void Render::render_world_at_player(BITMAP *destination, Maze *m, int maze_x, int maze_y) {
 	// Render the world with the tile at the player's position (7,6) equal to (maze_x, maze_y)

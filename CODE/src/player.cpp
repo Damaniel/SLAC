@@ -1,7 +1,7 @@
 //==========================================================================================
 //   Secret Legacy of the Ancient Caves (SLAC)
 //
-//   Copyright (c) 2020-2021 Shaun Brandt / Holy Meatgoat Software
+//   Copyright (c) 2020-2024 Shaun Brandt / Holy Meatgoat Software
 //
 //   Permission is hereby granted, free of charge, to any person obtaining a copy
 //   of this software and associated documentation files (the "Software"), to deal
@@ -23,26 +23,28 @@
 //==========================================================================================
 #include "globals.h"
 
-//================================
-// Constructors
-//================================
-
-//--------------------------------
-// Player(void)
-//--------------------------------
+//------------------------------------------------------------------------------
+// Player::Player
+//
+// Constructor.  Initializes the player at (0, 0).
+//
+// Arguments:
+//   None
+//------------------------------------------------------------------------------
 Player::Player(void) {
 	x_pos = 0;
 	y_pos = 0;
 }
 
-//--------------------------------
-// Player(int x, int y)
-//--------------------------------
+//------------------------------------------------------------------------------
+// Player::Player
+//
+// Constructor.  Initializes the player at the specified location
+//
+// Arguments:
+//   x, y - the position to place the player
+//------------------------------------------------------------------------------
 Player::Player(int x, int y) {
 	x_pos = x;
 	y_pos = y;
 }
-
-//================================
-// Methods
-//================================

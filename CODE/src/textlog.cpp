@@ -25,6 +25,15 @@
 
 TextLog g_text_log;
 
+//----------------------------------------------------------------------------
+// Adds a line to the log, removing the oldest one if the log is full
+//
+// Arguments:
+//   s - the line to add
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
 void TextLog::put_line(std::string s) {
 
     // if we have more than the maximum number of lines,
@@ -37,11 +46,20 @@ void TextLog::put_line(std::string s) {
     log.push_back(s);
 }
 
+//----------------------------------------------------------------------------
+// Gets a line from the log, where 0 is the oldest line
+//
+// Arguments:
+//   line - the line number to retreive.  
+//
+// Returns:
+//   The string at that line, or a blank line if the index is invalid
+//----------------------------------------------------------------------------
 std::string TextLog::get_line(int line) {
     int counter = 0;
 
     // If the range is invalid, return a blank line
-    if (line > max_len || line < 0) {
+    if (line >= get_num_lines() || line < 0) {
         return "";
     }
 
@@ -54,14 +72,41 @@ std::string TextLog::get_line(int line) {
     }
 }
 
+//----------------------------------------------------------------------------
+// Gets the newest entry in the log
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   A string containing the last line in the log
+//----------------------------------------------------------------------------
 std::string TextLog::get_last_line() {
     return log.back();
 }
 
+//----------------------------------------------------------------------------
+// Gets the number of entries in the log
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   The number of lines in the log
+//----------------------------------------------------------------------------
 int TextLog::get_num_lines() {
     return log.size();
 }
 
+//----------------------------------------------------------------------------
+// Debug function that prints the log
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
 void TextLog::dump_lines() {
     int line = 0;
 
