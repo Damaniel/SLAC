@@ -143,9 +143,23 @@ void update_display(void) {
 	g_state_flags.update_display = false;
 }
 
-// TODO:
-// Clean up hacks here... eventually.
-void initialize_state(void) {
+void create_new_maze_floor(void) {
+	g_maze = new Maze(30, 30);
+	g_maze->generate();
+
+	//std::cout << "main: generate() completed" << std::endl;
+	// TODO: Should be done on a per-floor basis!
+	g_render.initialize_map_bitmap(g_maze);
+	//std::cout << "Map bitmap is initialized" << std::endl;
+}
+
+// TODO: some things in here shouldn't be handled by the main state
+// initialization.  We're just doing it for now.
+void initialize_main_game_state(void) {
+
+	// Make a new maze floor
+	create_new_maze_floor();
+
 	// Place the player on a random set of up stairs
 	std::pair<int, int> stairLoc = g_maze->get_random_stair(STAIRS_UP);
 
@@ -181,15 +195,18 @@ void initialize_state(void) {
 
 	// Force an explicit display update so the user can see the world right away
 	update_display();
-
 }
 
-void process_movement_flags(void) {
-	g_state_flags.update_maze_area = true;
-	if (g_state_flags.text_log_extended) {
-		g_state_flags.update_text_dialog = true;
-	}
-	g_state_flags.update_display = true;
+void change_state(int new_state) {
+    g_state_flags.prev_state = g_state_flags.cur_state;
+    g_state_flags.cur_state = new_state;
+    g_state_flags.cur_substate = GAME_SUBSTATE_DEFAULT;
+
+    switch (g_state_flags.cur_state) {
+        case STATE_MAIN_GAME:
+			initialize_main_game_state();
+			break;
+    }
 }
 
 void add_items_at_player_to_log(void) {
@@ -205,80 +222,7 @@ void add_items_at_player_to_log(void) {
 	}
 }
 
-void process_input(void) {
-	int key = (readkey() >> 8);
 
-	if (key == KEY_ESC) {
-		g_state_flags.exit_game = true;
-	}
-
-	if (key == KEY_LEFT || key == KEY_RIGHT || key == KEY_UP || key == KEY_DOWN) 
-	{
-		// If the player is currently in a room, keep track of that room ID so we can darken
-		// the room if the player leaves it on move
-		g_player.set_last_room_entered(g_maze->get_room_id_at(g_player.x_pos, g_player.y_pos));
-		// Darken the current space around the player if not in a room
-		if (g_player.get_last_room_entered() == -1) {
-			g_maze->change_lit_status_around(g_player.x_pos, g_player.y_pos, false);
-		}
-	}
-	if (key == KEY_LEFT && g_state_flags.input_disabled == false) {
-		if (g_maze->is_carved(g_player.x_pos-1, g_player.y_pos) == true) {
-			g_player.x_pos = g_player.x_pos -1;
-			process_movement_flags();
-			add_items_at_player_to_log();
-		}
-	}
-	if (key == KEY_RIGHT && g_state_flags.input_disabled == false) {
-		if (g_maze->is_carved(g_player.x_pos+1, g_player.y_pos) == true) {			
-			g_player.x_pos = g_player.x_pos + 1;
-			process_movement_flags();
-			add_items_at_player_to_log();
-		}
-	}
-	if (key == KEY_UP && g_state_flags.input_disabled == false) {
-		if (g_maze->is_carved(g_player.x_pos, g_player.y_pos-1) == true) {
-			g_player.y_pos = g_player.y_pos - 1;
-			process_movement_flags();
-			add_items_at_player_to_log();
-		}
-	}
-	if (key == KEY_DOWN && g_state_flags.input_disabled == false) {
-		if (g_maze->is_carved(g_player.x_pos, g_player.y_pos+1) == true)
-		{
-			g_player.y_pos = g_player.y_pos + 1;
-			process_movement_flags();
-			add_items_at_player_to_log();
-		}
-	}
-	if (key == KEY_M) {
-		if (g_state_flags.map_displayed == true) {
-			g_state_flags.map_displayed = false;
-			g_state_flags.update_maze_area = true;
-			if (g_state_flags.text_log_extended) {
-				g_state_flags.update_text_dialog = true;
-			}
-			g_state_flags.input_disabled = false;
-		} else {
-			g_state_flags.map_displayed = true;
-			g_state_flags.input_disabled = true;
-		}
-		g_state_flags.update_display = true;
-	}
-
-	if (key == KEY_TILDE && g_state_flags.input_disabled == false) {
-		if (g_state_flags.text_log_extended) {
-			g_state_flags.text_log_extended = false;
-		}
-		else {
-			g_state_flags.text_log_extended = true;
-		}
-		g_state_flags.update_text_dialog = true;
-		g_state_flags.update_maze_area = true;
-		g_state_flags.update_status_dialog = true;
-		g_state_flags.update_display = true;
-	}
-}
 
 //----------------------------------------------------------------------------------
 // MAIN
@@ -310,15 +254,8 @@ int main(void) {
 	}
 	init_resources(g_render);
 
-	g_maze = new Maze(30, 30);
-	g_maze->generate();
+	change_state(STATE_MAIN_GAME);
 
-	//std::cout << "main: generate() completed" << std::endl;
-	// TODO: Should be done on a per-floor basis!
-	g_render.initialize_map_bitmap(g_maze);
-	//std::cout << "Map bitmap is initialized" << std::endl;
-
-	initialize_state();
 	//std::cout << "State initialized" << std::endl;
 
 	// Main game loop

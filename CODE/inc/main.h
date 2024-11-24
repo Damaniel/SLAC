@@ -36,18 +36,35 @@ enum {
     STATE_EXIT
 };
 
+enum {
+    GAME_SUBSTATE_DEFAULT,
+    GAME_SUBSTATE_MAP,
+    GAME_SUBSTATE_INVENTORY
+};
+
+void create_new_maze_floor(void);
+void initialize_main_game_state(void);
+void change_state(int new_state);
+void add_items_at_player_to_log(void);
+
 // A collection of flags relevant to the game loop.  The game loop will want
 // to farm tasks out to other functions; this provides a way to have them all
 // in one place to make them easy to query, while keeping things manageable. 
 struct StateFlags {
+    // Overall state
+    int  cur_state;
+    int  prev_state;
+    int  cur_substate;
+
     // Graphics state
-    bool update_display;        // Is the screen ready to be redrawn?
-    bool map_displayed;         // Is the map currently on the screen?
-    bool update_text_dialog;    // Should the text dialog be redrawn?
-    bool update_status_dialog;  // Should the status display be redrawn?
-    bool update_map_dialog;     // Should the map screen be redrawn?
-    bool update_maze_area;      // Should the maze area be redrawn?
-    
+    bool update_display;            // Is the screen ready to be redrawn?
+    bool map_displayed;             // Is the map currently on the screen?
+    bool update_text_dialog;        // Should the text dialog be redrawn?
+    bool update_status_dialog;      // Should the status display be redrawn?
+    bool update_map_dialog;         // Should the map screen be redrawn?
+    bool update_maze_area;          // Should the maze area be redrawn?
+    bool update_inventory_dialog;   // Should the inventory area be redrawn?
+
     // Render component state
     bool text_log_extended;  // Should we show the extended or standard text log
 
@@ -57,5 +74,7 @@ struct StateFlags {
     // Miscellaneous state
     bool exit_game;           // Did the player choose to exit the game?
 };
+
+extern Maze *g_maze;
 
 #endif

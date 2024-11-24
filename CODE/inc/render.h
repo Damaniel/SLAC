@@ -108,6 +108,10 @@
 #define PLAYER_PLAY_AREA_X			 7
 #define PLAYER_PLAY_AREA_Y			 6
 
+// The offset on the screen where the inventory goes
+#define INVENTORY_DIALOG_X			 9
+#define INVENTORY_DIALOG_Y			32
+
 // Each font has 5 different versions in different colors.  These are used to grab the correct
 // color font from the bitmaps
 enum {
