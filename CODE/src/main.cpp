@@ -86,7 +86,7 @@ void unload_resources(void) {
 }
 
 void update_display(void) {
-	if (g_state_flags.map_displayed == true) {
+	if (g_state_flags.cur_substate == GAME_SUBSTATE_MAP) {
 		g_render.render_map(g_back_buffer, g_maze);
 	}
 	else {		
@@ -188,8 +188,6 @@ void initialize_main_game_state(void) {
 
 	// Is the player locked out from keypresses due to a dialog being displayed?
 	g_state_flags.input_disabled = false;
-	// Is the map currently displayed?
-	g_state_flags.map_displayed = false;
 
 	g_state_flags.text_log_extended = false;
 
@@ -211,18 +209,21 @@ void change_state(int new_state) {
 
 void add_items_at_player_to_log(void) {
 	int item_count = g_maze->get_num_items_at(g_player.x_pos, g_player.y_pos);
+	int idx = 0;
 
 	if (item_count > 0) {
 		std::list<Item *> items = g_maze->get_items_at(g_player.x_pos, g_player.y_pos);
 		for (std::list<Item *>::iterator it = items.begin(); it != items.end(); ++ it) {
-			g_text_log.put_line("You see " + (*it)->get_full_name() + ".");
-			g_state_flags.update_text_dialog = true;
-			g_state_flags.update_display = true;
+			if (idx == 0)
+				g_text_log.put_line("You see " + (*it)->get_full_name() + ".");
+			else
+				g_text_log.put_line("You also see " + (*it)->get_full_name() + ".");
+			++idx;
 		}
+		g_state_flags.update_text_dialog = true;
+		g_state_flags.update_display = true;
 	}
 }
-
-
 
 //----------------------------------------------------------------------------------
 // MAIN
