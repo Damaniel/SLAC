@@ -566,3 +566,83 @@ void Render::render_world_at_player(BITMAP *destination, Maze *m, int maze_x, in
 	// Render the world with the tile at the player's position (7,6) equal to (maze_x, maze_y)
 	render_world_at(destination, m, maze_x - PLAYER_PLAY_AREA_X, maze_y - PLAYER_PLAY_AREA_Y);
 }
+
+// Non-class update functions.  They might go into the class eventually
+void update_main_game_display(void) {
+	if (g_state_flags.cur_substate == GAME_SUBSTATE_MAP) {
+		g_render.render_map(g_back_buffer);
+	}
+	else if (g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY) {
+		g_render.render_inventory(g_back_buffer);
+	}
+	else {		
+		if (g_state_flags.update_maze_area == true) {
+			// Add the areas around the player to the map bitmap
+			//std::cout << "update_display: adding area to map bitmap" << std::endl;
+			g_render.add_area_to_map_bitmap(g_maze, g_player.x_pos, g_player.y_pos);
+			//std::cout << "update_display: Added area to map bitmap" << std::endl;
+			// Light the space around the player
+			g_maze->change_lit_status_around(g_player.x_pos, g_player.y_pos, true);
+			//std::cout << "update_display: Changed lit status" << std::endl;
+			// Check what room the player is in, if any
+			int room_to_light = g_maze->get_room_id_at(g_player.x_pos, g_player.y_pos);
+			int last_player_room = g_player.get_last_room_entered();
+			//std::cout << "update_display: Got last room player was in" << std::endl;
+			// If the player was in a room but no longer is, then darken the room
+			if(last_player_room != -1 && room_to_light == -1) {
+				g_maze->change_room_lit_status(last_player_room, false);
+			}
+			// If the player wasn't in a room but now is, then light up the room
+			if(last_player_room == -1 && room_to_light != -1) {
+				g_maze->change_room_lit_status(room_to_light, true);
+				// TODO: restructure this!
+				// Mark the room itself as visited so rendering the map will
+				// show the room even at the start of the game
+				g_maze->set_room_as_entered(room_to_light);
+			}
+			//std::cout << "update_display: Finished processing lighting" << std::endl;
+
+			// Draw the world display area
+			g_render.render_world_at_player(g_back_buffer, g_maze, g_player.x_pos, g_player.y_pos);
+			//std::cout << "update_display: rendered world" << std::endl;
+			g_state_flags.update_maze_area = false;
+		}
+	}
+
+	if(g_state_flags.update_status_dialog == true) {
+		g_render.render_status_base(g_back_buffer);
+		g_state_flags.update_status_dialog = false;
+	}
+
+	if(g_state_flags.update_text_dialog == true) {
+		g_render.render_text_base(g_back_buffer, g_state_flags.text_log_extended);
+		g_render.render_text_log(g_back_buffer, g_state_flags.text_log_extended);
+		g_state_flags.update_text_dialog = false;
+	}
+}
+
+//------------------------------------------------------------------------------
+// Updates the main display for the current state
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//
+// TODO: Move this to render.cpp
+//------------------------------------------------------------------------------
+void update_display(void) {
+	switch (g_state_flags.cur_state) {
+		case STATE_MAIN_GAME:
+			update_main_game_display();
+			break;
+	}
+
+	// Now actually put the image on the visible part of the screen
+	vsync();
+	blit(g_back_buffer, screen, 0, 0, 0, 0, 320, 240);	
+	
+	// Display is updated - we don't want to do it again right now.
+	g_state_flags.update_display = false;
+}

@@ -56,8 +56,9 @@ void process_movement_flags(void) {
 //----------------------------------------------------------------------------
 void process_inventory_substate(int key) {
     switch (key) {
-        // If I is pressed, exit the inventory screen
+        // If I or ESC is pressed, exit the inventory screen
         case KEY_I:
+        case KEY_ESC:
             g_state_flags.cur_substate = GAME_SUBSTATE_DEFAULT;
 
             g_state_flags.update_maze_area = true;
@@ -80,7 +81,9 @@ void process_inventory_substate(int key) {
 //----------------------------------------------------------------------------
 void process_map_substate(int key) {
     switch (key) {
+        // If M or ESC is pressed, exit the map screen
         case KEY_M:
+        case KEY_ESC:
     		g_state_flags.cur_substate = GAME_SUBSTATE_DEFAULT;
 
             // Redraw the maze area, and the extended log if enabled

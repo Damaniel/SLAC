@@ -72,4 +72,7 @@ extern Player 	  g_player;
 // be disabled by a dialog, and so on.
 extern StateFlags   g_state_flags;
 
+// Holds flags and functionality related to drawing the screen
+extern Render g_render;
+
 #endif
