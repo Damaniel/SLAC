@@ -242,6 +242,28 @@ public:
     virtual void equip() = 0;
     virtual void remove() = 0;
     virtual ~Item() { /*std::cout << "    Deleting item" << std::endl; */ }
+    virtual bool is_null_item() = 0;
+};
+
+// A 'null' item - used to fill inventory slots that are otherwise empty.
+//
+class NullItem: public Item {
+public:
+    std::string get_full_name() { return "Null Item"; }
+    std::string get_type_name() { return "Null"; };
+    void init(int idx) {}
+    void dump_item() {}
+    void dump_prefix() {}
+    void dump_suffix() {};
+    void add_prefix(int pid) {}
+    void add_suffix(int sid) {};
+    void set_curse_state(bool curse) {}
+    void remove_prefix() {}
+    void remove_suffix() {}
+    bool is_it_cursed() { return false; }
+    void equip() {}
+    void remove() {}
+    bool is_null_item() { return true; }
 };
 
 // A piece of equipment.  This represents any item that can be equipped
@@ -269,6 +291,7 @@ public:
     void remove_prefix() { add_prefix(-1); }
     void remove_suffix() { add_suffix(-1); }
     virtual ~Equipment() {}
+    bool is_null_item() { return false; }
 };
 
 // A weapon - a piece of equipment that has an attack rating and is equipped in a weapon slot
@@ -322,6 +345,7 @@ public:
     void equip() {}
     void remove() {}
     virtual ~Consumable();
+    bool is_null_item() { return false; }
 };
 
 // Potions
@@ -378,6 +402,7 @@ public:
     void remove() {}
     std::string get_full_name();
     std::string get_type_name();
+    bool is_null_item() { return false; }
 };
 
 class Currency: public Item {
@@ -400,6 +425,8 @@ public:
     void remove() {}
     std::string get_full_name();
     std::string get_type_name();
+    bool is_null_item() { return false; }
+
 };
 
 // An inventory.  This consists of a list of Item pointers, plus
