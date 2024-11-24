@@ -1307,24 +1307,6 @@
                         "amount": 6,
                         "secondary_id": 0
                     },
-                    "atk": {
-                        "modifier_id": 3,
-                        "modifier_mode": 1,
-                        "amount": 6,
-                        "secondary_id": 0
-                    },
-                    "def": {
-                        "modifier_id": 4,
-                        "modifier_mode": 1,
-                        "amount": 6,
-                        "secondary_id": 0
-                    },
-                    "spd": {
-                        "modifier_id": 5,
-                        "modifier_mode": 1,
-                        "amount": 6,
-                        "secondary_id": 0
-                    },
                     "damage_reduction": {
                         "modifier_id": 19,
                         "modifier_mode": 0,
@@ -1570,24 +1552,6 @@
                     },
                     "dex": {
                         "modifier_id": 2,
-                        "modifier_mode": 1,
-                        "amount": -1,
-                        "secondary_id": 0
-                    },
-                    "atk": {
-                        "modifier_id": 3,
-                        "modifier_mode": 1,
-                        "amount": -1,
-                        "secondary_id": 0
-                    },
-                    "def": {
-                        "modifier_id": 4,
-                        "modifier_mode": 1,
-                        "amount": -1,
-                        "secondary_id": 0
-                    },
-                    "spd": {
-                        "modifier_id": 5,
                         "modifier_mode": 1,
                         "amount": -1,
                         "secondary_id": 0

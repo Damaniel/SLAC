@@ -48,6 +48,9 @@ struct StateFlags {
     bool update_map_dialog;     // Should the map screen be redrawn?
     bool update_maze_area;      // Should the maze area be redrawn?
     
+    // Render component state
+    bool text_log_extended;  // Should we show the extended or standard text log
+
     // Input state
     bool input_disabled;      // Is keyboard input currently disabled?
 

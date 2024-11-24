@@ -270,7 +270,6 @@ void Render::render_map(BITMAP *destination, Maze *m) {
 	blit(screen, destination, MAP_VMEM_X, MAP_VMEM_Y, MAP_X_POS, MAP_Y_POS, 
 	     MAP_VMEM_WIDTH, MAP_VMEM_HEIGHT);
 
-	std::cout << "render_map: g_player.x_pos is (" << g_player.x_pos << ", " << g_player.y_pos << ")" << std::endl;
 	// Draw the player's position on the map
 	blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat, 
 	     destination, 
@@ -305,9 +304,32 @@ void Render::render_prop_text(BITMAP *destination, char *text, int x_pos, int y_
 
 	while (*cur != 0) {
 		offset = (*cur++) - 32;
-		masked_blit((BITMAP *)g_game_data[DAMRL_PROP_FONT].dat, destination, prop_font_offset[offset],
-		     font_idx * prop_font_height, x, y, prop_font_width[offset], prop_font_height);
-		x += prop_font_width[offset] + 1;
+		masked_blit((BITMAP *)g_game_data[DAMRL_PROP_FONT].dat, destination, (int)prop_font_offset[offset],
+		     font_idx * prop_font_height, x, y, (int)prop_font_width[offset], prop_font_height);
+		x += (int)prop_font_width[offset] + 1;
+	}
+}
+
+// Draws a line of text in the narrow proportional font to the screen
+//
+// Arguments:
+//   destination - the place to render the text to
+//   x_pos, y_pos - the upper left corner of the location to place the text
+//   font_idx     - which color offet (0-4) to use 
+//
+// Returns:
+//   Nothing
+void Render::render_prop_narrow_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx) {
+	int x = x_pos;
+	int y = y_pos;
+	int offset;
+	char *cur = text;
+
+	while (*cur != 0) {
+		offset = (*cur++) - 32;
+		masked_blit((BITMAP *)g_game_data[DAMRL_PROP_FONT_NARROW].dat, destination, (int)prop_narrow_font_offset[offset],
+		     font_idx * prop_narrow_font_height, x, y, (int)prop_narrow_font_width[offset], prop_narrow_font_height);
+		x += (int)prop_narrow_font_width[offset] + 1;
 	}
 }
 
@@ -338,6 +360,48 @@ void Render::render_text_base(BITMAP *destination, bool extended) {
 	}
 	else {
 		blit(bstd, destination, 0, 0, TEXT_AREA_STD_X, TEXT_AREA_STD_Y, bstd->w, bstd->h);		
+	}
+}
+
+void Render::render_text_log(BITMAP *destination, bool extended) {
+	int size, x_off, y_off, lines_to_draw, log_start;
+	int counter;
+
+	// Notes:
+	// - For both regular and extended, the first line offset is based on the position of the window
+	// - Number of lines to draw
+	//     - If extended, the number of lines in the log
+	//     - If regular, the number of lines in the log or the size of the window, whichever is smaller
+	// - Log offset
+	//     - If extended, 0
+	//     - If regular:
+	//          If number of lines <= size of the window, then 0
+	//          If the number of lines > size of the window, then (length of log - size of window)   
+
+	lines_to_draw = g_text_log.get_num_lines();
+
+	if (extended) {
+		size = TEXT_AREA_EXT_NUM_LINES;
+		x_off = TEXT_AREA_EXT_X + 4;
+		y_off = TEXT_AREA_EXT_Y + prop_font_height;
+		log_start = 0;
+ 	} 
+	else {
+		size = TEXT_AREA_NORMAL_NUM_LINES;
+		x_off = TEXT_AREA_STD_X + 4;
+		y_off = TEXT_AREA_STD_Y + prop_font_height;
+		if (lines_to_draw > size) {
+			log_start = lines_to_draw - size;
+		} 
+		else {
+			log_start = 0;
+		}
+	}
+
+	counter = 0;
+	for(int idx = log_start; idx < lines_to_draw; ++idx) {
+		render_prop_narrow_text(destination, (char *)g_text_log.get_line(idx).c_str(), x_off, y_off + ((prop_font_height + 1) * counter), 0);
+		++counter;
 	}
 }
 

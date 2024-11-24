@@ -43,6 +43,7 @@
 #include "dat.h"
 
 // Other includes
+#include "textlog.h"
 #include "invntory.h"
 #include "itemgen.h"
 #include "gen_data.h"

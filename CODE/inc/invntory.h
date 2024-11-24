@@ -27,7 +27,7 @@
 #include "globals.h"
 
 #define INVENTORY_SIZE      48
-#define MAX_MODIFIERS   4
+#define MAX_MODIFIERS   5
 
 // Fundamental item/equipment types.  All base types (and rare versions of the base types) are all
 // assigned to one of these fundamental categories
@@ -62,9 +62,9 @@ typedef struct {
 // This is mainly used for equipment prefixes and suffixes.
 typedef struct {
     unsigned short modifier_id;
-    unsigned short secondary_id;
     unsigned char modifier_mode;
     float magnitude;
+    unsigned short secondary_id;
 } ModifierMagType;
 
 // Base equipment types.  These are particular base versions of the fundamental types, used

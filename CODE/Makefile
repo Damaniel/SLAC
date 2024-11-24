@@ -19,7 +19,7 @@ CFLAGS=-O2 -Iinc
 LIBS=-lalleg -lm
 
 TARGET=slac.exe
-OBJS=obj/gen_data.o obj/maze.o obj/render.o obj/player.o obj/invntory.o obj/itemgen.o obj/main.o 
+OBJS=obj/gen_data.o obj/textlog.o obj/maze.o obj/render.o obj/player.o obj/invntory.o obj/itemgen.o obj/main.o 
 
 $(TARGET): $(OBJS)
 	$(CC) -o $(TARGET) $(OBJS) $(LIBS)
@@ -33,6 +33,9 @@ obj/itemgen.o: src/itemgen.cpp inc/itemgen.h inc/invntory.h
 
 obj/gen_data.o: src/gen_data.cpp inc/gen_data.h inc/invntory.h
 	$(CC) -c $(CFLAGS) -o obj/gen_data.o src/gen_data.cpp
+
+obj/textlog.o: src/textlog.cpp inc/textlog.h
+	$(CC) -c $(CFLAGS) -o obj/textlog.o src/textlog.cpp
 
 obj/maze.o: src/maze.cpp inc/maze.h
 	$(CC) -c $(CFLAGS) -o obj/maze.o src/maze.cpp

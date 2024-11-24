@@ -13,10 +13,10 @@ const int g_scroll_pool_entries = 1553;
 const int g_scroll_pool_count = 12;
 const int g_artifact_pool_entries = 6056;
 const int g_artifact_pool_count = 63;
-const int g_item_prefix_pool_entries = 368;
-const int g_item_prefix_pool_count = 2;
-const int g_item_suffix_pool_entries = 240;
-const int g_item_suffix_pool_count = 1;
+const int g_item_prefix_pool_entries = 1152;
+const int g_item_prefix_pool_count = 8;
+const int g_item_suffix_pool_entries = 4877;
+const int g_item_suffix_pool_count = 40;
 
 int g_weapon_base_pool [] = { 255, 495, 695, 855, 975, 1015, 1270, 1505, 1700, 1855, 1965, 1995, 2250, 2485, 2680, 2835, 2945, 
       2975, 3230, 3465, 3660, 3815, 3925, 3955, 4195, 4420, 4600, 4730, 4830, 4845, 5100, 5330, 5515, 
@@ -34,8 +34,10 @@ int g_artifact_pool [] = { 255, 510, 765, 1020, 1275, 1530, 1770, 1920, 2070, 22
       3054, 3118, 3182, 3214, 3406, 3598, 3790, 3886, 3982, 4078, 4110, 4142, 4174, 4238, 4254, 4258, 
       4482, 4706, 4930, 5042, 5154, 5266, 5298, 5330, 5362, 5458, 5506, 5522, 5538, 5570, 5698, 5826, 
       5858, 5890, 5894, 5898, 5906, 5914, 5946, 5962, 5966, 5970, 5974, 5976, 6040, 6056 };
-int g_item_prefix_pool [] = { 240, 368 };
-int g_item_suffix_pool [] = { 240 };
+int g_item_prefix_pool [] = { 240, 368, 400, 640, 768, 784, 1024, 1152 };
+int g_item_suffix_pool [] = { 240, 368, 432, 687, 815, 879, 1134, 1262, 1326, 1566, 1678, 1726, 1966, 2078, 2126, 2381, 2509, 
+      2573, 2637, 2657, 2665, 2690, 2695, 2699, 2700, 2940, 3052, 3292, 3404, 3644, 3756, 3980, 4076, 
+      4316, 4428, 4652, 4748, 4844, 4876, 4877 };
 
 // BodyPartType g_body_part_type_ids
 //
@@ -393,7 +395,14 @@ ModifierType g_modifier_ids[] = {
    {9, "Fire Resist", "FRes"},
    {10, "Ice Resist", "IRes"},
    {11, "Lightning Resist", "LRes"},
-   {12, "Attacks Per Turn", "APT"}
+   {12, "Attacks Per Turn", "APT"},
+   {13, "HP", "HP"},
+   {14, "Fire Damage Taken", "FDam"},
+   {15, "Ice Damage Taken", "IDam"},
+   {16, "Lightning Damage Taken", "LDam"},
+   {17, "Poisoned", "Pois"},
+   {18, "Chance to block", "CBlk"},
+   {19, "All damage taken", "ADmg"}
 };
 
 // ItemPrefixType g_item_prefix_ids
@@ -404,8 +413,14 @@ ModifierType g_modifier_ids[] = {
 //   {id, name, gid, rarity, ilevel, modifier(s)}
 //
 ItemPrefixType g_item_prefix_ids[] = {
-   {0, "Strong", 0, 240, 5, 1, {{3, 0, 1.1}}},
-   {1, "Mighty", 1, 128, 20, 2, {{3, 0, 1.25}, {0, 1, 1}}}
+   {0, "Strong", 0, 240, 5, 1, {{3, 0, 1.1, 0}}},
+   {1, "Mighty", 1, 128, 20, 2, {{3, 0, 1.25, 0}, {0, 1, 1, 0}}},
+   {2, "Herculean", 2, 32, 70, 2, {{3, 0, 1.5, 0}, {0, 1, 4, 0}}},
+   {3, "Quick", 3, 240, 5, 1, {{5, 0, 1.1, 0}}},
+   {4, "Speedy", 4, 128, 20, 2, {{5, 0, 1.25, 0}, {2, 1, 1, 0}}},
+   {5, "Supersonic", 5, 16, 70, 2, {{5, 0, 1.5, 0}, {2, 1, 4, 0}}},
+   {6, "Stout", 6, 240, 5, 1, {{4, 0, 1.1, 0}}},
+   {7, "Hardy", 7, 128, 20, 2, {{4, 0, 1.25, 0}, {1, 1, 1, 0}}}
 };
 
 // ItemSuffixType g_item_suffix_ids
@@ -416,6 +431,45 @@ ItemPrefixType g_item_prefix_ids[] = {
 //   {id, name, gid, rarity, ilevel, modifier(s)}
 //
 ItemSuffixType g_item_suffix_ids[] = {
-   {0, "of Strength", 0, 240, 5, 1, {{3, 1, 1}}}
+   {0, "of Strength", 0, 240, 5, 1, {{0, 1, 1, 0}}},
+   {1, "of the Troll", 1, 128, 20, 1, {{0, 1, 3, 0}}},
+   {2, "of the Giant", 2, 64, 70, 1, {{0, 1, 6, 0}}},
+   {3, "of Dexterity", 3, 255, 5, 1, {{2, 1, 1, 0}}},
+   {4, "of the Thief", 4, 128, 20, 1, {{2, 1, 3, 0}}},
+   {5, "of the Ninja", 5, 64, 70, 1, {{2, 1, 6, 0}}},
+   {6, "of Constitution", 6, 255, 5, 1, {{1, 1, 1, 0}}},
+   {7, "of the Athlete", 7, 128, 20, 1, {{1, 1, 3, 0}}},
+   {8, "of the Bodybuilder", 8, 64, 70, 1, {{1, 1, 6, 0}}},
+   {9, "of Attack", 9, 240, 7, 1, {{3, 1, 1, 0}}},
+   {10, "of the Soldier", 10, 112, 22, 1, {{3, 1, 3, 0}}},
+   {11, "of the General", 11, 48, 74, 1, {{3, 1, 6, 0}}},
+   {12, "of Speed", 12, 240, 7, 1, {{5, 1, 1, 0}}},
+   {13, "of the Runner", 13, 112, 22, 1, {{5, 1, 3, 0}}},
+   {14, "of the Sprinter", 14, 48, 74, 1, {{5, 1, 6, 0}}},
+   {15, "of Defense", 15, 255, 5, 1, {{4, 1, 1, 0}}},
+   {16, "of the Blocker", 16, 128, 20, 1, {{4, 1, 3, 0}}},
+   {17, "of the Guardian", 17, 64, 70, 1, {{4, 1, 6, 0}}},
+   {18, "of Kings", 18, 64, 50, 3, {{0, 1, 1, 0}, {1, 1, 1, 0}, {2, 1, 1, 0}}},
+   {19, "of the Gods", 19, 20, 65, 3, {{0, 1, 3, 0}, {1, 1, 3, 0}, {2, 1, 3, 0}}},
+   {20, "of the Primordials", 20, 8, 80, 3, {{0, 1, 6, 0}, {1, 1, 6, 0}, {2, 1, 6, 0}}},
+   {21, "of Extra Attacks", 21, 25, 40, 1, {{12, 1, 1, 0}}},
+   {22, "of the Berserker", 22, 5, 65, 2, {{12, 1, 1, 0}, {0, 1, 3, 0}}},
+   {23, "of Perfect Defense", 23, 4, 75, 2, {{18, 0, 0.15, 0}, {19, 0, 0.8, 0}}},
+   {24, "of the Unstoppable", 24, 1, 100, 5, {{12, 1, 1, 0}, {0, 1, 6, 0}, {1, 1, 6, 0}, {2, 1, 6, 0}, {19, 0, 0.75, 0}}},
+   {25, "of Weakness", 25, 240, 7, 1, {{0, 1, -1, 0}}},
+   {26, "of Fraility", 26, 112, 24, 1, {{0, 1, -3, 0}}},
+   {27, "of Clumsiness", 27, 240, 7, 1, {{2, 1, -1, 0}}},
+   {28, "of Fumbling", 28, 112, 24, 1, {{2, 1, -3, 0}}},
+   {29, "of Illness", 29, 240, 7, 1, {{1, 1, -1, 0}}},
+   {30, "of Sickliness", 30, 112, 224, 1, {{1, 1, -3, 0}}},
+   {31, "of Slowness", 31, 224, 96, 1, {{5, 1, -1, 0}}},
+   {32, "of Halting", 32, 96, 27, 1, {{5, 1, -3, 0}}},
+   {33, "of Vulnerability", 33, 240, 7, 1, {{4, 1, -1, 0}}},
+   {34, "of Defenselessness", 34, 112, 24, 1, {{4, 1, -3, 0}}},
+   {35, "of Cowardice", 35, 224, 10, 1, {{3, 1, -1, 0}}},
+   {36, "of Surrender", 36, 96, 27, 1, {{3, 1, -3, 0}}},
+   {37, "of the Indecisive", 37, 96, 27, 1, {{12, 1, -1, 0}}},
+   {38, "of the Envenomed", 38, 32, 35, 1, {{17, 3, 1, 0}}},
+   {39, "of the Damned", 39, 1, 100, 5, {{12, 1, -1, 0}, {0, 1, -1, 0}, {1, 1, -1, 0}, {2, 1, -1, 0}, {19, 0, 1.25, 0}}}
 };
 

@@ -252,7 +252,7 @@ std::string Equipment::get_full_name() {
         }
     }
     else {
-        prefix_text = "(Unidentified) ";
+        prefix_text = "(?) ";
     }
 
     return prefix_text + name + suffix_text;
@@ -548,7 +548,12 @@ Consumable::~Consumable() {
 // Returns:
 //   The j;
 std::string Consumable::get_full_name() {
-    return name;
+    if (is_identified) {
+        return name;
+    }
+    else {
+        return "(?) " + get_type_name();
+    }
 }
 
 //==================================================================
@@ -578,6 +583,7 @@ void Currency::init(CurrencyType *b) {
     can_equip = b->can_equip;
     can_drop = b->can_drop;
     can_use = b->can_use;
+    is_identified = true;
 }
 
 void Currency::init(int idx) {
@@ -637,7 +643,7 @@ void Currency::dump_item() {
 // Returns:
 //   The full name;
 std::string Currency::get_full_name() {
-    return get_type_name();
+    return g_currency_ids[id].name;
 }
 
 // Gets the type name

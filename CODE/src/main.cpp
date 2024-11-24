@@ -130,7 +130,8 @@ void update_display(void) {
 	}
 
 	if(g_state_flags.update_text_dialog == true) {
-		g_render.render_text_base(g_back_buffer, false);
+		g_render.render_text_base(g_back_buffer, g_state_flags.text_log_extended);
+		g_render.render_text_log(g_back_buffer, g_state_flags.text_log_extended);
 		g_state_flags.update_text_dialog = false;
 	}
 
@@ -176,9 +177,32 @@ void initialize_state(void) {
 	// Is the map currently displayed?
 	g_state_flags.map_displayed = false;
 
+	g_state_flags.text_log_extended = false;
+
 	// Force an explicit display update so the user can see the world right away
 	update_display();
 
+}
+
+void process_movement_flags(void) {
+	g_state_flags.update_maze_area = true;
+	if (g_state_flags.text_log_extended) {
+		g_state_flags.update_text_dialog = true;
+	}
+	g_state_flags.update_display = true;
+}
+
+void add_items_at_player_to_log(void) {
+	int item_count = g_maze->get_num_items_at(g_player.x_pos, g_player.y_pos);
+
+	if (item_count > 0) {
+		std::list<Item *> items = g_maze->get_items_at(g_player.x_pos, g_player.y_pos);
+		for (std::list<Item *>::iterator it = items.begin(); it != items.end(); ++ it) {
+			g_text_log.put_line("You see " + (*it)->get_full_name() + ".");
+			g_state_flags.update_text_dialog = true;
+			g_state_flags.update_display = true;
+		}
+	}
 }
 
 void process_input(void) {
@@ -201,41 +225,57 @@ void process_input(void) {
 	if (key == KEY_LEFT && g_state_flags.input_disabled == false) {
 		if (g_maze->is_carved(g_player.x_pos-1, g_player.y_pos) == true) {
 			g_player.x_pos = g_player.x_pos -1;
-			g_state_flags.update_maze_area = true;
-			g_state_flags.update_display = true;
+			process_movement_flags();
+			add_items_at_player_to_log();
 		}
 	}
 	if (key == KEY_RIGHT && g_state_flags.input_disabled == false) {
 		if (g_maze->is_carved(g_player.x_pos+1, g_player.y_pos) == true) {			
 			g_player.x_pos = g_player.x_pos + 1;
-			g_state_flags.update_maze_area = true;
-			g_state_flags.update_display = true;
+			process_movement_flags();
+			add_items_at_player_to_log();
 		}
 	}
 	if (key == KEY_UP && g_state_flags.input_disabled == false) {
 		if (g_maze->is_carved(g_player.x_pos, g_player.y_pos-1) == true) {
 			g_player.y_pos = g_player.y_pos - 1;
-			g_state_flags.update_maze_area = true;
-			g_state_flags.update_display = true;
+			process_movement_flags();
+			add_items_at_player_to_log();
 		}
 	}
 	if (key == KEY_DOWN && g_state_flags.input_disabled == false) {
 		if (g_maze->is_carved(g_player.x_pos, g_player.y_pos+1) == true)
 		{
 			g_player.y_pos = g_player.y_pos + 1;
-			g_state_flags.update_maze_area = true;
-			g_state_flags.update_display = true;
+			process_movement_flags();
+			add_items_at_player_to_log();
 		}
 	}
 	if (key == KEY_M) {
 		if (g_state_flags.map_displayed == true) {
 			g_state_flags.map_displayed = false;
 			g_state_flags.update_maze_area = true;
+			if (g_state_flags.text_log_extended) {
+				g_state_flags.update_text_dialog = true;
+			}
 			g_state_flags.input_disabled = false;
 		} else {
 			g_state_flags.map_displayed = true;
 			g_state_flags.input_disabled = true;
 		}
+		g_state_flags.update_display = true;
+	}
+
+	if (key == KEY_TILDE && g_state_flags.input_disabled == false) {
+		if (g_state_flags.text_log_extended) {
+			g_state_flags.text_log_extended = false;
+		}
+		else {
+			g_state_flags.text_log_extended = true;
+		}
+		g_state_flags.update_text_dialog = true;
+		g_state_flags.update_maze_area = true;
+		g_state_flags.update_status_dialog = true;
 		g_state_flags.update_display = true;
 	}
 }
@@ -248,7 +288,6 @@ void process_input(void) {
 //   loop of any kind yet, and stuff in here is subject to change and/or removal.
 //----------------------------------------------------------------------------------
 int main(void) {
-
 
 	srand(time(NULL));
 	
