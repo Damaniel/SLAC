@@ -270,6 +270,9 @@ void Render::render_fixed_text(BITMAP *destination, char *text, int x_pos, int y
 //------------------------------------------------------------------------------
 void Render::render_map(BITMAP *destination) {
 
+	std::string dungeon;
+	char text[32];
+
 	// Blit the base map
 	blit(screen, destination, MAP_VMEM_X, MAP_VMEM_Y, MAP_X_POS, MAP_Y_POS, 
 	     MAP_VMEM_WIDTH, MAP_VMEM_HEIGHT);
@@ -283,12 +286,13 @@ void Render::render_map(BITMAP *destination) {
 		 MAP_Y_POS + map_maze_yoffset - MAP_VMEM_Y + (g_player.get_y_pos()*MAP_DOT_HEIGHT), 
 		 MAP_DOT_WIDTH, MAP_DOT_HEIGHT);
 
+	dungeon = get_dungeon_name(g_dungeon.maze_id);
+	sprintf(text, "%s, Floor %d", (char *)dungeon.c_str(), g_dungeon.depth);
 	// TODO - Draw actual relevant text.  Needs game state to do this.
-	render_fixed_text(destination, "Cave 1", 55, 30, FONT_YELLOW);
-	render_fixed_text(destination, "Floor 3", 130, 30, FONT_YELLOW);
-	render_fixed_text(destination, "X:25", 74, 171, FONT_YELLOW);
-	render_fixed_text(destination, "Y:18", 137, 171, FONT_YELLOW);
-}
+	render_centered_prop_narrow_text(destination, text, 120, 31, FONT_YELLOW);
+	sprintf(text, "Position: (%d, %d)", g_player.get_x_pos(), g_player.get_y_pos());
+	render_centered_prop_narrow_text(destination, text, 120, 172, FONT_YELLOW);
+  }
 
 //------------------------------------------------------------------------------
 // Draws inventory content (the items, descriptions, etc) on the inventory 
@@ -642,6 +646,80 @@ void update_main_game_display(void) {
 		g_render.render_text_log(g_back_buffer, g_state_flags.text_log_extended);
 		g_state_flags.update_text_dialog = false;
 	}
+}
+
+//------------------------------------------------------------------------------
+// Writes a string in the proportional ont, centered at the specified location
+//
+// Arguments:
+//   dest - the bitmap to render to
+//   text - the string to render
+//   center - the x location of the center of the place to draw
+//   y_pos  - the y position of the string
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Render::render_centered_prop_text(BITMAP *dest, char *text, int center, int y_pos, int font_idx) {
+  int width;
+
+  width = get_prop_text_width(text);
+  render_prop_text(dest, text, center - (width/2), y_pos, font_idx);
+}
+
+//------------------------------------------------------------------------------
+// Writes a string in the narrow font, centered at the specified location
+//
+// Arguments:
+//   dest - the bitmap to render to
+//   text - the string to render
+//   center - the x location of the center of the place to draw
+//   y_pos  - the y position of the string
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Render::render_centered_prop_narrow_text(BITMAP *dest, char *text, int center, int y_pos, int font_idx) {
+  int width;
+
+  width = get_prop_narrow_text_width(text);
+  render_prop_narrow_text(dest, text, center - (width/2), y_pos, font_idx);
+}
+
+/*=============================================================================
+ * get_prop_text_width
+ *============================================================================*/
+int Render::get_prop_text_width(char *text) {
+  int width, offset;
+  char *cur;
+
+  cur = text;
+  width = 0;
+	while (*cur != 0) {
+		offset = (*cur) - 32;
+		width += (int)prop_font_width[offset] + 1;
+    cur++;
+	}
+
+  return width;
+}
+
+/*=============================================================================
+ * get_prop_narrow_text_width
+ *============================================================================*/
+int Render::get_prop_narrow_text_width(char *text) {
+  int width, offset;
+  char *cur;
+
+  cur = text;
+  width = 0;
+	while (*cur != 0) {
+		offset = (*cur) - 32;
+		width += (int)prop_narrow_font_width[offset] + 1;
+    cur++;
+	}
+
+  return width;
 }
 
 //------------------------------------------------------------------------------

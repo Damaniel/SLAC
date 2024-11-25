@@ -50,6 +50,32 @@ Render       g_render;
 DungeonFloor   g_dungeon;
 
 //------------------------------------------------------------------------------
+// Retreives the name of the dungeon specified by the given ID
+//
+// Arguments:
+//   dungeon - the id of the dungeon
+//
+// Returns:
+//   A string containing the name of the dungeon
+//------------------------------------------------------------------------------
+std::string get_dungeon_name(int dungeon) {
+	switch (dungeon) {
+		case DUSTY_TUNNELS:
+			return "Dusty Tunnels";
+			break;
+		case MARBLE_HALLS:
+			return "Marble Halls";
+			break;
+		case CRYSTAL_DEPTHS:
+			return "Crystal Depths";
+			break;
+		default:
+			return "Huh?";
+			break;
+	}
+}
+
+//------------------------------------------------------------------------------
 // Loads and prepares all game resources from the data file
 //
 // Arguments:

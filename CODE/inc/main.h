@@ -53,6 +53,8 @@ void initialize_main_game_state(void);
 void change_state(int new_state);
 void add_items_at_player_to_log(void);
 
+std::string get_dungeon_name(int dungeon);
+
 // A collection of flags relevant to the game loop.  The game loop will want
 // to farm tasks out to other functions; this provides a way to have them all
 // in one place to make them easy to query, while keeping things manageable. 
@@ -73,9 +75,6 @@ struct StateFlags {
 
     // Render component state
     bool text_log_extended;  // Should we show the extended or standard text log
-
-    // Input state
-    bool input_disabled;      // Is keyboard input currently disabled?
 
     // Miscellaneous state
     bool exit_game;           // Did the player choose to exit the game?

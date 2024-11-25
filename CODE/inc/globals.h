@@ -33,6 +33,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
+#include <cstring>
 #include <stack>
 #include <iostream>
 #include <algorithm>

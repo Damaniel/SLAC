@@ -230,7 +230,8 @@ class Render {
 		void render_base_tile(BITMAP *destination, int tile_id, int x, int y);
 		void render_item(BITMAP *destination, int gid, int x, int y);
 		void render_inventory_content(BITMAP *destination);
-		
+		int get_prop_text_width(char *text);
+		int get_prop_narrow_text_width(char *text);		
 	public:
 		Render();
 		void initialize_map_bitmap(Maze *m);
@@ -241,6 +242,8 @@ class Render {
 		void render_inventory(BITMAP *destination);
 		void render_prop_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx);
 		void render_prop_narrow_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx);
+		void render_centered_prop_text(BITMAP *dest, char *text, int center, int y_pos, int font_idx);
+		void render_centered_prop_narrow_text(BITMAP *dest, char *text, int center, int y_pos, int font_idx);
 		void render_status_base(BITMAP *destination);		
 		void render_text_base(BITMAP *destination, bool extended);		
 		void render_text_log(BITMAP *destination, bool extended);
