@@ -241,7 +241,7 @@ public:
     unsigned short get_gid() { return gid; }
     virtual void equip() = 0;
     virtual void remove() = 0;
-    virtual ~Item() { /*std::cout << "    Deleting item" << std::endl; */ }
+    virtual ~Item() { /*std::cout << "    Deleting item" << std::endl;*/ }
 };
 
 // A piece of equipment.  This represents any item that can be equipped
@@ -268,7 +268,7 @@ public:
     bool is_it_cursed() { return is_cursed; }
     void remove_prefix() { add_prefix(-1); }
     void remove_suffix() { add_suffix(-1); }
-    virtual ~Equipment() {}
+    virtual ~Equipment() { /*std::cout << "   Deleting equipment" << std::endl;*/ }
 };
 
 // A weapon - a piece of equipment that has an attack rating and is equipped in a weapon slot
@@ -417,6 +417,7 @@ public:
     bool inventory_is_full();
     int get_num_slots_in_use();
     void drop_item_in_slot(int slot);
+    void dump_inventory(void);
     //void drop_item_qty_in_slot(int slot, int quantity);
 };
 

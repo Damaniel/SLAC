@@ -933,7 +933,7 @@ Room Maze::get_room(int room_id) {
 	
 	// Just return the last room for now.  Should throw something.
 	std::cout << "Warning - room not found!" << std::endl;
-	return *(rooms.end());
+	return rooms[rooms.size()-1];
 }
 
 //------------------------------------------------------------------------------
@@ -1121,4 +1121,29 @@ int Maze::stairs_here(int x, int y) {
 //------------------------------------------------------------------------------
 bool Maze::was_seen(int x, int y) {
 	return m[y * cols + x].was_seen;
+}
+
+//------------------------------------------------------------------------------
+// Removes the last item from the item list for the specified spot in the maze
+//
+// Arguments:
+//   x, y - the coordinates of the location to process
+// 
+// Returns:
+//   nothing
+//
+// Notes:
+//   When picking up an item, it's always pulled from the back of the list,
+//   so there's no equivalent (remove_item_from_front_at) function.
+//------------------------------------------------------------------------------
+
+void Maze::remove_item_from_end_at(int x, int y) {
+	int num_items = g_maze->get_num_items_at(x, y);
+	if (num_items > 0) {
+		//std::cout << "Number of items was " << num_items << std::endl;
+		std::pair<int, int> p = std::make_pair(x, y);
+		items[p].pop_back();
+		num_items = g_maze->get_num_items_at(x, y);
+		//std::cout << "Number of items is now " << num_items << std::endl;
+	}
 }

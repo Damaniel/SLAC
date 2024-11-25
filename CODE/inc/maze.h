@@ -153,6 +153,7 @@ public:
 	~Maze();
 	void add_item(int x, int y, Item *i);
 	std::list<Item *> get_items_at(int x, int y);
+	void remove_item_from_end_at(int x, int y);
 	int get_num_items_at(int x, int y);
 	void change_lit_status_around(int x, int y, bool lit);	
 	void change_room_lit_status(int room, bool lit);

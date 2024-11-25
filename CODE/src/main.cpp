@@ -250,6 +250,8 @@ int main(void) {
 	init_resources(g_render);
 
 	g_maze = NULL;
+	g_inventory = new Inventory();
+
 	change_state(STATE_MAIN_GAME);
 
 	//std::cout << "State initialized" << std::endl;
@@ -272,6 +274,7 @@ int main(void) {
 	set_gfx_mode(GFX_TEXT, 80, 25, 0, 0);
 
 	delete g_maze;
+	delete g_inventory;
 
 	return 0;
 }

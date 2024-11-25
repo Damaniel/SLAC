@@ -98,7 +98,7 @@ int Inventory::add_at_first_empty(Item *i) {
     if (!inventory_is_full()) {
         int slot = get_first_empty_slot();
         add_at_slot(i, slot);
-        std::cout << "add_at_first_empty: added to slot " << slot << std::endl;
+        //std::cout << "add_at_first_empty: added to slot " << slot << std::endl;
         return slot;
     }
     return -1;
@@ -122,7 +122,7 @@ int Inventory::get_first_empty_slot() {
         }
     }
 
-    std::cout << "First empty slot was " << (int)first_empty << std::endl;
+    //std::cout << "First empty slot was " << (int)first_empty << std::endl;
     return first_empty;
 }
 
@@ -178,6 +178,16 @@ void Inventory::drop_item_in_slot(int slot) {
     }
 }
 
+void Inventory::dump_inventory(void) {
+    for (int i = 0; i < INVENTORY_SIZE; ++i) {
+        if (inv[i] != NULL) {
+            std::cout << "Item " << (i+1) << ": " << inv[i]->get_full_name() << std::endl;
+        }
+        else {
+            std::cout << "Item " << (i+1) << ": <empty>" << std::endl;
+        }
+    }
+}
 //==================================================================
 // Item
 //==================================================================

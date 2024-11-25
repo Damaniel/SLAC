@@ -23,6 +23,22 @@
 //==========================================================================================
 #include "globals.h"
 
+void pick_up_item_at(int x, int y) {
+    if (g_maze->get_num_items_at(x, y) > 0) {
+
+        // Add it to the inventory
+        if (!g_inventory->inventory_is_full()) {
+            std::list<Item *> items = g_maze->get_items_at(x, y);
+            g_inventory->add_at_first_empty(items.back());
+            g_text_log.put_line("Picked up " + items.back()->get_full_name() + ".");
+            g_maze->remove_item_from_end_at(x, y);
+            // TODO: I may want to remove this maze area update...
+            g_state_flags.update_maze_area = true;
+            g_state_flags.update_text_dialog = true;
+            g_state_flags.update_display = true;
+        }
+    }
+}
 //----------------------------------------------------------------------------
 // Handles common tasks required after the player moves into a new square
 //
@@ -163,6 +179,9 @@ void process_game_state(int key) {
                     g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY;
                     g_state_flags.update_inventory_dialog = true;
                     g_state_flags.update_display = true;
+                    break;
+                case KEY_G:
+                    pick_up_item_at(g_player.x_pos, g_player.y_pos);    
                     break;
 	            case KEY_TILDE:
             		if (g_state_flags.text_log_extended) {
