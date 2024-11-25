@@ -218,7 +218,7 @@ void initialize_main_game_state(void) {
 		g_dungeon.maze = NULL;
 	}
 
-	generate_new_dungeon_floor(DUSTY_TUNNELS, 1, 48, 48);
+	generate_new_dungeon_floor(DUSTY_TUNNELS, 1, 30, 30);
 	g_inventory = new Inventory();
 }
 

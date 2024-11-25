@@ -114,3 +114,16 @@ void Player::set_x_pos(int pos) {
 void Player::set_y_pos(int pos) {
 	y_pos = pos;
 }
+
+//------------------------------------------------------------------------------
+// Adds to the player's copper stash
+// 
+// Arguments:
+//   amount - the amount to add
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Player::add_gold(int amount) {
+	gold += amount;
+}

@@ -460,6 +460,19 @@ void Weapon::remove() {
 }
 
 //----------------------------------------------------------------------------
+// Gets the item class of a weapon.
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   WEAPON_CLASS
+//----------------------------------------------------------------------------
+int Weapon::get_item_class() {
+    return WEAPON_CLASS;
+}
+
+//----------------------------------------------------------------------------
 // Dumps information specific to weapons to the console.
 //
 // Arguments:
@@ -594,6 +607,19 @@ void Armor::remove() {
 }
 
 //----------------------------------------------------------------------------
+// Gets the item class of an armor.
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   ARMOR_CLASS
+//----------------------------------------------------------------------------
+int Armor::get_item_class() {
+    return ARMOR_CLASS;
+}
+
+//----------------------------------------------------------------------------
 // Dumps information specific to armor to the console.
 //
 // Arguments:
@@ -666,7 +692,9 @@ void Currency::init(CurrencyType *b) {
     type_id = b->type_id;
     rarity = b->rarity;
     ilevel = b->ilevel;
-    value = b->value;
+    // The 'value' is the size of the pile of coins
+    // It's set to some random value * the base value
+    value = b->value * (rand() % 50 + 1);
     can_be_cursed = b->can_be_cursed;
     can_have_prefix = b->can_have_prefix;
     can_have_suffix = b->can_have_suffix;
@@ -729,6 +757,19 @@ Currency::Currency(unsigned int idx) {
 }
 
 //----------------------------------------------------------------------------
+// Gets the item class of currency.
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   CURRENCY_CLASS
+//----------------------------------------------------------------------------
+int Currency::get_item_class() {
+    return CURRENCY_CLASS;
+}
+
+//----------------------------------------------------------------------------
 // Dumps information specific to currency to the console.
 //
 // Arguments:
@@ -753,7 +794,10 @@ void Currency::dump_item() {
 //   A string containing the full name
 //----------------------------------------------------------------------------
 std::string Currency::get_full_name() {
-    return g_currency_ids[id].name;
+    char name[32];
+
+    sprintf(name, "%d gold worth of %s", value, (char *)g_currency_ids[id].name.c_str());
+    return std::string(name);
 }
 
 //----------------------------------------------------------------------------
@@ -864,6 +908,19 @@ Potion::Potion(unsigned int idx) {
 //----------------------------------------------------------------------------
 void Potion::use() {
     std::cout << "potion used" << std::endl;
+}
+
+//----------------------------------------------------------------------------
+// Gets the item class of a potion.
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   POTION_CLASS
+//----------------------------------------------------------------------------
+int Potion::get_item_class() {
+    return POTION_CLASS;
 }
 
 //----------------------------------------------------------------------------
@@ -992,6 +1049,19 @@ void Scroll::use() {
 }
 
 //----------------------------------------------------------------------------
+// Gets the item class of a scroll.
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   SCROLL_CLASS
+//----------------------------------------------------------------------------
+int Scroll::get_item_class() {
+    return SCROLL_CLASS;
+}
+
+//----------------------------------------------------------------------------
 // Dumps information specific to potions to the console.
 //
 // Arguments:
@@ -1102,6 +1172,19 @@ Artifact::Artifact(ArtifactType *b) {
 Artifact::Artifact(unsigned int idx) {
     ArtifactType *b = &(g_artifact_ids[idx]);
     init(b);
+}
+
+//----------------------------------------------------------------------------
+// Gets the item class of an artifact.
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   ARTIFACT_CLASS
+//----------------------------------------------------------------------------
+int Artifact::get_item_class() {
+    return ARTIFACT_CLASS;
 }
 
 //----------------------------------------------------------------------------

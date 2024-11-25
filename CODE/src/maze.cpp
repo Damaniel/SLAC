@@ -188,17 +188,33 @@ int Maze::get_num_items_at(int x, int y) {
 //------------------------------------------------------------------------------
 void Maze::add_stairs(int num_up_stairs, int num_down_stairs) {
 	int num_rooms = room_id - STARTING_ROOM - 1;
+	int up_stairs, down_stairs;
 
-	if (num_up_stairs + num_down_stairs > num_rooms) {
-		std::cout << "not enough rooms!" << std::endl;
+	//  We need at least 2 rooms.  Bail if we don't even have that.
+	if (num_rooms < 2) {
+		std::cout << "not enough rooms, period!" << std::endl;
 		return;
+	}
+
+	// If we don't have enough rooms to meet the requirement, split the 
+	// room total in half (rounded down), then set num_up_stairs and
+	// num_down_stairs to that total
+	if (num_rooms < num_up_stairs + num_down_stairs) {
+		int stair_target = num_rooms / 2;
+		up_stairs = stair_target;
+		down_stairs = stair_target;
+		std::cout << "Not enough rooms (" << num_rooms << ") to use defaults, adding " << stair_target << " pairs of stairs" << std::endl;
+	} 
+	else {
+		up_stairs = num_up_stairs;
+		down_stairs = num_down_stairs;
 	}
 	
 	std::vector<int> selected_rooms;
 	std::vector<int>::iterator room_it;
 	
 	// Iterate through up stairs
-	for (int i=0; i < num_up_stairs; i++) {
+	for (int i=0; i < up_stairs; i++) {
 		bool valid;
 		int candidate_room;
 		// Pick a random room and check to see if there's already stairs in it
@@ -219,7 +235,7 @@ void Maze::add_stairs(int num_up_stairs, int num_down_stairs) {
 	}
 	
 	// Repeat the same process for down stairs
-	for (int i=0; i < num_down_stairs; i++) {
+	for (int i=0; i < down_stairs; i++) {
 		bool valid;
 		int candidate_room;
 		do {
@@ -904,13 +920,18 @@ std::pair<int, int> Maze::get_random_stair(int direction) {
 	// Notes:
 	//   Used to position the player when entering a new maze.  Players always
 	//   spawn on a set of stairs.
+	int idx;
 
 	// The vector contains an equal number of up and down stairs.  Just pick 
 	// them at random until we find one that goes the correct direction.
 	while(1) {
-		Stair s = stairs[rand() % stairs.size()];
+		std::cout << "get_random_stair: stairs.size() = " << stairs.size() << std::endl;
+		idx = rand() % stairs.size();
+		std::cout << "get_random_stair: index = " << idx << std::endl;
+		Stair s = stairs[idx];
 		if (s.direction == direction) {
 			std::pair<int, int> p = std::make_pair(s.x, s.y);
+			std::cout << "Returning stair at (" << s.x << ", " << s.y << ")" << std::endl;
 			return p;
 		}
 	}

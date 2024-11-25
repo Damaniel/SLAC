@@ -34,6 +34,7 @@ private:
 	int mp;					// The player's current MP
 	int max_mp;				// The player's max HP
 	int level;				// The player's current level 
+	int gold;				// Amount of currency the player has
 	int exp;				// The player's current number of experience points
 	int character_class;	// What characer class is the player
 	int dungeon;			// What dungeon is the player in
@@ -51,6 +52,7 @@ public:
 	int get_y_pos();
 	void set_x_pos(int pos);
 	void set_y_pos(int pos);
+	void add_gold(int amount);
 };
 
 #endif

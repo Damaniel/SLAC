@@ -560,7 +560,7 @@ void Render::render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_
 					int num_items_here = m->get_num_items_at(tile_to_render_x, tile_to_render_y);
 					if (num_items_here > 0) {
 						std::list<Item *> items = m->get_items_at(tile_to_render_x, tile_to_render_y);
-						Item *it = items.front();
+						Item *it = items.back();
 						render_item(destination, it->get_gid(), screen_x, screen_y);
 					}
 				} else {

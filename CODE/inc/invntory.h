@@ -233,14 +233,16 @@ public:
     virtual void set_curse_state(bool curse) = 0;
     virtual void remove_prefix() = 0;
     virtual void remove_suffix() = 0;
-    virtual bool can_have_a_prefix() { return can_have_prefix; }
-    virtual bool can_have_a_suffix() { return can_have_suffix; }
-    virtual bool can_have_curse() { return can_be_cursed; }
     virtual bool is_it_cursed() = 0;
-    void identify() { is_identified = true; }
-    unsigned short get_gid() { return gid; }
+    virtual int get_item_class() = 0;
     virtual void equip() = 0;
     virtual void remove() = 0;
+    int get_value() { return (int)value; }
+    bool can_have_a_prefix() { return can_have_prefix; }
+    bool can_have_a_suffix() { return can_have_suffix; }
+    bool can_have_curse() { return can_be_cursed; }
+    void identify() { is_identified = true; }
+    unsigned short get_gid() { return gid; }
     virtual ~Item() { /*std::cout << "    Deleting item" << std::endl;*/ }
 };
 
@@ -266,6 +268,7 @@ public:
     void add_prefix(int pid) { can_have_prefix ? prefix_id = pid : prefix_id = -1; }
     void add_suffix(int sid) { can_have_suffix ? suffix_id = sid : suffix_id = -1; }
     bool is_it_cursed() { return is_cursed; }
+    virtual int get_item_class() = 0;
     void remove_prefix() { add_prefix(-1); }
     void remove_suffix() { add_suffix(-1); }
     virtual ~Equipment() { /*std::cout << "   Deleting equipment" << std::endl;*/ }
@@ -281,6 +284,7 @@ public:
     Weapon(WeaponBaseType *b);
     Weapon(unsigned int idx);
     void init(int idx);
+    int get_item_class(void);
     void dump_item();
     void equip();
     void remove();
@@ -296,6 +300,7 @@ public:
     Armor(ArmorBaseType *b);
     Armor(unsigned int idx);
     void init(int idx);
+    int get_item_class(void);
     void dump_item();
     void equip();
     void remove();
@@ -311,6 +316,7 @@ public:
     virtual void dump_item() = 0;
     virtual void use() = 0;
     virtual void init(int idx) = 0;
+    virtual int get_item_class() = 0;
     void dump_prefix() {}
     void dump_suffix() {}
     void add_prefix(int pid) {}
@@ -334,6 +340,7 @@ public:
     Potion(PotionType *t);
     Potion(unsigned int idx);
     void init(int idx);
+    int get_item_class();
     std::string get_type_name();
     void dump_item();
     void use();
@@ -349,6 +356,7 @@ public:
     Scroll(ScrollType *t);
     Scroll(unsigned int idx);
     void init(int idx);
+    int get_item_class();
     std::string get_type_name();
     void dump_item();
     void use();
@@ -365,6 +373,7 @@ public:
     Artifact(ArtifactType *t);
     Artifact(unsigned int idx);
     void init(int idx);
+    int get_item_class();
     void dump_item();
     void dump_prefix() {}
     void dump_suffix() {}
@@ -387,6 +396,7 @@ public:
     Currency(CurrencyType *t);
     Currency(unsigned int idx);
     void init(int idx);
+    int get_item_class();
     void dump_item();
     void dump_prefix() {}
     void dump_suffix() {}

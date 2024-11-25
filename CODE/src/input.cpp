@@ -24,21 +24,38 @@
 #include "globals.h"
 
 void pick_up_item_at(int x, int y) {
-    if (g_dungeon.maze->get_num_items_at(x, y) > 0) {
+    bool picked_up = false;
 
+    if (g_dungeon.maze->get_num_items_at(x, y) > 0) {
+        std::list<Item *> items = g_dungeon.maze->get_items_at(x, y);
+        Item *i = items.back();
+        // For currency, add the value to the player's gold directly
+        if (i->get_item_class() == CURRENCY_CLASS) {
+            g_player.add_gold(i->get_value());
+            picked_up = true;
+        }
+        // Otherwise, add it to the inventory (if there's room)
+        else {
         // Add it to the inventory
-        if (!g_inventory->inventory_is_full()) {
-            std::list<Item *> items = g_dungeon.maze->get_items_at(x, y);
-            g_inventory->add_at_first_empty(items.back());
-            g_text_log.put_line("Picked up " + items.back()->get_full_name() + ".");
+            if (!g_inventory->inventory_is_full()) {
+                g_inventory->add_at_first_empty(items.back());
+                picked_up = true;
+            }
+            else {
+                g_text_log.put_line("You have no room to pick that up.");
+            }
+        }
+         
+        if (picked_up) {
             g_dungeon.maze->remove_item_from_end_at(x, y);
-            // TODO: I may want to remove this maze area update...
+            g_text_log.put_line("Picked up " + items.back()->get_full_name() + ".");
             g_state_flags.update_maze_area = true;
             g_state_flags.update_text_dialog = true;
             g_state_flags.update_display = true;
         }
     }
 }
+
 //----------------------------------------------------------------------------
 // Handles common tasks required after the player moves into a new square
 //
