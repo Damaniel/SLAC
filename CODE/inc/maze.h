@@ -131,6 +131,7 @@ private:
 	int rows;
 	int cols;
     int room_id;
+	int ilevel;
 
 	void add_stairs(int num_up_stairs, int num_down_stairs);
 	void carve(int x, int y, int tag);
@@ -149,7 +150,7 @@ private:
 	
 public:
 	Maze();
-	Maze(int x, int y);
+	Maze(int x, int y, int il);
 	~Maze();
 	void add_item(int x, int y, Item *i);
 	std::list<Item *> get_items_at(int x, int y);

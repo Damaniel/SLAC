@@ -41,7 +41,7 @@ Maze::Maze() {
 //   x - the width of the maze
 //   y - the height of the maze
 //------------------------------------------------------------------------------
-Maze::Maze(int x, int y) {
+Maze::Maze(int x, int y, int il) {
 	if (x < MIN_MAZE_WIDTH) x = MIN_MAZE_WIDTH;
 	if (y < MIN_MAZE_HEIGHT) y = MIN_MAZE_HEIGHT;
 	if (x > MAX_MAZE_WIDTH) x = MAX_MAZE_WIDTH;
@@ -51,6 +51,8 @@ Maze::Maze(int x, int y) {
 	 * a border surrounds the entire maze. */
 	rows = y % 2 == 0 ? y + 1 : y;
 	cols = x % 2 == 0 ? x + 1 : x;
+
+	ilevel = il;
 	init();
 }
 
@@ -104,8 +106,7 @@ void Maze::generate_items(int min_items, int max_items) {
 			int y = rand() % get_height();
 			if (is_carved(x, y) && stairs_here(x, y) == NO_STAIRS) {
 				std::pair<int, int> p = std::make_pair(x, y);
-				// TODO: This should call the generic item generator with proper ilevel)
-				Item *item = ItemGenerator::generate();
+				Item *item = ItemGenerator::generate(ilevel);
 				add_item(x, y, item);
 				//std::cout << "maze_generator: Added item " << item->get_full_name() << " at position (" << x << ", " << y << ")" << std::endl;
 				is_placed = true;
@@ -1138,12 +1139,12 @@ bool Maze::was_seen(int x, int y) {
 //------------------------------------------------------------------------------
 
 void Maze::remove_item_from_end_at(int x, int y) {
-	int num_items = g_maze->get_num_items_at(x, y);
+	int num_items = g_dungeon.maze->get_num_items_at(x, y);
 	if (num_items > 0) {
 		//std::cout << "Number of items was " << num_items << std::endl;
 		std::pair<int, int> p = std::make_pair(x, y);
 		items[p].pop_back();
-		num_items = g_maze->get_num_items_at(x, y);
+		num_items = g_dungeon.maze->get_num_items_at(x, y);
 		//std::cout << "Number of items is now " << num_items << std::endl;
 	}
 }

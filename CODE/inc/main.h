@@ -42,6 +42,12 @@ enum {
     GAME_SUBSTATE_INVENTORY
 };
 
+enum {
+    DUSTY_TUNNELS,
+    MARBLE_HALLS,
+    CRYSTAL_DEPTHS
+};
+
 void create_new_maze_floor(void);
 void initialize_main_game_state(void);
 void change_state(int new_state);
@@ -75,6 +81,15 @@ struct StateFlags {
     bool exit_game;           // Did the player choose to exit the game?
 };
 
-extern Maze *g_maze;
+struct DungeonFloor {
+    Maze *maze;
+    int maze_id;        // which maze we're in
+    int depth;          // The current depth
+    int ilevel;         // The ilevel of the current floor
+    int width;          // The width of the dungeon floor
+    int height;         // The height of the dungeon floor
+};
+
+extern DungeonFloor g_dungeon;
 
 #endif

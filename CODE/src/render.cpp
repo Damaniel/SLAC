@@ -321,9 +321,14 @@ void Render::render_inventory_content(BITMAP *destination) {
 		 				TILE_PIXEL_HEIGHT);	
 		}
 	}
+
 	// Draw the active item cursor (if any)
 
 	// Draw the active item description
+	Item *it = g_inventory->get_item_in_slot(0);
+	if (it != NULL) {
+		render_prop_narrow_text(destination, (char *)it->get_full_name().c_str(), 15, 135, 0);
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -597,31 +602,31 @@ void update_main_game_display(void) {
 		if (g_state_flags.update_maze_area == true) {
 			// Add the areas around the player to the map bitmap
 			//std::cout << "update_display: adding area to map bitmap" << std::endl;
-			g_render.add_area_to_map_bitmap(g_maze, g_player.x_pos, g_player.y_pos);
+			g_render.add_area_to_map_bitmap(g_dungeon.maze, g_player.x_pos, g_player.y_pos);
 			//std::cout << "update_display: Added area to map bitmap" << std::endl;
 			// Light the space around the player
-			g_maze->change_lit_status_around(g_player.x_pos, g_player.y_pos, true);
+			g_dungeon.maze->change_lit_status_around(g_player.x_pos, g_player.y_pos, true);
 			//std::cout << "update_display: Changed lit status" << std::endl;
 			// Check what room the player is in, if any
-			int room_to_light = g_maze->get_room_id_at(g_player.x_pos, g_player.y_pos);
+			int room_to_light = g_dungeon.maze->get_room_id_at(g_player.x_pos, g_player.y_pos);
 			int last_player_room = g_player.get_last_room_entered();
 			//std::cout << "update_display: Got last room player was in" << std::endl;
 			// If the player was in a room but no longer is, then darken the room
 			if(last_player_room != -1 && room_to_light == -1) {
-				g_maze->change_room_lit_status(last_player_room, false);
+				g_dungeon.maze->change_room_lit_status(last_player_room, false);
 			}
 			// If the player wasn't in a room but now is, then light up the room
 			if(last_player_room == -1 && room_to_light != -1) {
-				g_maze->change_room_lit_status(room_to_light, true);
+				g_dungeon.maze->change_room_lit_status(room_to_light, true);
 				// TODO: restructure this!
 				// Mark the room itself as visited so rendering the map will
 				// show the room even at the start of the game
-				g_maze->set_room_as_entered(room_to_light);
+				g_dungeon.maze->set_room_as_entered(room_to_light);
 			}
 			//std::cout << "update_display: Finished processing lighting" << std::endl;
 
 			// Draw the world display area
-			g_render.render_world_at_player(g_back_buffer, g_maze, g_player.x_pos, g_player.y_pos);
+			g_render.render_world_at_player(g_back_buffer, g_dungeon.maze, g_player.x_pos, g_player.y_pos);
 			//std::cout << "update_display: rendered world" << std::endl;
 			g_state_flags.update_maze_area = false;
 		}

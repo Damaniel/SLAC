@@ -46,9 +46,8 @@ Player 	   	 g_player;
 StateFlags 	 g_state_flags;
 Render       g_render;
 
-// The current maze.
-// TODO: This will be part of a larger dungeon state object later on.
-Maze      *g_maze;
+// The current dungeon.
+DungeonFloor   g_dungeon;
 
 //------------------------------------------------------------------------------
 // Loads and prepares all game resources from the data file
@@ -106,50 +105,56 @@ void unload_resources(void) {
 // Returns:
 //   Nothing
 //------------------------------------------------------------------------------
-void create_new_maze_floor(void) {
-	if (g_maze != NULL) {
-		delete g_maze;
+void generate_new_dungeon_floor(int id, int floor, int w, int h) {
+	if (g_dungeon.maze != NULL) {
+		delete g_dungeon.maze;
 	}
 
-	g_maze = new Maze(30, 30);
-	g_maze->generate();
+	g_dungeon.width = w;
+	g_dungeon.height = h;
+	g_dungeon.depth = floor;
+	g_dungeon.maze_id = id;
 
-	//std::cout << "main: generate() completed" << std::endl;
-	g_render.initialize_map_bitmap(g_maze);
-	//std::cout << "Map bitmap is initialized" << std::endl;
-}
+	// Set the current ilevel based on the dungeon the player is in and the
+	// floor they're on
+	switch (g_dungeon.maze_id) {
+		case DUSTY_TUNNELS:
+			g_dungeon.ilevel = floor / 2;
+			if (g_dungeon.ilevel < 1 ) g_dungeon.ilevel = 1;
+			if (g_dungeon.ilevel > 25) g_dungeon.ilevel = 25;
+			break;
+		case MARBLE_HALLS:
+			g_dungeon.ilevel = 20 + (floor / 2);
+			if (g_dungeon.ilevel < 20 ) g_dungeon.ilevel = 20;
+			if (g_dungeon.ilevel > 70) g_dungeon.ilevel = 70;
+			break;
+		case CRYSTAL_DEPTHS:
+			g_dungeon.ilevel = 30 + (floor / 2);
+			if (g_dungeon.ilevel < 30 ) g_dungeon.ilevel = 30;
+			if (g_dungeon.ilevel > 100) g_dungeon.ilevel = 100;
+			break;
+		default:
+			g_dungeon.ilevel = 100;
+			break;
+	}
 
-//------------------------------------------------------------------------------
-// Do any initialization tasks required when moving into the new game state
-//
-// Arguments:
-//   None
-//
-// Returns:
-//   Nothing
-//------------------------------------------------------------------------------
-void initialize_main_game_state(void) {
-
-	// TODO: some things in here shouldn't be handled by the main state
-	// initialization.  We're just doing it for now.
-
-	// Make a new maze floor
-	create_new_maze_floor();
+	g_dungeon.maze = new Maze(g_dungeon.width, g_dungeon.height, g_dungeon.ilevel);
+	g_dungeon.maze->generate();
 
 	// Place the player on a random set of up stairs
-	std::pair<int, int> stairLoc = g_maze->get_random_stair(STAIRS_UP);
+	std::pair<int, int> stairLoc = g_dungeon.maze->get_random_stair(STAIRS_UP);
 
 	// Create a new player at the stair location
 	g_player = Player(stairLoc.first, stairLoc.second);
 	
 	// Hack to force lighting in the initial room the player is in
-	int initial_room = g_maze->get_room_id_at(g_player.x_pos, g_player.y_pos);
+	int initial_room = g_dungeon.maze->get_room_id_at(g_player.x_pos, g_player.y_pos);
 	g_player.set_last_room_entered(initial_room);	
 	if (initial_room != -1) {
 		// double hack to mark the room as seen so that the map renderer can
 		// display it
-		g_maze->change_room_lit_status(initial_room, false);		
-		g_maze->change_room_lit_status(initial_room, true);			
+		g_dungeon.maze->change_room_lit_status(initial_room, false);		
+		g_dungeon.maze->change_room_lit_status(initial_room, true);			
 	}
 	
 	// Loop until done.  Right now, 'done' = pressing Esc
@@ -167,8 +172,29 @@ void initialize_main_game_state(void) {
 
 	g_state_flags.text_log_extended = false;
 
+	g_render.initialize_map_bitmap(g_dungeon.maze);
+
 	// Force an explicit display update so the user can see the world right away
 	update_display();
+}
+
+//------------------------------------------------------------------------------
+// Do any initialization tasks required when moving into the new game state
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void initialize_main_game_state(void) {
+	if (g_dungeon.maze != NULL) {
+		delete g_dungeon.maze;
+		g_dungeon.maze = NULL;
+	}
+
+	generate_new_dungeon_floor(DUSTY_TUNNELS, 1, 48, 48);
+	g_inventory = new Inventory();
 }
 
 //------------------------------------------------------------------------------
@@ -202,11 +228,11 @@ void change_state(int new_state) {
 //   Nothing
 //------------------------------------------------------------------------------
 void add_items_at_player_to_log(void) {
-	int item_count = g_maze->get_num_items_at(g_player.x_pos, g_player.y_pos);
+	int item_count = g_dungeon.maze->get_num_items_at(g_player.x_pos, g_player.y_pos);
 	int idx = 0;
 
 	if (item_count > 0) {
-		std::list<Item *> items = g_maze->get_items_at(g_player.x_pos, g_player.y_pos);
+		std::list<Item *> items = g_dungeon.maze->get_items_at(g_player.x_pos, g_player.y_pos);
 		for (std::list<Item *>::iterator it = items.begin(); it != items.end(); ++ it) {
 			if (idx == 0)
 				g_text_log.put_line("You see " + (*it)->get_full_name() + ".");
@@ -249,9 +275,6 @@ int main(void) {
 	}
 	init_resources(g_render);
 
-	g_maze = NULL;
-	g_inventory = new Inventory();
-
 	change_state(STATE_MAIN_GAME);
 
 	//std::cout << "State initialized" << std::endl;
@@ -270,11 +293,13 @@ int main(void) {
 		}
 	} while (g_state_flags.exit_game == false);
 
+	delete g_inventory;
+	if (g_dungeon.maze != NULL) {
+		delete g_dungeon.maze;
+	}
+	
 	unload_resources();
 	set_gfx_mode(GFX_TEXT, 80, 25, 0, 0);
-
-	delete g_maze;
-	delete g_inventory;
 
 	return 0;
 }
