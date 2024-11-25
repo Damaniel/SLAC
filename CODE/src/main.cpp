@@ -144,11 +144,11 @@ void generate_new_dungeon_floor(int id, int floor, int w, int h) {
 	// Place the player on a random set of up stairs
 	std::pair<int, int> stairLoc = g_dungeon.maze->get_random_stair(STAIRS_UP);
 
-	// Create a new player at the stair location
-	g_player = Player(stairLoc.first, stairLoc.second);
+	// Place the player at the stair location
+	g_player.set_position(stairLoc.first, stairLoc.second);
 	
 	// Hack to force lighting in the initial room the player is in
-	int initial_room = g_dungeon.maze->get_room_id_at(g_player.x_pos, g_player.y_pos);
+	int initial_room = g_dungeon.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos());
 	g_player.set_last_room_entered(initial_room);	
 	if (initial_room != -1) {
 		// double hack to mark the room as seen so that the map renderer can
@@ -167,11 +167,10 @@ void generate_new_dungeon_floor(int id, int floor, int w, int h) {
 	g_state_flags.update_status_dialog = true;
 	g_state_flags.update_text_dialog = true;
 
-	// Is the player locked out from keypresses due to a dialog being displayed?
-	g_state_flags.input_disabled = false;
-
+	// Use the short text log by default
 	g_state_flags.text_log_extended = false;
 
+	// Clear the map bitmap
 	g_render.initialize_map_bitmap(g_dungeon.maze);
 
 	// Force an explicit display update so the user can see the world right away
@@ -228,11 +227,11 @@ void change_state(int new_state) {
 //   Nothing
 //------------------------------------------------------------------------------
 void add_items_at_player_to_log(void) {
-	int item_count = g_dungeon.maze->get_num_items_at(g_player.x_pos, g_player.y_pos);
+	int item_count = g_dungeon.maze->get_num_items_at(g_player.get_x_pos(), g_player.get_y_pos());
 	int idx = 0;
 
 	if (item_count > 0) {
-		std::list<Item *> items = g_dungeon.maze->get_items_at(g_player.x_pos, g_player.y_pos);
+		std::list<Item *> items = g_dungeon.maze->get_items_at(g_player.get_x_pos(), g_player.get_y_pos());
 		for (std::list<Item *>::iterator it = items.begin(); it != items.end(); ++ it) {
 			if (idx == 0)
 				g_text_log.put_line("You see " + (*it)->get_full_name() + ".");
@@ -274,6 +273,8 @@ int main(void) {
 		return 1;
 	}
 	init_resources(g_render);
+
+	g_player = Player();
 
 	change_state(STATE_MAIN_GAME);
 

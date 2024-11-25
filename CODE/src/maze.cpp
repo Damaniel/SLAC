@@ -188,7 +188,7 @@ int Maze::get_num_items_at(int x, int y) {
 //------------------------------------------------------------------------------
 void Maze::add_stairs(int num_up_stairs, int num_down_stairs) {
 	int num_rooms = room_id - STARTING_ROOM - 1;
-	
+
 	if (num_up_stairs + num_down_stairs > num_rooms) {
 		std::cout << "not enough rooms!" << std::endl;
 		return;

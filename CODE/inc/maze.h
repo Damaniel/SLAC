@@ -47,7 +47,7 @@ const int ROOM_ATTEMPTS = 200;
 const int NO_STAIRS = -1;
 const int STAIRS_UP = 0;
 const int STAIRS_DOWN = 1;
-const int NUM_STAIRS = 2;
+const int NUM_STAIRS = 3;
 
 // The minimum and maximum size of maze that can be generated
 const int MIN_MAZE_WIDTH = 30;

@@ -48,3 +48,69 @@ Player::Player(int x, int y) {
 	x_pos = x;
 	y_pos = y;
 }
+
+//------------------------------------------------------------------------------
+// sets the player's position
+//
+// Arguments:
+//   x, y - the player's new position
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Player::set_position(int x, int y) {
+	x_pos = x;
+	y_pos = y;
+}
+
+//------------------------------------------------------------------------------
+// Gets the player's x position
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   The player's x position
+//------------------------------------------------------------------------------
+int Player::get_x_pos() {
+	return x_pos;
+}
+
+//------------------------------------------------------------------------------
+// Gets the player's y position
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   The player's y position
+//------------------------------------------------------------------------------
+int Player::get_y_pos() {
+	return y_pos;
+}
+
+//------------------------------------------------------------------------------
+// Sets the player's x position
+// 
+// Arguments:
+//   pos - the position to set to
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Player::set_x_pos(int pos) {
+	x_pos = pos;
+}
+
+//------------------------------------------------------------------------------
+// Sets the player's y position
+// 
+// Arguments:
+//   pos - the position to set to
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Player::set_y_pos(int pos) {
+	y_pos = pos;
+}

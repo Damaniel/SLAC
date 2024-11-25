@@ -279,8 +279,8 @@ void Render::render_map(BITMAP *destination) {
 	     destination, 
          MAP_DOT_PLAYER*MAP_DOT_WIDTH,
 		 0, 
-		 MAP_X_POS + map_maze_xoffset - MAP_VMEM_X + (g_player.x_pos*MAP_DOT_WIDTH),
-		 MAP_Y_POS + map_maze_yoffset - MAP_VMEM_Y + (g_player.y_pos*MAP_DOT_HEIGHT), 
+		 MAP_X_POS + map_maze_xoffset - MAP_VMEM_X + (g_player.get_x_pos()*MAP_DOT_WIDTH),
+		 MAP_Y_POS + map_maze_yoffset - MAP_VMEM_Y + (g_player.get_y_pos()*MAP_DOT_HEIGHT), 
 		 MAP_DOT_WIDTH, MAP_DOT_HEIGHT);
 
 	// TODO - Draw actual relevant text.  Needs game state to do this.
@@ -602,13 +602,13 @@ void update_main_game_display(void) {
 		if (g_state_flags.update_maze_area == true) {
 			// Add the areas around the player to the map bitmap
 			//std::cout << "update_display: adding area to map bitmap" << std::endl;
-			g_render.add_area_to_map_bitmap(g_dungeon.maze, g_player.x_pos, g_player.y_pos);
+			g_render.add_area_to_map_bitmap(g_dungeon.maze, g_player.get_x_pos(), g_player.get_y_pos());
 			//std::cout << "update_display: Added area to map bitmap" << std::endl;
 			// Light the space around the player
-			g_dungeon.maze->change_lit_status_around(g_player.x_pos, g_player.y_pos, true);
+			g_dungeon.maze->change_lit_status_around(g_player.get_x_pos(), g_player.get_y_pos(), true);
 			//std::cout << "update_display: Changed lit status" << std::endl;
 			// Check what room the player is in, if any
-			int room_to_light = g_dungeon.maze->get_room_id_at(g_player.x_pos, g_player.y_pos);
+			int room_to_light = g_dungeon.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos());
 			int last_player_room = g_player.get_last_room_entered();
 			//std::cout << "update_display: Got last room player was in" << std::endl;
 			// If the player was in a room but no longer is, then darken the room
@@ -626,7 +626,7 @@ void update_main_game_display(void) {
 			//std::cout << "update_display: Finished processing lighting" << std::endl;
 
 			// Draw the world display area
-			g_render.render_world_at_player(g_back_buffer, g_dungeon.maze, g_player.x_pos, g_player.y_pos);
+			g_render.render_world_at_player(g_back_buffer, g_dungeon.maze, g_player.get_x_pos(), g_player.get_y_pos());
 			//std::cout << "update_display: rendered world" << std::endl;
 			g_state_flags.update_maze_area = false;
 		}

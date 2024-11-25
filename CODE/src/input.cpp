@@ -132,40 +132,40 @@ void process_game_state(int key) {
         case GAME_SUBSTATE_DEFAULT:
             // Handle lighting status for the current room.
             // TODO: Maybe figure out if this is really the best place for this.
-		    g_player.set_last_room_entered(g_dungeon.maze->get_room_id_at(g_player.x_pos, g_player.y_pos));
+		    g_player.set_last_room_entered(g_dungeon.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos()));
 		    // Darken the current space around the player if not in a room
 		    if (g_player.get_last_room_entered() == -1) {
-    		    g_dungeon.maze->change_lit_status_around(g_player.x_pos, g_player.y_pos, false);
+    		    g_dungeon.maze->change_lit_status_around(g_player.get_x_pos(), g_player.get_y_pos(), false);
 		    }            
             switch (key) {
                 case KEY_ESC:
             	    g_state_flags.exit_game = true;
                     break;
                 case KEY_LEFT:
-        		    if (g_dungeon.maze->is_carved(g_player.x_pos-1, g_player.y_pos) == true) {
-			            g_player.x_pos = g_player.x_pos -1;
+        		    if (g_dungeon.maze->is_carved(g_player.get_x_pos()-1, g_player.get_y_pos()) == true) {
+			            g_player.set_x_pos(g_player.get_x_pos() - 1);
 			            process_movement_flags();
 			            add_items_at_player_to_log();
 		            }
                     break;           
 	            case KEY_RIGHT:
-            		if (g_dungeon.maze->is_carved(g_player.x_pos+1, g_player.y_pos) == true) {			
-	    		        g_player.x_pos = g_player.x_pos + 1;
+            		if (g_dungeon.maze->is_carved(g_player.get_x_pos()+1, g_player.get_y_pos()) == true) {			
+	    		        g_player.set_x_pos(g_player.get_x_pos() + 1);
 		    	        process_movement_flags();
 			            add_items_at_player_to_log();
 		            }
                     break;
     	        case KEY_UP:
-        	    	if (g_dungeon.maze->is_carved(g_player.x_pos, g_player.y_pos-1) == true) {
-    			        g_player.y_pos = g_player.y_pos - 1;
+        	    	if (g_dungeon.maze->is_carved(g_player.get_x_pos(), g_player.get_y_pos()-1) == true) {
+    			        g_player.set_y_pos(g_player.get_y_pos() - 1);
 	    		        process_movement_flags();
 		    	        add_items_at_player_to_log();
 		            }
                     break;
                 case KEY_DOWN:
-            		if (g_dungeon.maze->is_carved(g_player.x_pos, g_player.y_pos+1) == true)
+            		if (g_dungeon.maze->is_carved(g_player.get_x_pos(), g_player.get_y_pos()+1) == true)
 	    	        {
-        	    		g_player.y_pos = g_player.y_pos + 1;
+        	    		g_player.set_y_pos(g_player.get_y_pos() + 1);
 			            process_movement_flags();
 			            add_items_at_player_to_log();
 		            }
@@ -181,7 +181,7 @@ void process_game_state(int key) {
                     g_state_flags.update_display = true;
                     break;
                 case KEY_G:
-                    pick_up_item_at(g_player.x_pos, g_player.y_pos);    
+                    pick_up_item_at(g_player.get_x_pos(), g_player.get_y_pos());    
                     break;
 	            case KEY_TILDE:
             		if (g_state_flags.text_log_extended) {

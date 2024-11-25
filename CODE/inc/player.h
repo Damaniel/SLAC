@@ -39,15 +39,18 @@ private:
 	int dungeon;			// What dungeon is the player in
 	int dungeon_floor;		// What floor of the dungeon the player is in
 	int last_room_entered;  // What room was the player last in?
-	
+	int x_pos;
+	int y_pos;
 public:
-	int x_pos;				// They're constantly set and read, so we'll skip the setter/getter for now
-	int y_pos;				// (The compiler is probably smart, but I can understand this, at least)
-	
 	Player();
 	Player(int x, int y);
 	int get_last_room_entered() { return last_room_entered; }
 	void set_last_room_entered(int room) { last_room_entered = room; }
+	void set_position(int x, int y);
+	int get_x_pos();
+	int get_y_pos();
+	void set_x_pos(int pos);
+	void set_y_pos(int pos);
 };
 
 #endif
