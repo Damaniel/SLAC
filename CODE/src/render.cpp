@@ -302,7 +302,25 @@ void Render::render_map(BITMAP *destination) {
 //------------------------------------------------------------------------------
 void Render::render_inventory_content(BITMAP *destination) {
 	// Draw the items
+	for (int i = 0; i < INVENTORY_SIZE; ++i) {
+		int x = i % INVENTORY_ITEMS_PER_ROW;
+		int y = i / INVENTORY_ITEMS_PER_ROW;
+		Item *it = g_inventory->get_item_in_slot(i);
+		if (it != NULL) {
+			int gid = it->get_gid();
+			int tilex = gid % ITEM_TILE_ENTRY_WIDTH;
+			int tiley = gid / ITEM_TILE_ENTRY_WIDTH;
 
+			masked_blit((BITMAP *)g_game_data[DAMRL_ITEMS].dat, 
+	     			    destination,
+	     				tilex * TILE_PIXEL_WIDTH, 
+		 				tiley * TILE_PIXEL_HEIGHT, 
+		 				(x * (TILE_PIXEL_WIDTH + 1)) + INVENTORY_DIALOG_X + INVENTORY_ITEMS_X,
+		 				(y * (TILE_PIXEL_HEIGHT + 1)) + INVENTORY_DIALOG_Y + INVENTORY_ITEMS_Y,
+		 				TILE_PIXEL_WIDTH,
+		 				TILE_PIXEL_HEIGHT);	
+		}
+	}
 	// Draw the active item cursor (if any)
 
 	// Draw the active item description

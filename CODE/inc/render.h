@@ -115,6 +115,12 @@
 #define INVENTORY_DIALOG_WIDTH	   224
 #define INVENTORY_DIALOG_HEIGHT    143
 
+// The upper left corner of the first inventory item.  Each other one is a multiple
+// of TILE_PIXEL_WIDTH or TILE_PIXEL_HEIGHT pixels away
+#define INVENTORY_ITEMS_X		    11
+#define INVENTORY_ITEMS_Y			22 
+#define INVENTORY_ITEMS_PER_ROW		12
+
 // Each font has 5 different versions in different colors.  These are used to grab the correct
 // color font from the bitmaps
 enum {
