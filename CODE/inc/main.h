@@ -26,6 +26,7 @@
 
 // States for the state machine god.  This is a first shot at some; there will
 // be more.  He must feed.
+
 enum {
     STATE_LOGO_SCREEN,
     STATE_TITLE_SCREEN,

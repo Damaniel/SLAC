@@ -255,8 +255,8 @@ void Render::render_fixed_text(BITMAP *destination, char *text, int x_pos, int y
 	// This isn't a library, so we'll assume strings are terminated.  That should end well...
 	while(*cur != 0) {
 		offset = (*cur++) - 32;
-		masked_blit((BITMAP *)g_game_data[DAMRL_FIXED_FONT].dat, destination, offset * fixed_font_width, 
-		     font_idx * fixed_font_height, x, y, fixed_font_width, fixed_font_height);
+		masked_blit((BITMAP *)g_game_data[DAMRL_FIXED_FONT].dat, destination, offset * FontConsts::fixed_font_width, 
+		     font_idx * FontConsts::fixed_font_height, x, y, FontConsts::fixed_font_width, FontConsts::fixed_font_height);
 		x += 8;
 	}
 }
@@ -376,9 +376,9 @@ void Render::render_prop_text(BITMAP *destination, char *text, int x_pos, int y_
 
 	while (*cur != 0) {
 		offset = (*cur++) - 32;
-		masked_blit((BITMAP *)g_game_data[DAMRL_PROP_FONT].dat, destination, (int)prop_font_offset[offset],
-		     font_idx * prop_font_height, x, y, (int)prop_font_width[offset], prop_font_height);
-		x += (int)prop_font_width[offset] + 1;
+		masked_blit((BITMAP *)g_game_data[DAMRL_PROP_FONT].dat, destination, (int)FontConsts::prop_font_offset[offset],
+		     font_idx * FontConsts::prop_font_height, x, y, (int)FontConsts::prop_font_width[offset], FontConsts::prop_font_height);
+		x += (int)FontConsts::prop_font_width[offset] + 1;
 	}
 }
 
@@ -402,9 +402,10 @@ void Render::render_prop_narrow_text(BITMAP *destination, char *text, int x_pos,
 
 	while (*cur != 0) {
 		offset = (*cur++) - 32;
-		masked_blit((BITMAP *)g_game_data[DAMRL_PROP_FONT_NARROW].dat, destination, (int)prop_narrow_font_offset[offset],
-		     font_idx * prop_narrow_font_height, x, y, (int)prop_narrow_font_width[offset], prop_narrow_font_height);
-		x += (int)prop_narrow_font_width[offset] + 1;
+		masked_blit((BITMAP *)g_game_data[DAMRL_PROP_FONT_NARROW].dat, destination, 
+		            (int)FontConsts::prop_narrow_font_offset[offset], font_idx * FontConsts::prop_narrow_font_height, 
+					x, y, (int)FontConsts::prop_narrow_font_width[offset], FontConsts::prop_narrow_font_height);
+		x += (int)FontConsts::prop_narrow_font_width[offset] + 1;
 	}
 }
 
@@ -486,13 +487,13 @@ void Render::render_text_log(BITMAP *destination, bool extended) {
 	if (extended) {
 		size = UiConsts::TEXT_AREA_EXT_NUM_LINES;
 		x_off = UiConsts::TEXT_AREA_EXT_X + 4;
-		y_off = UiConsts::TEXT_AREA_EXT_Y + prop_font_height;
+		y_off = UiConsts::TEXT_AREA_EXT_Y + FontConsts::prop_font_height;
 		log_start = 0;
  	} 
 	else {
 		size = UiConsts::TEXT_AREA_NORMAL_NUM_LINES;
 		x_off = UiConsts::TEXT_AREA_STD_X + 4;
-		y_off = UiConsts::TEXT_AREA_STD_Y + prop_font_height;
+		y_off = UiConsts::TEXT_AREA_STD_Y + FontConsts::prop_font_height;
 		if (lines_to_draw > size) {
 			log_start = lines_to_draw - size;
 		} 
@@ -503,7 +504,7 @@ void Render::render_text_log(BITMAP *destination, bool extended) {
 
 	for(int idx = log_start; idx < lines_to_draw; ++idx) {
 		render_prop_narrow_text(destination, (char *)g_text_log.get_line(idx).c_str(),
-		                        x_off, y_off + ((prop_font_height + 1) * (idx-log_start)), 
+		                        x_off, y_off + ((FontConsts::prop_font_height + 1) * (idx-log_start)), 
 								UiConsts::FONT_YELLOW);
 	}
 }
@@ -660,7 +661,7 @@ int Render::get_prop_text_width(char *text) {
   width = 0;
 	while (*cur != 0) {
 		offset = (*cur) - 32;
-		width += (int)prop_font_width[offset] + 1;
+		width += (int)FontConsts::prop_font_width[offset] + 1;
     cur++;
 	}
 
@@ -678,7 +679,7 @@ int Render::get_prop_narrow_text_width(char *text) {
   width = 0;
 	while (*cur != 0) {
 		offset = (*cur) - 32;
-		width += (int)prop_narrow_font_width[offset] + 1;
+		width += (int)FontConsts::prop_narrow_font_width[offset] + 1;
     cur++;
 	}
 
