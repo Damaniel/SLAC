@@ -34,6 +34,7 @@
 Player::Player(void) {
 	x_pos = 0;
 	y_pos = 0;
+	gold = 0;
 }
 
 //------------------------------------------------------------------------------
@@ -47,6 +48,7 @@ Player::Player(void) {
 Player::Player(int x, int y) {
 	x_pos = x;
 	y_pos = y;
+	gold = 0;
 }
 
 //------------------------------------------------------------------------------
@@ -126,4 +128,17 @@ void Player::set_y_pos(int pos) {
 //------------------------------------------------------------------------------
 void Player::add_gold(int amount) {
 	gold += amount;
+}
+
+//------------------------------------------------------------------------------
+// Retreives the player's gold
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   Amount of gold the player has
+//------------------------------------------------------------------------------
+int Player::get_gold(void) {
+	return gold;
 }

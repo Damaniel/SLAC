@@ -262,6 +262,41 @@ void Render::render_fixed_text(BITMAP *destination, char *text, int x_pos, int y
 }
 
 //------------------------------------------------------------------------------
+// Draws a line of text in the a proportional font to the screen
+//
+// Arguments:
+//   destination - the place to render the text to
+//   text - the text to write
+//   x_pos, y_pos - the upper left corner of the location to place the text
+//   font_idx     - which color offet (0-4) to use 
+//   style - standard or narrow
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Render::render_prop_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx, int style) {
+	int x = x_pos;
+	int y = y_pos;
+	int offset;
+	char *cur = text;
+
+	while (*cur != 0) {
+		offset = (*cur++) - 32;
+		if (style == FontConsts::FONT_NARROW_PROPORTIONAL) {
+			masked_blit((BITMAP *)g_game_data[DAMRL_PROP_FONT_NARROW].dat, destination, 
+			            (int)FontConsts::prop_narrow_font_offset[offset], font_idx * FontConsts::prop_narrow_font_height, 
+						x, y, (int)FontConsts::prop_narrow_font_width[offset], FontConsts::prop_narrow_font_height);
+			x += (int)FontConsts::prop_narrow_font_width[offset] + 1;
+		}
+		else {
+			masked_blit((BITMAP *)g_game_data[DAMRL_PROP_FONT].dat, destination, (int)FontConsts::prop_font_offset[offset],
+		    	 font_idx * FontConsts::prop_font_height, x, y, (int)FontConsts::prop_font_width[offset], FontConsts::prop_font_height);
+			x += (int)FontConsts::prop_font_width[offset] + 1;			
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
 // Displays the map dialog in the play area.
 //
 // Arguments:
@@ -288,12 +323,18 @@ void Render::render_map(BITMAP *destination) {
 		 UiConsts::MAP_Y_POS + map_maze_yoffset - UiConsts::MAP_VMEM_Y + (g_player.get_y_pos() * UiConsts::MAP_DOT_HEIGHT), 
 		 UiConsts::MAP_DOT_WIDTH, UiConsts::MAP_DOT_HEIGHT);
 
+	// Draw the dungeon name
 	dungeon = get_dungeon_name(g_dungeon.maze_id);
 	sprintf(text, "%s, Floor %d", (char *)dungeon.c_str(), g_dungeon.depth);
-	// TODO - Draw actual relevant text.  Needs game state to do this.
-	render_centered_prop_narrow_text(destination, text, 120, 31, UiConsts::FONT_YELLOW);
+	render_text(destination, text, UiConsts::MAP_AREA_DUNGEON_X, UiConsts::MAP_AREA_DUNGEON_Y,
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_CENTERED);
+
+	// Draw the player's position
 	sprintf(text, "Position: (%d, %d)", g_player.get_x_pos(), g_player.get_y_pos());
-	render_centered_prop_narrow_text(destination, text, 120, 172, UiConsts::FONT_YELLOW);
+	render_text(destination, text, UiConsts::MAP_AREA_POSITION_X, UiConsts::MAP_AREA_POSITION_Y,
+				FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_CENTERED);
   }
 
 //------------------------------------------------------------------------------
@@ -333,7 +374,10 @@ void Render::render_inventory_content(BITMAP *destination) {
 	// Draw the active item description
 	Item *it = g_inventory->get_item_in_slot(0);
 	if (it != NULL) {
-		render_prop_narrow_text(destination, (char *)it->get_full_name().c_str(), 15, 135, UiConsts::FONT_YELLOW);
+		render_text(destination, (char *)it->get_full_name().c_str(), 
+		            UiConsts::INVENTORY_ITEM_NAME_X, UiConsts::INVENTORY_ITEM_NAME_Y, 
+					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+					FontConsts::TEXT_LEFT_JUSTIFIED);
 	}
 }
 
@@ -356,60 +400,6 @@ void Render::render_inventory(BITMAP *destination) {
 }
 
 //------------------------------------------------------------------------------
-// Writes a string to the screen in the specified location using the specified 
-// color (0-4) using a proportional font.
-//
-// Arguments:
-//   destination - the bitmap to write the text to
-//   text - the text to write
-//   x_pos, y_pos - the location to place the text
-//   font_idx - the 'color' (0-4) to draw the text with
-//
-// Returns:
-//   Nothing
-//------------------------------------------------------------------------------
-void Render::render_prop_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx) {
-	int x = x_pos;
-	int y = y_pos;
-	int offset;
-	char *cur = text;
-
-	while (*cur != 0) {
-		offset = (*cur++) - 32;
-		masked_blit((BITMAP *)g_game_data[DAMRL_PROP_FONT].dat, destination, (int)FontConsts::prop_font_offset[offset],
-		     font_idx * FontConsts::prop_font_height, x, y, (int)FontConsts::prop_font_width[offset], FontConsts::prop_font_height);
-		x += (int)FontConsts::prop_font_width[offset] + 1;
-	}
-}
-
-//------------------------------------------------------------------------------
-// Draws a line of text in the narrow proportional font to the screen
-//
-// Arguments:
-//   destination - the place to render the text to
-//   text - the text to write
-//   x_pos, y_pos - the upper left corner of the location to place the text
-//   font_idx     - which color offet (0-4) to use 
-//
-// Returns:
-//   Nothing
-//------------------------------------------------------------------------------
-void Render::render_prop_narrow_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx) {
-	int x = x_pos;
-	int y = y_pos;
-	int offset;
-	char *cur = text;
-
-	while (*cur != 0) {
-		offset = (*cur++) - 32;
-		masked_blit((BITMAP *)g_game_data[DAMRL_PROP_FONT_NARROW].dat, destination, 
-		            (int)FontConsts::prop_narrow_font_offset[offset], font_idx * FontConsts::prop_narrow_font_height, 
-					x, y, (int)FontConsts::prop_narrow_font_width[offset], FontConsts::prop_narrow_font_height);
-		x += (int)FontConsts::prop_narrow_font_width[offset] + 1;
-	}
-}
-
-//------------------------------------------------------------------------------
 // Draws the contents of the status area (Name/Level/HP/EXP/gold) to the screen
 //
 // Arguments:
@@ -419,7 +409,15 @@ void Render::render_prop_narrow_text(BITMAP *destination, char *text, int x_pos,
 //   Nothing
 //------------------------------------------------------------------------------
 void Render::render_status_ui(BITMAP *destination) {
+	char text[16];
 
+	render_text(destination, "Gold", UiConsts::GOLD_TEXT_X, UiConsts::GOLD_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_FIXED, FontConsts::TEXT_LEFT_JUSTIFIED);
+
+	sprintf(text, "%d", g_player.get_gold());
+	render_text(destination, text, UiConsts::GOLD_VALUE_X, UiConsts::GOLD_VALUE_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
 }
 
 //------------------------------------------------------------------------------
@@ -486,14 +484,14 @@ void Render::render_text_log(BITMAP *destination, bool extended) {
 
 	if (extended) {
 		size = UiConsts::TEXT_AREA_EXT_NUM_LINES;
-		x_off = UiConsts::TEXT_AREA_EXT_X + 4;
-		y_off = UiConsts::TEXT_AREA_EXT_Y + FontConsts::prop_font_height;
+		x_off = UiConsts::TEXT_AREA_EXT_X + UiConsts::TEXT_AREA_LINE_X_OFFSET;
+		y_off = UiConsts::TEXT_AREA_EXT_Y + UiConsts::TEXT_AREA_LINE_Y_OFFSET;
 		log_start = 0;
  	} 
 	else {
 		size = UiConsts::TEXT_AREA_NORMAL_NUM_LINES;
-		x_off = UiConsts::TEXT_AREA_STD_X + 4;
-		y_off = UiConsts::TEXT_AREA_STD_Y + FontConsts::prop_font_height;
+		x_off = UiConsts::TEXT_AREA_STD_X + UiConsts::TEXT_AREA_LINE_X_OFFSET;
+		y_off = UiConsts::TEXT_AREA_STD_Y + UiConsts::TEXT_AREA_LINE_Y_OFFSET;
 		if (lines_to_draw > size) {
 			log_start = lines_to_draw - size;
 		} 
@@ -503,9 +501,9 @@ void Render::render_text_log(BITMAP *destination, bool extended) {
 	}
 
 	for(int idx = log_start; idx < lines_to_draw; ++idx) {
-		render_prop_narrow_text(destination, (char *)g_text_log.get_line(idx).c_str(),
-		                        x_off, y_off + ((FontConsts::prop_font_height + 1) * (idx-log_start)), 
-								UiConsts::FONT_YELLOW);
+		render_text(destination, (char *)g_text_log.get_line(idx).c_str(),
+					x_off, y_off + ((FontConsts::prop_font_height + 1) * (idx-log_start)),
+					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);
 	}
 }
 
@@ -613,77 +611,93 @@ void Render::render_world_at_player(BITMAP *destination, Maze *m, int maze_x, in
 }
 
 //------------------------------------------------------------------------------
-// Writes a string in the proportional ont, centered at the specified location
-//
+// Writes a string in the specified location on the screen, with specified
+// font, width, color and justification.
+////
 // Arguments:
 //   dest - the bitmap to render to
 //   text - the string to render
-//   center - the x location of the center of the place to draw
+//   x_pos - the x position of the string  
 //   y_pos  - the y position of the string
+//   font_idx - the color of the string
+//   type   - fixed, proportional or narrow proportional
+//   alignment - left, center, or right justified
 //
 // Returns:
 //   Nothing
+//
+// Notes:
+//   For 'x_pos', this specifies the left edge of the text in left-justified 
+//   mode, the center in centered mode, and the right edge of the text in 
+//   right justified mode
 //------------------------------------------------------------------------------
-void Render::render_centered_prop_text(BITMAP *dest, char *text, int center, int y_pos, int font_idx) {
-  int width;
+void Render::render_text(BITMAP *dest, char *text, int x_pos, int y_pos, int font_idx, int style, int alignment) {
+	int width;
+	int x_offset;
 
-  width = get_prop_text_width(text);
-  render_prop_text(dest, text, center - (width/2), y_pos, font_idx);
+	// Get the text width
+	switch (style) {
+		case FontConsts::FONT_FIXED:
+			width = strlen(text) * FontConsts::fixed_font_width;
+			break;
+		case FontConsts::FONT_NARROW_PROPORTIONAL:
+		case FontConsts::FONT_PROPORTIONAL:
+			width = get_prop_text_width(text, style);
+			break;
+	}
+
+	// Get the text alignment
+	switch (alignment) {
+		case FontConsts::TEXT_LEFT_JUSTIFIED:
+			x_offset = x_pos;
+			break;
+		case FontConsts::TEXT_CENTERED:
+			x_offset = x_pos - (width / 2);
+			break;
+		case FontConsts::TEXT_RIGHT_JUSTIFIED:
+			x_offset = x_pos - width;
+			break;
+	}
+
+	// Render the text itself
+	switch (style) {
+		case FontConsts::FONT_FIXED:
+			render_fixed_text(dest, text, x_offset, y_pos, font_idx);
+			break;
+		case FontConsts::FONT_NARROW_PROPORTIONAL:
+		case FontConsts::FONT_PROPORTIONAL:
+			render_prop_text(dest, text, x_offset, y_pos, font_idx, style);
+			break;
+	}
 }
 
+
 //------------------------------------------------------------------------------
-// Writes a string in the narrow font, centered at the specified location
+// Gets the width of a text in the proportional font.
 //
 // Arguments:
-//   dest - the bitmap to render to
-//   text - the string to render
-//   center - the x location of the center of the place to draw
-//   y_pos  - the y position of the string
+//   text - the text to be rendered
+//   style - standard or narrow
 //
 // Returns:
-//   Nothing
+//   The width of the text in pixels
 //------------------------------------------------------------------------------
-void Render::render_centered_prop_narrow_text(BITMAP *dest, char *text, int center, int y_pos, int font_idx) {
-  int width;
+int Render::get_prop_text_width(char *text, int style) {
+	int width, offset;
+	char *cur;
 
-  width = get_prop_narrow_text_width(text);
-  render_prop_narrow_text(dest, text, center - (width/2), y_pos, font_idx);
-}
-
-/*=============================================================================
- * get_prop_text_width
- *============================================================================*/
-int Render::get_prop_text_width(char *text) {
-  int width, offset;
-  char *cur;
-
-  cur = text;
-  width = 0;
+	cur = text;
+	width = 0;
 	while (*cur != 0) {
 		offset = (*cur) - 32;
-		width += (int)FontConsts::prop_font_width[offset] + 1;
-    cur++;
+		if (style == FontConsts::FONT_NARROW_PROPORTIONAL)
+			width += (int)FontConsts::prop_narrow_font_width[offset] + 1;
+		else
+			width += (int)FontConsts::prop_font_width[offset] + 1;
+    	cur++;
 	}
 
-  return width;
-}
-
-/*=============================================================================
- * get_prop_narrow_text_width
- *============================================================================*/
-int Render::get_prop_narrow_text_width(char *text) {
-  int width, offset;
-  char *cur;
-
-  cur = text;
-  width = 0;
-	while (*cur != 0) {
-		offset = (*cur) - 32;
-		width += (int)FontConsts::prop_narrow_font_width[offset] + 1;
-    cur++;
-	}
-
-  return width;
+	return width;
 }
 
 // Non-class update functions.  They might go into the class eventually
@@ -731,6 +745,7 @@ void update_main_game_display(void) {
 
 	if(g_state_flags.update_status_dialog == true) {
 		g_render.render_status_base(g_back_buffer);
+		g_render.render_status_ui(g_back_buffer);
 		g_state_flags.update_status_dialog = false;
 	}
 

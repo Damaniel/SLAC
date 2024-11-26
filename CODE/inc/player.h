@@ -53,6 +53,7 @@ public:
 	void set_x_pos(int pos);
 	void set_y_pos(int pos);
 	void add_gold(int amount);
+	int get_gold();
 };
 
 #endif

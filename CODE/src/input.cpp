@@ -32,6 +32,7 @@ void pick_up_item_at(int x, int y) {
         // For currency, add the value to the player's gold directly
         if (i->get_item_class() == ItemConsts::CURRENCY_CLASS) {
             g_player.add_gold(i->get_value());
+            g_state_flags.update_status_dialog = true;
             picked_up = true;
         }
         // Otherwise, add it to the inventory (if there's room)

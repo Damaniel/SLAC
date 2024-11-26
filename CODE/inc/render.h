@@ -62,8 +62,17 @@ namespace UiConsts {
 	const int MAP_AREA_VMEM_X = (MAP_VMEM_X + MAP_AREA_START_X);
 	const int MAP_AREA_VMEM_Y = (MAP_VMEM_Y + MAP_AREA_START_Y);
 
+	// The size of the map area stored in offscreen memory
 	const int MAP_AREA_VMEM_WIDTH = (MAP_DOT_WIDTH * MAP_NUM_X_DOTS);
 	const int MAP_AREA_VMEM_HEIGHT = (MAP_DOT_HEIGHT * MAP_NUM_Y_DOTS);
+
+	// The location of the dungeon name on the map
+	const int MAP_AREA_DUNGEON_X = 120;
+	const int MAP_AREA_DUNGEON_Y = 31;
+
+	// The location of the player position text on the map
+	const int MAP_AREA_POSITION_X = 120;
+	const int MAP_AREA_POSITION_Y = 172;
 
 	// The place on the screen where the map goes
 	const int MAP_X_POS	= 48;
@@ -95,6 +104,11 @@ namespace UiConsts {
 	const int TEXT_AREA_EXT_X = 0;
 	const int TEXT_AREA_EXT_Y = 160;
 
+	// The offset (relative to the top left corner of the text log) of where
+	// the first line of text goes
+	const int TEXT_AREA_LINE_X_OFFSET = 4;
+	const int TEXT_AREA_LINE_Y_OFFSET = 8;
+
 	// The number of lines shown in the text log
 	const int TEXT_AREA_NORMAL_NUM_LINES = 2;
 	const int TEXT_AREA_EXT_NUM_LINES = 7;
@@ -111,6 +125,7 @@ namespace UiConsts {
 	const int INVENTORY_DIALOG_X = 9;
 	const int INVENTORY_DIALOG_Y = 32;
 
+	// The offset of the name of the highlighted intm in the item description
 	const int INVENTORY_DIALOG_WIDTH = 224;
 	const int INVENTORY_DIALOG_HEIGHT = 143;
 
@@ -120,15 +135,16 @@ namespace UiConsts {
 	const int INVENTORY_ITEMS_Y	= 22; 
 	const int INVENTORY_ITEMS_PER_ROW = 12;
 
-	// Each font has 5 different versions in different colors.  These are used to grab the correct
-	// color font from the bitmaps
-	enum {
-		FONT_YELLOW,
-		FONT_BLUE,
-		FONT_GREEN,
-		FONT_RED,
-		FONT_GRAY
-	};
+	// The name in the item description area of the inventory
+	const int INVENTORY_ITEM_NAME_X = 15;
+	const int INVENTORY_ITEM_NAME_Y = 135;
+
+	// Positions of status indicators on the right side of the main screen
+	const int GOLD_TEXT_X = 246;
+	const int GOLD_TEXT_Y = 141;
+
+	const int GOLD_VALUE_X = 313;
+	const int GOLD_VALUE_Y = 151;
 
 	// The base tiles that make up the fixed portions of a dungeon level
 	// They map to tile offsets in the dungeon world tiles
@@ -170,6 +186,31 @@ namespace UiConsts {
 }
 
 namespace FontConsts {
+
+	// Each font has 5 different versions in different colors.  These are used to grab the correct
+	// color font from the bitmaps
+	enum {
+		FONT_YELLOW,
+		FONT_BLUE,
+		FONT_GREEN,
+		FONT_RED,
+		FONT_GRAY
+	};
+
+	// Font types (fixed width, proportional width, narrow proportional width)
+	enum {
+		FONT_FIXED,
+		FONT_PROPORTIONAL,
+		FONT_NARROW_PROPORTIONAL
+	};
+
+	// Text alignment types (left justified, right justified, centered)
+	enum {
+		TEXT_LEFT_JUSTIFIED,
+		TEXT_CENTERED,
+		TEXT_RIGHT_JUSTIFIED
+	};
+
 	// Width and height of all characters from ASCII values 32 to 127 in the standard 
 	// proportional font
 	const unsigned char prop_font_width[UiConsts::FONT_ENTRIES] = {
@@ -231,22 +272,19 @@ class Render {
 		void render_base_tile(BITMAP *destination, int tile_id, int x, int y);
 		void render_item(BITMAP *destination, int gid, int x, int y);
 		void render_inventory_content(BITMAP *destination);
-		int get_prop_text_width(char *text);
-		int get_prop_narrow_text_width(char *text);		
+		int get_prop_text_width(char *text, int style);	
 	public:
 		Render();
 		void initialize_map_bitmap(Maze *m);
 		void add_area_to_map_bitmap(Maze *m, int x, int y);
 		void copy_data_to_offscreen_vram(void);		
 		void render_fixed_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx);		
+		void render_prop_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx, int style);
 		void render_map(BITMAP *destination);
 		void render_inventory(BITMAP *destination);
-		void render_prop_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx);
-		void render_prop_narrow_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx);
-		void render_centered_prop_text(BITMAP *dest, char *text, int center, int y_pos, int font_idx);
-		void render_centered_prop_narrow_text(BITMAP *dest, char *text, int center, int y_pos, int font_idx);
 		void render_status_ui(BITMAP *destination);
-		void render_status_base(BITMAP *destination);		
+		void render_status_base(BITMAP *destination);
+		void render_text(BITMAP *dest, char *text, int x_pos, int y_pos, int font_idx, int style, int alignment);
 		void render_text_base(BITMAP *destination, bool extended);		
 		void render_text_log(BITMAP *destination, bool extended);
 		void render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_y);
