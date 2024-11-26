@@ -27,151 +27,151 @@
 // Game-specific includes
 #include "globals.h"
 
-// Number of characters defined in each instance of a font
-#define FONT_ENTRIES       96
+namespace Ui {
+	// Number of characters defined in each instance of a font
+	const int FONT_ENTRIES = 96;
 
-// A copy of the map bitmap is stored at this location in video memory.
-#define MAP_VMEM_X	0
-#define MAP_VMEM_Y	480
+	// A copy of the map bitmap is stored at this location in video memory.
+	const int MAP_VMEM_X = 0;
+	const int MAP_VMEM_Y = 480;
 
-// The size of the map bitmap in offscreen memory
-#define MAP_VMEM_WIDTH   144
-#define MAP_VMEM_HEIGHT  160
+	// The size of the map bitmap in offscreen memory
+	const int MAP_VMEM_WIDTH = 144;
+	const int MAP_VMEM_HEIGHT = 160;
 
+	// The size of the map area itself in offscreen memory
+	const int MAP_PIXEL_WIDTH = 128;
+	const int MAP_PIXEL_HEIGHT = 128;
 
-// The size of the map area itself in offscreen memory
-#define MAP_PIXEL_WIDTH		128
-#define MAP_PIXEL_HEIGHT	128
+	// The size (in pixels) of a single map dot.
+	const int MAP_DOT_WIDTH	= 2;
+	const int MAP_DOT_HEIGHT = 2;
 
-// The size (in pixels) of a single map dot.
-#define MAP_DOT_WIDTH				 2
-#define MAP_DOT_HEIGHT				 2
+	// The maximum width and height of the map area in dots. This is the maximum
+	// amount of displayable area inside the map.  Currently, the maze can be
+	// no larger than these values below, but can be smaller.
+	const int MAP_NUM_X_DOTS = 64;
+	const int MAP_NUM_Y_DOTS = 64;
 
-// The maximum width and height of the map area in dots. This is the maximum
-// amount of displayable area inside the map.  Currently, the maze can be
-// no larger than these values below, but can be smaller.
-#define MAP_NUM_X_DOTS				64
-#define MAP_NUM_Y_DOTS				64
+	// The position of the map area relative to the upper left of the map dialog
+	const int MAP_AREA_START_X = 7;
+	const int MAP_AREA_START_Y = 16;
 
-// The position of the map area relative to the upper left of the map dialog
-#define MAP_AREA_START_X	7
-#define MAP_AREA_START_Y	16
+	// The offset of the actual map portion of the map screen stored in offscreen
+	// memory
+	const int MAP_AREA_VMEM_X = (MAP_VMEM_X + MAP_AREA_START_X);
+	const int MAP_AREA_VMEM_Y = (MAP_VMEM_Y + MAP_AREA_START_Y);
 
-// The offset of the actual map portion of the map screen stored in offscreen
-// memory
-#define MAP_AREA_VMEM_X  (MAP_VMEM_X + MAP_AREA_START_X)
-#define MAP_AREA_VMEM_Y  (MAP_VMEM_Y + MAP_AREA_START_Y)
+	const int MAP_AREA_VMEM_WIDTH = (MAP_DOT_WIDTH * MAP_NUM_X_DOTS);
+	const int MAP_AREA_VMEM_HEIGHT = (MAP_DOT_HEIGHT * MAP_NUM_Y_DOTS);
 
-#define MAP_AREA_VMEM_WIDTH 	(MAP_DOT_WIDTH * MAP_NUM_X_DOTS)
-#define MAP_AREA_VMEM_HEIGHT 	(MAP_DOT_HEIGHT * MAP_NUM_Y_DOTS)
+	// The place on the screen where the map goes
+	const int MAP_X_POS	= 48;
+	const int MAP_Y_POS	= 24;
 
-// The place on the screen where the map goes
-#define MAP_X_POS		48
-#define MAP_Y_POS		24
+	//  The size of a dungeon tile in pixels
+	const int TILE_PIXEL_WIDTH = 16;
+	const int TILE_PIXEL_HEIGHT	= 16;
 
-//  The size of a dungeon tile in pixels
-#define TILE_PIXEL_WIDTH		  16
-#define TILE_PIXEL_HEIGHT	      16
+	// The number of tiles in a row of the item spritesheet
+	const int ITEM_TILE_ENTRY_WIDTH = 32;
 
-// The number of tiles in a row of the item spritesheet
-#define ITEM_TILE_ENTRY_WIDTH     32
+	// The size of the visible play area (in tiles)
+	// PLAY_AREA_TILE_HEIGHT_EXT measures the height in tiles when the extended message
+	// log is displayed.
+	const int PLAY_AREA_TILE_WIDTH = 15;
+	const int PLAY_AREA_TILE_HEIGHT = 13;
+	const int PLAY_AREA_TILE_HEIGHT_EXT	= 10;
 
-// The size of the visible play area (in tiles)
-// PLAY_AREA_TILE_HEIGHT_EXT measures the height in tiles when the extended message
-// log is displayed.
-#define PLAY_AREA_TILE_WIDTH   		15
-#define PLAY_AREA_TILE_HEIGHT  		13
-#define PLAY_AREA_TILE_HEIGHT_EXT	10
+	// The location on the screen (in pixels) where the status area is placed
+	const int STATUS_AREA_X	= 240;
+	const int STATUS_AREA_Y = 0;
 
-// The location on the screen (in pixels) where the status area is placed
-#define STATUS_AREA_X			   240
-#define STATUS_AREA_Y				 0
+	// The location on the screen (in pixels) where the normal text area is placed
+	const int TEXT_AREA_STD_X = 0;
+	const int TEXT_AREA_STD_Y = 208;
 
-// The location on the screen (in pixels) where the normal text area is placed
-#define TEXT_AREA_STD_X			     0
-#define TEXT_AREA_STD_Y			   208
+	// The location on the screen (in pixels) where the extended text area is placed
+	const int TEXT_AREA_EXT_X = 0;
+	const int TEXT_AREA_EXT_Y = 160;
 
-// The location on the screen (in pixels) where the extended text area is placed
-#define TEXT_AREA_EXT_X              0
-#define TEXT_AREA_EXT_Y			   160
+	// The number of lines shown in the text log
+	const int TEXT_AREA_NORMAL_NUM_LINES = 2;
+	const int TEXT_AREA_EXT_NUM_LINES = 7;
 
-// The number of lines shown in the text log
-#define TEXT_AREA_NORMAL_NUM_LINES	 2
-#define TEXT_AREA_EXT_NUM_LINES		 7
+	// The offset (in tiles) into the player graphic where the player is.  
+	const int PLAYER_TILE_OFFSET = 9;
 
-// The offset (in tiles) into the player graphic where the player is.  
-// TODO: This will eventually include different characters, but this one is a placeholder.
-#define PLAYER_TILE_OFFSET			 9
+	// The offset (in tiles) into the play area where the player graphic is placed.  The player
+	// will always be centered in the play area.
+	const int PLAYER_PLAY_AREA_X = 7;
+	const int PLAYER_PLAY_AREA_Y = 6;
 
-// The offset (in tiles) into the play area where the player graphic is placed.  The player
-// will always be centered in the play area.
-#define PLAYER_PLAY_AREA_X			 7
-#define PLAYER_PLAY_AREA_Y			 6
+	// The offset on the screen where the inventory goes
+	const int INVENTORY_DIALOG_X = 9;
+	const int INVENTORY_DIALOG_Y = 32;
 
-// The offset on the screen where the inventory goes
-#define INVENTORY_DIALOG_X			 9
-#define INVENTORY_DIALOG_Y			32
+	const int INVENTORY_DIALOG_WIDTH = 224;
+	const int INVENTORY_DIALOG_HEIGHT = 143;
 
-#define INVENTORY_DIALOG_WIDTH	   224
-#define INVENTORY_DIALOG_HEIGHT    143
+	// The upper left corner of the first inventory item.  Each other one is a multiple
+	// of TILE_PIXEL_WIDTH or TILE_PIXEL_HEIGHT pixels away
+	const int INVENTORY_ITEMS_X = 11;
+	const int INVENTORY_ITEMS_Y	= 22; 
+	const int INVENTORY_ITEMS_PER_ROW = 12;
 
-// The upper left corner of the first inventory item.  Each other one is a multiple
-// of TILE_PIXEL_WIDTH or TILE_PIXEL_HEIGHT pixels away
-#define INVENTORY_ITEMS_X		    11
-#define INVENTORY_ITEMS_Y			22 
-#define INVENTORY_ITEMS_PER_ROW		12
+	// Each font has 5 different versions in different colors.  These are used to grab the correct
+	// color font from the bitmaps
+	enum {
+		FONT_YELLOW,
+		FONT_BLUE,
+		FONT_GREEN,
+		FONT_RED,
+		FONT_GRAY
+	};
 
-// Each font has 5 different versions in different colors.  These are used to grab the correct
-// color font from the bitmaps
-enum {
-	FONT_YELLOW,
-	FONT_BLUE,
-	FONT_GREEN,
-	FONT_RED,
-	FONT_GRAY
-};
+	// The base tiles that make up the fixed portions of a dungeon level
+	// They map to tile offsets in the dungeon world tiles
+	enum {
+		TILE_DARK,
+		TILE_DARKER_WALL,
+		TILE_WALL,
+		TILE_FLOOR,
+		TILE_FLOOR_TOP_HIGHLIGHT,
+		TILE_FLOOR_LEFT_HIGHLIGHT,
+		TILE_FLOOR_BOTH_HIGHLIGHT,
+		TILE_UP_STAIRS,
+		TILE_DOWN_STAIRS,
+		TILE_DOOR
+	};
 
-// The base tiles that make up the fixed portions of a dungeon level
-// They map to tile offsets in the dungeon world tiles
-enum {
-	TILE_DARK,
-	TILE_DARKER_WALL,
-	TILE_WALL,
-	TILE_FLOOR,
-	TILE_FLOOR_TOP_HIGHLIGHT,
-	TILE_FLOOR_LEFT_HIGHLIGHT,
-	TILE_FLOOR_BOTH_HIGHLIGHT,
-	TILE_UP_STAIRS,
-	TILE_DOWN_STAIRS,
-	TILE_DOOR
-};
-
-// An enum containing entries for each of the 16 colors of 'map dots' sitting
-// in the datafile.  Some of them aren't used on the minimap, but those that
-// are will have a name describing what they're used for (for example, 
-// MAP_DOT_FLOOR is used for unoccupied floor spaces)
-enum {
-	MAP_DOT_FLOOR,
-	MAP_DOT_FOG_OF_WAR,
-	MAP_DOT_2,
-	MAP_DOT_3,
-	MAP_DOT_4,
-	MAP_DOT_UP_STAIRS,
-	MAP_DOT_DOWN_STAIRS,
-	MAP_DOT_7,
-	MAP_DOT_8,
-	MAP_DOT_9,
-	MAP_DOT_PLAYER,
-	MAP_DOT_11,
-	MAP_DOT_12,
-	MAP_DOT_13,
-	MAP_DOT_14,
-	MAP_DOT_WALL
-};
+	// An enum containing entries for each of the 16 colors of 'map dots' sitting
+	// in the datafile.  Some of them aren't used on the minimap, but those that
+	// are will have a name describing what they're used for (for example, 
+	// MAP_DOT_FLOOR is used for unoccupied floor spaces)
+	enum {
+		MAP_DOT_FLOOR,
+		MAP_DOT_FOG_OF_WAR,
+		MAP_DOT_2,
+		MAP_DOT_3,
+		MAP_DOT_4,
+		MAP_DOT_UP_STAIRS,
+		MAP_DOT_DOWN_STAIRS,
+		MAP_DOT_7,
+		MAP_DOT_8,
+		MAP_DOT_9,
+		MAP_DOT_PLAYER,
+		MAP_DOT_11,
+		MAP_DOT_12,
+		MAP_DOT_13,
+		MAP_DOT_14,
+		MAP_DOT_WALL
+	};
+}
 
 // Width and height of all characters from ASCII values 32 to 127 in the standard 
 // proportional font
-const unsigned char prop_font_width[FONT_ENTRIES] = {
+const unsigned char prop_font_width[Ui::FONT_ENTRIES] = {
 	6, 2, 6, 7, 6, 6, 7, 2, 4, 4, 5, 5, 2, 6, 2, 6, 
 	7, 4, 7, 7, 7, 7, 7, 7, 7, 7, 2, 2, 5, 6, 5, 6, 
 	8, 8, 7, 7, 7, 7, 7, 7, 8, 4, 7, 8, 7, 8, 8, 7, 
@@ -183,7 +183,7 @@ const int prop_font_height = 8;
 
 // Offsets into the font bitmap for each character (based on the character widths
 // defined in prop_font_width)
-const unsigned short prop_font_offset[FONT_ENTRIES] = {
+const unsigned short prop_font_offset[Ui::FONT_ENTRIES] = {
 	0,    6,    8,  14,  21,  27,  33,  40,  42,  46,  50,  55,  60,  62,  68,  70, 
 	76,  83,   87,  94, 101, 108, 115, 122, 129, 136, 143, 145, 147, 152, 158, 163, 
 	169, 177, 185, 192, 199, 206, 213, 220, 227, 235, 239, 246, 254, 261, 269, 277,
@@ -192,7 +192,7 @@ const unsigned short prop_font_offset[FONT_ENTRIES] = {
 	491, 498, 505, 512, 518, 522, 529, 537, 544, 550, 556, 562, 566, 568, 572, 579
 };	
 
-const unsigned char prop_narrow_font_width[FONT_ENTRIES] = {
+const unsigned char prop_narrow_font_width[Ui::FONT_ENTRIES] = {
   3, 1, 3, 5, 5, 5, 5, 1, 2, 2, 3, 5, 2, 5, 1, 3,
   5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 2, 3, 3, 3, 5,
   5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
@@ -203,7 +203,7 @@ const unsigned char prop_narrow_font_width[FONT_ENTRIES] = {
 
 const int prop_narrow_font_height = 7;
 
-const unsigned short prop_narrow_font_offset[FONT_ENTRIES] = {
+const unsigned short prop_narrow_font_offset[Ui::FONT_ENTRIES] = {
     0,   4,   5,   8,  13,  18,  23,  28,  29,  31,  33,  36,  41,  43,  48,  49,
    52,  57,  62,  67,  72,  77,  82,  87,  92,  97, 102, 103, 105, 108, 111, 114,
   119, 124, 129, 134, 139, 144, 149, 154, 159, 164, 169, 174, 179, 184, 189, 194,
@@ -244,6 +244,7 @@ class Render {
 		void render_prop_narrow_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx);
 		void render_centered_prop_text(BITMAP *dest, char *text, int center, int y_pos, int font_idx);
 		void render_centered_prop_narrow_text(BITMAP *dest, char *text, int center, int y_pos, int font_idx);
+		void render_status_ui(BITMAP *destination);
 		void render_status_base(BITMAP *destination);		
 		void render_text_base(BITMAP *destination, bool extended);		
 		void render_text_log(BITMAP *destination, bool extended);

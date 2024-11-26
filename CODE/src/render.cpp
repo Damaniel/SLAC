@@ -51,9 +51,10 @@ void Render::render_actors(BITMAP *destination, int maze_x, int maze_y) {
 	BITMAP *bpc = (BITMAP *)g_game_data[DAMRL_PLAYER_SPRITES].dat;
 
 	// For now, just draw the player.  He's always centered in the play area.
-	masked_blit(bpc, destination, PLAYER_TILE_OFFSET * TILE_PIXEL_WIDTH, 0, 
-	            PLAYER_PLAY_AREA_X * TILE_PIXEL_WIDTH, PLAYER_PLAY_AREA_Y * TILE_PIXEL_HEIGHT,
-		        TILE_PIXEL_WIDTH, TILE_PIXEL_HEIGHT);
+	masked_blit(bpc, destination, Ui::PLAYER_TILE_OFFSET * Ui::TILE_PIXEL_WIDTH, 0, 
+	            Ui::PLAYER_PLAY_AREA_X * Ui::TILE_PIXEL_WIDTH, 
+				Ui::PLAYER_PLAY_AREA_Y * Ui::TILE_PIXEL_HEIGHT,
+		        Ui::TILE_PIXEL_WIDTH, Ui::TILE_PIXEL_HEIGHT);
 }
 
 //------------------------------------------------------------------------------
@@ -71,12 +72,12 @@ void Render::render_actors(BITMAP *destination, int maze_x, int maze_y) {
 void Render::render_base_tile(BITMAP *destination, int tile_id, int x, int y) {
 	blit((BITMAP *)g_game_data[DAMRL_MAZE_BASE_TILES_1].dat, 
 	     destination,
-	     tile_id * TILE_PIXEL_WIDTH, 
+	     tile_id * Ui::TILE_PIXEL_WIDTH, 
 		 0, 
-		 x * TILE_PIXEL_WIDTH,
-		 y * TILE_PIXEL_HEIGHT,
-		 TILE_PIXEL_WIDTH,
-		 TILE_PIXEL_HEIGHT);	
+		 x * Ui::TILE_PIXEL_WIDTH,
+		 y * Ui::TILE_PIXEL_HEIGHT,
+		 Ui::TILE_PIXEL_WIDTH,
+		 Ui::TILE_PIXEL_HEIGHT);	
 }
 
 //------------------------------------------------------------------------------
@@ -89,17 +90,17 @@ void Render::render_base_tile(BITMAP *destination, int tile_id, int x, int y) {
 //   x, y - the position to draw the tile
 //------------------------------------------------------------------------------
 void Render::render_item(BITMAP *destination, int gid, int x, int y) {
-	int tilex = gid % ITEM_TILE_ENTRY_WIDTH;
-	int tiley = gid / ITEM_TILE_ENTRY_WIDTH;
+	int tilex = gid % Ui::ITEM_TILE_ENTRY_WIDTH;
+	int tiley = gid / Ui::ITEM_TILE_ENTRY_WIDTH;
 
 	masked_blit((BITMAP *)g_game_data[DAMRL_ITEMS].dat, 
 	     destination,
-	     tilex * TILE_PIXEL_WIDTH, 
-		 tiley * TILE_PIXEL_HEIGHT, 
-		 x * TILE_PIXEL_WIDTH,
-		 y * TILE_PIXEL_HEIGHT,
-		 TILE_PIXEL_WIDTH,
-		 TILE_PIXEL_HEIGHT);	
+	     tilex * Ui::TILE_PIXEL_WIDTH, 
+		 tiley * Ui::TILE_PIXEL_HEIGHT, 
+		 x * Ui::TILE_PIXEL_WIDTH,
+		 y * Ui::TILE_PIXEL_HEIGHT,
+		 Ui::TILE_PIXEL_WIDTH,
+		 Ui::TILE_PIXEL_HEIGHT);	
 }
 
 //------------------------------------------------------------------------------
@@ -112,24 +113,24 @@ void Render::render_item(BITMAP *destination, int gid, int x, int y) {
 //   
 //------------------------------------------------------------------------------
 void Render::initialize_map_bitmap(Maze *m) {
-	for (int y=0; y <= MAP_NUM_Y_DOTS; y++) {
-		for (int x=0; x <= MAP_NUM_X_DOTS; x++) {
+	for (int y=0; y <= Ui::MAP_NUM_Y_DOTS; y++) {
+		for (int x=0; x <= Ui::MAP_NUM_X_DOTS; x++) {
 			blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat,
 			screen,
-			MAP_DOT_FOG_OF_WAR * MAP_DOT_WIDTH,
+			Ui::MAP_DOT_FOG_OF_WAR * Ui::MAP_DOT_WIDTH,
 			0,
-			MAP_AREA_VMEM_X + (x * MAP_DOT_WIDTH),
-			MAP_AREA_VMEM_Y + (y * MAP_DOT_HEIGHT),
-			MAP_DOT_WIDTH,
-			MAP_DOT_HEIGHT);			
+			Ui::MAP_AREA_VMEM_X + (x * Ui::MAP_DOT_WIDTH),
+			Ui::MAP_AREA_VMEM_Y + (y * Ui::MAP_DOT_HEIGHT),
+			Ui::MAP_DOT_WIDTH,
+			Ui::MAP_DOT_HEIGHT);			
 		}
 	}	
 
 	// Calculate the center point for the maze on the map (so everything is
 	// nice and centered)
 	// The center location is map_x + (((the whole map width) - (2 * maze_width)) / 2)
-    map_maze_xoffset = MAP_AREA_VMEM_X + ((MAP_PIXEL_WIDTH - m->get_width() * MAP_DOT_WIDTH) / 2);
-	map_maze_yoffset = MAP_AREA_VMEM_Y + ((MAP_PIXEL_HEIGHT - m->get_height() * MAP_DOT_HEIGHT) / 2);
+    map_maze_xoffset = Ui::MAP_AREA_VMEM_X + ((Ui::MAP_PIXEL_WIDTH - m->get_width() * Ui::MAP_DOT_WIDTH) / 2);
+	map_maze_yoffset = Ui::MAP_AREA_VMEM_Y + ((Ui::MAP_PIXEL_HEIGHT - m->get_height() * Ui::MAP_DOT_HEIGHT) / 2);
 }
 
 //------------------------------------------------------------------------------
@@ -152,22 +153,22 @@ void Render::add_area_to_map_bitmap(Maze *m, int x, int y) {
 					//std::cout << "  add_area_to_map_bitmap: not carved" << std::endl;
 					blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat,
 				     	screen,
-					 	MAP_DOT_WALL * MAP_DOT_WIDTH,
+					 	Ui::MAP_DOT_WALL * Ui::MAP_DOT_WIDTH,
 					 	0,
-					 	map_maze_xoffset + (i * MAP_DOT_WIDTH),
-					 	map_maze_yoffset + (j * MAP_DOT_HEIGHT),
-					 	MAP_DOT_WIDTH,
-					 	MAP_DOT_HEIGHT);
+					 	map_maze_xoffset + (i * Ui::MAP_DOT_WIDTH),
+					 	map_maze_yoffset + (j * Ui::MAP_DOT_HEIGHT),
+					 	Ui::MAP_DOT_WIDTH,
+					 	Ui::MAP_DOT_HEIGHT);
 				} else {
 					//std::cout << "  add_area_to_map_bitmap: carved" << std::endl;
 					blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat,
 				     	screen,
-					 	MAP_DOT_FLOOR * MAP_DOT_WIDTH,
+					 	Ui::MAP_DOT_FLOOR * Ui::MAP_DOT_WIDTH,
 					 	0,
-					 	map_maze_xoffset + (i * MAP_DOT_WIDTH),
-					 	map_maze_yoffset + (j * MAP_DOT_HEIGHT),
-					 	MAP_DOT_WIDTH,
-					 	MAP_DOT_HEIGHT);			
+					 	map_maze_xoffset + (i * Ui::MAP_DOT_WIDTH),
+					 	map_maze_yoffset + (j * Ui::MAP_DOT_HEIGHT),
+					 	Ui::MAP_DOT_WIDTH,
+					 	Ui::MAP_DOT_HEIGHT);			
 				}
 			}
 		}
@@ -187,21 +188,21 @@ void Render::add_area_to_map_bitmap(Maze *m, int x, int y) {
 					if(m->is_carved(i, j) == false) {
 						blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat,
 					     	screen,
-					 		MAP_DOT_WALL * MAP_DOT_WIDTH,
+					 		Ui::MAP_DOT_WALL * Ui::MAP_DOT_WIDTH,
 					 		0,
-					 		map_maze_xoffset + (i * MAP_DOT_WIDTH),
-					 		map_maze_yoffset + (j * MAP_DOT_HEIGHT),
-					 		MAP_DOT_WIDTH,
-					 		MAP_DOT_HEIGHT);
+					 		map_maze_xoffset + (i * Ui::MAP_DOT_WIDTH),
+					 		map_maze_yoffset + (j * Ui::MAP_DOT_HEIGHT),
+					 		Ui::MAP_DOT_WIDTH,
+					 		Ui::MAP_DOT_HEIGHT);
 					} else {
 						blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat,
 					     	screen,
-					 		MAP_DOT_FLOOR * MAP_DOT_WIDTH,
+					 		Ui::MAP_DOT_FLOOR * Ui::MAP_DOT_WIDTH,
 					 		0,
-					 		map_maze_xoffset + (i * MAP_DOT_WIDTH),
-					 		map_maze_yoffset + (j * MAP_DOT_HEIGHT),
-					 		MAP_DOT_WIDTH,
-					 		MAP_DOT_HEIGHT);
+					 		map_maze_xoffset + (i * Ui::MAP_DOT_WIDTH),
+					 		map_maze_yoffset + (j * Ui::MAP_DOT_HEIGHT),
+					 		Ui::MAP_DOT_WIDTH,
+					 		Ui::MAP_DOT_HEIGHT);
 					}
 				}	
 			}
@@ -228,7 +229,8 @@ void Render::copy_data_to_offscreen_vram(void) {
 	//   exploration occurs, there's no need to generate it at the time the map is
 	//   displayed (which would be a very slow operation).
 	BITMAP *b = (BITMAP *)g_game_data[DAMRL_MAIN_MAP].dat;	
-	blit(b, screen, 0, 0, MAP_VMEM_X, MAP_VMEM_Y, MAP_VMEM_WIDTH, MAP_VMEM_HEIGHT);
+	blit(b, screen, 0, 0, Ui::MAP_VMEM_X, Ui::MAP_VMEM_Y, 
+	     Ui::MAP_VMEM_WIDTH, Ui::MAP_VMEM_HEIGHT);
 }
 
 //------------------------------------------------------------------------------
@@ -274,24 +276,24 @@ void Render::render_map(BITMAP *destination) {
 	char text[32];
 
 	// Blit the base map
-	blit(screen, destination, MAP_VMEM_X, MAP_VMEM_Y, MAP_X_POS, MAP_Y_POS, 
-	     MAP_VMEM_WIDTH, MAP_VMEM_HEIGHT);
+	blit(screen, destination, Ui::MAP_VMEM_X, Ui::MAP_VMEM_Y, 
+	     Ui::MAP_X_POS, Ui::MAP_Y_POS, Ui::MAP_VMEM_WIDTH, Ui::MAP_VMEM_HEIGHT);
 
 	// Draw the player's position on the map
 	blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat, 
 	     destination, 
-         MAP_DOT_PLAYER*MAP_DOT_WIDTH,
+         Ui::MAP_DOT_PLAYER * Ui::MAP_DOT_WIDTH,
 		 0, 
-		 MAP_X_POS + map_maze_xoffset - MAP_VMEM_X + (g_player.get_x_pos()*MAP_DOT_WIDTH),
-		 MAP_Y_POS + map_maze_yoffset - MAP_VMEM_Y + (g_player.get_y_pos()*MAP_DOT_HEIGHT), 
-		 MAP_DOT_WIDTH, MAP_DOT_HEIGHT);
+		 Ui::MAP_X_POS + map_maze_xoffset - Ui::MAP_VMEM_X + (g_player.get_x_pos() * Ui::MAP_DOT_WIDTH),
+		 Ui::MAP_Y_POS + map_maze_yoffset - Ui::MAP_VMEM_Y + (g_player.get_y_pos() * Ui::MAP_DOT_HEIGHT), 
+		 Ui::MAP_DOT_WIDTH, Ui::MAP_DOT_HEIGHT);
 
 	dungeon = get_dungeon_name(g_dungeon.maze_id);
 	sprintf(text, "%s, Floor %d", (char *)dungeon.c_str(), g_dungeon.depth);
 	// TODO - Draw actual relevant text.  Needs game state to do this.
-	render_centered_prop_narrow_text(destination, text, 120, 31, FONT_YELLOW);
+	render_centered_prop_narrow_text(destination, text, 120, 31, Ui::FONT_YELLOW);
 	sprintf(text, "Position: (%d, %d)", g_player.get_x_pos(), g_player.get_y_pos());
-	render_centered_prop_narrow_text(destination, text, 120, 172, FONT_YELLOW);
+	render_centered_prop_narrow_text(destination, text, 120, 172, Ui::FONT_YELLOW);
   }
 
 //------------------------------------------------------------------------------
@@ -307,22 +309,22 @@ void Render::render_map(BITMAP *destination) {
 void Render::render_inventory_content(BITMAP *destination) {
 	// Draw the items
 	for (int i = 0; i < INVENTORY_SIZE; ++i) {
-		int x = i % INVENTORY_ITEMS_PER_ROW;
-		int y = i / INVENTORY_ITEMS_PER_ROW;
+		int x = i % Ui::INVENTORY_ITEMS_PER_ROW;
+		int y = i / Ui::INVENTORY_ITEMS_PER_ROW;
 		Item *it = g_inventory->get_item_in_slot(i);
 		if (it != NULL) {
 			int gid = it->get_gid();
-			int tilex = gid % ITEM_TILE_ENTRY_WIDTH;
-			int tiley = gid / ITEM_TILE_ENTRY_WIDTH;
+			int tilex = gid % Ui::ITEM_TILE_ENTRY_WIDTH;
+			int tiley = gid / Ui::ITEM_TILE_ENTRY_WIDTH;
 
 			masked_blit((BITMAP *)g_game_data[DAMRL_ITEMS].dat, 
 	     			    destination,
-	     				tilex * TILE_PIXEL_WIDTH, 
-		 				tiley * TILE_PIXEL_HEIGHT, 
-		 				(x * (TILE_PIXEL_WIDTH + 1)) + INVENTORY_DIALOG_X + INVENTORY_ITEMS_X,
-		 				(y * (TILE_PIXEL_HEIGHT + 1)) + INVENTORY_DIALOG_Y + INVENTORY_ITEMS_Y,
-		 				TILE_PIXEL_WIDTH,
-		 				TILE_PIXEL_HEIGHT);	
+	     				tilex * Ui::TILE_PIXEL_WIDTH, 
+		 				tiley * Ui::TILE_PIXEL_HEIGHT, 
+		 				(x * (Ui::TILE_PIXEL_WIDTH + 1)) + Ui::INVENTORY_DIALOG_X + Ui::INVENTORY_ITEMS_X,
+		 				(y * (Ui::TILE_PIXEL_HEIGHT + 1)) + Ui::INVENTORY_DIALOG_Y + Ui::INVENTORY_ITEMS_Y,
+		 				Ui::TILE_PIXEL_WIDTH,
+		 				Ui::TILE_PIXEL_HEIGHT);	
 		}
 	}
 
@@ -331,7 +333,7 @@ void Render::render_inventory_content(BITMAP *destination) {
 	// Draw the active item description
 	Item *it = g_inventory->get_item_in_slot(0);
 	if (it != NULL) {
-		render_prop_narrow_text(destination, (char *)it->get_full_name().c_str(), 15, 135, 0);
+		render_prop_narrow_text(destination, (char *)it->get_full_name().c_str(), 15, 135, Ui::FONT_YELLOW);
 	}
 }
 
@@ -347,8 +349,8 @@ void Render::render_inventory_content(BITMAP *destination) {
 void Render::render_inventory(BITMAP *destination) {
 	// Draw the background
 	blit((BITMAP *)g_game_data[DAMRL_INVENTORY].dat,
-	     destination, 0, 0, INVENTORY_DIALOG_X, INVENTORY_DIALOG_Y, 
-		 INVENTORY_DIALOG_WIDTH, INVENTORY_DIALOG_HEIGHT);
+	     destination, 0, 0, Ui::INVENTORY_DIALOG_X, Ui::INVENTORY_DIALOG_Y, 
+		 Ui::INVENTORY_DIALOG_WIDTH, Ui::INVENTORY_DIALOG_HEIGHT);
 
 	render_inventory_content(destination);
 }
@@ -407,6 +409,19 @@ void Render::render_prop_narrow_text(BITMAP *destination, char *text, int x_pos,
 }
 
 //------------------------------------------------------------------------------
+// Draws the contents of the status area (Name/Level/HP/EXP/gold) to the screen
+//
+// Arguments:
+//   destination - the bitmap to write to
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Render::render_status_ui(BITMAP *destination) {
+
+}
+
+//------------------------------------------------------------------------------
 // Draws the status background graphic to the screen.
 //
 // Arguments:
@@ -417,7 +432,7 @@ void Render::render_prop_narrow_text(BITMAP *destination, char *text, int x_pos,
 //------------------------------------------------------------------------------
 void Render::render_status_base(BITMAP *destination) {
 	BITMAP *b = (BITMAP *)g_game_data[DAMRL_MAIN_STATUS].dat;
-	blit(b, destination, 0, 0, STATUS_AREA_X, STATUS_AREA_Y, b->w, b->h);
+	blit(b, destination, 0, 0, Ui::STATUS_AREA_X, Ui::STATUS_AREA_Y, b->w, b->h);
 }
 
 //------------------------------------------------------------------------------
@@ -435,10 +450,10 @@ void Render::render_text_base(BITMAP *destination, bool extended) {
 	BITMAP *bext = (BITMAP *)g_game_data[DAMRL_MAIN_TEXT_EXT].dat;
 	
 	if(extended == true) {
-		blit(bext, destination, 0, 0, TEXT_AREA_EXT_X, TEXT_AREA_EXT_Y, bext->w, bext->h);
+		blit(bext, destination, 0, 0, Ui::TEXT_AREA_EXT_X, Ui::TEXT_AREA_EXT_Y, bext->w, bext->h);
 	}
 	else {
-		blit(bstd, destination, 0, 0, TEXT_AREA_STD_X, TEXT_AREA_STD_Y, bstd->w, bstd->h);		
+		blit(bstd, destination, 0, 0, Ui::TEXT_AREA_STD_X, Ui::TEXT_AREA_STD_Y, bstd->w, bstd->h);		
 	}
 }
 
@@ -469,15 +484,15 @@ void Render::render_text_log(BITMAP *destination, bool extended) {
 	lines_to_draw = g_text_log.get_num_lines();
 
 	if (extended) {
-		size = TEXT_AREA_EXT_NUM_LINES;
-		x_off = TEXT_AREA_EXT_X + 4;
-		y_off = TEXT_AREA_EXT_Y + prop_font_height;
+		size = Ui::TEXT_AREA_EXT_NUM_LINES;
+		x_off = Ui::TEXT_AREA_EXT_X + 4;
+		y_off = Ui::TEXT_AREA_EXT_Y + prop_font_height;
 		log_start = 0;
  	} 
 	else {
-		size = TEXT_AREA_NORMAL_NUM_LINES;
-		x_off = TEXT_AREA_STD_X + 4;
-		y_off = TEXT_AREA_STD_Y + prop_font_height;
+		size = Ui::TEXT_AREA_NORMAL_NUM_LINES;
+		x_off = Ui::TEXT_AREA_STD_X + 4;
+		y_off = Ui::TEXT_AREA_STD_Y + prop_font_height;
 		if (lines_to_draw > size) {
 			log_start = lines_to_draw - size;
 		} 
@@ -487,7 +502,9 @@ void Render::render_text_log(BITMAP *destination, bool extended) {
 	}
 
 	for(int idx = log_start; idx < lines_to_draw; ++idx) {
-		render_prop_narrow_text(destination, (char *)g_text_log.get_line(idx).c_str(), x_off, y_off + ((prop_font_height + 1) * (idx-log_start)), 0);
+		render_prop_narrow_text(destination, (char *)g_text_log.get_line(idx).c_str(),
+		                        x_off, y_off + ((prop_font_height + 1) * (idx-log_start)), 
+								Ui::FONT_YELLOW);
 	}
 }
 
@@ -512,8 +529,8 @@ void Render::render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_
 	//   any check done to see if those tiles are valid, but the default Maze class will 
 	//   always have a valid tile to the left and above any carved tile, so this shouldn't
 	//   cause a problem.  If weird crashes happen, try looking here.
-	for (int screen_x = 0; screen_x < PLAY_AREA_TILE_WIDTH; screen_x++) {
-		for (int screen_y = 0; screen_y < PLAY_AREA_TILE_HEIGHT; screen_y++) {
+	for (int screen_x = 0; screen_x < Ui::PLAY_AREA_TILE_WIDTH; screen_x++) {
+		for (int screen_y = 0; screen_y < Ui::PLAY_AREA_TILE_HEIGHT; screen_y++) {
 			int tile_to_render_x = maze_x + screen_x;
 			int tile_to_render_y = maze_y + screen_y;
 			int tile_to_use;
@@ -526,34 +543,34 @@ void Render::render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_
 				if (m->is_square_lit(tile_to_render_x, tile_to_render_y) == false) { 
 					// If the square has previously been seen and isn't carved, draw a darker wall
 					if (m->is_carved(tile_to_render_x, tile_to_render_y) == false && m->was_seen(tile_to_render_x, tile_to_render_y) == true) {
-						render_base_tile(destination, TILE_DARKER_WALL, screen_x, screen_y);
+						render_base_tile(destination, Ui::TILE_DARKER_WALL, screen_x, screen_y);
 					} else {
 						// Otherwise, draw darkness
-						render_base_tile(destination, TILE_DARK, screen_x, screen_y);
+						render_base_tile(destination, Ui::TILE_DARK, screen_x, screen_y);
 					}
 				}
 				// Render stairs if present
 				else if (stairs == STAIRS_UP) {
-					render_base_tile(destination, TILE_UP_STAIRS, screen_x, screen_y);
+					render_base_tile(destination, Ui::TILE_UP_STAIRS, screen_x, screen_y);
 				}
 				else if (stairs == STAIRS_DOWN) {
-					render_base_tile(destination, TILE_DOWN_STAIRS, screen_x, screen_y);
+					render_base_tile(destination, Ui::TILE_DOWN_STAIRS, screen_x, screen_y);
 				}
 				// Render floor if present.  There are 4 different floor tiles - one with no
 				// highlighting and 3 with different types of highlighting
 				// If the location is a wall, render that instead.
 				else if (m->is_carved(tile_to_render_x, tile_to_render_y) == true) {
 					if (carved_left == false && carved_up == true) {
-						tile_to_use = TILE_FLOOR_LEFT_HIGHLIGHT;
+						tile_to_use = Ui::TILE_FLOOR_LEFT_HIGHLIGHT;
 					}
 					else if (carved_left == true && carved_up == false) {
-						tile_to_use = TILE_FLOOR_TOP_HIGHLIGHT;
+						tile_to_use = Ui::TILE_FLOOR_TOP_HIGHLIGHT;
 					}
 					else if (carved_left == false && carved_up == false) {
-						tile_to_use = TILE_FLOOR_BOTH_HIGHLIGHT;
+						tile_to_use = Ui::TILE_FLOOR_BOTH_HIGHLIGHT;
 					}
 					else {
-						tile_to_use = TILE_FLOOR;
+						tile_to_use = Ui::TILE_FLOOR;
 					}
 					render_base_tile(destination, tile_to_use, screen_x, screen_y);
 					// Get any items at the location and draw the first on the list
@@ -564,11 +581,11 @@ void Render::render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_
 						render_item(destination, it->get_gid(), screen_x, screen_y);
 					}
 				} else {
-					render_base_tile(destination, TILE_WALL, screen_x, screen_y);
+					render_base_tile(destination, Ui::TILE_WALL, screen_x, screen_y);
 				}		
 			} else {
 				// Draw an empty space since it's outside of the map
-				render_base_tile(destination, TILE_DARK, screen_x, screen_y);
+				render_base_tile(destination, Ui::TILE_DARK, screen_x, screen_y);
 			}						 
 		}
 	}
@@ -591,7 +608,7 @@ void Render::render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_
 //----------------------------------------------------------------------------------
 void Render::render_world_at_player(BITMAP *destination, Maze *m, int maze_x, int maze_y) {
 	// Render the world with the tile at the player's position (7,6) equal to (maze_x, maze_y)
-	render_world_at(destination, m, maze_x - PLAYER_PLAY_AREA_X, maze_y - PLAYER_PLAY_AREA_Y);
+	render_world_at(destination, m, maze_x - Ui::PLAYER_PLAY_AREA_X, maze_y - Ui::PLAYER_PLAY_AREA_Y);
 }
 
 // Non-class update functions.  They might go into the class eventually

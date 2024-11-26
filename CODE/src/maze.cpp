@@ -203,7 +203,6 @@ void Maze::add_stairs(int num_up_stairs, int num_down_stairs) {
 		int stair_target = num_rooms / 2;
 		up_stairs = stair_target;
 		down_stairs = stair_target;
-		std::cout << "Not enough rooms (" << num_rooms << ") to use defaults, adding " << stair_target << " pairs of stairs" << std::endl;
 	} 
 	else {
 		up_stairs = num_up_stairs;
@@ -925,13 +924,10 @@ std::pair<int, int> Maze::get_random_stair(int direction) {
 	// The vector contains an equal number of up and down stairs.  Just pick 
 	// them at random until we find one that goes the correct direction.
 	while(1) {
-		std::cout << "get_random_stair: stairs.size() = " << stairs.size() << std::endl;
 		idx = rand() % stairs.size();
-		std::cout << "get_random_stair: index = " << idx << std::endl;
 		Stair s = stairs[idx];
 		if (s.direction == direction) {
 			std::pair<int, int> p = std::make_pair(s.x, s.y);
-			std::cout << "Returning stair at (" << s.x << ", " << s.y << ")" << std::endl;
 			return p;
 		}
 	}
