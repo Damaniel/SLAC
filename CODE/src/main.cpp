@@ -126,65 +126,79 @@ void unload_resources(void) {
 // Creates a new maze floor, deleting any existing one first.
 //
 // Arguments:
-//   None
+//   d - a reference to a DungeonFloor that will contain the new floor
+//   level - the dungeon level to generate (affects iLevel)
+//   stairs_from - the kind of stairs the player came from 
 //
 // Returns:
 //   Nothing
+//
+// Notes:
+//   stairs_from is used to place the player on the correct kind of stairs
+//   corresponding to the floor they came from (up stairs if the player went
+//   down, and down stairs if the player went up)
 //------------------------------------------------------------------------------
-void generate_new_dungeon_floor(int id, int floor, int w, int h) {
-	if (g_dungeon.maze != NULL) {
-		delete g_dungeon.maze;
+void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
+	if (d.maze != NULL) {
+		delete d.maze;
 	}
 
-	g_dungeon.width = w;
-	g_dungeon.height = h;
-	g_dungeon.depth = floor;
-	g_dungeon.maze_id = id;
+	//std::cout << "generate_new_dungeon_floor: Generating floor " << level << "..." << std::endl;
+
+	d.depth = level;
+
+	// Set the maximum depth and size for the current dungeon
+	// Yes, this is done every floor when it doesn't need to be, but fine.
+	d.max_depth = g_max_dungeon_depths[d.maze_id];
+	d.width = g_dungeon_sizes[d.maze_id];
+	d.height = g_dungeon_sizes[d.maze_id];
 
 	// Set the current ilevel based on the dungeon the player is in and the
 	// floor they're on
-	switch (g_dungeon.maze_id) {
+	switch (d.maze_id) {
 		case DUSTY_TUNNELS:
-			g_dungeon.ilevel = floor / 2;
-			if (g_dungeon.ilevel < 1 ) g_dungeon.ilevel = 1;
-			if (g_dungeon.ilevel > 25) g_dungeon.ilevel = 25;
+			d.ilevel = level / 2;
+			if (d.ilevel < 1 ) d.ilevel = 1;
+			if (d.ilevel > 25) d.ilevel = 25;
 			break;
 		case MARBLE_HALLS:
-			g_dungeon.ilevel = 20 + (floor / 2);
-			if (g_dungeon.ilevel < 20 ) g_dungeon.ilevel = 20;
-			if (g_dungeon.ilevel > 70) g_dungeon.ilevel = 70;
+			d.ilevel = 20 + (level / 2);
+			if (d.ilevel < 20 ) d.ilevel = 20;
+			if (d.ilevel > 70) d.ilevel = 70;
 			break;
 		case CRYSTAL_DEPTHS:
-			g_dungeon.ilevel = 30 + (floor / 2);
-			if (g_dungeon.ilevel < 30 ) g_dungeon.ilevel = 30;
-			if (g_dungeon.ilevel > 100) g_dungeon.ilevel = 100;
+			d.ilevel = 30 + (level / 2);
+			if (d.ilevel < 30 ) d.ilevel = 30;
+			if (d.ilevel > 100) d.ilevel = 100;
 			break;
 		default:
-			g_dungeon.ilevel = 100;
+			d.ilevel = 100;
 			break;
 	}
 
-	g_dungeon.maze = new Maze(g_dungeon.width, g_dungeon.height, g_dungeon.ilevel);
-	g_dungeon.maze->generate();
+	d.maze = new Maze(d.width, d.height, d.ilevel);
+	d.maze->generate();
 
-	// Place the player on a random set of up stairs
-	std::pair<int, int> stairLoc = g_dungeon.maze->get_random_stair(MazeConsts::STAIRS_UP);
+	std::pair<int, int> stairLoc;
+	// Place the player on a random set of stairs based on where they came from
+	if (stairs_from == MazeConsts::STAIRS_DOWN)
+		stairLoc = d.maze->get_random_stair(MazeConsts::STAIRS_UP);
+	else
+		stairLoc = d.maze->get_random_stair(MazeConsts::STAIRS_DOWN);
 
 	// Place the player at the stair location
 	g_player.set_position(stairLoc.first, stairLoc.second);
 	
 	// Hack to force lighting in the initial room the player is in
-	int initial_room = g_dungeon.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos());
+	int initial_room = d.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos());
 	g_player.set_last_room_entered(initial_room);	
 	if (initial_room != -1) {
 		// double hack to mark the room as seen so that the map renderer can
 		// display it
-		g_dungeon.maze->change_room_lit_status(initial_room, false);		
-		g_dungeon.maze->change_room_lit_status(initial_room, true);			
+		d.maze->change_room_lit_status(initial_room, false);		
+		d.maze->change_room_lit_status(initial_room, true);			
 	}
 	
-	// Loop until done.  Right now, 'done' = pressing Esc
-	g_state_flags.exit_game = false;
 	// Does the display need to be refreshed?
 	g_state_flags.update_display = true;
 	
@@ -218,7 +232,10 @@ void initialize_main_game_state(void) {
 		g_dungeon.maze = NULL;
 	}
 
-	generate_new_dungeon_floor(DUSTY_TUNNELS, 1, 30, 30);
+	// Create a new dungeon floor (first floor, coming down from surface)
+	generate_new_dungeon_floor(g_dungeon, 1, MazeConsts::STAIRS_DOWN);
+
+	// create a new inventory (TODO - move to an earlier state)
 	g_inventory = new Inventory();
 }
 
@@ -301,6 +318,8 @@ int main(void) {
 	init_resources(g_render);
 
 	g_player = Player();
+	// Loop until done.  Right now, 'done' = pressing Esc
+	g_state_flags.exit_game = false;
 
 	change_state(STATE_MAIN_GAME);
 
@@ -320,7 +339,10 @@ int main(void) {
 		}
 	} while (g_state_flags.exit_game == false);
 
+	//std::cout << "main: deleting inventory" << std::endl;
 	delete g_inventory;
+	
+	//std::cout << "main: deleting maze" << std::endl;
 	if (g_dungeon.maze != NULL) {
 		delete g_dungeon.maze;
 	}

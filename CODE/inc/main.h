@@ -49,12 +49,19 @@ enum {
     CRYSTAL_DEPTHS
 };
 
-void create_new_maze_floor(void);
-void initialize_main_game_state(void);
-void change_state(int new_state);
-void add_items_at_player_to_log(void);
+// The maximum depth of each of the 3 dungeons
+const int g_max_dungeon_depths[3] = {50, 100, 150};
+const int g_dungeon_sizes[3] = {48, 48, 64};
 
-std::string get_dungeon_name(int dungeon);
+struct DungeonFloor {
+    Maze *maze;
+    int maze_id;        // which maze we're in
+    int depth;          // The current depth
+    int max_depth;      // The deepest floor allowed
+    int ilevel;         // The ilevel of the current floor
+    int width;          // The width of the dungeon floor
+    int height;         // The height of the dungeon floor
+};
 
 // A collection of flags relevant to the game loop.  The game loop will want
 // to farm tasks out to other functions; this provides a way to have them all
@@ -81,15 +88,13 @@ struct StateFlags {
     bool exit_game;           // Did the player choose to exit the game?
 };
 
-struct DungeonFloor {
-    Maze *maze;
-    int maze_id;        // which maze we're in
-    int depth;          // The current depth
-    int ilevel;         // The ilevel of the current floor
-    int width;          // The width of the dungeon floor
-    int height;         // The height of the dungeon floor
-};
-
 extern DungeonFloor g_dungeon;
+
+void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from);
+void initialize_main_game_state(void);
+void change_state(int new_state);
+void add_items_at_player_to_log(void);
+
+std::string get_dungeon_name(int dungeon);
 
 #endif

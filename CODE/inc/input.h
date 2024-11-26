@@ -1,6 +1,7 @@
 #ifndef __INPUT_H__
 #define __INPUT_H__
 
+void use_stairs(int x, int y);
 void process_movement_flags(void);
 void process_inventory_substate(int key);
 void process_map_substate(int key);

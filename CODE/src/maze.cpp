@@ -1156,11 +1156,15 @@ bool Maze::was_seen(int x, int y) {
 //------------------------------------------------------------------------------
 
 void Maze::remove_item_from_end_at(int x, int y) {
+	Item *i;
 	int num_items = g_dungeon.maze->get_num_items_at(x, y);
 	if (num_items > 0) {
 		//std::cout << "Number of items was " << num_items << std::endl;
 		std::pair<int, int> p = std::make_pair(x, y);
+
+		// Remove the pointer from the list
 		items[p].pop_back();
+
 		num_items = g_dungeon.maze->get_num_items_at(x, y);
 		//std::cout << "Number of items is now " << num_items << std::endl;
 	}

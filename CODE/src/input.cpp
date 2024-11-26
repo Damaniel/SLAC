@@ -23,33 +23,106 @@
 //==========================================================================================
 #include "globals.h"
 
+//----------------------------------------------------------------------------
+// 'Uses' a set of stairs - adjusts floor, generates new maze, etc
+//
+// Arguments:
+//   x, y - the position to check for stairs
+//
+// Returns:
+//   Nothing
+//
+// Notes:
+//   Does nothing if there are no stairs in the provided location
+//----------------------------------------------------------------------------
+void use_stairs(int x, int y) {
+    int stairs = g_dungeon.maze->stairs_here(x, y);
+    int depth;
+
+    // If there aren't actually any stairs, then do nothing
+    if (stairs == MazeConsts::NO_STAIRS)
+        return;
+
+    // If the stairs are down stairs, the new floor should be
+    // one greater than the current one (with a limit of the 
+    // maximum floor value for the current dungeon)
+    if (stairs == MazeConsts::STAIRS_DOWN) {
+        depth = g_dungeon.depth + 1;
+        if (depth > g_dungeon.max_depth)
+            depth = g_dungeon.max_depth;
+    }
+
+    // If the stairs are up stairs, the new floor should be
+    // one less than the current one (with a limit of 1).
+    // Eventually, if the floor is 0, it will transition to
+    // town instead of generating floor 1 again.
+    if (stairs == MazeConsts::STAIRS_UP) {
+        depth = g_dungeon.depth - 1;
+        if (depth < 1) 
+            depth = 1;
+    }
+
+    // Generate a new dungeon with the new floor value
+    generate_new_dungeon_floor(g_dungeon, depth, stairs); 
+}
+
+//----------------------------------------------------------------------------
+// 'Picks up' an item (adding it to the inventory or gold total, removing it
+// from the ground)
+//
+// Arguments:
+//   x, y - the position to check for items
+//
+// Returns:
+//   Nothing
+//
+// Notes:
+//   Does nothing if there are no items in the provided location
+//----------------------------------------------------------------------------
 void pick_up_item_at(int x, int y) {
     bool picked_up = false;
+    std::string item_name;
 
-    if (g_dungeon.maze->get_num_items_at(x, y) > 0) {
+    // Check for items.  Only do something if there are.
+    if (g_dungeon.maze->get_num_items_at(x, y) <= 0) {
+        return;
+    } 
+    else {
+        // Get the item list and process the one at the end 
+        // (which is the one that the player can see)
         std::list<Item *> items = g_dungeon.maze->get_items_at(x, y);
+        // Get the item name.  Currency items will be deleted before
+        // the end of the function (by remove_item_from_end_at)
+        // so we'll grab it for all items and use it instead of
+        // accidentally trying to blit a deleted item.
         Item *i = items.back();
+        item_name = i->get_full_name();
+
         // For currency, add the value to the player's gold directly
+        // Also, delete the currency item because it's going away
+        // (not on the floor, not in the inventory)
         if (i->get_item_class() == ItemConsts::CURRENCY_CLASS) {
             g_player.add_gold(i->get_value());
+		    delete i;
             g_state_flags.update_status_dialog = true;
             picked_up = true;
         }
-        // Otherwise, add it to the inventory (if there's room)
         else {
-        // Add it to the inventory
+            // Otherwise, add it to the inventory (if there's room)
             if (!g_inventory->inventory_is_full()) {
-                g_inventory->add_at_first_empty(items.back());
+                g_inventory->add_at_first_empty(i);
                 picked_up = true;
             }
             else {
+                // If there wasn't room, tell the player and do nothing.
                 g_text_log.put_line("You have no room to pick that up.");
             }
         }
-         
+        
+        // If an item was picked up, tell the player.
         if (picked_up) {
             g_dungeon.maze->remove_item_from_end_at(x, y);
-            g_text_log.put_line("Picked up " + items.back()->get_full_name() + ".");
+            g_text_log.put_line("Picked up " + item_name + ".");
             g_state_flags.update_maze_area = true;
             g_state_flags.update_text_dialog = true;
             g_state_flags.update_display = true;
@@ -199,6 +272,24 @@ void process_game_state(int key) {
                     g_state_flags.update_display = true;
                     break;
                 case KEY_G:
+                    pick_up_item_at(g_player.get_x_pos(), g_player.get_y_pos());    
+                    break;
+                case KEY_COMMA:
+                case KEY_STOP:
+                    use_stairs(g_player.get_x_pos(), g_player.get_y_pos());
+                    break;
+                case KEY_SPACE:
+                    // attempt to perform all context sensitive actions in turn.
+                    // Each is only designed to do something if the relevant
+                    // condition is met anyway, so we can do them all in turn
+                    // and the ones for non-valid actions become no-ops.
+
+                    // Use the stairs.  This will only do something if there's
+                    // a set of stairs at the player's feet.
+                    use_stairs(g_player.get_x_pos(), g_player.get_y_pos());
+
+                    // Pick up an item.  This will only do something if there's
+                    // an item to actually pick up.
                     pick_up_item_at(g_player.get_x_pos(), g_player.get_y_pos());    
                     break;
 	            case KEY_TILDE:
