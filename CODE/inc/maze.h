@@ -55,6 +55,15 @@ namespace MazeConsts {
 	const int MIN_MAZE_HEIGHT = 30;
 	const int MAX_MAZE_WIDTH = 64;
 	const int MAX_MAZE_HEIGHT = 64;
+
+	// Controls the generator's behavior regarding whether to render 
+	// both kinds of stairs in the maze, or only one or the other.
+	enum {
+		GENERATE_BOTH_STAIRS,
+		GENERATE_NO_UP_STAIRS,
+		GENERATE_NO_DOWN_STAIRS,
+		GENERATE_NO_STAIRS				// Not used 
+	};
 }
 
 //------------------------------------------------------------------------------
@@ -134,6 +143,7 @@ private:
 	int cols;
     int room_id;
 	int ilevel;
+	int stair_gen_behavior;
 
 	void add_stairs(int num_up_stairs, int num_down_stairs);
 	void carve(int x, int y, int tag);
@@ -175,6 +185,7 @@ public:
 	void print_memory_usage(void); 
 	void print_room_ids(void);
 	void set_room_as_entered(int room_id);
+	void set_stair_gen_behavior(int behavior) { stair_gen_behavior = behavior; }
 	int stairs_here(int x, int y);
 	bool was_seen(int x, int y);
 };

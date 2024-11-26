@@ -177,6 +177,11 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 	}
 
 	d.maze = new Maze(d.width, d.height, d.ilevel);
+
+	// If we're at the bottom, direct the maze generator to omit down stairs
+	if(d.depth >= d.max_depth)
+		d.maze->set_stair_gen_behavior(MazeConsts::GENERATE_NO_DOWN_STAIRS);
+
 	d.maze->generate();
 
 	std::pair<int, int> stairLoc;
@@ -341,7 +346,7 @@ int main(void) {
 
 	//std::cout << "main: deleting inventory" << std::endl;
 	delete g_inventory;
-	
+
 	//std::cout << "main: deleting maze" << std::endl;
 	if (g_dungeon.maze != NULL) {
 		delete g_dungeon.maze;

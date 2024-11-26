@@ -53,6 +53,9 @@ Maze::Maze(int x, int y, int il) {
 	cols = x % 2 == 0 ? x + 1 : x;
 
 	ilevel = il;
+
+	stair_gen_behavior = MazeConsts::GENERATE_BOTH_STAIRS;
+
 	init();
 }
 
@@ -213,43 +216,47 @@ void Maze::add_stairs(int num_up_stairs, int num_down_stairs) {
 	std::vector<int>::iterator room_it;
 	
 	// Iterate through up stairs
-	for (int i=0; i < up_stairs; i++) {
-		bool valid;
-		int candidate_room;
-		// Pick a random room and check to see if there's already stairs in it
-		do {
-			valid = true;
-			candidate_room = rand() % num_rooms + MazeConsts::STARTING_ROOM;
-			for(std::vector<int>::iterator it = selected_rooms.begin(); it != selected_rooms.end(); it++) {
-				if (*it == candidate_room) {
-					valid = false;
+	if (stair_gen_behavior == MazeConsts::GENERATE_BOTH_STAIRS || stair_gen_behavior == MazeConsts::GENERATE_NO_DOWN_STAIRS) { 
+		for (int i=0; i < up_stairs; i++) {
+			bool valid;
+			int candidate_room;
+			// Pick a random room and check to see if there's already stairs in it
+			do {
+				valid = true;
+				candidate_room = rand() % num_rooms + MazeConsts::STARTING_ROOM;
+				for(std::vector<int>::iterator it = selected_rooms.begin(); it != selected_rooms.end(); it++) {
+					if (*it == candidate_room) {
+						valid = false;
+					}
 				}
-			}
-		}	
-		while (valid == false);
+			}	
+			while (valid == false);
 
-		// When a candidate room is found, create the stairs there.
-		place_stairs(candidate_room, MazeConsts::STAIRS_UP);
-		selected_rooms.push_back(candidate_room);
+			// When a candidate room is found, create the stairs there.
+			place_stairs(candidate_room, MazeConsts::STAIRS_UP);
+			selected_rooms.push_back(candidate_room);
+		}
 	}
 	
-	// Repeat the same process for down stairs
-	for (int i=0; i < down_stairs; i++) {
-		bool valid;
-		int candidate_room;
-		do {
-			valid = true;
-			candidate_room = rand() % num_rooms + MazeConsts::STARTING_ROOM;
-			for(std::vector<int>::iterator it = selected_rooms.begin(); it != selected_rooms.end(); it++) {
-				if (*it == candidate_room) {
-					valid = false;
+	if (stair_gen_behavior == MazeConsts::GENERATE_BOTH_STAIRS || stair_gen_behavior == MazeConsts::GENERATE_NO_UP_STAIRS) {
+		// Repeat the same process for down stairs
+		for (int i=0; i < down_stairs; i++) {
+			bool valid;
+			int candidate_room;
+			do {
+				valid = true;
+				candidate_room = rand() % num_rooms + MazeConsts::STARTING_ROOM;
+				for(std::vector<int>::iterator it = selected_rooms.begin(); it != selected_rooms.end(); it++) {
+					if (*it == candidate_room) {
+						valid = false;
+					}
 				}
-			}
-		}	
-		while (valid == false);
-		place_stairs(candidate_room, MazeConsts::STAIRS_DOWN);
-		selected_rooms.push_back(candidate_room);
-	}	
+			}	
+			while (valid == false);
+			place_stairs(candidate_room, MazeConsts::STAIRS_DOWN);
+			selected_rooms.push_back(candidate_room);
+		}		
+	}
 }
 
 //------------------------------------------------------------------------------
