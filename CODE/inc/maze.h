@@ -26,34 +26,36 @@
 
 #include "globals.h"
 
-// Directions used by the maze generator
-const int DIRECTION_NORTH = 0;
-const int DIRECTION_SOUTH = 1;
-const int DIRECTION_EAST = 2;
-const int DIRECTION_WEST = 3;
+namespace MazeConsts {
+	// Directions used by the maze generator
+	const int DIRECTION_NORTH = 0;
+	const int DIRECTION_SOUTH = 1;
+	const int DIRECTION_EAST = 2;
+	const int DIRECTION_WEST = 3;
 
-// Square types used by the maze generator
-const int EMPTY = 0;
-const int PASSAGE = 1;
-const int WALL = 2;
+	// Square types used by the maze generator
+	const int EMPTY = 0;
+	const int PASSAGE = 1;
+	const int WALL = 2;
 
-// The starting room ID, assigned to the first room
-const int STARTING_ROOM = 100;
+	// The starting room ID, assigned to the first room
+	const int STARTING_ROOM = 100;
 
-// Number of attempts made to add valid rooms to the maze
-const int ROOM_ATTEMPTS = 200;
+	// Number of attempts made to add valid rooms to the maze
+	const int ROOM_ATTEMPTS = 200;
 
-// Stair types for the stair generator
-const int NO_STAIRS = -1;
-const int STAIRS_UP = 0;
-const int STAIRS_DOWN = 1;
-const int NUM_STAIRS = 3;
+	// Stair types for the stair generator
+	const int NO_STAIRS = -1;
+	const int STAIRS_UP = 0;
+	const int STAIRS_DOWN = 1;
+	const int NUM_STAIRS = 3;
 
-// The minimum and maximum size of maze that can be generated
-const int MIN_MAZE_WIDTH = 30;
-const int MIN_MAZE_HEIGHT = 30;
-const int MAX_MAZE_WIDTH = 64;
-const int MAX_MAZE_HEIGHT = 64;
+	// The minimum and maximum size of maze that can be generated
+	const int MIN_MAZE_WIDTH = 30;
+	const int MIN_MAZE_HEIGHT = 30;
+	const int MAX_MAZE_WIDTH = 64;
+	const int MAX_MAZE_HEIGHT = 64;
+}
 
 //------------------------------------------------------------------------------
 // Stair struct definition

@@ -26,8 +26,10 @@
 
 #include "globals.h"
 
-#define INVENTORY_SIZE      48
-#define MAX_MODIFIERS   5
+namespace InventoryConsts {
+    const int INVENTORY_SIZE = 48;
+    const int MAX_MODIFIERS  = 5;
+}
 
 // Fundamental item/equipment types.  All base types (and rare versions of the base types) are all
 // assigned to one of these fundamental categories
@@ -183,7 +185,7 @@ typedef struct {
     unsigned char rarity;
     unsigned char ilevel;
     unsigned char num_modifiers;
-    ModifierMagType modifiers[MAX_MODIFIERS];
+    ModifierMagType modifiers[InventoryConsts::MAX_MODIFIERS];
 } ItemPrefixType;
 
 typedef struct {
@@ -193,7 +195,7 @@ typedef struct {
     unsigned char rarity;
     unsigned char ilevel;
     unsigned char num_modifiers;
-    ModifierMagType modifiers[MAX_MODIFIERS];
+    ModifierMagType modifiers[InventoryConsts::MAX_MODIFIERS];
 } ItemSuffixType;
 
 typedef struct {

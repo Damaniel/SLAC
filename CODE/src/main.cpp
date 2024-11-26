@@ -168,7 +168,7 @@ void generate_new_dungeon_floor(int id, int floor, int w, int h) {
 	g_dungeon.maze->generate();
 
 	// Place the player on a random set of up stairs
-	std::pair<int, int> stairLoc = g_dungeon.maze->get_random_stair(STAIRS_UP);
+	std::pair<int, int> stairLoc = g_dungeon.maze->get_random_stair(MazeConsts::STAIRS_UP);
 
 	// Place the player at the stair location
 	g_player.set_position(stairLoc.first, stairLoc.second);

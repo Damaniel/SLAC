@@ -76,7 +76,9 @@ Item *ItemGenerator::generate() {
 //----------------------------------------------------------------------------
 Item *ItemGenerator::generate(int ilevel) {
     Item *i;
-    int item_type = ItemGenerator::roll_from_pool(g_item_class_pool, g_item_class_pool_count, g_item_class_pool_entries);
+    int item_type = ItemGenerator::roll_from_pool(ItemConsts::g_item_class_pool, 
+                                                  ItemConsts::g_item_class_pool_count, 
+                                                  ItemConsts::g_item_class_pool_entries);
     i = ItemGenerator::generate(item_type, ilevel);
 
     // i->dump_item();
@@ -108,22 +110,22 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
     generated = false;
 
     switch (item_type) {
-        case WEAPON_CLASS:
+        case ItemConsts::WEAPON_CLASS:
             i = new Weapon();
             break;
-        case ARMOR_CLASS:
+        case ItemConsts::ARMOR_CLASS:
             i = new Armor();
             break;
-        case CURRENCY_CLASS:
+        case ItemConsts::CURRENCY_CLASS:
             i = new Currency();
             break;
-        case POTION_CLASS:
+        case ItemConsts::POTION_CLASS:
             i = new Potion();
             break;
-        case SCROLL_CLASS:
+        case ItemConsts::SCROLL_CLASS:
             i = new Scroll();
             break;
-        case ARTIFACT_CLASS:
+        case ItemConsts::ARTIFACT_CLASS:
             i = new Artifact();
             break;
         default:
@@ -139,27 +141,27 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
     do {
         // std::cout << "generator: ilevel roll attempt " << (attempt + 1) << " of " << MAX_GENERATOR_REROLLS << std::endl;
         switch (item_type) {
-            case WEAPON_CLASS:
+            case ItemConsts::WEAPON_CLASS:
                 rolled_base_type = ItemGenerator::roll_from_pool(g_weapon_base_pool, g_weapon_base_pool_count, g_weapon_base_pool_entries);
                 base_ilevel = g_weapon_base_ids[rolled_base_type].ilevel;
                 break;
-            case ARMOR_CLASS:
+            case ItemConsts::ARMOR_CLASS:
                 rolled_base_type = ItemGenerator::roll_from_pool(g_armor_base_pool, g_armor_base_pool_count, g_armor_base_pool_entries);
                 base_ilevel = g_armor_base_ids[rolled_base_type].ilevel;
                 break;
-            case CURRENCY_CLASS:
+            case ItemConsts::CURRENCY_CLASS:
                 rolled_base_type = ItemGenerator::roll_from_pool(g_currency_pool, g_currency_pool_count, g_currency_pool_entries);
                 base_ilevel = g_currency_ids[rolled_base_type].ilevel;
                 break;        
-             case POTION_CLASS:
+             case ItemConsts::POTION_CLASS:
                 rolled_base_type = ItemGenerator::roll_from_pool(g_potion_pool, g_potion_pool_count, g_potion_pool_entries);
                 base_ilevel = g_potion_ids[rolled_base_type].ilevel;
                 break;
-            case SCROLL_CLASS:                               
+            case ItemConsts::SCROLL_CLASS:                               
                 rolled_base_type = ItemGenerator::roll_from_pool(g_scroll_pool, g_scroll_pool_count, g_scroll_pool_entries);
                 base_ilevel = g_scroll_ids[rolled_base_type].ilevel;
                 break;        
-            case ARTIFACT_CLASS:                               
+            case ItemConsts::ARTIFACT_CLASS:                               
                 rolled_base_type = ItemGenerator::roll_from_pool(g_artifact_pool, g_artifact_pool_count, g_artifact_pool_entries);
                 base_ilevel = g_artifact_ids[rolled_base_type].ilevel;
                 break;        
@@ -188,7 +190,7 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
             }
         }
         ++attempt;
-    } while (generated == false && attempt < MAX_GENERATOR_REROLLS);
+    } while (generated == false && attempt < ItemConsts::MAX_GENERATOR_REROLLS);
 
     // If the item was successfully generated, initialize it, otherwise create a 'default' item 
     // (that is, an item with id 0)
@@ -212,11 +214,11 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
     // Attempt to add a prefix or suffix to items that can have them
     if (i->can_have_a_prefix()) {
         // std::cout << "generator: attempting to add prefix" << std::endl;
-        ItemGenerator::apply_affix(i, PREFIX_CLASS, ilevel);
+        ItemGenerator::apply_affix(i, ItemConsts::PREFIX_CLASS, ilevel);
     }
     if (i->can_have_a_suffix()) {
         // std::cout << "generator: attempting to add suffix" << std::endl;
-        ItemGenerator::apply_affix(i, SUFFIX_CLASS, ilevel);
+        ItemGenerator::apply_affix(i, ItemConsts::SUFFIX_CLASS, ilevel);
     }
 
     // std::cout << std::endl;
@@ -240,17 +242,17 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
     bool generated;
 
     roll = rand() % 100;
-    if (roll < CHANCE_OF_AFFIX) {
+    if (roll < ItemConsts::CHANCE_OF_AFFIX) {
         attempt = 0;
         generated = false;
         do {
             // std::cout << "generator: ilevel roll attempt " << (attempt + 1) << " of " << MAX_GENERATOR_REROLLS << std::endl;
             // generate the affix
-            if (affix_type == PREFIX_CLASS) {
+            if (affix_type == ItemConsts::PREFIX_CLASS) {
                 rolled_affix_type = roll_from_pool(g_item_prefix_pool, g_item_prefix_pool_count, g_item_prefix_pool_entries);
                 base_ilevel = g_item_prefix_ids[rolled_affix_type].ilevel;
             }
-            if (affix_type == SUFFIX_CLASS) {
+            if (affix_type == ItemConsts::SUFFIX_CLASS) {
                 rolled_affix_type = roll_from_pool(g_item_suffix_pool, g_item_suffix_pool_count, g_item_suffix_pool_entries);
                 base_ilevel = g_item_suffix_ids[rolled_affix_type].ilevel;
             }
@@ -280,30 +282,30 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
                 }
             }
             ++attempt;
-        } while (generated == false && attempt < MAX_GENERATOR_REROLLS);
+        } while (generated == false && attempt < ItemConsts::MAX_GENERATOR_REROLLS);
 
         // If an affix was generated, apply it, otherwise clear it
         if (generated) {
             // std::cout << "generator: applying the affix" << std::endl;
-            if (affix_type == PREFIX_CLASS)
+            if (affix_type == ItemConsts::PREFIX_CLASS)
                 i->add_prefix(rolled_affix_type);
-            if (affix_type == SUFFIX_CLASS)
+            if (affix_type == ItemConsts::SUFFIX_CLASS)
                 i->add_suffix(rolled_affix_type);
         }
         else {
             // std::cout << "generator: no affix was applied" << std::endl;
-            if (affix_type == PREFIX_CLASS)
+            if (affix_type == ItemConsts::PREFIX_CLASS)
                 i->remove_prefix();
-            if (affix_type == SUFFIX_CLASS)
+            if (affix_type == ItemConsts::SUFFIX_CLASS)
                 i->remove_suffix();           
         }
     }
     else
     {
         // std::cout << "generator: 'apply affix' roll failed, no affix was applied" << std::endl;
-        if (affix_type == PREFIX_CLASS)
+        if (affix_type == ItemConsts::PREFIX_CLASS)
             i->remove_prefix();
-        if (affix_type == SUFFIX_CLASS)
+        if (affix_type == ItemConsts::SUFFIX_CLASS)
             i->remove_suffix();
     } 
 }
@@ -319,7 +321,7 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
 //----------------------------------------------------------------------------
 void ItemGenerator::apply_curse(Item *i) {
     int roll = rand() % 100;
-    if (roll < CHANCE_OF_CURSE) {
+    if (roll < ItemConsts::CHANCE_OF_CURSE) {
         i->set_curse_state(true);
         //std::cout << "generator: Item was cursed" << std::endl;
     }

@@ -42,10 +42,10 @@ Maze::Maze() {
 //   y - the height of the maze
 //------------------------------------------------------------------------------
 Maze::Maze(int x, int y, int il) {
-	if (x < MIN_MAZE_WIDTH) x = MIN_MAZE_WIDTH;
-	if (y < MIN_MAZE_HEIGHT) y = MIN_MAZE_HEIGHT;
-	if (x > MAX_MAZE_WIDTH) x = MAX_MAZE_WIDTH;
-	if (y > MAX_MAZE_HEIGHT) y = MAX_MAZE_HEIGHT;
+	if (x < MazeConsts::MIN_MAZE_WIDTH) x = MazeConsts::MIN_MAZE_WIDTH;
+	if (y < MazeConsts::MIN_MAZE_HEIGHT) y = MazeConsts::MIN_MAZE_HEIGHT;
+	if (x > MazeConsts::MAX_MAZE_WIDTH) x = MazeConsts::MAX_MAZE_WIDTH;
+	if (y > MazeConsts::MAX_MAZE_HEIGHT) y = MazeConsts::MAX_MAZE_HEIGHT;
 
 	/* If the maze is of even size, add an additional row/column to ensure 
 	 * a border surrounds the entire maze. */
@@ -104,7 +104,7 @@ void Maze::generate_items(int min_items, int max_items) {
 		do {
 			int x = rand() % get_width();
 			int y = rand() % get_height();
-			if (is_carved(x, y) && stairs_here(x, y) == NO_STAIRS) {
+			if (is_carved(x, y) && stairs_here(x, y) == MazeConsts::NO_STAIRS) {
 				std::pair<int, int> p = std::make_pair(x, y);
 				Item *item = ItemGenerator::generate(ilevel);
 				add_item(x, y, item);
@@ -187,7 +187,7 @@ int Maze::get_num_items_at(int x, int y) {
 //   the stairs must either be part of a room, or the walls of a room.
 //------------------------------------------------------------------------------
 void Maze::add_stairs(int num_up_stairs, int num_down_stairs) {
-	int num_rooms = room_id - STARTING_ROOM - 1;
+	int num_rooms = room_id - MazeConsts::STARTING_ROOM - 1;
 	int up_stairs, down_stairs;
 
 	//  We need at least 2 rooms.  Bail if we don't even have that.
@@ -219,7 +219,7 @@ void Maze::add_stairs(int num_up_stairs, int num_down_stairs) {
 		// Pick a random room and check to see if there's already stairs in it
 		do {
 			valid = true;
-			candidate_room = rand() % num_rooms + STARTING_ROOM;
+			candidate_room = rand() % num_rooms + MazeConsts::STARTING_ROOM;
 			for(std::vector<int>::iterator it = selected_rooms.begin(); it != selected_rooms.end(); it++) {
 				if (*it == candidate_room) {
 					valid = false;
@@ -229,7 +229,7 @@ void Maze::add_stairs(int num_up_stairs, int num_down_stairs) {
 		while (valid == false);
 
 		// When a candidate room is found, create the stairs there.
-		place_stairs(candidate_room, STAIRS_UP);
+		place_stairs(candidate_room, MazeConsts::STAIRS_UP);
 		selected_rooms.push_back(candidate_room);
 	}
 	
@@ -239,7 +239,7 @@ void Maze::add_stairs(int num_up_stairs, int num_down_stairs) {
 		int candidate_room;
 		do {
 			valid = true;
-			candidate_room = rand() % num_rooms + STARTING_ROOM;
+			candidate_room = rand() % num_rooms + MazeConsts::STARTING_ROOM;
 			for(std::vector<int>::iterator it = selected_rooms.begin(); it != selected_rooms.end(); it++) {
 				if (*it == candidate_room) {
 					valid = false;
@@ -247,7 +247,7 @@ void Maze::add_stairs(int num_up_stairs, int num_down_stairs) {
 			}
 		}	
 		while (valid == false);
-		place_stairs(candidate_room, STAIRS_DOWN);
+		place_stairs(candidate_room, MazeConsts::STAIRS_DOWN);
 		selected_rooms.push_back(candidate_room);
 	}	
 }
@@ -288,22 +288,22 @@ void Maze::carve(int x, int y, int tag) {
 //   square between them.
 //------------------------------------------------------------------------------
 void Maze::carve_direction(int x, int y, int direction, int tag) {
-	if (direction == DIRECTION_NORTH) {
+	if (direction == MazeConsts::DIRECTION_NORTH) {
 		carve(x, y, tag);
 		carve(x, y-1, tag);
 		carve(x, y-2, tag);
 	}
-	if (direction == DIRECTION_SOUTH) {
+	if (direction == MazeConsts::DIRECTION_SOUTH) {
 		carve(x, y, tag);
 		carve(x, y+1, tag);
 		carve(x, y+2, tag);
 	}
-	if (direction == DIRECTION_EAST) {
+	if (direction == MazeConsts::DIRECTION_EAST) {
 		carve(x, y, tag);
 		carve(x+1, y, tag);
 		carve(x+2, y, tag);
 	}
-	if (direction == DIRECTION_WEST) {
+	if (direction == MazeConsts::DIRECTION_WEST) {
 		carve(x, y, tag);
 		carve(x-1, y, tag);
 		carve(x-2, y, tag);
@@ -367,7 +367,7 @@ bool Maze::create_room(int x, int y, int w, int h) {
 	// make the room.
 	for (int i = x; i < x+w; i++ ) {
 		for (int j = y; j < y+h; j++ ) {
-			if (m[j*cols + i].tag >= STARTING_ROOM) {
+			if (m[j*cols + i].tag >= MazeConsts::STARTING_ROOM) {
 				return false;
 			}
 		}
@@ -439,20 +439,20 @@ void Maze::generate_passages(int x, int y) {
 			// and carve in that direction.
 			visited.push(cur);
 			direction = directions[rand() % directions.size()];
-			if (direction == DIRECTION_NORTH) {
-				carve_direction(cur_x, cur_y, DIRECTION_NORTH, PASSAGE);
+			if (direction == MazeConsts::DIRECTION_NORTH) {
+				carve_direction(cur_x, cur_y, MazeConsts::DIRECTION_NORTH, MazeConsts::PASSAGE);
 				cur_y = cur_y - 2;
 			}
-			else if (direction == DIRECTION_SOUTH) {
-				carve_direction(cur_x, cur_y, DIRECTION_SOUTH, PASSAGE);
+			else if (direction == MazeConsts::DIRECTION_SOUTH) {
+				carve_direction(cur_x, cur_y, MazeConsts::DIRECTION_SOUTH, MazeConsts::PASSAGE);
 				cur_y = cur_y + 2;
 			}
-			else if (direction == DIRECTION_EAST) {
-				carve_direction(cur_x, cur_y, DIRECTION_EAST, PASSAGE);
+			else if (direction == MazeConsts::DIRECTION_EAST) {
+				carve_direction(cur_x, cur_y, MazeConsts::DIRECTION_EAST, MazeConsts::PASSAGE);
 				cur_x = cur_x + 2;
 			}
-			else if (direction == DIRECTION_WEST ) {
-				carve_direction(cur_x, cur_y, DIRECTION_WEST, PASSAGE);
+			else if (direction == MazeConsts::DIRECTION_WEST ) {
+				carve_direction(cur_x, cur_y, MazeConsts::DIRECTION_WEST, MazeConsts::PASSAGE);
 				cur_x = cur_x - 2;
 			}
 			directions.clear();			
@@ -502,16 +502,16 @@ void Maze::get_directions(std::vector<int> & directions, int x, int y) {
 	//   Used for maze generation, which requires such a list.
 
 	if (x >= 3 && !is_carved(x-2 , y)) {
-		directions.push_back(DIRECTION_WEST);
+		directions.push_back(MazeConsts::DIRECTION_WEST);
 	}
 	if (x <= cols - 3 && !is_carved(x+2, y)) {
-		directions.push_back(DIRECTION_EAST);
+		directions.push_back(MazeConsts::DIRECTION_EAST);
 	}
 	if (y >= 3 && !is_carved(x, y-2)) {
-		directions.push_back(DIRECTION_NORTH);
+		directions.push_back(MazeConsts::DIRECTION_NORTH);
 	}
 	if (y <= rows -3 && !is_carved(x, y+2)) {
-		directions.push_back(DIRECTION_SOUTH);
+		directions.push_back(MazeConsts::DIRECTION_SOUTH);
 	}
 }
 
@@ -536,38 +536,38 @@ void Maze::mark_walls(void) {
 	for (int x = 0; x < cols; x++ ) {
 		for (int y = 0; y < rows; y++ ) {
 			// Is the square uncarved?
-			if (m[y*cols + x].tag == EMPTY) {
+			if (m[y*cols + x].tag == MazeConsts::EMPTY) {
 				// Check the spot above and to the left of the current square
-				if (y>0 && x>0 && (m[(y-1)*cols+(x-1)].tag == PASSAGE || m[(y-1)*cols+(x-1)].tag >= STARTING_ROOM)) {
-					m[y*cols + x].tag = WALL;
+				if (y>0 && x>0 && (m[(y-1)*cols+(x-1)].tag == MazeConsts::PASSAGE || m[(y-1)*cols+(x-1)].tag >= MazeConsts::STARTING_ROOM)) {
+					m[y*cols + x].tag = MazeConsts::WALL;
 				}
 				// Check the spot directly above the current square
-				else if (y>0 && (m[(y-1)*cols + x].tag == PASSAGE || m[(y-1)*cols + x].tag >= STARTING_ROOM)) {
-					m[y*cols + x].tag = WALL;
+				else if (y>0 && (m[(y-1)*cols + x].tag == MazeConsts::PASSAGE || m[(y-1)*cols + x].tag >= MazeConsts::STARTING_ROOM)) {
+					m[y*cols + x].tag = MazeConsts::WALL;
 				}
 				// Check the spot above and to the right of the current square
-				else if (y>0 && x<(cols-1) && (m[(y-1)*cols +(x+1)].tag == PASSAGE || m[(y-1)*cols +(x+1)].tag >= STARTING_ROOM)) {
-					m[y*cols + x].tag = WALL;
+				else if (y>0 && x<(cols-1) && (m[(y-1)*cols +(x+1)].tag == MazeConsts::PASSAGE || m[(y-1)*cols +(x+1)].tag >= MazeConsts::STARTING_ROOM)) {
+					m[y*cols + x].tag = MazeConsts::WALL;
 				}
 				// Check the spot to the left of the current square
-				else if (x>0 && (m[y*cols + (x-1)].tag == PASSAGE || m[y*cols + (x-1)].tag >= STARTING_ROOM)) {
-					m[y*cols + x].tag = WALL;
+				else if (x>0 && (m[y*cols + (x-1)].tag == MazeConsts::PASSAGE || m[y*cols + (x-1)].tag >= MazeConsts::STARTING_ROOM)) {
+					m[y*cols + x].tag = MazeConsts::WALL;
 				}
 				// Check the spot to the right of the current square
-				else if (x<(cols-1) && (m[y*cols + (x+1)].tag == PASSAGE || m[y*cols + (x+1)].tag >= STARTING_ROOM)) {
-					m[y*cols + x].tag = WALL;
+				else if (x<(cols-1) && (m[y*cols + (x+1)].tag == MazeConsts::PASSAGE || m[y*cols + (x+1)].tag >= MazeConsts::STARTING_ROOM)) {
+					m[y*cols + x].tag = MazeConsts::WALL;
 				}
 				// Check the spot below and to the left of the current square
-				else if (y<(rows-1) && x>0 && (m[(y+1)*cols+(x-1)].tag == PASSAGE || m[(y+1)*cols+(x-1)].tag >= STARTING_ROOM)) {
-					m[y*cols + x].tag = WALL;
+				else if (y<(rows-1) && x>0 && (m[(y+1)*cols+(x-1)].tag == MazeConsts::PASSAGE || m[(y+1)*cols+(x-1)].tag >= MazeConsts::STARTING_ROOM)) {
+					m[y*cols + x].tag = MazeConsts::WALL;
 				}
 				// Check the spot directly below the current square
-				else if (y<(rows-1) && (m[(y+1)*cols + x].tag == PASSAGE || m[(y+1)*cols + x].tag >= STARTING_ROOM)) {
-					m[y*cols + x].tag = WALL;
+				else if (y<(rows-1) && (m[(y+1)*cols + x].tag == MazeConsts::PASSAGE || m[(y+1)*cols + x].tag >= MazeConsts::STARTING_ROOM)) {
+					m[y*cols + x].tag = MazeConsts::WALL;
 				}
 				// Check the spot below and to the right of the current square
-				else if (y<(rows-1) && x<(cols-1) && (m[(y+1)*cols +(x+1)].tag == PASSAGE || m[(y+1)*cols +(x+1)].tag >= STARTING_ROOM)) {
-					m[y*cols + x].tag = WALL;
+				else if (y<(rows-1) && x<(cols-1) && (m[(y+1)*cols +(x+1)].tag == MazeConsts::PASSAGE || m[(y+1)*cols +(x+1)].tag >= MazeConsts::STARTING_ROOM)) {
+					m[y*cols + x].tag = MazeConsts::WALL;
 				}
 			}
 		}
@@ -594,30 +594,30 @@ void Maze::open_room(Room &r) {
 	// Check all north and south walls to see if the adjacent spaces are passageways
 	for (int i = r.x; i < r.x + r.w; i+=2 ) {
 		// Check the spot north of the top edge
-		if (m[(r.y - 2) * cols + i].tag == PASSAGE) {
-			edges.push_back(WallLoc(i, r.y, DIRECTION_NORTH));
+		if (m[(r.y - 2) * cols + i].tag == MazeConsts::PASSAGE) {
+			edges.push_back(WallLoc(i, r.y, MazeConsts::DIRECTION_NORTH));
 		}
 		// Check the spot south of the bottom edge
-		if (m[(r.y + r.h + 1) * cols + i].tag == PASSAGE) {
-			edges.push_back(WallLoc(i, r.y+r.h-1, DIRECTION_SOUTH));
+		if (m[(r.y + r.h + 1) * cols + i].tag == MazeConsts::PASSAGE) {
+			edges.push_back(WallLoc(i, r.y+r.h-1, MazeConsts::DIRECTION_SOUTH));
 		}		
 	}
 	
 	// Check all east and west walls to see if the adjacent spaces are passageways
 	for (int i = r.y; i < r.y + r.h; i+=2) {
-		if (m[i*cols + (r.x - 2)].tag == PASSAGE) {
-			edges.push_back(WallLoc(r.x, i, DIRECTION_WEST));
+		if (m[i*cols + (r.x - 2)].tag == MazeConsts::PASSAGE) {
+			edges.push_back(WallLoc(r.x, i, MazeConsts::DIRECTION_WEST));
 			
 		}
-		if (m[i*cols + (r.x + r.w  + 1)].tag == PASSAGE) {	
-			edges.push_back(WallLoc(r.x+r.w-1, i, DIRECTION_EAST));
+		if (m[i*cols + (r.x + r.w  + 1)].tag == MazeConsts::PASSAGE) {	
+			edges.push_back(WallLoc(r.x+r.w-1, i, MazeConsts::DIRECTION_EAST));
 		}		
 	}
 	
 	if(edges.size() > 0) {
 		// Pick a random edge from the list and carve it.
 		int to_carve = rand() % edges.size();
-		carve_direction(edges[to_carve].x, edges[to_carve].y, edges[to_carve].direction, PASSAGE);
+		carve_direction(edges[to_carve].x, edges[to_carve].y, edges[to_carve].direction, MazeConsts::PASSAGE);
 		// Re-mark the original source square as part of the room (since carve_direction will mark it
 		// as passageway)
 		m[edges[to_carve].y * cols + edges[to_carve].x].tag = r.id;
@@ -626,7 +626,7 @@ void Maze::open_room(Room &r) {
 		// Now iterate through all edges and remove them with small (2%) probability 		
 		for (int i=0 ; i<edges.size(); i++) {
 			if (rand() % 1000 < 20) {
-				carve_direction(edges[i].x, edges[i].y, edges[i].direction, PASSAGE);
+				carve_direction(edges[i].x, edges[i].y, edges[i].direction, MazeConsts::PASSAGE);
 				// Re-mark the original source square as part of the room (since carve_direction will mark it
 				// as passageway)				
 				m[edges[i].y * cols + edges[i].x].tag = r.id;
@@ -722,37 +722,37 @@ void Maze::remove_dead_ends(void) {
 				carved[1] = false;
 				carved[2] = false;
 				carved[3] = false;
-				if(m[y*cols + x].tag == PASSAGE && m[y*cols + x].carved == true) {
+				if(m[y*cols + x].tag == MazeConsts::PASSAGE && m[y*cols + x].carved == true) {
 					if(m[y*cols +x -1].carved == true) { 
-						carved[DIRECTION_WEST] = true;
+						carved[MazeConsts::DIRECTION_WEST] = true;
 						num_carved++;
 					}
 					if(m[y*cols + x + 1].carved == true) {
-						carved[DIRECTION_EAST] = true; 
+						carved[MazeConsts::DIRECTION_EAST] = true; 
 						num_carved++;
 					}
 					if(m[(y+1)*cols + x].carved == true) {
-						carved[DIRECTION_SOUTH] = true;
+						carved[MazeConsts::DIRECTION_SOUTH] = true;
 						num_carved++;
 					}
 					if(m[(y-1)*cols + x].carved == true) {
-						carved[DIRECTION_NORTH] = true;
+						carved[MazeConsts::DIRECTION_NORTH] = true;
 						num_carved++;
 					}
 					if(num_carved == 1) {
-						if(carved[DIRECTION_NORTH] == true) {
+						if(carved[MazeConsts::DIRECTION_NORTH] == true) {
 							uncarve(x, y);
 							uncarve(x, y-1);
 						}
-						else if(carved[DIRECTION_SOUTH] == true) {
+						else if(carved[MazeConsts::DIRECTION_SOUTH] == true) {
 							uncarve(x, y);
 							uncarve(x, y+1);
 						}
-						else if(carved[DIRECTION_EAST] == true) {
+						else if(carved[MazeConsts::DIRECTION_EAST] == true) {
 							uncarve(x, y);
 							uncarve(x+1, y);
 						}
-						else if(carved[DIRECTION_WEST] == true) {
+						else if(carved[MazeConsts::DIRECTION_WEST] == true) {
 							uncarve(x, y);
 							uncarve(x-1, y);
 						}
@@ -793,7 +793,7 @@ void Maze::knock_out_walls(int chance) {
 				// adjacent passages
 				if ((is_carved(x-1, y) == true && is_carved(x+1, y) == true) ||
 					(is_carved(x, y-1) == true && is_carved(x, y+1) == true)) {
-					carve(x,y, PASSAGE);
+					carve(x,y, MazeConsts::PASSAGE);
 				}
 			}
 		}
@@ -810,7 +810,7 @@ void Maze::knock_out_walls(int chance) {
 //   Nothing
 //------------------------------------------------------------------------------
 void Maze::uncarve(int x, int y) {
-	m[y*cols + x].tag = EMPTY;
+	m[y*cols + x].tag = MazeConsts::EMPTY;
 	m[y*cols + x].carved = false;
 }
 
@@ -849,7 +849,7 @@ void Maze::change_lit_status_around(int x, int y, bool lit) {
 //   Nothing
 //------------------------------------------------------------------------------
 void Maze::change_room_lit_status(int room_id, bool lit) {
-	int room_offset = room_id - STARTING_ROOM;
+	int room_offset = room_id - MazeConsts::STARTING_ROOM;
 	Room r = rooms[room_offset];
 	
 	for(int i=r.x-1; i < r.x + r.w + 1; i++) {
@@ -882,7 +882,7 @@ void Maze::generate(void) {
 	//     - Placing stairs in rooms
 
 	// Create rooms with widths and heights between 4 and 10 squares
-	generate_rooms(ROOM_ATTEMPTS, 4, 10);
+	generate_rooms(MazeConsts::ROOM_ATTEMPTS, 4, 10);
 	// Fill in the remaining space with passages
 	generate_passages(1, 1);
 	
@@ -895,7 +895,7 @@ void Maze::generate(void) {
 	remove_dead_ends();
 	mark_walls();
 
-	add_stairs(NUM_STAIRS, NUM_STAIRS);
+	add_stairs(MazeConsts::NUM_STAIRS, MazeConsts::NUM_STAIRS);
 
 	// Generate a few items on the ground
 	generate_items(10, 30);
@@ -965,7 +965,7 @@ Room Maze::get_room(int room_id) {
 //------------------------------------------------------------------------------
 int Maze::get_room_id_at(int x, int y) {
 	int room = m[y * cols + x].tag;
-	if(room < STARTING_ROOM) {
+	if(room < MazeConsts::STARTING_ROOM) {
 		return -1;
 	}
 	else {
@@ -996,10 +996,10 @@ Square Maze::get_square(int x, int y) {
 //   Nothing
 //------------------------------------------------------------------------------
 void Maze::init(void) {
-	room_id = STARTING_ROOM;
+	room_id = MazeConsts::STARTING_ROOM;
 	for (int i = 0; i < rows * cols; ++i) {
 		Square s;
-		s.tag = EMPTY;
+		s.tag = MazeConsts::EMPTY;
 		s.carved = false;
 		s.is_lit = false;
 		s.was_seen = false;
@@ -1060,7 +1060,7 @@ void Maze::print(void) {
 	}
 	
 	for (std::vector<Stair>::iterator it = stairs.begin(); it != stairs.end(); it++) {
-		std::cout << (it->direction == STAIRS_UP ? "Up " : "Down ");
+		std::cout << (it->direction == MazeConsts::STAIRS_UP ? "Up " : "Down ");
 		std::cout << "stairs at (" << it->x << ", " << it->y << ")" << std::endl;
 	}
 }
@@ -1107,7 +1107,7 @@ void Maze::print_room_ids(void) {
 //   Nothing
 //------------------------------------------------------------------------------
 void Maze::set_room_as_entered(int room_id) {
-	rooms[room_id - STARTING_ROOM].has_been_entered = true;
+	rooms[room_id - MazeConsts::STARTING_ROOM].has_been_entered = true;
 }
 
 //------------------------------------------------------------------------------
@@ -1125,7 +1125,7 @@ int Maze::stairs_here(int x, int y) {
 			return it->direction;
 		}
 	}
-	return NO_STAIRS;
+	return MazeConsts::NO_STAIRS;
 }
 
 //------------------------------------------------------------------------------

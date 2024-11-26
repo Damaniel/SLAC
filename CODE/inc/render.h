@@ -27,7 +27,7 @@
 // Game-specific includes
 #include "globals.h"
 
-namespace Ui {
+namespace UiConsts {
 	// Number of characters defined in each instance of a font
 	const int FONT_ENTRIES = 96;
 
@@ -171,7 +171,7 @@ namespace Ui {
 
 // Width and height of all characters from ASCII values 32 to 127 in the standard 
 // proportional font
-const unsigned char prop_font_width[Ui::FONT_ENTRIES] = {
+const unsigned char prop_font_width[UiConsts::FONT_ENTRIES] = {
 	6, 2, 6, 7, 6, 6, 7, 2, 4, 4, 5, 5, 2, 6, 2, 6, 
 	7, 4, 7, 7, 7, 7, 7, 7, 7, 7, 2, 2, 5, 6, 5, 6, 
 	8, 8, 7, 7, 7, 7, 7, 7, 8, 4, 7, 8, 7, 8, 8, 7, 
@@ -183,7 +183,7 @@ const int prop_font_height = 8;
 
 // Offsets into the font bitmap for each character (based on the character widths
 // defined in prop_font_width)
-const unsigned short prop_font_offset[Ui::FONT_ENTRIES] = {
+const unsigned short prop_font_offset[UiConsts::FONT_ENTRIES] = {
 	0,    6,    8,  14,  21,  27,  33,  40,  42,  46,  50,  55,  60,  62,  68,  70, 
 	76,  83,   87,  94, 101, 108, 115, 122, 129, 136, 143, 145, 147, 152, 158, 163, 
 	169, 177, 185, 192, 199, 206, 213, 220, 227, 235, 239, 246, 254, 261, 269, 277,
@@ -192,7 +192,7 @@ const unsigned short prop_font_offset[Ui::FONT_ENTRIES] = {
 	491, 498, 505, 512, 518, 522, 529, 537, 544, 550, 556, 562, 566, 568, 572, 579
 };	
 
-const unsigned char prop_narrow_font_width[Ui::FONT_ENTRIES] = {
+const unsigned char prop_narrow_font_width[UiConsts::FONT_ENTRIES] = {
   3, 1, 3, 5, 5, 5, 5, 1, 2, 2, 3, 5, 2, 5, 1, 3,
   5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 2, 3, 3, 3, 5,
   5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
@@ -203,7 +203,7 @@ const unsigned char prop_narrow_font_width[Ui::FONT_ENTRIES] = {
 
 const int prop_narrow_font_height = 7;
 
-const unsigned short prop_narrow_font_offset[Ui::FONT_ENTRIES] = {
+const unsigned short prop_narrow_font_offset[UiConsts::FONT_ENTRIES] = {
     0,   4,   5,   8,  13,  18,  23,  28,  29,  31,  33,  36,  41,  43,  48,  49,
    52,  57,  62,  67,  72,  77,  82,  87,  92,  97, 102, 103, 105, 108, 111, 114,
   119, 124, 129, 134, 139, 144, 149, 154, 159, 164, 169, 174, 179, 184, 189, 194,

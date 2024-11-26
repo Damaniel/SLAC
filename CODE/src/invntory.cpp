@@ -37,8 +37,8 @@ Inventory *g_inventory;
 // Constructor.
 //----------------------------------------------------------------------------
 Inventory::Inventory() {
-    inv = std::vector<Item *>(INVENTORY_SIZE);
-    for(int i=0;i<INVENTORY_SIZE;++i) {
+    inv = std::vector<Item *>(InventoryConsts::INVENTORY_SIZE);
+    for(int i = 0; i < InventoryConsts::INVENTORY_SIZE; ++i) {
         inv[i] = NULL;
     }
 }
@@ -115,7 +115,7 @@ int Inventory::add_at_first_empty(Item *i) {
 //----------------------------------------------------------------------------
 int Inventory::get_first_empty_slot() {
     int first_empty = -1;
-    for(int i=0; i<INVENTORY_SIZE; ++i) {
+    for(int i = 0; i < InventoryConsts::INVENTORY_SIZE; ++i) {
         if (inv[i] == NULL) {
             first_empty = i;
             break;
@@ -138,7 +138,7 @@ int Inventory::get_first_empty_slot() {
 int Inventory::get_num_slots_in_use() {
     int slots_in_use = 0;
 
-    for (int i=0; i < INVENTORY_SIZE; i++) {
+    for (int i = 0; i < InventoryConsts::INVENTORY_SIZE; i++) {
         if (inv[i] != NULL)
             ++slots_in_use;
     }
@@ -155,7 +155,7 @@ int Inventory::get_num_slots_in_use() {
 //   true if inventory is full, false if not.
 //----------------------------------------------------------------------------
 bool Inventory::inventory_is_full() {
-    for (int i=0; i<INVENTORY_SIZE; i++) {
+    for (int i = 0; i < InventoryConsts::INVENTORY_SIZE; i++) {
         if (inv[i] == NULL)
             return false;
     }
@@ -179,7 +179,7 @@ void Inventory::drop_item_in_slot(int slot) {
 }
 
 void Inventory::dump_inventory(void) {
-    for (int i = 0; i < INVENTORY_SIZE; ++i) {
+    for (int i = 0; i < InventoryConsts::INVENTORY_SIZE; ++i) {
         if (inv[i] != NULL) {
             std::cout << "Item " << (i+1) << ": " << inv[i]->get_full_name() << std::endl;
         }
@@ -469,7 +469,7 @@ void Weapon::remove() {
 //   WEAPON_CLASS
 //----------------------------------------------------------------------------
 int Weapon::get_item_class() {
-    return WEAPON_CLASS;
+    return ItemConsts::WEAPON_CLASS;
 }
 
 //----------------------------------------------------------------------------
@@ -616,7 +616,7 @@ void Armor::remove() {
 //   ARMOR_CLASS
 //----------------------------------------------------------------------------
 int Armor::get_item_class() {
-    return ARMOR_CLASS;
+    return ItemConsts::ARMOR_CLASS;
 }
 
 //----------------------------------------------------------------------------
@@ -766,7 +766,7 @@ Currency::Currency(unsigned int idx) {
 //   CURRENCY_CLASS
 //----------------------------------------------------------------------------
 int Currency::get_item_class() {
-    return CURRENCY_CLASS;
+    return ItemConsts::CURRENCY_CLASS;
 }
 
 //----------------------------------------------------------------------------
@@ -920,7 +920,7 @@ void Potion::use() {
 //   POTION_CLASS
 //----------------------------------------------------------------------------
 int Potion::get_item_class() {
-    return POTION_CLASS;
+    return ItemConsts::POTION_CLASS;
 }
 
 //----------------------------------------------------------------------------
@@ -1058,7 +1058,7 @@ void Scroll::use() {
 //   SCROLL_CLASS
 //----------------------------------------------------------------------------
 int Scroll::get_item_class() {
-    return SCROLL_CLASS;
+    return ItemConsts::SCROLL_CLASS;
 }
 
 //----------------------------------------------------------------------------
@@ -1184,7 +1184,7 @@ Artifact::Artifact(unsigned int idx) {
 //   ARTIFACT_CLASS
 //----------------------------------------------------------------------------
 int Artifact::get_item_class() {
-    return ARTIFACT_CLASS;
+    return ItemConsts::ARTIFACT_CLASS;
 }
 
 //----------------------------------------------------------------------------
@@ -1200,13 +1200,13 @@ void Artifact::dump_item() {
     dump_item_common();
     std::cout << "====== Artifact Specific ===================" << std::endl;
     std::cout << "Type: ";
-    if(type_id == STANDARD_ARTIFACT) {
+    if(type_id == ItemConsts::STANDARD_ARTIFACT) {
         std::cout << "Standard" << std::endl;
     } 
-    else if (type_id == MULTIPART_ARTIFACT) {
+    else if (type_id == ItemConsts::MULTIPART_ARTIFACT) {
         std::cout << "Multipart: (" << pieces << " parts)" << std::endl;
     }
-    else if (type_id == MULTIGEN_ARTIFACT) {
+    else if (type_id == ItemConsts::MULTIGEN_ARTIFACT) {
         std::cout << "Multi-generation (" << pieces << " generations)" << std::endl;
     }
     std::cout << "Effect ID: " << effect_id << " (expanded form TBD)" << std::endl;

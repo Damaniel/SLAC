@@ -30,7 +30,7 @@ void pick_up_item_at(int x, int y) {
         std::list<Item *> items = g_dungeon.maze->get_items_at(x, y);
         Item *i = items.back();
         // For currency, add the value to the player's gold directly
-        if (i->get_item_class() == CURRENCY_CLASS) {
+        if (i->get_item_class() == ItemConsts::CURRENCY_CLASS) {
             g_player.add_gold(i->get_value());
             picked_up = true;
         }

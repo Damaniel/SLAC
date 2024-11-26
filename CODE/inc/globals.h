@@ -54,6 +54,7 @@
 #include "render.h"
 #include "main.h"
 
+
 // The datafile - contains all sprite, font and sound data.  
 // -- Defined in main.cpp
 extern DATAFILE *g_game_data;
