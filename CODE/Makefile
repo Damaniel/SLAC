@@ -19,7 +19,7 @@ CFLAGS=-O2 -Iinc
 LIBS=-lalleg -lm
 
 TARGET=slac.exe
-OBJS=obj/gen_data.o obj/textlog.o obj/maze.o obj/render.o obj/player.o obj/invntory.o obj/itemgen.o obj/input.o obj/main.o 
+OBJS=obj/gen_data.o obj/utils.o obj/textlog.o obj/maze.o obj/render.o obj/player.o obj/invntory.o obj/itemgen.o obj/input.o obj/main.o 
 
 $(TARGET): $(OBJS)
 	$(CC) -o $(TARGET) $(OBJS) $(LIBS)
@@ -28,13 +28,16 @@ prod: $(TARGET)
 	strip $(TARGET)
 	upx $(TARGET)
 
+obj/utils.o: src/utils.cpp 
+	$(CC) -c $(CFLAGS) -o obj/utils.o src/utils.cpp
+
 obj/input.o: src/input.cpp inc/input.h 
 	$(CC) -c $(CFLAGS) -o obj/input.o src/input.cpp
 
 obj/itemgen.o: src/itemgen.cpp inc/itemgen.h inc/invntory.h
 	$(CC) -c $(CFLAGS) -o obj/itemgen.o src/itemgen.cpp
 
-obj/gen_data.o: src/gen_data.cpp inc/gen_data.h inc/invntory.h
+obj/gen_data.o: src/gen_data.cpp inc/gen_data.h
 	$(CC) -c $(CFLAGS) -o obj/gen_data.o src/gen_data.cpp
 
 obj/textlog.o: src/textlog.cpp inc/textlog.h
@@ -43,16 +46,16 @@ obj/textlog.o: src/textlog.cpp inc/textlog.h
 obj/maze.o: src/maze.cpp inc/maze.h
 	$(CC) -c $(CFLAGS) -o obj/maze.o src/maze.cpp
 
-obj/render.o: src/render.cpp inc/render.h inc/globals.h inc/maze.h
+obj/render.o: src/render.cpp inc/render.h inc/globals.h inc/maze.h inc/textlog.h inc/utils.h
 	$(CC) -c $(CFLAGS) -o obj/render.o src/render.cpp
 
-obj/player.o: src/player.cpp inc/globals.h
+obj/player.o: src/player.cpp inc/player.h inc/invntory.h
 	$(CC) -c $(CFLAGS) -o obj/player.o src/player.cpp
 
-obj/invntory.o: src/invntory.cpp inc/invntory.h inc/invntory.h
+obj/invntory.o: src/invntory.cpp inc/invntory.h inc/invntory.h inc/gen_data.h
 	$(CC) -c $(CFLAGS) -o obj/invntory.o src/invntory.cpp
 
-obj/main.o: src/main.cpp inc/main.h inc/gen_data.h inc/render.h inc/globals.h inc/maze.h inc/invntory.h
+obj/main.o: src/main.cpp inc/main.h inc/utils.h inc/render.h inc/player.h inc/maze.h inc/invntory.h inc/itemgen.h
 	$(CC) -c $(CFLAGS) -o obj/main.o src/main.cpp
 	
 clean:

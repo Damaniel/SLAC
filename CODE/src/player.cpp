@@ -40,7 +40,7 @@ Player::Player(void) {
 	level = 1;
 	exp = 0;
 	hp = 100;
-	max_hp = 100;
+	base.max_hp = 100;
 }
 
 //------------------------------------------------------------------------------
@@ -146,4 +146,18 @@ void Player::add_gold(int amount) {
 //------------------------------------------------------------------------------
 int Player::get_gold(void) {
 	return gold;
+}
+
+//------------------------------------------------------------------------------
+// Iterates through all equipped items and used items with active effects,
+// calculating what the player's modified (that is, actual) stats are.
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing.
+//------------------------------------------------------------------------------
+void Player::recalculate_actual_stats(void) {
+
 }

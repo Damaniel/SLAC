@@ -331,9 +331,6 @@ class Render {
 		void render_world_at_player(BITMAP *destination, Maze *m, int maze_x, int maze_y);
 };
 
-void update_main_game_display(void);
-void update_display(void);
-
 #endif	
 	
 	

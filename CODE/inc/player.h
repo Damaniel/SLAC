@@ -25,6 +25,7 @@
 #define __PLAYER_H__
 
 typedef struct {
+	unsigned short max_hp;		// Max HP
 	unsigned short str;			// Strength
 	unsigned short con;			// Constitution
 	unsigned short dex;			// Dexterity
@@ -41,6 +42,18 @@ typedef struct {
 	unsigned short block;		// Absolute chance to block
 } Stats;
 
+typedef struct {
+	Item *weapon;
+	Item *shield;
+	Item *head;
+	Item *chest;
+	Item *hands;
+	Item *legs;
+	Item *feet;
+	Item *amulet;
+	Item *ring;
+} EquipmentSet;
+
 //------------------------------------------------------------------------------
 // Player class definition
 //------------------------------------------------------------------------------
@@ -50,12 +63,12 @@ public:
 	std::string name;		// The player's name
 	int generation;			// The current generation of the player
 	unsigned short hp;		// The player's current HP
-	unsigned short max_hp;	// The player's max HP
 	unsigned short level;	// The player's current level 
 	int gold;				// Amount of currency the player has
 	int exp;				// The player's current number of experience points
 	Stats base;				// The player's base stats
 	Stats actual;			// The player's fully modified (by gear, items, etc) stats
+	EquipmentSet equipment;	// Equipment
 	bool is_poisoned;		// Is the player poisoned?
 	bool is_paralyzed;		// Is the player paralyzed?
 
@@ -76,6 +89,7 @@ public:
 	void set_y_pos(int pos);
 	void add_gold(int amount);
 	int get_gold();
+	void recalculate_actual_stats();
 };
 
 #endif

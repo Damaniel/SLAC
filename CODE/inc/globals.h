@@ -52,6 +52,7 @@
 #include "player.h"
 #include "maze.h"
 #include "render.h"
+#include "utils.h"
 #include "main.h"
 
 
@@ -76,5 +77,8 @@ extern StateFlags   g_state_flags;
 
 // Holds flags and functionality related to drawing the screen
 extern Render g_render;
+
+// Holds information about the current dungeon floor (the maze, ilevel, depth, etc)
+extern DungeonFloor g_dungeon;
 
 #endif
