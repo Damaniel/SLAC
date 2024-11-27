@@ -146,7 +146,7 @@ namespace UiConsts {
 
 	// The name in the item description area of the inventory
 	const int INVENTORY_ITEM_NAME_X = 15;
-	const int INVENTORY_ITEM_NAME_Y = 135;
+	const int INVENTORY_ITEM_NAME_Y = 133;
 
 	const int INVENTORY_DESC_AREA_X = INVENTORY_DIALOG_X + 4;
 	const int INVENTORY_DESC_AREA_Y = INVENTORY_DIALOG_Y + 101;
@@ -336,6 +336,7 @@ class Render {
 		void render_base_tile(BITMAP *destination, int tile_id, int x, int y);
 		void render_item(BITMAP *destination, int gid, int x, int y);
 		void render_inventory_content(BITMAP *destination);
+		void render_description_fields(BITMAP *destination, Item *it);
 		int get_prop_text_width(char *text, int style);	
 	public:
 		Render();

@@ -117,12 +117,13 @@
             "pool_define": "g_item_prefix_pool_entries",
             "pool_count": "g_item_prefix_pool_count",
             "description": "Item prefixes",
-            "fields": ["id", "name", "gid", "rarity", "ilevel", "modifier(s)"]
+            "fields": ["id", "name", "description", "gid", "rarity", "ilevel", "modifier(s)"]
         },
         "items": {
             "Strong": {
                 "id": 0,
                 "name": "Strong",
+                "description": "+10% ATK",
                 "gid": 0,
                 "rarity": 240,
                 "ilevel": 5, 
@@ -138,6 +139,7 @@
             "Mighty": {
                 "id": 1,
                 "name": "Mighty",
+                "description": "+25% ATK, +1 STR",
                 "gid": 1,
                 "rarity": 128,
                 "ilevel": 20,
@@ -159,6 +161,7 @@
             "Herculean": {
                 "id": 2,
                 "name": "Herculean",
+                "description": "+50% ATK, +4 STR",
                 "gid": 2,
                 "rarity": 32,
                 "ilevel": 70,
@@ -180,6 +183,7 @@
             "Quick": {
                 "id": 3,
                 "name": "Quick",
+                "description": "+10% SPD",
                 "gid": 3,
                 "rarity": 240,
                 "ilevel": 5,
@@ -195,6 +199,7 @@
             "Speedy": {
                 "id": 4,
                 "name": "Speedy",
+                "description": "+25% SPD, +1 DEX",
                 "gid": 4,
                 "rarity": 128,
                 "ilevel": 20,
@@ -216,6 +221,7 @@
             "Supersonic": {
                 "id": 5,
                 "name": "Supersonic",
+                "description": "+50% SPD, +4 DEX",
                 "gid": 5,
                 "rarity": 16,
                 "ilevel": 70,
@@ -237,6 +243,7 @@
             "Stout": {
                 "id": 6,
                 "name": "Stout",
+                "description": "+10% DEF",
                 "gid": 6,
                 "rarity": 240,
                 "ilevel": 5,
@@ -252,6 +259,7 @@
             "Hardy": {
                 "id": 7,
                 "name": "Hardy",
+                "description": "+25% DEF, +1 CON",
                 "gid": 7,
                 "rarity": 128,
                 "ilevel": 20,
@@ -273,6 +281,7 @@
             "Unbreakable": {
                 "id": 8,
                 "name": "Unbreakable",
+                "description": "+50% DEF, +4 CON",
                 "gid": 8,
                 "rarity": 16,
                 "ilevel": 70,
@@ -294,6 +303,7 @@
             "Buffed": {
                 "id": 9,
                 "name": "Buffed",
+                "description": "+20% HP",
                 "gid": 9,
                 "rarity": 128,
                 "ilevel": 25,
@@ -309,6 +319,7 @@
             "Healthy": {
                 "id": 10,
                 "name": "Healthy",
+                "description": "+50% HP",
                 "gid": 10,
                 "rarity": 32,
                 "ilevel": 50,
@@ -324,6 +335,7 @@
             "Immortal": {
                 "id": 11,
                 "name": "Immortal",
+                "description": "+100% HP",
                 "gid": 11,
                 "rarity": 2,
                 "ilevel": 80,
@@ -339,6 +351,7 @@
             "Ogre's": {
                 "id": 12,
                 "name": "Ogre's",
+                "description": "+50% ATK, -20% SPD",
                 "gid": 12,
                 "rarity": 64,
                 "ilevel": 35,
@@ -360,6 +373,7 @@
             "Flaming": {
                 "id": 13,
                 "name": "Flaming",
+                "description": "+10% of damage as fire",
                 "gid": 13,
                 "rarity": 192,
                 "ilevel": 15,
@@ -375,6 +389,7 @@
             "Infernous": {
                 "id": 14,
                 "name": "Infernous",
+                "description": "+50% of damage as fire",
                 "gid": 14,
                 "rarity": 96,
                 "ilevel": 50,
@@ -390,6 +405,7 @@
             "Icy": {
                 "id": 15,
                 "name": "Icy",
+                "description": "+10% of damage as ice",
                 "gid": 15,
                 "rarity": 192,
                 "ilevel": 15,
@@ -405,6 +421,7 @@
             "Freezing": {
                 "id": 16,
                 "name": "Freezing",
+                "description": "+50% of damage as ice",
                 "gid": 16,
                 "rarity": 96,
                 "ilevel": 50,
@@ -420,6 +437,7 @@
             "Sparking": {
                 "id": 17,
                 "name": "Sparking",
+                "description": "+10% of damage as lightning",
                 "gid": 17,
                 "rarity": 192,
                 "ilevel": 15,
@@ -435,6 +453,7 @@
             "Shocking": {
                 "id": 18,
                 "name": "Shocking",
+                "description": "+50% of damage as lightning",
                 "gid": 18,
                 "rarity": 96,
                 "ilevel": 50,
@@ -450,6 +469,7 @@
             "Fire-shrouded": {
                 "id": 19,
                 "name": "Fire-shrouded",
+                "description": "20% fire damage reduction",
                 "gid": 19,
                 "rarity": 128,
                 "ilevel": 15,
@@ -465,6 +485,7 @@
             "Fire-cloaked": {
                 "id": 20,
                 "name": "Fire-cloaked",
+                "description": "40% fire damage reduction",
                 "gid": 20,
                 "rarity": 32,
                 "ilevel": 55,
@@ -480,6 +501,7 @@
             "Ice-shrouded": {
                 "id": 21,
                 "name": "Ice-shrouded",
+                "description": "20% ice damage reduction",
                 "gid": 21,
                 "rarity": 128,
                 "ilevel": 15,
@@ -495,6 +517,7 @@
             "Ice-cloaked": {
                 "id": 22,
                 "name": "Ice-cloaked",
+                "description": "40% ice damage reduction",
                 "gid": 22,
                 "rarity": 32,
                 "ilevel": 55,
@@ -510,6 +533,7 @@
             "Spark-shrouded": {
                 "id": 23,
                 "name": "Spark-shrouded",
+                "description": "20% lightning damage reduction",
                 "gid": 23,
                 "rarity": 128,
                 "ilevel": 15,
@@ -525,6 +549,7 @@
             "Spark-cloaked": {
                 "id": 24,
                 "name": "Spark-cloaked",
+                "description": "40% lightning damage reduction",
                 "gid": 24,
                 "rarity": 32,
                 "ilevel": 55,
@@ -540,6 +565,7 @@
             "Elemental-shrouded": {
                 "id": 25,
                 "name": "Elemental-shrouded",
+                "description": "10% elemental damage reduction",
                 "gid": 25,
                 "rarity": 64,
                 "ilevel": 15,
@@ -567,6 +593,7 @@
             "Elemental-cloaked": {
                 "id": 26,
                 "name": "Elemental-cloaked",
+                "description": "20% elemental damage reduction",
                 "gid": 26,
                 "rarity": 8,
                 "ilevel": 55,
@@ -594,6 +621,7 @@
             "Ignited": {
                 "id": 27,
                 "name": "Ignited",
+                "description": "+20% fire damage taken",
                 "gid": 27,
                 "rarity": 192,
                 "ilevel": 10,
@@ -609,6 +637,7 @@
             "Engulfed": {
                 "id": 28,
                 "name": "Engulfed",
+                "description": "+40% fire damage taken",
                 "gid": 28,
                 "rarity": 96,
                 "ilevel": 40,
@@ -624,6 +653,7 @@
             "Chilled": {
                 "id": 29,
                 "name": "Chilled",
+                "description": "+20% ice damage taken",
                 "gid": 29,
                 "rarity": 192,
                 "ilevel": 10,
@@ -639,6 +669,7 @@
             "Frozen": {
                 "id": 30,
                 "name": "Chilled",
+                "description": "+40% ice damage taken",
                 "gid": 30,
                 "rarity": 96,
                 "ilevel": 40,
@@ -654,6 +685,7 @@
             "Shocked": {
                 "id": 31,
                 "name": "Shocked",
+                "description": "+20% lightning damage taken",
                 "gid": 31,
                 "rarity": 192,
                 "ilevel": 10,
@@ -669,6 +701,7 @@
             "Electrified": {
                 "id": 32,
                 "name": "Electrified",
+                "description": "+40 lightning damage taken",
                 "gid": 32,
                 "rarity": 96,
                 "ilevel": 40,
@@ -684,6 +717,7 @@
             "Element-touched": {
                 "id": 33,
                 "name": "Element-touched",
+                "description": "+10% elemental damage taken",
                 "gid": 33,
                 "rarity": 32,
                 "ilevel": 20,
@@ -711,6 +745,7 @@
             "Element-tangled": {
                 "id": 34,
                 "name": "Element-tangled",
+                "description": "+20% elemental damage taken",
                 "gid": 34,
                 "rarity": 8,
                 "ilevel": 50,
@@ -738,6 +773,7 @@
             "Weak": {
                 "id": 35,
                 "name": "Weak",
+                "description": "-10% ATK",
                 "gid": 35,
                 "rarity": 160,
                 "ilevel": 10,
@@ -753,6 +789,7 @@
             "Crippled": {
                 "id": 36,
                 "name": "Crippled",
+                "description": "-25% ATK",
                 "gid": 36,
                 "rarity": 64,
                 "ilevel": 30,
@@ -768,6 +805,7 @@
             "Slow": {
                 "id": 37,
                 "name": "Slow",
+                "description": "-10% SPD",
                 "gid": 37,
                 "rarity": 160,
                 "ilevel": 20,
@@ -783,6 +821,7 @@
             "Halting": {
                 "id": 38,
                 "name": "Halting",
+                "description": "-25% SPD",
                 "gid": 38,
                 "rarity": 64,
                 "ilevel": 45,
@@ -798,6 +837,7 @@
             "Frail": {
                 "id": 39,
                 "name": "Frail",
+                "description": "-10% DEF",
                 "gid": 39,
                 "rarity": 192,
                 "ilevel": 15,
@@ -813,6 +853,7 @@
             "Defenseless": {
                 "id": 40,
                 "name": "Defenseless",
+                "description": "-25% DEF",
                 "gid": 40,
                 "rarity": 96,
                 "ilevel": 35,
@@ -828,6 +869,7 @@
             "Infirm": {
                 "id": 41,
                 "name": "Infirm",
+                "description": "-10% HP",
                 "gid": 41,
                 "rarity": 128,
                 "ilevel": 25,
@@ -843,6 +885,7 @@
             "Sickly": {
                 "id": 42,
                 "name": "Sickly",
+                "description": "-25% HP",
                 "gid": 42,
                 "rarity": 32,
                 "ilevel": 50,
@@ -865,12 +908,13 @@
             "pool_count": "g_item_suffix_pool_count",
             "struct_type": "ItemSuffixType",
             "description": "Item suffixes",
-            "fields": ["id", "name", "gid", "rarity", "ilevel", "modifier(s)"]
+            "fields": ["id", "name", "description", "gid", "rarity", "ilevel", "modifier(s)"]
         },
         "items": {
             "of_strength": {
                 "id": 0,
                 "name": "of Strength",
+                "description": "+1 STR",
                 "gid": 0,
                 "rarity": 240,
                 "ilevel": 5,
@@ -886,6 +930,7 @@
             "of_the_troll": {
                 "id": 1,
                 "name": "of the Troll",
+                "description": "+3 STR",
                 "gid": 1,
                 "rarity": 128,
                 "ilevel": 20,
@@ -901,6 +946,7 @@
             "of_the_giant": {
                 "id": 2,
                 "name": "of the Giant",
+                "description": "+6 STR",
                 "gid": 2,
                 "rarity": 64,
                 "ilevel": 70,
@@ -916,6 +962,7 @@
             "of_dexterity": {
                 "id": 3,
                 "name": "of Dexterity",
+                "description": "+1 DEX",
                 "gid": 3,
                 "rarity": 255,
                 "ilevel": 5,
@@ -931,6 +978,7 @@
             "of_the_thief": {
                 "id": 4,
                 "name": "of the Thief",
+                "description": "+3 DEX",
                 "gid": 4,
                 "rarity": 128,
                 "ilevel": 20,
@@ -946,6 +994,7 @@
             "of_the_ninja": {
                 "id": 5,
                 "name": "of the Ninja",
+                "description": "+6 DEX",
                 "gid": 5,
                 "rarity": 64,
                 "ilevel": 70,
@@ -961,6 +1010,7 @@
             "of_constitution": {
                 "id": 6,
                 "name": "of Constitution",
+                "description": "+1 CON",
                 "gid": 6,
                 "rarity": 255,
                 "ilevel": 5,
@@ -976,6 +1026,7 @@
             "of_the_athlete": {
                 "id": 7,
                 "name": "of the Athlete",
+                "description": "+3 CON",
                 "gid": 7,
                 "rarity": 128,
                 "ilevel": 20,
@@ -991,6 +1042,7 @@
             "of_the_bodybuilder": {
                 "id": 8,
                 "name": "of the Bodybuilder",
+                "description": "+6 CON",
                 "gid": 8,
                 "rarity": 64,
                 "ilevel": 70,
@@ -1006,6 +1058,7 @@
             "of_attack": {
                 "id": 9,
                 "name": "of Attack",
+                "description": "+1 ATK",
                 "gid": 9,
                 "rarity": 240,
                 "ilevel": 7,
@@ -1021,6 +1074,7 @@
             "of_the_soldier": {
                 "id": 10,
                 "name": "of the Soldier",
+                "description": "+3 ATK",
                 "gid": 10,
                 "rarity": 112,
                 "ilevel": 22,
@@ -1036,6 +1090,7 @@
             "of_the_general": {
                 "id": 11,
                 "name": "of the General",
+                "description": "+6 ATK",
                 "gid": 11,
                 "rarity": 48,
                 "ilevel": 74,
@@ -1051,6 +1106,7 @@
             "of_speed": {
                 "id": 12,
                 "name": "of Speed",
+                "description": "+1 SPD",
                 "gid": 12,
                 "rarity": 240,
                 "ilevel": 7,
@@ -1066,6 +1122,7 @@
             "of_the_runner": {
                 "id": 13,
                 "name": "of the Runner",
+                "description": "+3 SPD",
                 "gid": 13,
                 "rarity": 112,
                 "ilevel": 22,
@@ -1081,6 +1138,7 @@
             "of_the_sprinter": {
                 "id": 14,
                 "name": "of the Sprinter",
+                "description": "+6 SPD",
                 "gid": 14,
                 "rarity": 48,
                 "ilevel": 74,
@@ -1096,6 +1154,7 @@
             "of_defense": {
                 "id": 15,
                 "name": "of Defense",
+                "description": "+1 DEF",
                 "gid": 15,
                 "rarity": 255,
                 "ilevel": 5,
@@ -1111,6 +1170,7 @@
             "of_the_blocker": {
                 "id": 16,
                 "name": "of the Blocker",
+                "description": "+3 DEF",
                 "gid": 16,
                 "rarity": 128,
                 "ilevel": 20,
@@ -1126,6 +1186,7 @@
             "of_the_guardian": {
                 "id": 17,
                 "name": "of the Guardian",
+                "description": "+6 DEF",
                 "gid": 17,
                 "rarity": 64,
                 "ilevel": 70,
@@ -1141,6 +1202,7 @@
             "of_kings": {
                 "id": 18,
                 "name": "of Kings",
+                "description": "+1 STR, +1 DEX, +1 CON",
                 "gid": 18,
                 "rarity": 64,
                 "ilevel": 50,
@@ -1168,6 +1230,7 @@
             "of_the_gods": {
                 "id": 19,
                 "name": "of the Gods",
+                "description": "+3 STR, +3 DEX, +3 CON",
                 "gid": 19,
                 "rarity": 20,
                 "ilevel": 65,
@@ -1195,6 +1258,7 @@
             "of_the_primordials": {
                 "id": 20,
                 "name": "of the Primordials",
+                "description": "+6 STR, +6 DEX, +6 CON",
                 "gid": 20,
                 "rarity": 8,
                 "ilevel": 80,
@@ -1222,6 +1286,7 @@
             "of_extra_attacks": {
                 "id": 21,
                 "name": "of Extra Attacks",
+                "description": "+1 APT",
                 "gid": 21,
                 "rarity": 25,
                 "ilevel": 40,
@@ -1237,6 +1302,7 @@
             "of_the_berserker": {
                 "id": 22,
                 "name": "of the Berserker",
+                "description": "+1 APT, +1 STR",
                 "gid": 22,
                 "rarity": 5,
                 "ilevel": 65,
@@ -1258,6 +1324,7 @@
             "of_perfect_defense": {
                 "id": 23,
                 "name": "of Perfect Defense",
+                "description": "15% block, 20% DMG reduction",
                 "gid": 23,
                 "rarity": 4,
                 "ilevel": 75,
@@ -1279,6 +1346,7 @@
             "of_the_unstoppable": {
                 "id": 24,
                 "name": "of the Unstoppable",
+                "description": "+1 APT, +6 all stats, -20% DMG taken",
                 "gid": 24,
                 "rarity": 1,
                 "ilevel": 100,
@@ -1318,6 +1386,7 @@
             "of_weakness": {
                 "id": 25,
                 "name": "of Weakness",
+                "description": "-1 STR",
                 "gid": 25,
                 "rarity": 240,
                 "ilevel": 7,
@@ -1333,6 +1402,7 @@
             "of_fraility": {
                 "id": 26,
                 "name": "of Fraility",
+                "description": "-3 STR",
                 "gid": 26,
                 "rarity": 112,
                 "ilevel": 24,
@@ -1348,6 +1418,7 @@
             "of_clumsiness": {
                 "id": 27,
                 "name": "of Clumsiness",
+                "description": "-1 DEX",
                 "gid": 27,
                 "rarity": 240,
                 "ilevel": 7,
@@ -1363,6 +1434,7 @@
             "of_fumbling": {
                 "id": 28,
                 "name": "of Fumbling",
+                "description": "-3 DEX",
                 "gid": 28,
                 "rarity": 112,
                 "ilevel": 24,
@@ -1378,6 +1450,7 @@
             "of_illness": {
                 "id": 29,
                 "name": "of Illness",
+                "description": "-1 CON",
                 "gid": 29,
                 "rarity": 240,
                 "ilevel": 7,
@@ -1393,6 +1466,7 @@
             "of_sickliness": {
                 "id": 30,
                 "name": "of Sickliness",
+                "description": "-3 CON",
                 "gid": 30,
                 "rarity": 112,
                 "ilevel": 224,
@@ -1408,6 +1482,7 @@
             "of_slowness": {
                 "id": 31,
                 "name": "of Slowness",
+                "description": "-1 SPD",
                 "gid": 31,
                 "rarity": 224,
                 "ilevel": 96,
@@ -1423,6 +1498,7 @@
             "of_halting": {
                 "id": 32,
                 "name": "of Halting",
+                "description": "-3 SPD",
                 "gid": 32,
                 "rarity": 96,
                 "ilevel": 27,
@@ -1438,6 +1514,7 @@
             "of_vulnerability": {
                 "id": 33,
                 "name": "of Vulnerability",
+                "description": "-1 DEF",
                 "gid": 33,
                 "rarity": 240,
                 "ilevel": 7,
@@ -1453,6 +1530,7 @@
             "of_defenselessness": {
                 "id": 34,
                 "name": "of Defenselessness",
+                "description": "-3 DEF",
                 "gid": 34,
                 "rarity": 112,
                 "ilevel": 24,
@@ -1468,6 +1546,7 @@
             "of_cowardice": {
                 "id": 35,
                 "name": "of Cowardice",
+                "description": "-1 ATK",
                 "gid": 35,
                 "rarity": 224,
                 "ilevel": 10,
@@ -1483,6 +1562,7 @@
             "of_surrender": {
                 "id": 36,
                 "name": "of Surrender",
+                "description": "-3 ATK",
                 "gid": 36,
                 "rarity": 96,
                 "ilevel": 27,
@@ -1498,6 +1578,7 @@
             "of_the_indecisive": {
                 "id": 37,
                 "name": "of the Indecisive",
+                "description": "-1 APT",
                 "gid": 37,
                 "rarity": 96,
                 "ilevel": 27,
@@ -1513,6 +1594,7 @@
             "of_the_envenomed": {
                 "id": 38,
                 "name": "of the Envenomed",
+                "description": "Always poisoned",
                 "gid": 38,
                 "rarity": 32,
                 "ilevel": 35,
@@ -1528,6 +1610,7 @@
             "of_the_damned": {
                 "id": 39,
                 "name": "of the Damned",
+                "description": "-1 APT, -3 all stats, +20% DMG taken",
                 "gid": 39,
                 "rarity": 1,
                 "ilevel": 100,
@@ -1541,19 +1624,19 @@
                     "str": {
                         "modifier_id": 0,
                         "modifier_mode": 1,
-                        "amount": -1,
+                        "amount": -3,
                         "secondary_id": 0
                     },
                     "con": {
                         "modifier_id": 1,
                         "modifier_mode": 1,
-                        "amount": -1,
+                        "amount": -3,
                         "secondary_id": 0
                     },
                     "dex": {
                         "modifier_id": 2,
                         "modifier_mode": 1,
-                        "amount": -1,
+                        "amount": -3,
                         "secondary_id": 0
                     },
                     "damage_taken": {

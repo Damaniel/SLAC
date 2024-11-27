@@ -127,6 +127,7 @@ typedef struct {
 typedef struct {
     unsigned short id;
     std::string name;
+    std::string description;
     unsigned short gid;
     unsigned short type_id;
     unsigned short effect_id;
@@ -145,6 +146,7 @@ typedef struct {
 typedef struct {
     unsigned short id;
     std::string name;
+    std::string description;
     unsigned short gid;
     unsigned short type_id;
     unsigned short effect_id;
@@ -163,6 +165,7 @@ typedef struct {
 typedef struct {
     unsigned short id;
     std::string name;
+    std::string description;
     unsigned short gid;
     unsigned short type_id;
     unsigned char pieces;
@@ -181,6 +184,7 @@ typedef struct {
 typedef struct {
     unsigned short id;
     std::string name;
+    std::string description;
     unsigned short gid;
     unsigned char rarity;
     unsigned char ilevel;
@@ -191,6 +195,7 @@ typedef struct {
 typedef struct {
     unsigned short id;
     std::string name;
+    std::string description;
     unsigned short gid;
     unsigned char rarity;
     unsigned char ilevel;
@@ -210,6 +215,7 @@ protected:
     unsigned short id;
     unsigned short quantity;
     std::string name;
+    std::string description;
     unsigned short gid;
     unsigned short type_id;
     unsigned char rarity;
@@ -234,10 +240,14 @@ public:
     virtual void add_prefix(int pid) = 0;
     virtual void add_suffix(int sid) = 0;
     virtual void set_curse_state(bool curse) = 0;
+    virtual int get_prefix() = 0;
+    virtual int get_suffix() = 0;
     virtual void remove_prefix() = 0;
     virtual void remove_suffix() = 0;
     virtual bool is_it_cursed() = 0;
     virtual int get_item_class() = 0;
+    virtual int get_attack() = 0;
+    virtual int get_defense() = 0;
     virtual void equip() = 0;
     virtual void remove() = 0;
     int get_value() { return (int)value; }
@@ -246,9 +256,12 @@ public:
     bool can_have_curse() { return can_be_cursed; }
     bool can_it_stack() { return can_stack; }
     void identify() { is_identified = true; }
+    bool is_it_identified() { return is_identified; }
     unsigned short get_quantity() { return quantity; }
     void adjust_quantity(int amount) { quantity += amount; }
+    std::string get_description() { return description; }
     unsigned short get_gid() { return gid; }
+    unsigned short get_id() { return id; }
     virtual ~Item() { /*std::cout << "~Item: Deleting item" << std::endl;*/ }
 };
 
@@ -266,8 +279,12 @@ public:
     virtual void remove() = 0;
     virtual void dump_item() = 0;
     virtual void init(int idx) = 0;
+    virtual int get_attack() = 0;
+    virtual int get_defense() = 0;
     std::string get_full_name();
     std::string get_type_name();
+    int get_prefix() { return prefix_id; }
+    int get_suffix() { return suffix_id; }
     void dump_prefix();
     void dump_suffix();
     void set_curse_state(bool curse) { is_cursed = curse; }
@@ -290,6 +307,8 @@ public:
     Weapon(WeaponBaseType *b);
     Weapon(unsigned int idx);
     void init(int idx);
+    int get_attack(void) { return attack; }
+    int get_defense(void) { return -1; }
     int get_item_class(void);
     void dump_item();
     void equip();
@@ -306,6 +325,8 @@ public:
     Armor(ArmorBaseType *b);
     Armor(unsigned int idx);
     void init(int idx);
+    int get_attack(void) { return -1; }
+    int get_defense(void) { return defense; }
     int get_item_class(void);
     void dump_item();
     void equip();
@@ -323,6 +344,10 @@ public:
     virtual void use() = 0;
     virtual void init(int idx) = 0;
     virtual int get_item_class() = 0;
+    int get_prefix() { return -1; }
+    int get_suffix() { return -1; }
+    int get_attack() { return -1; }
+    int get_defense() { return -1; }
     void dump_prefix() {}
     void dump_suffix() {}
     void add_prefix(int pid) {}
@@ -381,6 +406,10 @@ public:
     void init(int idx);
     int get_item_class();
     void dump_item();
+    int get_prefix() { return -1; }
+    int get_suffix() { return -1; }
+    int get_attack() { return -1; }
+    int get_defense() { return -1; }
     void dump_prefix() {}
     void dump_suffix() {}
     void add_prefix(int pid) {}
@@ -404,6 +433,10 @@ public:
     void init(int idx);
     int get_item_class();
     void dump_item();
+    int get_prefix() { return -1; }
+    int get_suffix() { return -1; }
+    int get_attack() { return -1; }
+    int get_defense() { return -1; }
     void dump_prefix() {}
     void dump_suffix() {}
     void add_prefix(int pid) {}

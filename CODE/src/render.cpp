@@ -345,6 +345,95 @@ void Render::render_map(BITMAP *destination) {
   }
 
 //------------------------------------------------------------------------------
+// Draws all non-name description fields for an item, based on the item
+// type.
+//
+// Arguments:
+//   i - the item to use as the reference
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Render::render_description_fields(BITMAP *destination, Item *it) {
+	char text[24];
+	
+	int item_class = it->get_item_class();
+
+	// This value will increment by 10 every time we put a new line on the screen
+	int text_y = UiConsts::INVENTORY_ITEM_NAME_Y + 10;
+
+	// Show quantity for stackable items
+	if (it->can_it_stack()) {
+		sprintf(text, "Quantity: %d", it->get_quantity());
+		render_text(destination, text, UiConsts::INVENTORY_ITEM_NAME_X, 
+					text_y, FontConsts::FONT_YELLOW, 
+					FontConsts::FONT_NARROW_PROPORTIONAL, 
+					FontConsts::TEXT_LEFT_JUSTIFIED);	
+		text_y += 10;
+	}
+
+	// Show attack or defense rating for equipment
+	if (item_class == ItemConsts::WEAPON_CLASS) {
+		sprintf(text, "Attack Rating: %d", it->get_attack());
+		render_text(destination, text, UiConsts::INVENTORY_ITEM_NAME_X, 
+					text_y, FontConsts::FONT_YELLOW, 
+					FontConsts::FONT_NARROW_PROPORTIONAL, 
+					FontConsts::TEXT_LEFT_JUSTIFIED);	
+		text_y += 10;		
+	}
+	else if (item_class == ItemConsts::ARMOR_CLASS) {
+		sprintf(text, "Defense Rating: %d", it->get_defense());
+		render_text(destination, text, UiConsts::INVENTORY_ITEM_NAME_X, 
+					text_y, FontConsts::FONT_YELLOW, 
+					FontConsts::FONT_NARROW_PROPORTIONAL, 
+					FontConsts::TEXT_LEFT_JUSTIFIED);	
+		text_y += 10;				
+	}
+
+	// Show description for identified items (or for any artifact)
+	if (item_class == ItemConsts::ARTIFACT_CLASS || (it->is_it_identified() && (item_class == ItemConsts::POTION_CLASS || item_class == ItemConsts::SCROLL_CLASS))) {
+		render_text(destination, (char *)it->get_description().c_str(), UiConsts::INVENTORY_ITEM_NAME_X, 
+					text_y, FontConsts::FONT_YELLOW, 
+					FontConsts::FONT_NARROW_PROPORTIONAL, 
+					FontConsts::TEXT_LEFT_JUSTIFIED);	
+		text_y += 10;
+	}
+	else if (!it->is_it_identified() && (item_class == ItemConsts::POTION_CLASS || item_class == ItemConsts::SCROLL_CLASS)) {
+		render_text(destination, "(This item is unidentified)", UiConsts::INVENTORY_ITEM_NAME_X, 
+					text_y, FontConsts::FONT_YELLOW, 
+					FontConsts::FONT_NARROW_PROPORTIONAL, 
+					FontConsts::TEXT_LEFT_JUSTIFIED);	
+		text_y += 10;		
+	}
+
+	else if (item_class == ItemConsts::WEAPON_CLASS || item_class == ItemConsts::ARMOR_CLASS) {
+		if (it->is_it_identified()) {
+			std::string description;
+			if (it->get_prefix() != -1) {
+				description = g_item_prefix_ids[it->get_prefix()].description;
+				render_text(destination, (char *)description.c_str(), UiConsts::INVENTORY_ITEM_NAME_X, 
+							text_y, FontConsts::FONT_YELLOW, 
+							FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);	
+				text_y += 10;
+			}
+			if (it->get_suffix() != -1) {
+				description = g_item_suffix_ids[it->get_suffix()].description;
+				render_text(destination, (char *)description.c_str(), UiConsts::INVENTORY_ITEM_NAME_X, 
+							text_y, FontConsts::FONT_YELLOW, 
+							FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);	
+				text_y += 10;
+			}
+		}
+		else {
+				render_text(destination, "(This item is unidentified)", UiConsts::INVENTORY_ITEM_NAME_X, 
+							text_y, FontConsts::FONT_YELLOW, 
+							FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);	
+				text_y += 10;			
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
 // Draws inventory content (the items, descriptions, etc) on the inventory 
 // screen
 //
@@ -410,16 +499,12 @@ void Render::render_inventory_content(BITMAP *destination) {
 		int item_index = (g_ui_globals.inv_cursor_y  * UiConsts::INVENTORY_ITEMS_PER_ROW) + g_ui_globals.inv_cursor_x;
 		Item *it = g_inventory->get_item_in_slot(item_index);
 		if (it != NULL) {
-			// Render the new description
+			// Render the item name
 			render_text(destination, (char *)it->get_full_name().c_str(), 
 		    	        UiConsts::INVENTORY_ITEM_NAME_X, UiConsts::INVENTORY_ITEM_NAME_Y, 
 						FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 						FontConsts::TEXT_LEFT_JUSTIFIED);
-			char text[24];
-			sprintf(text, "Quantity: %d", it->get_quantity());
-			render_text(destination, text, UiConsts::INVENTORY_ITEM_NAME_X, 
-						UiConsts::INVENTORY_ITEM_NAME_Y + 10, FontConsts::FONT_YELLOW, 
-						FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);		
+			render_description_fields(destination, it);
 		}
 		g_state_flags.update_inventory_description = false;
 	}

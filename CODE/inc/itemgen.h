@@ -7,7 +7,7 @@
 
 namespace ItemConsts {
     // %chance that an item will generate an affix (prefix or suffix)
-    const int CHANCE_OF_AFFIX  = 30;
+    const int CHANCE_OF_AFFIX  = 20;
 
     // %chance that an item will be cursed
     const int CHANCE_OF_CURSE  = 4;

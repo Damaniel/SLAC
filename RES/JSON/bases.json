@@ -2252,12 +2252,13 @@
             "pool_define": "g_potion_pool_entries",
             "pool_count": "g_potion_pool_count",
             "description": "A list of potion types",
-            "fields": ["id", "name", "gid", "type id", "effect id", "rarity", "ilevel", "value", "cursed?", "prefix?", "suffix?", "stack?", "equip?", "drop?", "use?"]
+            "fields": ["id", "name", "description", "gid", "type id", "effect id", "rarity", "ilevel", "value", "cursed?", "prefix?", "suffix?", "stack?", "equip?", "drop?", "use?"]
         },
         "items": {  
             "Potion of Light Healing": {
                 "id": 0,
                 "name": "Potion of Light Healing",
+                "description": "Recovers 10% of HP",
                 "gid": 130,
                 "type": 0,
                 "effect_id": 0,
@@ -2275,6 +2276,7 @@
             "Potion of Moderate Healing": {
                 "id": 1,
                 "name": "Potion of Moderate Healing",
+                "description": "Recovers 50% of HP",
                 "gid": 131,
                 "type": 0,
                 "effect_id": 1,
@@ -2292,6 +2294,7 @@
             "Potion of Full Healing": {
                 "id": 2,
                 "name": "Potion of Full Healing",
+                "description": "Recovers 100% of HP",
                 "gid": 132,
                 "type": 0,
                 "effect_id": 2,
@@ -2309,6 +2312,7 @@
             "Potion of Cure Poison": {
                 "id": 3,
                 "name": "Potion of Cure Poison",
+                "description": "Removes poison",
                 "gid": 133,
                 "type": 0,
                 "effect_id": 3,
@@ -2326,6 +2330,7 @@
             "Potion of Cure Paralysis": {
                 "id": 4,
                 "name": "Potion of Cure Paralysis",
+                "description": "Removes paralysis",
                 "gid": 134,
                 "type": 0,
                 "effect_id": 4,
@@ -2343,6 +2348,7 @@
             "Potion of Berserk Strength": {
                 "id": 5,
                 "name": "Potion of Berserk Strength",
+                "description": "+100% STR for 20 turns",
                 "gid": 135,
                 "type": 0,
                 "effect_id": 5,
@@ -2360,6 +2366,7 @@
             "Potion of Speed": {
                 "id": 6,
                 "name": "Potion of Speed",
+                "description": "+100% SPD for 20 turns",
                 "gid": 136,
                 "type": 0,
                 "effect_id": 6,
@@ -2377,6 +2384,7 @@
             "Potion of Hardiness": {
                 "id": 7,
                 "name": "Potion of Hardiness",
+                "description": "+100% HP for 20 turns",
                 "gid": 137,
                 "type": 0,
                 "effect_id": 7,
@@ -2394,6 +2402,7 @@
             "Potion of Extra Attacks": {
                 "id": 8,
                 "name": "Potion of Extra Attacks",
+                "description": "+1 APT for 20 turns",
                 "gid": 138,
                 "type": 0,
                 "effect_id": 8,
@@ -2411,6 +2420,7 @@
             "Potion of Poison": {
                 "id": 9,
                 "name": "Potion of Poison",
+                "description": "Applies poison",
                 "gid": 139,
                 "type": 0,
                 "effect_id": 9,
@@ -2428,6 +2438,7 @@
             "Potion of Paralysis": {
                 "id": 10,
                 "name": "Potion of Paralysis",
+                "description": "Applies paralysis",
                 "gid": 140,
                 "type": 0,
                 "effect_id": 10,
@@ -2445,6 +2456,7 @@
             "Potion of Death": {
                 "id": 11,
                 "name": "Potion of Death",
+                "description": "Reduces HP to 0",
                 "gid": 141,
                 "type": 0,
                 "effect_id": 11,
@@ -2475,6 +2487,7 @@
             "Scroll of Identify": {
                 "id": 0,
                 "name": "Scroll of Identify",
+                "description": "Identifies an item",
                 "gid": 142,
                 "type": 0,
                 "effect_id": 12,
@@ -2492,6 +2505,7 @@
             "Scroll of Identify All": {
                 "id": 1,
                 "name": "Scroll of Identify All",
+                "description": "Identifies all items",
                 "gid": 143,
                 "type": 0,
                 "effect_id": 13,
@@ -2509,6 +2523,7 @@
             "Scroll of Magic Map": {
                 "id": 2,
                 "name": "Scroll of Magic Map",
+                "description": "Marks map as discovered",
                 "gid": 144,
                 "type": 0,
                 "effect_id": 14,
@@ -2526,6 +2541,7 @@
             "Scroll of Discovery": {
                 "id": 3,
                 "name": "Scroll of Discovery",
+                "description": "Shows items and stairs on map",
                 "gid": 145,
                 "type": 0,
                 "effect_id": 15,
@@ -2543,6 +2559,7 @@
             "Scroll of Decurse": {
                 "id": 4,
                 "name": "Scroll of Decurse",
+                "description": "Removes curse from an item",
                 "gid": 146,
                 "type": 0,
                 "effect_id": 16,
@@ -2560,6 +2577,7 @@
             "Scroll of Decurse All": {
                 "id": 5,
                 "name": "Scroll of Decurse All",
+                "description": "Removes curse from all items",
                 "gid": 147,
                 "type": 0,
                 "effect_id": 17,
@@ -2577,6 +2595,7 @@
             "Scroll of Teleport": {
                 "id": 6,
                 "name": "Scroll of Teleport",
+                "description": "Moves player to a random location",
                 "gid": 148,
                 "type": 0,
                 "effect_id": 18,
@@ -2594,6 +2613,7 @@
             "Scroll of Recall": {
                 "id": 7,
                 "name": "Scroll of Recall",
+                "description": "Returns player to surface",
                 "gid": 149,
                 "type": 0,
                 "effect_id": 19,
@@ -2611,6 +2631,7 @@
             "Scroll of Summon Item": {
                 "id": 8,
                 "name": "Scroll of Summon Item",
+                "description": "Creates a good item",
                 "gid": 150,
                 "type": 0,
                 "effect_id": 20,
@@ -2628,6 +2649,7 @@
             "Scroll of Darkness": {
                 "id": 9,
                 "name": "Scroll of Darkness",
+                "description": "Darkens all lit areas",
                 "gid": 151,
                 "type": 0,
                 "effect_id": 21,
@@ -2645,6 +2667,7 @@
             "Scroll of Forget Area": {
                 "id": 10,
                 "name": "Scroll of Forget Area",
+                "description": "Forgets the explored map",
                 "gid": 152,
                 "type": 0,
                 "effect_id": 22,
@@ -2662,6 +2685,7 @@
             "Scroll of Curse": {
                 "id": 11,
                 "name": "Scroll of Curse",
+                "description": "Curses a random unequipped item",
                 "gid": 153,
                 "type": 0,
                 "effect_id": 23,
@@ -2686,12 +2710,13 @@
             "pool_define": "g_artifact_pool_entries",
             "pool_count": "g_artifact_pool_count",
             "description": "A list of artifact types",
-            "fields": ["id", "name", "gid", "artifact type", "pieces", "effect id", "rarity", "ilevel", "cursed?", "prefix?", "suffix?", "stack?", "equip?", "drop?", "use?"]
+            "fields": ["id", "name", "gid", "description", "artifact type", "pieces", "effect id", "rarity", "ilevel", "cursed?", "prefix?", "suffix?", "stack?", "equip?", "drop?", "use?"]
         },
         "items": {
             "Sign of Strength": {
                 "id": 0,
                 "name": "Sign of Strength",
+                "description": "+1 STR",
                 "gid": 154,
                 "type": 0,
                 "pieces": 1,
@@ -2709,6 +2734,7 @@
             "Sign of Constitution": {
                 "id": 1,
                 "name": "Sign of Constitution",
+                "description": "+1 CON",
                 "gid": 155,
                 "type": 0,
                 "pieces": 1,
@@ -2726,6 +2752,7 @@
             "Sign of Dexterity": {
                 "id": 2,
                 "name": "Sign of Dexterity",
+                "description": "+1 DEX",
                 "gid": 156,
                 "type": 0,
                 "pieces": 1,
@@ -2743,6 +2770,7 @@
             "Sign of Attack": {
                 "id": 3,
                 "name": "Sign of Attack",
+                "description": "+1 ATK",
                 "gid": 157,
                 "type": 0,
                 "pieces": 1,
@@ -2760,6 +2788,7 @@
             "Sign of Defense": {
                 "id": 4,
                 "name": "Sign of Defense",
+                "description": "+1 DEF",
                 "gid": 158,
                 "type": 0,
                 "pieces": 1,
@@ -2777,6 +2806,7 @@
             "Sign of Accuracy": {
                 "id": 5,
                 "name": "Sign of Accuracy",
+                "description": "+1 ACC",
                 "gid": 159,
                 "type": 0,
                 "pieces": 1,
@@ -2794,6 +2824,7 @@
             "Sign of Speed": {
                 "id": 6,
                 "name": "Sign of Speed",
+                "description": "+1 SPD",
                 "gid": 160,
                 "type": 0,
                 "pieces": 1,
@@ -2811,6 +2842,7 @@
             "Medal of Strength": {
                 "id": 7,
                 "name": "Medal of Strength",
+                "description": "+2 STR",
                 "gid": 161,
                 "type": 0,
                 "pieces": 1,
@@ -2828,6 +2860,7 @@
             "Medal of Constitution": {
                 "id": 8,
                 "name": "Medal of Constitution",
+                "description": "+2 CON",
                 "gid": 162,
                 "type": 0,
                 "pieces": 1,
@@ -2845,6 +2878,7 @@
             "Medal of Dexterity": {
                 "id": 9,
                 "name": "Medal of Dexterity",
+                "description": "+2 DEX",
                 "gid": 163,
                 "type": 0,
                 "pieces": 1,
@@ -2862,6 +2896,7 @@
             "Medal of Attack": {
                 "id": 10,
                 "name": "Medal of Attack",
+                "description": "+2 ATK",
                 "gid": 164,
                 "type": 0,
                 "pieces": 1,
@@ -2879,6 +2914,7 @@
             "Medal of Defense": {
                 "id": 11,
                 "name": "Medal of Defense",
+                "description": "+2 DEF",
                 "gid": 165,
                 "type": 0,
                 "pieces": 1,
@@ -2896,6 +2932,7 @@
             "Medal of Accuracy": {
                 "id": 12,
                 "name": "Medal of Accuracy",
+                "description": "+2 ACC",
                 "gid": 166,
                 "type": 0,
                 "pieces": 1,
@@ -2913,6 +2950,7 @@
             "Medal of Speed": {
                 "id": 13,
                 "name": "Medal of Speed",
+                "description": "+2 SPD",
                 "gid": 167,
                 "type": 0,
                 "pieces": 1,
@@ -2930,6 +2968,7 @@
             "Trophy of Strength": {
                 "id": 14,
                 "name": "Trophy of Strength",
+                "description": "+3 STR",
                 "gid": 168,
                 "type": 0,
                 "pieces": 1,
@@ -2947,6 +2986,7 @@
             "Trophy of Constitution": {
                 "id": 15,
                 "name": "Trophy of Constitution",
+                "description": "+3 CON",
                 "gid": 169,
                 "type": 0,
                 "pieces": 1,
@@ -2964,6 +3004,7 @@
             "Trophy of Dexterity": {
                 "id": 16,
                 "name": "Trophy of Dexterity",
+                "description": "+3 DEX",
                 "gid": 170,
                 "type": 0,
                 "pieces": 1,
@@ -2981,6 +3022,7 @@
             "Trophy of Attack": {
                 "id": 17,
                 "name": "Trophy of Attack",
+                "description": "+3 ATK",
                 "gid": 171,
                 "type": 0,
                 "pieces": 1,
@@ -2998,6 +3040,7 @@
             "Trophy of Defense": {
                 "id": 18,
                 "name": "Trophy of Defense",
+                "description": "+3 DEF",
                 "gid": 172,
                 "type": 0,
                 "pieces": 1,
@@ -3015,6 +3058,7 @@
             "Trophy of Accuracy": {
                 "id": 19,
                 "name": "Trophy of Accuracy",
+                "description": "+3 ACC",
                 "gid": 173,
                 "type": 0,
                 "pieces": 1,
@@ -3032,6 +3076,7 @@
             "Trophy of Speed": {
                 "id": 20,
                 "name": "Trophy of Speed",
+                "description": "+3 SPD",
                 "gid": 174,
                 "type": 0,
                 "pieces": 1,
@@ -3049,6 +3094,7 @@
             "Ward of Fire": {
                 "id": 21,
                 "name": "Ward of Fire",
+                "description": "+1 Fire Resist",
                 "gid": 175,
                 "type": 0,
                 "pieces": 1,
@@ -3066,6 +3112,7 @@
             "Ward of Ice": {
                 "id": 22,
                 "name": "Ward of Ice",
+                "description": "+1 Ice Resist",
                 "gid": 176,
                 "type": 0,
                 "pieces": 1,
@@ -3083,6 +3130,7 @@
             "Ward of Lightning": {
                 "id": 23,
                 "name": "Ward of Lightning",
+                "description": "+1 Lightning Resist",
                 "gid": 177,
                 "type": 0,
                 "pieces": 1,
@@ -3100,6 +3148,7 @@
             "Sigil of Fire": {
                 "id": 24,
                 "name": "Sigil of Fire",
+                "description": "+2 Fire Resist",
                 "gid": 178,
                 "type": 0,
                 "pieces": 1,
@@ -3117,6 +3166,7 @@
             "Sigil of Ice": {
                 "id": 25,
                 "name": "Sigil of Ice",
+                "description": "+2 Ice Resist",
                 "gid": 179,
                 "type": 0,
                 "pieces": 1,
@@ -3134,6 +3184,7 @@
             "Sigil of Lightning": {
                 "id": 26,
                 "name": "Sigil of Lightning",
+                "description": "+2 Lightning Resist",
                 "gid": 180,
                 "type": 0,
                 "pieces": 1,
@@ -3151,6 +3202,7 @@
             "Relic of Fire": {
                 "id": 27,
                 "name": "Relic of Fire",
+                "description": "+3 Fire Resist",
                 "gid": 181,
                 "type": 0,
                 "pieces": 1,
@@ -3168,6 +3220,7 @@
             "Relic of Ice": {
                 "id": 28,
                 "name": "Relic of Ice",
+                "description": "+3 Ice Resist",
                 "gid": 182,
                 "type": 0,
                 "pieces": 1,
@@ -3185,6 +3238,7 @@
             "Relic of Lightning": {
                 "id": 29,
                 "name": "Relic of Lightning",
+                "description": "+3 Lightning Resist",
                 "gid": 183,
                 "type": 0,
                 "pieces": 1,
@@ -3202,6 +3256,7 @@
             "Lucky Token": {
                 "id": 30,
                 "name": "Lucky Token",
+                "description": "+1% currency drop value",
                 "gid": 184,
                 "type": 0,
                 "pieces": 1,
@@ -3219,6 +3274,7 @@
             "Lucky Coin": {
                 "id": 31,
                 "name": "Lucky Coin",
+                "description": "+2% currency drop value",
                 "gid": 185,
                 "type": 0,
                 "pieces": 1,
@@ -3236,6 +3292,7 @@
             "Lucky Pendant": {
                 "id": 32,
                 "name": "Lucky Pendant",
+                "description": "+3% currency drop value",
                 "gid": 186,
                 "type": 0,
                 "pieces": 1,
@@ -3253,6 +3310,7 @@
             "Book of the Warrior": {
                 "id": 33,
                 "name": "Book of the Warrior",
+                "description": "+1 STR, +1 CON",
                 "gid": 187,
                 "type": 1,
                 "pieces": 2,
@@ -3270,6 +3328,7 @@
             "Book of the Thief": {
                 "id": 34,
                 "name": "Book of the Thief",
+                "description": "+1 SPD, +1 DEX",
                 "gid": 188,
                 "type": 1,
                 "pieces": 2,
@@ -3287,6 +3346,7 @@
             "Book of the Combatant": {
                 "id": 35,
                 "name": "Book of the Combatant",
+                "description": "+1 ATK, +1 DEF",
                 "gid": 189,
                 "type": 1,
                 "pieces": 2,
@@ -3304,6 +3364,7 @@
             "Tome of the Warrior": {
                 "id": 36,
                 "name": "Tome of the Warrior",
+                "description": "+2 STR, +2 CON",
                 "gid": 190,
                 "type": 1,
                 "pieces": 3,
@@ -3321,6 +3382,7 @@
             "Tome of the Thief": {
                 "id": 37,
                 "name": "Tome of the Thief",
+                "description": "+2 SPD, +2 DEX",
                 "gid": 191,
                 "type": 1,
                 "pieces": 3,
@@ -3338,6 +3400,7 @@
             "Tome of the Combatant": {
                 "id": 38,
                 "name": "Tome of the Combatant",
+                "description": "+2 ATK, +2 DEF",
                 "gid": 192,
                 "type": 1,
                 "pieces": 3,
@@ -3355,6 +3418,7 @@
             "Bible of the Warrior": {
                 "id": 39,
                 "name": "Bible of the Warrior",
+                "description": "+3 STR, +3 CON",
                 "gid": 193,
                 "type": 1,
                 "pieces": 5,
@@ -3372,6 +3436,7 @@
             "Bible of the Thief": {
                 "id": 40,
                 "name": "Bible of the Thief",
+                "description": "+3 SPD, +3 DEX",
                 "gid": 194,
                 "type": 1,
                 "pieces": 5,
@@ -3389,6 +3454,7 @@
             "Bible of the Combatant": {
                 "id": 41,
                 "name": "Bible of the Combatant",
+                "description": "+3 ATK, +3 DEF",
                 "gid": 195,
                 "type": 1,
                 "pieces": 5,
@@ -3406,6 +3472,7 @@
             "Ward of the Elements": {
                 "id": 42,
                 "name": "Ward of the Elements",
+                "description": "+1 to all resists",
                 "gid": 196,
                 "type": 1,
                 "pieces": 2,
@@ -3423,6 +3490,7 @@
             "Sigil of the Elements": {
                 "id": 43,
                 "name": "Sigil of the Elements",
+                "description": "+2 to all resists",
                 "gid": 197,
                 "type": 1,
                 "pieces": 4,
@@ -3440,6 +3508,7 @@
             "Relic of the Elements": {
                 "id": 44,
                 "name": "Relic of the Elements",
+                "description": "+3 to all resists",
                 "gid": 198,
                 "type": 1,
                 "pieces": 6,
@@ -3456,7 +3525,8 @@
             },
             "Cup of Wealth": {
                 "id": 45,
-                "name": "Cup of Wealth",
+                "name": "Cup of Wealth",                
+                "description": "+10% currency drop value",
                 "gid": 199,
                 "type": 1,
                 "pieces": 8,
@@ -3474,6 +3544,7 @@
             "Puzzle Box of Frivolousness": {
                 "id": 46,
                 "name": "Puzzle Box of Frivolousness",
+                "description": "For bragging rights only!",
                 "gid": 200,
                 "type": 1,
                 "pieces": 255,
@@ -3491,6 +3562,7 @@
             "Book of the Polymath": {
                 "id": 47,
                 "name": "Book of the Polymath",
+                "description": "+1 SPD, +1 ATK, +1 DEF",
                 "gid": 201,
                 "type": 2,
                 "pieces": 3,
@@ -3508,6 +3580,7 @@
             "Book of the Gladiator": {
                 "id": 48,
                 "name": "Book of the Gladiator",
+                "description": "+1 STR, +1 CON, +1 DEX",
                 "gid": 202,
                 "type": 2,
                 "pieces": 3,
@@ -3525,6 +3598,7 @@
             "Tome of the Polymath": {
                 "id": 49,
                 "name": "Tome of the Polymath",
+                "description": "+2 SPD, +2 ATK, +2 DEF",
                 "gid": 203,
                 "type": 2,
                 "pieces": 5,
@@ -3542,6 +3616,7 @@
             "Tome of the Gladiator": {
                 "id": 50,
                 "name": "Tome of the Gladiator",
+                "description": "+2 STR, +2 CON, +2 DEX",
                 "gid": 204,
                 "type": 2,
                 "pieces": 5,
@@ -3559,6 +3634,7 @@
             "Bible of the Polymath": {
                 "id": 51,
                 "name": "Bible of the Polymath",
+                "description": "+3 SPD, +3 ATK, +3 DEF",
                 "gid": 205,
                 "type": 2,
                 "pieces": 8,
@@ -3576,6 +3652,7 @@
             "Bible of the Gladiator": {
                 "id": 52,
                 "name": "Bible of the Gladiator",
+                "description": "+3 STR, +3 CON, +3 DEX",
                 "gid": 206,
                 "type": 2,
                 "pieces": 8,
@@ -3593,6 +3670,7 @@
             "Trickster Trinket": {
                 "id": 53,
                 "name": "Trickster Trinket",
+                "description": "+1 APT",
                 "gid": 207,
                 "type": 2,
                 "pieces": 4,
@@ -3610,6 +3688,7 @@
             "Prismatic Mirror": {
                 "id": 54,
                 "name": "Prismatic Mirror",
+                "description": "+10 to all elemental resists",
                 "gid": 208,
                 "type": 2,
                 "pieces": 4,
@@ -3627,6 +3706,7 @@
             "Glasses of Foresight": {
                 "id": 55,
                 "name": "Glasses of Foresight",
+                "description": "Permanent 'discovery' effect",
                 "gid": 209,
                 "type": 2,
                 "pieces": 6,
@@ -3644,6 +3724,7 @@
             "Ethereal Barrier": {
                 "id": 56,
                 "name": "Ethereal Barrier",
+                "description": "Reduce all damage by 1%",
                 "gid": 210,
                 "type": 2,
                 "pieces": 4,
@@ -3661,6 +3742,7 @@
             "Righteous Fire": {
                 "id": 57,
                 "name": "Righteous Fire",
+                "description": "+1 to maximum fire resist",
                 "gid": 211,
                 "type": 2,
                 "pieces": 6,
@@ -3678,6 +3760,7 @@
             "Righteous Ice": {
                 "id": 58,
                 "name": "Righteous Ice",
+                "description": "+1 to maximum ice resist",
                 "gid": 212,
                 "type": 2,
                 "pieces": 6,
@@ -3695,6 +3778,7 @@
             "Righteous Lightning": {
                 "id": 59,
                 "name": "Righteous Lightning",
+                "description": "+1 to maximum lightning resist",
                 "gid": 213,
                 "type": 2,
                 "pieces": 6,
@@ -3712,6 +3796,7 @@
             "Ark of Enlightenment": {
                 "id": 60,
                 "name": "Ark of Enlightenment",
+                "description": "Auto-identify of all items",
                 "gid": 214,
                 "type": 2,
                 "pieces": 3,
@@ -3729,6 +3814,7 @@
             "Chalice of Riches": {
                 "id": 61,
                 "name": "Chalice of Riches",
+                "description": "+100% currency drop value",
                 "gid": 215,
                 "type": 2,
                 "pieces": 16,
@@ -3746,6 +3832,7 @@
             "Amphora of Holy Water": {
                 "id": 62,
                 "name": "Amphora of Holy Water",
+                "description": "All items are auto-decursed",
                 "gid": 216,
                 "type": 2,
                 "pieces": 8,

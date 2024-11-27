@@ -223,6 +223,7 @@ void process_game_state(int key) {
                     use_stairs(g_player.get_x_pos(), g_player.get_y_pos());
                     break;
                 case KEY_SPACE:
+                case KEY_ENTER:
                     // attempt to perform all context sensitive actions in turn.
                     // Each is only designed to do something if the relevant
                     // condition is met anyway, so we can do them all in turn

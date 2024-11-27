@@ -237,14 +237,15 @@ int Inventory::get_stackable_item_slot(Item *item) {
 //----------------------------------------------------------------------------
 void Item::dump_item_common(void) {
     std::cout << "====== Common ============================" << std::endl;
-    std::cout << "Name:      " << get_full_name() << std::endl;
-    std::cout << "ID:        " << id << std::endl;
-    std::cout << "GID:       " << gid << std::endl;
-    std::cout << "Base name: " << name << std::endl;
-    std::cout << "Rarity:    " << (int)rarity << std::endl;
-    std::cout << "iLevel:    " << (int)ilevel << std::endl;
-    std::cout << "Value:     " << value << std::endl;
-    std::cout << "Flags:     ";
+    std::cout << "Name:        " << get_full_name() << std::endl;
+    std::cout << "Description: " << description << std::endl;
+    std::cout << "ID:          " << id << std::endl;
+    std::cout << "GID:         " << gid << std::endl;
+    std::cout << "Base name:   " << name << std::endl;
+    std::cout << "Rarity:      " << (int)rarity << std::endl;
+    std::cout << "iLevel:      " << (int)ilevel << std::endl;
+    std::cout << "Value:       " << value << std::endl;
+    std::cout << "Flags:       ";
     if (can_be_cursed)
         std::cout << "C";
     else
@@ -395,6 +396,7 @@ void Weapon::init(WeaponBaseType *b) {
     // Assign the fields from the weapon base type here
     id = b->id;
     name = b->name;
+    description = "";
     gid = b->gid;
     type_id = b->type_id;
     attack = b->attack;
@@ -544,6 +546,7 @@ void Armor::init(ArmorBaseType *b) {
     // Assign the fields from the armor base type here
     id = b->id;
     name = b->name;
+    description = "";
     gid = b->gid;
     type_id = b->type_id;
     defense = b->defense;
@@ -724,6 +727,7 @@ void Currency::init(CurrencyType *b) {
     // Assign the fields from the armor base type here
     id = b->id;
     name = b->name;
+    description = "";
     gid = b->gid;
     type_id = b->type_id;
     rarity = b->rarity;
@@ -867,6 +871,7 @@ void Potion::init(PotionType *b) {
     // Assign the fields from the potion type here
     id = b->id;
     name = b->name;
+    description = b->description;
     gid = b->gid;
     type_id = b->type_id;
     effect_id = b->effect_id;
@@ -1007,6 +1012,7 @@ void Scroll::init(ScrollType *b) {
     // Assign the fields from the potion type here
     id = b->id;
     name = b->name;
+    description = b->description;
     gid = b->gid;
     type_id = b->type_id;
     effect_id = b->effect_id;
@@ -1146,6 +1152,7 @@ void Artifact::init(ArtifactType *b) {
     // Assign the fields from the potion type here
     id = b->id;
     name = b->name;
+    description = b->description;
     gid = b->gid;
     type_id = b->type_id;
     pieces = b->pieces;
