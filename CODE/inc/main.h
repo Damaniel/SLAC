@@ -95,6 +95,8 @@ void initialize_main_game_state(void);
 void change_state(int new_state);
 void add_items_at_player_to_log(void);
 
-std::string get_dungeon_name(int dungeon);
+std::string get_generation_string(int generation);
+
+std::string get_dungeon_name(int dungeon, bool abbrev);
 
 #endif

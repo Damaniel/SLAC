@@ -24,25 +24,47 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
+typedef struct {
+	unsigned short str;			// Strength
+	unsigned short con;			// Constitution
+	unsigned short dex;			// Dexterity
+	unsigned short atk;			// Attack
+	unsigned short def;			// Defense
+	unsigned short spd;			// Speed
+	unsigned short f_def;		// Fire defense
+	unsigned short i_def;		// Ice defense
+	unsigned short l_def;		// Lightning defense
+	unsigned short f_atk;		// Fire attack damage
+	unsigned short i_atk;		// Ice attack damage
+	unsigned short l_atk;		// Lightning attack damage
+	unsigned short apt;			// Attacks per turn
+	unsigned short block;		// Absolute chance to block
+} Stats;
+
 //------------------------------------------------------------------------------
 // Player class definition
 //------------------------------------------------------------------------------
 class Player {
-private:
-	int hp;					// The player's current HP
-	int max_hp;				// The player's max HP
-	int mp;					// The player's current MP
-	int max_mp;				// The player's max HP
-	int level;				// The player's current level 
+// For now, all members are public.
+public:
+	std::string name;		// The player's name
+	int generation;			// The current generation of the player
+	unsigned short hp;		// The player's current HP
+	unsigned short max_hp;	// The player's max HP
+	unsigned short level;	// The player's current level 
 	int gold;				// Amount of currency the player has
 	int exp;				// The player's current number of experience points
-	int character_class;	// What characer class is the player
-	int dungeon;			// What dungeon is the player in
-	int dungeon_floor;		// What floor of the dungeon the player is in
-	int last_room_entered;  // What room was the player last in?
-	int x_pos;
+	Stats base;				// The player's base stats
+	Stats actual;			// The player's fully modified (by gear, items, etc) stats
+	bool is_poisoned;		// Is the player poisoned?
+	bool is_paralyzed;		// Is the player paralyzed?
+
+	// TODO - consider whether these values, and the *_last_room_entered functions
+	// should be moved elsewhere
+	int x_pos;				// The position of the player in the current area
 	int y_pos;
-public:
+	int last_room_entered;
+
 	Player();
 	Player(int x, int y);
 	int get_last_room_entered() { return last_room_entered; }

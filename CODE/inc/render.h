@@ -139,12 +139,52 @@ namespace UiConsts {
 	const int INVENTORY_ITEM_NAME_X = 15;
 	const int INVENTORY_ITEM_NAME_Y = 135;
 
+	const int NAME_TEXT_X = 280;
+	const int NAME_TEXT_Y = 7;
+
+	const int GENERATION_TEXT_X = 280;
+	const int GENERATION_TEXT_Y = 16;
+
+	const int LEVEL_TEXT_X = 280;
+	const int LEVEL_TEXT_Y = 25;
+
+	// Positions of HP text and indicator on the right side of the main screen
+	const int HP_TEXT_X = 246;
+	const int HP_TEXT_Y = 46;
+
+	const int HP_BAR_X = 246;
+	const int HP_BAR_Y = 57;
+
+	// Positions of EXP text and indicator on the right side of the screen
+	const int EXP_TEXT_X = 246; 
+	const int EXP_TEXT_Y = 78;
+
+	const int EXP_BAR_X = 246;
+	const int EXP_BAR_Y = 89;
+
+	const int HP_EXP_BAR_WIDTH = 68;
+	const int HP_EXP_BAR_HEIGHT = 14;
+
+	// Positions of area indicators on the right side of the main screen
+	const int DUNGEON_TEXT_X = 246;
+	const int DUNGEON_TEXT_Y = 114;
+
+	const int DUNGEON_NAME_X = 280;
+	const int DUNGEON_NAME_Y = 126;
+
+	// Positions of area indicators on the right side of the main screen
+	const int FLOOR_TEXT_X = 246;
+	const int FLOOR_TEXT_Y = 140;
+
+	const int FLOOR_VALUE_X = 313;
+	const int FLOOR_VALUE_Y = 152;
+
 	// Positions of status indicators on the right side of the main screen
 	const int GOLD_TEXT_X = 246;
-	const int GOLD_TEXT_Y = 141;
+	const int GOLD_TEXT_Y = 167;
 
 	const int GOLD_VALUE_X = 313;
-	const int GOLD_VALUE_Y = 151;
+	const int GOLD_VALUE_Y = 178;
 
 	// The base tiles that make up the fixed portions of a dungeon level
 	// They map to tile offsets in the dungeon world tiles

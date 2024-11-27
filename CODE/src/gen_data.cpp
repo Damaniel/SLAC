@@ -255,9 +255,9 @@ ArmorBaseType g_armor_base_ids[] = {
 //
 CurrencyType g_currency_ids[] = {
    {0, "Copper Coins", 126, 0, 255, 1, 1, false, false, false, true, false, true, false},
-   {1, "Silver Coins", 127, 0, 200, 10, 10, false, false, false, true, false, true, false},
-   {2, "Gold Coins", 128, 0, 100, 30, 100, false, false, false, true, false, true, false},
-   {3, "Gems", 129, 0, 25, 70, 500, false, false, false, true, false, true, false}
+   {1, "Silver Coins", 127, 0, 200, 10, 5, false, false, false, true, false, true, false},
+   {2, "Gold Coins", 128, 0, 100, 30, 25, false, false, false, true, false, true, false},
+   {3, "Gems", 129, 0, 25, 70, 125, false, false, false, true, false, true, false}
 };
 
 // PotionType g_potion_ids

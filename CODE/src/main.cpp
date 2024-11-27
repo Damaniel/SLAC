@@ -58,21 +58,89 @@ DungeonFloor   g_dungeon;
 // Returns:
 //   A string containing the name of the dungeon
 //------------------------------------------------------------------------------
-std::string get_dungeon_name(int dungeon) {
-	switch (dungeon) {
-		case DUSTY_TUNNELS:
-			return "Dusty Tunnels";
+std::string get_dungeon_name(int dungeon, bool abbrev) {
+	if (abbrev) {
+		switch (dungeon) {
+			case DUSTY_TUNNELS:
+				return "D. Tunnels";
+				break;
+			case MARBLE_HALLS:
+				return "M. Halls";
+				break;
+			case CRYSTAL_DEPTHS:
+				return "C. Depths";
+				break;
+			default:
+				return "Huh?";
+				break;
+		}
+
+	} 
+	else {
+		switch (dungeon) {
+			case DUSTY_TUNNELS:
+				return "Dusty Tunnels";
+				break;
+			case MARBLE_HALLS:
+				return "Marble Halls";
+				break;
+			case CRYSTAL_DEPTHS:
+				return "Crystal Depths";
+				break;
+			default:
+				return "Huh?";
+				break;
+		}
+	}
+}
+
+std::string get_generation_string(int generation) {
+	int suffix = generation % 100;
+	char gen_string[16];
+
+	switch (suffix) {
+		case 1:
+			sprintf(gen_string, "Senior");
 			break;
-		case MARBLE_HALLS:
-			return "Marble Halls";
+		case 2:
+			sprintf(gen_string, "Junior");
 			break;
-		case CRYSTAL_DEPTHS:
-			return "Crystal Depths";
+		case 21:
+		case 31:
+		case 41:
+		case 51:
+		case 61:
+		case 71:
+		case 81:
+		case 91:
+			sprintf(gen_string, "%dst", generation);
+			break;
+		case 22:
+		case 32:
+		case 42:
+		case 52:
+		case 62:
+		case 72:
+		case 82:
+		case 92:
+			sprintf(gen_string, "%dnd", generation);
+			break;
+		case 3:
+		case 23:
+		case 33:
+		case 43:
+		case 53:
+		case 63:
+		case 73:
+		case 83:
+		case 93:
+			sprintf(gen_string, "%drd", generation);
 			break;
 		default:
-			return "Huh?";
-			break;
+			sprintf(gen_string, "%dth", generation);
 	}
+
+	return std::string(gen_string);
 }
 
 //------------------------------------------------------------------------------
@@ -323,6 +391,7 @@ int main(void) {
 	init_resources(g_render);
 
 	g_player = Player();
+
 	// Loop until done.  Right now, 'done' = pressing Esc
 	g_state_flags.exit_game = false;
 

@@ -324,7 +324,7 @@ void Render::render_map(BITMAP *destination) {
 		 UiConsts::MAP_DOT_WIDTH, UiConsts::MAP_DOT_HEIGHT);
 
 	// Draw the dungeon name
-	dungeon = get_dungeon_name(g_dungeon.maze_id);
+	dungeon = get_dungeon_name(g_dungeon.maze_id, false);
 	sprintf(text, "%s, Floor %d", (char *)dungeon.c_str(), g_dungeon.depth);
 	render_text(destination, text, UiConsts::MAP_AREA_DUNGEON_X, UiConsts::MAP_AREA_DUNGEON_Y,
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
@@ -409,15 +409,59 @@ void Render::render_inventory(BITMAP *destination) {
 //   Nothing
 //------------------------------------------------------------------------------
 void Render::render_status_ui(BITMAP *destination) {
-	char text[16];
+	char text[32];
 
-	render_text(destination, "Gold", UiConsts::GOLD_TEXT_X, UiConsts::GOLD_TEXT_Y, 
-	            FontConsts::FONT_YELLOW, FontConsts::FONT_FIXED, FontConsts::TEXT_LEFT_JUSTIFIED);
+	// Name
+	render_text(destination, (char *)g_player.name.c_str(), UiConsts::NAME_TEXT_X, UiConsts::NAME_TEXT_Y,
+			    FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
 
+	// Generation
+	sprintf(text, "(%s)", get_generation_string(g_player.generation).c_str());
+	render_text(destination, text, UiConsts::GENERATION_TEXT_X, UiConsts::GENERATION_TEXT_Y,
+			    FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+
+	// Level
+	sprintf(text, "Level %d", g_player.level);
+	render_text(destination, text, UiConsts::LEVEL_TEXT_X, UiConsts::LEVEL_TEXT_Y,
+			    FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+
+	// HP status bar
+	render_text(destination, "HP:", UiConsts::HP_TEXT_X, UiConsts::HP_TEXT_Y,
+				FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);
+	masked_blit((BITMAP *)g_game_data[DAMRL_STATUS_BAR].dat,
+				destination, 0, 0, UiConsts::HP_BAR_X, UiConsts::HP_BAR_Y, 
+				UiConsts::HP_EXP_BAR_WIDTH, UiConsts::HP_EXP_BAR_HEIGHT);
+
+	// EXP status bar
+	render_text(destination, "EXP:", UiConsts::EXP_TEXT_X, UiConsts::EXP_TEXT_Y,
+				FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);
+	masked_blit((BITMAP *)g_game_data[DAMRL_STATUS_BAR].dat,
+				destination, 0, 0, UiConsts::EXP_BAR_X, UiConsts::EXP_BAR_Y,
+				UiConsts::HP_EXP_BAR_WIDTH, UiConsts::HP_EXP_BAR_HEIGHT);
+
+	// Area text
+	render_text(destination, "Area:", UiConsts::DUNGEON_TEXT_X, UiConsts::DUNGEON_TEXT_Y,
+				FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);
+	render_text(destination, (char *)get_dungeon_name(g_dungeon.maze_id, true).c_str(), UiConsts::DUNGEON_NAME_X,
+	  			UiConsts::DUNGEON_NAME_Y, FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL,
+				FontConsts::TEXT_CENTERED);
+
+	render_text(destination, "Floor:", UiConsts::FLOOR_TEXT_X, UiConsts::FLOOR_TEXT_Y,
+				FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%d of %d", g_dungeon.depth, g_dungeon.max_depth);
+	render_text(destination, text, UiConsts::FLOOR_VALUE_X, UiConsts::FLOOR_VALUE_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// Gold text
+	render_text(destination, "Gold:", UiConsts::GOLD_TEXT_X, UiConsts::GOLD_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);
 	sprintf(text, "%d", g_player.get_gold());
 	render_text(destination, text, UiConsts::GOLD_VALUE_X, UiConsts::GOLD_VALUE_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// Status icons (TBD)
 }
 
 //------------------------------------------------------------------------------

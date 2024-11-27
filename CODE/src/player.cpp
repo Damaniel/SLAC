@@ -35,6 +35,12 @@ Player::Player(void) {
 	x_pos = 0;
 	y_pos = 0;
 	gold = 0;
+	name = "Damaniel";
+	generation = 1;
+	level = 1;
+	exp = 0;
+	hp = 100;
+	max_hp = 100;
 }
 
 //------------------------------------------------------------------------------
@@ -48,7 +54,6 @@ Player::Player(void) {
 Player::Player(int x, int y) {
 	x_pos = x;
 	y_pos = y;
-	gold = 0;
 }
 
 //------------------------------------------------------------------------------
