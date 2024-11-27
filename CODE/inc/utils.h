@@ -18,24 +18,40 @@ struct DungeonFloor {
 // to farm tasks out to other functions; this provides a way to have them all
 // in one place to make them easy to query, while keeping things manageable. 
 struct StateFlags {
-    // Overall state
+    //--------------------------------------------------------------------------
+    // State machine (states + substates)
+    //--------------------------------------------------------------------------
     int  cur_state;
     int  prev_state;
     int  cur_substate;
 
+    //--------------------------------------------------------------------------
     // Graphics state
-    bool update_display;            // Is the screen ready to be redrawn?
-    bool map_displayed;             // Is the map currently on the screen?
-    bool update_text_dialog;        // Should the text dialog be redrawn?
-    bool update_status_dialog;      // Should the status display be redrawn?
-    bool update_map_dialog;         // Should the map screen be redrawn?
-    bool update_maze_area;          // Should the maze area be redrawn?
-    bool update_inventory_dialog;   // Should the inventory area be redrawn?
+    //--------------------------------------------------------------------------
+    bool update_display;                // Is the screen ready to be redrawn?
 
-    // Render component state
+    // - main screen dialogs
+    bool update_text_dialog;            // Should the text dialog be redrawn?
+    bool update_status_dialog;          // Should the status display be redrawn?
+    bool update_maze_area;              // Should the maze area be redrawn?
+
+    // - subscreen dialogs
+    bool update_map_dialog;             // Should the map screen be redrawn?
+    bool update_inventory_dialog;       // Should the inventory dialog be redrawn?
+    
+    // - inventory
+    bool update_inventory_cursor;       // Should the inventory cursor be redrawn?
+    bool update_inventory_description;  // Should the description area be redrawn?
+    bool update_inventory_items;        // Should the inventory items be redrawn?
+
+    //--------------------------------------------------------------------------
+    // Other data
+    //--------------------------------------------------------------------------
+
+    // - game flags
     bool text_log_extended;  // Should we show the extended or standard text log
 
-    // Miscellaneous state
+    // - control flags
     bool exit_game;           // Did the player choose to exit the game?
 };
 

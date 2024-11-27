@@ -81,4 +81,7 @@ extern Render g_render;
 // Holds information about the current dungeon floor (the maze, ilevel, depth, etc)
 extern DungeonFloor g_dungeon;
 
+// Holds dynamic UI global information (like cursor positions and such)
+extern UiGlobals g_ui_globals;
+
 #endif

@@ -23,13 +23,20 @@
 //==========================================================================================
 #include "globals.h"
 
+UiGlobals g_ui_globals;
+
 //------------------------------------------------------------------------------
 // Render::Render
 //
 // Constructor.
 //------------------------------------------------------------------------------
 Render::Render() {
+	// Set the inventory cursor to the first position of the inventory.
+	g_ui_globals.inv_cursor_x = 0;
+	g_ui_globals.inv_cursor_y = 0;
 
+	g_ui_globals.prev_inv_cursor_x = 0;
+	g_ui_globals.prev_inv_cursor_y = 0;
 }
 
 //------------------------------------------------------------------------------
@@ -129,8 +136,8 @@ void Render::initialize_map_bitmap(Maze *m) {
 	// Calculate the center point for the maze on the map (so everything is
 	// nice and centered)
 	// The center location is map_x + (((the whole map width) - (2 * maze_width)) / 2)
-    map_maze_xoffset = UiConsts::MAP_AREA_VMEM_X + ((UiConsts::MAP_PIXEL_WIDTH - m->get_width() * UiConsts::MAP_DOT_WIDTH) / 2);
-	map_maze_yoffset = UiConsts::MAP_AREA_VMEM_Y + ((UiConsts::MAP_PIXEL_HEIGHT - m->get_height() * UiConsts::MAP_DOT_HEIGHT) / 2);
+    g_ui_globals.map_maze_xoffset = UiConsts::MAP_AREA_VMEM_X + ((UiConsts::MAP_PIXEL_WIDTH - m->get_width() * UiConsts::MAP_DOT_WIDTH) / 2);
+	g_ui_globals.map_maze_yoffset = UiConsts::MAP_AREA_VMEM_Y + ((UiConsts::MAP_PIXEL_HEIGHT - m->get_height() * UiConsts::MAP_DOT_HEIGHT) / 2);
 }
 
 //------------------------------------------------------------------------------
@@ -155,8 +162,8 @@ void Render::add_area_to_map_bitmap(Maze *m, int x, int y) {
 				     	screen,
 					 	UiConsts::MAP_DOT_WALL * UiConsts::MAP_DOT_WIDTH,
 					 	0,
-					 	map_maze_xoffset + (i * UiConsts::MAP_DOT_WIDTH),
-					 	map_maze_yoffset + (j * UiConsts::MAP_DOT_HEIGHT),
+					 	g_ui_globals.map_maze_xoffset + (i * UiConsts::MAP_DOT_WIDTH),
+					 	g_ui_globals.map_maze_yoffset + (j * UiConsts::MAP_DOT_HEIGHT),
 					 	UiConsts::MAP_DOT_WIDTH,
 					 	UiConsts::MAP_DOT_HEIGHT);
 				} else {
@@ -165,8 +172,8 @@ void Render::add_area_to_map_bitmap(Maze *m, int x, int y) {
 				     	screen,
 					 	UiConsts::MAP_DOT_FLOOR * UiConsts::MAP_DOT_WIDTH,
 					 	0,
-					 	map_maze_xoffset + (i * UiConsts::MAP_DOT_WIDTH),
-					 	map_maze_yoffset + (j * UiConsts::MAP_DOT_HEIGHT),
+					 	g_ui_globals.map_maze_xoffset + (i * UiConsts::MAP_DOT_WIDTH),
+					 	g_ui_globals.map_maze_yoffset + (j * UiConsts::MAP_DOT_HEIGHT),
 					 	UiConsts::MAP_DOT_WIDTH,
 					 	UiConsts::MAP_DOT_HEIGHT);			
 				}
@@ -190,8 +197,8 @@ void Render::add_area_to_map_bitmap(Maze *m, int x, int y) {
 					     	screen,
 					 		UiConsts::MAP_DOT_WALL * UiConsts::MAP_DOT_WIDTH,
 					 		0,
-					 		map_maze_xoffset + (i * UiConsts::MAP_DOT_WIDTH),
-					 		map_maze_yoffset + (j * UiConsts::MAP_DOT_HEIGHT),
+					 		g_ui_globals.map_maze_xoffset + (i * UiConsts::MAP_DOT_WIDTH),
+					 		g_ui_globals.map_maze_yoffset + (j * UiConsts::MAP_DOT_HEIGHT),
 					 		UiConsts::MAP_DOT_WIDTH,
 					 		UiConsts::MAP_DOT_HEIGHT);
 					} else {
@@ -199,8 +206,8 @@ void Render::add_area_to_map_bitmap(Maze *m, int x, int y) {
 					     	screen,
 					 		UiConsts::MAP_DOT_FLOOR * UiConsts::MAP_DOT_WIDTH,
 					 		0,
-					 		map_maze_xoffset + (i * UiConsts::MAP_DOT_WIDTH),
-					 		map_maze_yoffset + (j * UiConsts::MAP_DOT_HEIGHT),
+					 		g_ui_globals.map_maze_xoffset + (i * UiConsts::MAP_DOT_WIDTH),
+					 		g_ui_globals.map_maze_yoffset + (j * UiConsts::MAP_DOT_HEIGHT),
 					 		UiConsts::MAP_DOT_WIDTH,
 					 		UiConsts::MAP_DOT_HEIGHT);
 					}
@@ -319,8 +326,8 @@ void Render::render_map(BITMAP *destination) {
 	     destination, 
          UiConsts::MAP_DOT_PLAYER * UiConsts::MAP_DOT_WIDTH,
 		 0, 
-		 UiConsts::MAP_X_POS + map_maze_xoffset - UiConsts::MAP_VMEM_X + (g_player.get_x_pos() * UiConsts::MAP_DOT_WIDTH),
-		 UiConsts::MAP_Y_POS + map_maze_yoffset - UiConsts::MAP_VMEM_Y + (g_player.get_y_pos() * UiConsts::MAP_DOT_HEIGHT), 
+		 UiConsts::MAP_X_POS + g_ui_globals.map_maze_xoffset - UiConsts::MAP_VMEM_X + (g_player.get_x_pos() * UiConsts::MAP_DOT_WIDTH),
+		 UiConsts::MAP_Y_POS + g_ui_globals.map_maze_yoffset - UiConsts::MAP_VMEM_Y + (g_player.get_y_pos() * UiConsts::MAP_DOT_HEIGHT), 
 		 UiConsts::MAP_DOT_WIDTH, UiConsts::MAP_DOT_HEIGHT);
 
 	// Draw the dungeon name
@@ -348,41 +355,73 @@ void Render::render_map(BITMAP *destination) {
 //   Nothing
 //------------------------------------------------------------------------------
 void Render::render_inventory_content(BITMAP *destination) {
-	// Draw the items
-	for (int i = 0; i < InventoryConsts::INVENTORY_SIZE; ++i) {
-		int x = i % UiConsts::INVENTORY_ITEMS_PER_ROW;
-		int y = i / UiConsts::INVENTORY_ITEMS_PER_ROW;
-		Item *it = g_inventory->get_item_in_slot(i);
-		if (it != NULL) {
-			int gid = it->get_gid();
-			int tilex = gid % UiConsts::ITEM_TILE_ENTRY_WIDTH;
-			int tiley = gid / UiConsts::ITEM_TILE_ENTRY_WIDTH;
+	if (g_state_flags.update_inventory_items) {
+		// Draw the items
+		for (int i = 0; i < InventoryConsts::INVENTORY_SIZE; ++i) {
+			int x = i % UiConsts::INVENTORY_ITEMS_PER_ROW;
+			int y = i / UiConsts::INVENTORY_ITEMS_PER_ROW;
+			Item *it = g_inventory->get_item_in_slot(i);
+			if (it != NULL) {
+				int gid = it->get_gid();
+				int tilex = gid % UiConsts::ITEM_TILE_ENTRY_WIDTH;
+				int tiley = gid / UiConsts::ITEM_TILE_ENTRY_WIDTH;
 
-			masked_blit((BITMAP *)g_game_data[DAMRL_ITEMS].dat, 
-	     			    destination,
-	     				tilex * UiConsts::TILE_PIXEL_WIDTH, 
-		 				tiley * UiConsts::TILE_PIXEL_HEIGHT, 
-		 				(x * (UiConsts::TILE_PIXEL_WIDTH + 1)) + UiConsts::INVENTORY_DIALOG_X + UiConsts::INVENTORY_ITEMS_X,
-		 				(y * (UiConsts::TILE_PIXEL_HEIGHT + 1)) + UiConsts::INVENTORY_DIALOG_Y + UiConsts::INVENTORY_ITEMS_Y,
-		 				UiConsts::TILE_PIXEL_WIDTH,
-		 				UiConsts::TILE_PIXEL_HEIGHT);	
+				masked_blit((BITMAP *)g_game_data[DAMRL_ITEMS].dat, 
+	     			    	destination,
+	     					tilex * UiConsts::TILE_PIXEL_WIDTH, 
+		 					tiley * UiConsts::TILE_PIXEL_HEIGHT, 
+		 					(x * (UiConsts::TILE_PIXEL_WIDTH + 1)) + UiConsts::INVENTORY_DIALOG_X + UiConsts::INVENTORY_ITEMS_X,
+		 					(y * (UiConsts::TILE_PIXEL_HEIGHT + 1)) + UiConsts::INVENTORY_DIALOG_Y + UiConsts::INVENTORY_ITEMS_Y,
+		 					UiConsts::TILE_PIXEL_WIDTH,
+		 					UiConsts::TILE_PIXEL_HEIGHT);	
+			}
 		}
+		g_state_flags.update_inventory_items = false;
 	}
 
 	// Draw the active item cursor (if any)
+	if (g_state_flags.update_inventory_cursor) {
+		// Draw a square around the old location in the standard border color
+		int x1 = UiConsts::INVENTORY_DIALOG_X + UiConsts::INVENTORY_ITEMS_X + (g_ui_globals.prev_inv_cursor_x * (UiConsts::INVENTORY_CURSOR_SIZE - 1)) - 1;
+		int y1 = UiConsts::INVENTORY_DIALOG_Y + UiConsts::INVENTORY_ITEMS_Y + (g_ui_globals.prev_inv_cursor_y * (UiConsts::INVENTORY_CURSOR_SIZE - 1)) - 1;
+		int x2 = x1 + (UiConsts::INVENTORY_CURSOR_SIZE - 1);
+		int y2 = y1 + (UiConsts::INVENTORY_CURSOR_SIZE - 1);
+		rect(destination, x1, y1, x2, y2, 19);
+
+		// Draw a square around the new location in the standard border color
+		x1 = UiConsts::INVENTORY_DIALOG_X + UiConsts::INVENTORY_ITEMS_X + (g_ui_globals.inv_cursor_x * (UiConsts::INVENTORY_CURSOR_SIZE - 1)) - 1;
+		y1 = UiConsts::INVENTORY_DIALOG_Y + UiConsts::INVENTORY_ITEMS_Y + (g_ui_globals.inv_cursor_y * (UiConsts::INVENTORY_CURSOR_SIZE - 1)) - 1;
+		x2 = x1 + (UiConsts::INVENTORY_CURSOR_SIZE - 1);
+		y2 = y1 + (UiConsts::INVENTORY_CURSOR_SIZE - 1);
+		rect(destination, x1, y1, x2, y2, 30);
+
+		g_state_flags.update_inventory_cursor = false;
+	}
 
 	// Draw the active item description
-	Item *it = g_inventory->get_item_in_slot(0);
-	if (it != NULL) {
-		render_text(destination, (char *)it->get_full_name().c_str(), 
-		            UiConsts::INVENTORY_ITEM_NAME_X, UiConsts::INVENTORY_ITEM_NAME_Y, 
-					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
-					FontConsts::TEXT_LEFT_JUSTIFIED);
-		char text[24];
-		sprintf(text, "Quantity: %d", it->get_quantity());
-		render_text(destination, text, UiConsts::INVENTORY_ITEM_NAME_X, 
-					UiConsts::INVENTORY_ITEM_NAME_Y + 10, FontConsts::FONT_YELLOW, 
-					FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);		
+	if (g_state_flags.update_inventory_description) {
+		// Clear the old description
+		rectfill(destination, UiConsts::INVENTORY_DESC_AREA_X, UiConsts::INVENTORY_DESC_AREA_Y,
+				 UiConsts::INVENTORY_DESC_AREA_X + UiConsts::INVENTORY_DESC_AREA_W - 1,
+				 UiConsts::INVENTORY_DESC_AREA_Y + UiConsts::INVENTORY_DESC_AREA_H - 1,
+				 23);
+				 
+		// Get the item we are writing the description of
+		int item_index = (g_ui_globals.inv_cursor_y  * UiConsts::INVENTORY_ITEMS_PER_ROW) + g_ui_globals.inv_cursor_x;
+		Item *it = g_inventory->get_item_in_slot(item_index);
+		if (it != NULL) {
+			// Render the new description
+			render_text(destination, (char *)it->get_full_name().c_str(), 
+		    	        UiConsts::INVENTORY_ITEM_NAME_X, UiConsts::INVENTORY_ITEM_NAME_Y, 
+						FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+						FontConsts::TEXT_LEFT_JUSTIFIED);
+			char text[24];
+			sprintf(text, "Quantity: %d", it->get_quantity());
+			render_text(destination, text, UiConsts::INVENTORY_ITEM_NAME_X, 
+						UiConsts::INVENTORY_ITEM_NAME_Y + 10, FontConsts::FONT_YELLOW, 
+						FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);		
+		}
+		g_state_flags.update_inventory_description = false;
 	}
 }
 
@@ -397,9 +436,12 @@ void Render::render_inventory_content(BITMAP *destination) {
 //------------------------------------------------------------------------------
 void Render::render_inventory(BITMAP *destination) {
 	// Draw the background
-	blit((BITMAP *)g_game_data[DAMRL_INVENTORY].dat,
-	     destination, 0, 0, UiConsts::INVENTORY_DIALOG_X, UiConsts::INVENTORY_DIALOG_Y, 
-		 UiConsts::INVENTORY_DIALOG_WIDTH, UiConsts::INVENTORY_DIALOG_HEIGHT);
+	if (g_state_flags.update_inventory_dialog) {
+		blit((BITMAP *)g_game_data[DAMRL_INVENTORY].dat,
+		     destination, 0, 0, UiConsts::INVENTORY_DIALOG_X, UiConsts::INVENTORY_DIALOG_Y, 
+			 UiConsts::INVENTORY_DIALOG_WIDTH, UiConsts::INVENTORY_DIALOG_HEIGHT);
+		g_state_flags.update_inventory_dialog = false;
+	}
 
 	render_inventory_content(destination);
 }

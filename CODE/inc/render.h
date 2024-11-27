@@ -133,11 +133,26 @@ namespace UiConsts {
 	// of TILE_PIXEL_WIDTH or TILE_PIXEL_HEIGHT pixels away
 	const int INVENTORY_ITEMS_X = 11;
 	const int INVENTORY_ITEMS_Y	= 22; 
+
 	const int INVENTORY_ITEMS_PER_ROW = 12;
+	const int INVENTORY_ROWS = 4;
+
+	// The position of the inventory cursor when at position 0 (top left)
+	const int INVENTORY_CURSOR_X = 10;
+	const int INVENTORY_CURSOR_Y = 21;
+
+	// The width (and height) of the inventory cursor
+	const int INVENTORY_CURSOR_SIZE = 18;
 
 	// The name in the item description area of the inventory
 	const int INVENTORY_ITEM_NAME_X = 15;
 	const int INVENTORY_ITEM_NAME_Y = 135;
+
+	const int INVENTORY_DESC_AREA_X = INVENTORY_DIALOG_X + 4;
+	const int INVENTORY_DESC_AREA_Y = INVENTORY_DIALOG_Y + 101;
+
+	const int INVENTORY_DESC_AREA_W = 214;
+	const int INVENTORY_DESC_AREA_H = 38;
 
 	const int NAME_TEXT_X = 280;
 	const int NAME_TEXT_Y = 7;
@@ -299,15 +314,24 @@ namespace FontConsts {
 	const int fixed_font_height = 8;
 }
 
+// A structure to hold UI related globals (like cursor and menu positions)
+typedef struct {
+	int inv_cursor_x;
+    int inv_cursor_y;
+
+    int prev_inv_cursor_x;
+    int prev_inv_cursor_y;
+
+	// Used to center the maze inside the map region
+	int map_maze_xoffset;
+	int map_maze_yoffset;
+} UiGlobals;
+
 //----------------------------------------------------------------------------
 // Render class definition
 //----------------------------------------------------------------------------
 class Render {
 	private:	
-		// Used to center the maze inside the map region
-		int map_maze_xoffset;
-		int map_maze_yoffset;
-
 		void render_actors(BITMAP *destination, int maze_x, int maze_y);
 		void render_base_tile(BITMAP *destination, int tile_id, int x, int y);
 		void render_item(BITMAP *destination, int gid, int x, int y);

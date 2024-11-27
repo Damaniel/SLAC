@@ -45,6 +45,21 @@ void process_movement_flags(void) {
 }
 
 //----------------------------------------------------------------------------
+// Handles common tasks required after the inventory cursor is moved
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void process_inventory_movement_flags(void) {
+    g_state_flags.update_inventory_cursor = true;
+    g_state_flags.update_inventory_description = true;
+    g_state_flags.update_display = true;
+}
+
+//----------------------------------------------------------------------------
 // Handles all input for the inventory substate (that is, when the inventory
 // is on screen)
 //
@@ -56,6 +71,39 @@ void process_movement_flags(void) {
 //----------------------------------------------------------------------------
 void process_inventory_substate(int key) {
     switch (key) {
+        // If an arrow key is pressed, move the cursor around
+        case KEY_UP:
+            g_ui_globals.prev_inv_cursor_x = g_ui_globals.inv_cursor_x;
+            g_ui_globals.prev_inv_cursor_y = g_ui_globals.inv_cursor_y;
+            g_ui_globals.inv_cursor_y = g_ui_globals.inv_cursor_y - 1;
+            if (g_ui_globals.inv_cursor_y < 0) 
+                g_ui_globals.inv_cursor_y = UiConsts::INVENTORY_ROWS - 1;
+            process_inventory_movement_flags();
+            break;
+        case KEY_DOWN:
+            g_ui_globals.prev_inv_cursor_x = g_ui_globals.inv_cursor_x;
+            g_ui_globals.prev_inv_cursor_y = g_ui_globals.inv_cursor_y;
+            g_ui_globals.inv_cursor_y = g_ui_globals.inv_cursor_y + 1;
+            if (g_ui_globals.inv_cursor_y >= UiConsts::INVENTORY_ROWS) 
+                g_ui_globals.inv_cursor_y = 0;
+            process_inventory_movement_flags();
+            break;
+        case KEY_LEFT:
+            g_ui_globals.prev_inv_cursor_x = g_ui_globals.inv_cursor_x;
+            g_ui_globals.prev_inv_cursor_y = g_ui_globals.inv_cursor_y;
+            g_ui_globals.inv_cursor_x = g_ui_globals.inv_cursor_x - 1;
+            if (g_ui_globals.inv_cursor_x < 0) 
+                g_ui_globals.inv_cursor_x = UiConsts::INVENTORY_ITEMS_PER_ROW - 1;
+            process_inventory_movement_flags();
+            break;
+        case KEY_RIGHT:
+            g_ui_globals.prev_inv_cursor_x = g_ui_globals.inv_cursor_x;
+            g_ui_globals.prev_inv_cursor_y = g_ui_globals.inv_cursor_y;
+            g_ui_globals.inv_cursor_x = g_ui_globals.inv_cursor_x + 1;
+            if (g_ui_globals.inv_cursor_x >= UiConsts::INVENTORY_ITEMS_PER_ROW) 
+                g_ui_globals.inv_cursor_x = 0;
+            process_inventory_movement_flags();
+            break;
         // If I or ESC is pressed, exit the inventory screen
         case KEY_I:
         case KEY_ESC:
@@ -162,6 +210,9 @@ void process_game_state(int key) {
                 case KEY_I:
                     g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY;
                     g_state_flags.update_inventory_dialog = true;
+                    g_state_flags.update_inventory_cursor = true;
+                    g_state_flags.update_inventory_description = true;
+                    g_state_flags.update_inventory_items = true;
                     g_state_flags.update_display = true;
                     break;
                 case KEY_G:
