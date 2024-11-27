@@ -54,6 +54,7 @@ void unload_resources(void);
 
 // Dungeon functions
 void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from);
+void use_stairs(int x, int y);
 
 // Text log functions
 void add_items_at_player_to_log(void);
@@ -61,5 +62,8 @@ void add_items_at_player_to_log(void);
 // State functions
 void initialize_main_game_state(void);
 void change_state(int new_state);
+
+// Item functions
+void pick_up_item_at(int x, int y);
 
 #endif
