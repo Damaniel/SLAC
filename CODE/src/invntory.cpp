@@ -188,6 +188,40 @@ void Inventory::dump_inventory(void) {
         }
     }
 }
+
+//----------------------------------------------------------------------------
+// If stackable, finds and returns the item slot where any existing stack of
+// the specified item is.
+//
+// Arguments: 
+//   i - the item to check
+//
+// Returns:
+//   The index where others of that item are stored; -1 otherwise
+//----------------------------------------------------------------------------
+int Inventory::get_stackable_item_slot(Item *item) {
+
+    // First check if the item is stackable.  If not,
+    // return
+    if (item->can_it_stack() == false) {
+        return -1;
+    }
+
+    // Iterate through the inventory.  If an item with the same gid 
+    // is found in a slot, return the slot number.  Otherwise,
+    // return -1.
+    for (int i = 0; i < InventoryConsts::INVENTORY_SIZE; ++i) {
+        if(inv[i] != NULL) {
+            if (item->get_gid() == inv[i]->get_gid()) {
+                return i;
+            }
+        }
+    }
+    
+    // There's no existing stackable item in the inventory.
+    return -1;
+}
+
 //==================================================================
 // Item
 //==================================================================
@@ -379,6 +413,7 @@ void Weapon::init(WeaponBaseType *b) {
     is_identified = false;
     prefix_id = -1;
     suffix_id = -1;
+    quantity = 1;
 }
 
 //----------------------------------------------------------------------------
@@ -527,6 +562,7 @@ void Armor::init(ArmorBaseType *b) {
     is_identified = false;
     prefix_id = -1;
     suffix_id = -1;
+    quantity = 1;
 }
 
 //----------------------------------------------------------------------------
@@ -694,7 +730,7 @@ void Currency::init(CurrencyType *b) {
     ilevel = b->ilevel;
     // The 'value' is the size of the pile of coins
     // It's set to some random value * the base value
-    value = b->value * (rand() % 50 + 1);
+    value = b->value;
     can_be_cursed = b->can_be_cursed;
     can_have_prefix = b->can_have_prefix;
     can_have_suffix = b->can_have_suffix;
@@ -703,6 +739,7 @@ void Currency::init(CurrencyType *b) {
     can_drop = b->can_drop;
     can_use = b->can_use;
     is_identified = true;
+    quantity = b->value * (rand() % 50 + 1);
 }
 
 //----------------------------------------------------------------------------
@@ -796,7 +833,7 @@ void Currency::dump_item() {
 std::string Currency::get_full_name() {
     char name[32];
 
-    sprintf(name, "%d gold worth of %s", value, (char *)g_currency_ids[id].name.c_str());
+    sprintf(name, "%d gold worth of %s", quantity, (char *)g_currency_ids[id].name.c_str());
     return std::string(name);
 }
 
@@ -844,6 +881,7 @@ void Potion::init(PotionType *b) {
     can_drop = b->can_drop;
     can_use = b->can_use;
     is_identified = false;
+    quantity = 1;
 }
 
 //----------------------------------------------------------------------------
@@ -983,6 +1021,7 @@ void Scroll::init(ScrollType *b) {
     can_drop = b->can_drop;
     can_use = b->can_use;
     is_identified = false;
+    quantity = 1;
 }
 //----------------------------------------------------------------------------
 // Initializes a Scroll using an index into the scroll type table
@@ -1121,6 +1160,7 @@ void Artifact::init(ArtifactType *b) {
     can_drop = b->can_drop;
     can_use = b->can_use;
     is_identified = false;
+    quantity = 1;
 }
 
 //----------------------------------------------------------------------------

@@ -378,6 +378,11 @@ void Render::render_inventory_content(BITMAP *destination) {
 		            UiConsts::INVENTORY_ITEM_NAME_X, UiConsts::INVENTORY_ITEM_NAME_Y, 
 					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 					FontConsts::TEXT_LEFT_JUSTIFIED);
+		char text[24];
+		sprintf(text, "Quantity: %d", it->get_quantity());
+		render_text(destination, text, UiConsts::INVENTORY_ITEM_NAME_X, 
+					UiConsts::INVENTORY_ITEM_NAME_Y + 10, FontConsts::FONT_YELLOW, 
+					FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);		
 	}
 }
 

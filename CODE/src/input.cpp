@@ -91,10 +91,11 @@ void pick_up_item_at(int x, int y) {
         // Get the item list and process the one at the end 
         // (which is the one that the player can see)
         std::list<Item *> items = g_dungeon.maze->get_items_at(x, y);
-        // Get the item name.  Currency items will be deleted before
-        // the end of the function (by remove_item_from_end_at)
-        // so we'll grab it for all items and use it instead of
-        // accidentally trying to blit a deleted item.
+
+        // Get the item name.  Currency items and stackable items
+        // will be deleted before the end of the function so we'll 
+        // grab it for all items and use it instead of accidentally 
+        //trying to blit a deleted item.
         Item *i = items.back();
         item_name = i->get_full_name();
 
@@ -102,20 +103,34 @@ void pick_up_item_at(int x, int y) {
         // Also, delete the currency item because it's going away
         // (not on the floor, not in the inventory)
         if (i->get_item_class() == ItemConsts::CURRENCY_CLASS) {
-            g_player.add_gold(i->get_value());
+            g_player.add_gold(i->get_quantity());
 		    delete i;
             g_state_flags.update_status_dialog = true;
             picked_up = true;
         }
         else {
-            // Otherwise, add it to the inventory (if there's room)
-            if (!g_inventory->inventory_is_full()) {
-                g_inventory->add_at_first_empty(i);
+            // If it's a stackable item, get any item slot existing
+            // items are in
+            int stackable_slot = g_inventory->get_stackable_item_slot(i);
+
+            // If an existing item is found, increase the quantity of the
+            // item in the existing slot, then delete the picked up one
+            if (stackable_slot != -1) {
+                Item *si = g_inventory->get_item_in_slot(stackable_slot);
+                si->adjust_quantity(1);
+                delete i;
                 picked_up = true;
             }
             else {
-                // If there wasn't room, tell the player and do nothing.
-                g_text_log.put_line("You have no room to pick that up.");
+                // Otherwise, add it to the inventory (if there's room)
+                if (!g_inventory->inventory_is_full()) {
+                    g_inventory->add_at_first_empty(i);
+                    picked_up = true;
+                }
+                else {
+                    // If there wasn't room, tell the player and do nothing.
+                    g_text_log.put_line("You have no room to pick that up.");
+                }
             }
         }
         

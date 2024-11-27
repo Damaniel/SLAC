@@ -208,6 +208,7 @@ typedef struct {
 class Item {
 protected:
     unsigned short id;
+    unsigned short quantity;
     std::string name;
     unsigned short gid;
     unsigned short type_id;
@@ -243,7 +244,10 @@ public:
     bool can_have_a_prefix() { return can_have_prefix; }
     bool can_have_a_suffix() { return can_have_suffix; }
     bool can_have_curse() { return can_be_cursed; }
+    bool can_it_stack() { return can_stack; }
     void identify() { is_identified = true; }
+    unsigned short get_quantity() { return quantity; }
+    void adjust_quantity(int amount) { quantity += amount; }
     unsigned short get_gid() { return gid; }
     virtual ~Item() { /*std::cout << "~Item: Deleting item" << std::endl;*/ }
 };
@@ -430,6 +434,7 @@ public:
     int get_num_slots_in_use();
     void drop_item_in_slot(int slot);
     void dump_inventory(void);
+    int get_stackable_item_slot(Item *it);
     //void drop_item_qty_in_slot(int slot, int quantity);
 };
 
