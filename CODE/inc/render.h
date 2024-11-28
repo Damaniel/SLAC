@@ -154,6 +154,10 @@ namespace UiConsts {
 	const int INVENTORY_DESC_AREA_W = 214;
 	const int INVENTORY_DESC_AREA_H = 38;
 
+	const int INVENTORY_MENU_Y = 57;
+	const int INVENTORY_MENU_WIDTH = 47;
+	const int INVENTORY_MENU_HEIGHT = 63;
+
 	const int NAME_TEXT_X = 280;
 	const int NAME_TEXT_Y = 7;
 
@@ -316,9 +320,17 @@ namespace FontConsts {
 
 // A structure to hold UI related globals (like cursor and menu positions)
 typedef struct {
+
+	// The index of the selected option for the current inventory action menu
+	int sel_item_option;
+
+	// The current location of the cursor (in row and column) in the inventory
 	int inv_cursor_x;
     int inv_cursor_y;
 
+	bool inv_menu_active;
+
+	// The place where the cursor was before it was last moved
     int prev_inv_cursor_x;
     int prev_inv_cursor_y;
 
@@ -337,6 +349,7 @@ class Render {
 		void render_item(BITMAP *destination, int gid, int x, int y);
 		void render_inventory_content(BITMAP *destination);
 		void render_description_fields(BITMAP *destination, Item *it);
+		void render_item_submenu(BITMAP *destination);
 		int get_prop_text_width(char *text, int style);	
 	public:
 		Render();

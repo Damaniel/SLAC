@@ -344,6 +344,24 @@ void Render::render_map(BITMAP *destination) {
 				FontConsts::TEXT_CENTERED);
   }
 
+void Render::render_item_submenu(BITMAP *destination) {
+
+	// Determine the x position of the menu
+
+	// Create the filled box
+
+	// Create the rest of the box
+
+	// Draw the highlight over what will be the selected text option
+
+	// Get the item at the highlighed slot
+
+	// Fill in the text in the menu
+
+	// Done
+
+}
+
 //------------------------------------------------------------------------------
 // Draws all non-name description fields for an item, based on the item
 // type.

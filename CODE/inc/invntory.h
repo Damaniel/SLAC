@@ -242,6 +242,7 @@ public:
     virtual void set_curse_state(bool curse) = 0;
     virtual int get_prefix() = 0;
     virtual int get_suffix() = 0;
+    virtual void use() = 0;
     virtual void remove_prefix() = 0;
     virtual void remove_suffix() = 0;
     virtual bool is_it_cursed() = 0;
