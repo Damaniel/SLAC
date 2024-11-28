@@ -121,18 +121,12 @@ namespace UiConsts {
 	const int PLAYER_PLAY_AREA_X = 7;
 	const int PLAYER_PLAY_AREA_Y = 6;
 
-	// The offset on the screen where the inventory goes
-	const int INVENTORY_DIALOG_X = 9;
-	const int INVENTORY_DIALOG_Y = 32;
+	// Offsets for the inventory dialog.  It's built up from drawing primitives that use a
+	// (x1, y1)-(x2,y2) instead of (x1,y1, width, height) arrangement, so the coordinates below
+	// are set up around that.
 
-	// The offset of the name of the highlighted intm in the item description
-	const int INVENTORY_DIALOG_WIDTH = 224;
-	const int INVENTORY_DIALOG_HEIGHT = 143;
-
-	// The upper left corner of the first inventory item.  Each other one is a multiple
-	// of TILE_PIXEL_WIDTH or TILE_PIXEL_HEIGHT pixels away
-	const int INVENTORY_ITEMS_X = 11;
-	const int INVENTORY_ITEMS_Y	= 22; 
+	// The width (and height) of the inventory cursor
+	const int INVENTORY_CURSOR_SIZE = 18;
 
 	const int INVENTORY_ITEMS_PER_ROW = 12;
 	const int INVENTORY_ROWS = 4;
@@ -141,8 +135,26 @@ namespace UiConsts {
 	const int INVENTORY_CURSOR_X = 10;
 	const int INVENTORY_CURSOR_Y = 21;
 
-	// The width (and height) of the inventory cursor
-	const int INVENTORY_CURSOR_SIZE = 18;
+	// The offset on the screen where the inventory goes
+	const int INVENTORY_DIALOG_X = 9;
+	const int INVENTORY_DIALOG_Y = 32;
+
+	// The x and y position of the lower right corner of the entire dialog
+	const int INVENTORY_DIALOG_X2 = 233;
+	const int INVENTORY_DIALOG_Y2 = 177;
+
+	// The x and y position of the lower right corner of the top half of the dialog
+	const int INVENTORY_TOP_X2 = 233;
+	const int INVENTORY_TOP_Y2 = 128;
+
+	// The offset of the upper left corner of the first inventory item.  Each other one is a multiple
+	// of TILE_PIXEL_WIDTH or TILE_PIXEL_HEIGHT pixels away
+	const int INVENTORY_ITEMS_X = INVENTORY_DIALOG_X + 10;
+	const int INVENTORY_ITEMS_Y	= INVENTORY_DIALOG_Y + 19; 
+
+	// The offset of the lower right corner of the item box area
+	const int INVENTORY_ITEMS_X2 = INVENTORY_ITEMS_X + ((INVENTORY_CURSOR_SIZE - 1) * INVENTORY_ITEMS_PER_ROW);
+	const int INVENTORY_ITEMS_Y2 = INVENTORY_ITEMS_Y + ((INVENTORY_CURSOR_SIZE - 1) * INVENTORY_ROWS);
 
 	// The name in the item description area of the inventory
 	const int INVENTORY_ITEM_NAME_X = 15;
@@ -328,7 +340,12 @@ typedef struct {
 	int inv_cursor_x;
     int inv_cursor_y;
 
+	// Is the context menu active?
 	bool inv_menu_active;
+
+	// The x position of the context menu (which depends on which inventory item
+	// is selected).  Note that the y position is always fixed.
+	int inv_menu_x;
 
 	// The place where the cursor was before it was last moved
     int prev_inv_cursor_x;

@@ -280,6 +280,7 @@ public:
     virtual void remove() = 0;
     virtual void dump_item() = 0;
     virtual void init(int idx) = 0;
+    virtual void use() = 0;
     virtual int get_attack() = 0;
     virtual int get_defense() = 0;
     std::string get_full_name();
@@ -314,6 +315,7 @@ public:
     void dump_item();
     void equip();
     void remove();
+    void use() {}
 };
 
 // Armor - a piece of equipment that has a defense rating and is equipped in an armor slot
@@ -332,6 +334,7 @@ public:
     void dump_item();
     void equip();
     void remove();
+    void use() {}
 };
 
 // A 'consumable'.  This represents any kind of item which can be used
@@ -421,6 +424,7 @@ public:
     bool is_it_cursed() {return false; }
     void equip() {}
     void remove() {}
+    void use() {}
     std::string get_full_name();
     std::string get_type_name();
 };
@@ -448,6 +452,7 @@ public:
     bool is_it_cursed() {return false; }
     void equip() {}
     void remove() {}
+    void use() {}
     std::string get_full_name();
     std::string get_type_name();
 };

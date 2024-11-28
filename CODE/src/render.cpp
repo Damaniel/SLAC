@@ -37,6 +37,9 @@ Render::Render() {
 
 	g_ui_globals.prev_inv_cursor_x = 0;
 	g_ui_globals.prev_inv_cursor_y = 0;
+
+	g_ui_globals.inv_menu_active = false;
+	g_ui_globals.sel_item_option = 0;
 }
 
 //------------------------------------------------------------------------------
@@ -347,7 +350,9 @@ void Render::render_map(BITMAP *destination) {
 void Render::render_item_submenu(BITMAP *destination) {
 
 	// Determine the x position of the menu
-
+	// if (UiGlobals::inv_cursor_x < 6) {
+	// 	UiGlobals::
+	// }
 	// Create the filled box
 
 	// Create the rest of the box
@@ -477,8 +482,8 @@ void Render::render_inventory_content(BITMAP *destination) {
 	     			    	destination,
 	     					tilex * UiConsts::TILE_PIXEL_WIDTH, 
 		 					tiley * UiConsts::TILE_PIXEL_HEIGHT, 
-		 					(x * (UiConsts::TILE_PIXEL_WIDTH + 1)) + UiConsts::INVENTORY_DIALOG_X + UiConsts::INVENTORY_ITEMS_X,
-		 					(y * (UiConsts::TILE_PIXEL_HEIGHT + 1)) + UiConsts::INVENTORY_DIALOG_Y + UiConsts::INVENTORY_ITEMS_Y,
+		 					(x * (UiConsts::TILE_PIXEL_WIDTH + 1)) + UiConsts::INVENTORY_ITEMS_X + 1,
+		 					(y * (UiConsts::TILE_PIXEL_HEIGHT + 1)) + UiConsts::INVENTORY_ITEMS_Y + 1,
 		 					UiConsts::TILE_PIXEL_WIDTH,
 		 					UiConsts::TILE_PIXEL_HEIGHT);	
 			}
@@ -489,15 +494,15 @@ void Render::render_inventory_content(BITMAP *destination) {
 	// Draw the active item cursor (if any)
 	if (g_state_flags.update_inventory_cursor) {
 		// Draw a square around the old location in the standard border color
-		int x1 = UiConsts::INVENTORY_DIALOG_X + UiConsts::INVENTORY_ITEMS_X + (g_ui_globals.prev_inv_cursor_x * (UiConsts::INVENTORY_CURSOR_SIZE - 1)) - 1;
-		int y1 = UiConsts::INVENTORY_DIALOG_Y + UiConsts::INVENTORY_ITEMS_Y + (g_ui_globals.prev_inv_cursor_y * (UiConsts::INVENTORY_CURSOR_SIZE - 1)) - 1;
+		int x1 = UiConsts::INVENTORY_ITEMS_X + (g_ui_globals.prev_inv_cursor_x * (UiConsts::INVENTORY_CURSOR_SIZE - 1));
+		int y1 = UiConsts::INVENTORY_ITEMS_Y + (g_ui_globals.prev_inv_cursor_y * (UiConsts::INVENTORY_CURSOR_SIZE - 1));
 		int x2 = x1 + (UiConsts::INVENTORY_CURSOR_SIZE - 1);
 		int y2 = y1 + (UiConsts::INVENTORY_CURSOR_SIZE - 1);
 		rect(destination, x1, y1, x2, y2, 19);
 
 		// Draw a square around the new location in the standard border color
-		x1 = UiConsts::INVENTORY_DIALOG_X + UiConsts::INVENTORY_ITEMS_X + (g_ui_globals.inv_cursor_x * (UiConsts::INVENTORY_CURSOR_SIZE - 1)) - 1;
-		y1 = UiConsts::INVENTORY_DIALOG_Y + UiConsts::INVENTORY_ITEMS_Y + (g_ui_globals.inv_cursor_y * (UiConsts::INVENTORY_CURSOR_SIZE - 1)) - 1;
+		x1 = UiConsts::INVENTORY_ITEMS_X + (g_ui_globals.inv_cursor_x * (UiConsts::INVENTORY_CURSOR_SIZE - 1));
+		y1 = UiConsts::INVENTORY_ITEMS_Y + (g_ui_globals.inv_cursor_y * (UiConsts::INVENTORY_CURSOR_SIZE - 1));
 		x2 = x1 + (UiConsts::INVENTORY_CURSOR_SIZE - 1);
 		y2 = y1 + (UiConsts::INVENTORY_CURSOR_SIZE - 1);
 		rect(destination, x1, y1, x2, y2, 30);
@@ -538,11 +543,59 @@ void Render::render_inventory_content(BITMAP *destination) {
 //   Nothing
 //------------------------------------------------------------------------------
 void Render::render_inventory(BITMAP *destination) {
+	// This used to be drawn as a bitmap, but the UI is now much simpler so
+	// I'm rendering it using graphics primitives.  That makes the code below
+	// look pretty ugly, but I shouldn't have to touch it.
+
 	// Draw the background
 	if (g_state_flags.update_inventory_dialog) {
-		blit((BITMAP *)g_game_data[DAMRL_INVENTORY].dat,
-		     destination, 0, 0, UiConsts::INVENTORY_DIALOG_X, UiConsts::INVENTORY_DIALOG_Y, 
-			 UiConsts::INVENTORY_DIALOG_WIDTH, UiConsts::INVENTORY_DIALOG_HEIGHT);
+		// the main window
+		rectfill(destination, UiConsts::INVENTORY_DIALOG_X + 4, UiConsts::INVENTORY_DIALOG_Y + 4,
+				 UiConsts::INVENTORY_DIALOG_X2 - 4,
+				 UiConsts::INVENTORY_DIALOG_Y2 - 4,
+				 23);
+
+		//the common borders
+		rect(destination, UiConsts::INVENTORY_DIALOG_X, UiConsts::INVENTORY_DIALOG_Y,
+		   	 UiConsts::INVENTORY_DIALOG_X2, UiConsts::INVENTORY_DIALOG_Y2, 16);
+	    rect(destination, UiConsts::INVENTORY_DIALOG_X + 1, UiConsts::INVENTORY_DIALOG_Y + 1,
+		 	 UiConsts::INVENTORY_DIALOG_X2 - 1, UiConsts::INVENTORY_DIALOG_Y2 - 1, 30);
+
+		// The top borders
+		rect(destination, UiConsts::INVENTORY_DIALOG_X + 2, UiConsts::INVENTORY_DIALOG_Y + 2,
+		 	 UiConsts::INVENTORY_TOP_X2 - 2, UiConsts::INVENTORY_TOP_Y2 - 1, 16);
+		rect(destination, UiConsts::INVENTORY_DIALOG_X + 3, UiConsts::INVENTORY_DIALOG_Y + 3,
+		 	 UiConsts::INVENTORY_TOP_X2 - 3, UiConsts::INVENTORY_TOP_Y2 - 2, 19);		
+
+		// The bottom borders	
+		rect(destination, UiConsts::INVENTORY_DIALOG_X + 2, UiConsts::INVENTORY_TOP_Y2 + 1,
+		 	 UiConsts::INVENTORY_TOP_X2 - 2, UiConsts::INVENTORY_DIALOG_Y2 - 2, 16);
+		rect(destination, UiConsts::INVENTORY_DIALOG_X + 3, UiConsts::INVENTORY_TOP_Y2 + 2,
+		 	 UiConsts::INVENTORY_TOP_X2 - 3, UiConsts::INVENTORY_DIALOG_Y2 - 3, 19);	
+
+		// the separating line
+		hline(destination, UiConsts::INVENTORY_DIALOG_X + 1, UiConsts::INVENTORY_TOP_Y2,
+			  UiConsts::INVENTORY_DIALOG_X2 - 1, 30);
+		
+		// The item text
+		render_text(destination, "Inventory", (UiConsts::INVENTORY_DIALOG_X + UiConsts::INVENTORY_DIALOG_X2) / 2,
+					UiConsts::INVENTORY_DIALOG_Y + 7, FontConsts::FONT_YELLOW, 
+					FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+
+		// The item grid
+		rectfill(destination, UiConsts::INVENTORY_ITEMS_X - 1, UiConsts::INVENTORY_ITEMS_Y - 1,
+			 UiConsts::INVENTORY_ITEMS_X2 + 1, UiConsts::INVENTORY_ITEMS_Y2 + 1, 16);
+		rect(destination, UiConsts::INVENTORY_ITEMS_X, UiConsts::INVENTORY_ITEMS_Y,
+			 UiConsts::INVENTORY_ITEMS_X2, UiConsts::INVENTORY_ITEMS_Y2, 19);
+		for (int i = 1; i < UiConsts::INVENTORY_ROWS; i++) {
+			hline(destination, UiConsts::INVENTORY_ITEMS_X, 
+				  UiConsts::INVENTORY_ITEMS_Y + ((UiConsts::INVENTORY_CURSOR_SIZE - 1) * i),
+				  UiConsts::INVENTORY_ITEMS_X2, 19);
+		}
+		for (int i = 1; i < UiConsts::INVENTORY_ITEMS_PER_ROW; i++) {
+			vline(destination, UiConsts::INVENTORY_ITEMS_X + ((UiConsts::INVENTORY_CURSOR_SIZE - 1) * i), 
+				  UiConsts::INVENTORY_ITEMS_Y, UiConsts::INVENTORY_ITEMS_Y2, 19);
+		}			 
 		g_state_flags.update_inventory_dialog = false;
 	}
 
