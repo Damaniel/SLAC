@@ -93,25 +93,37 @@ namespace UiConsts {
 	const int PLAY_AREA_TILE_HEIGHT_EXT	= 10;
 
 	// The location on the screen (in pixels) where the status area is placed
-	const int STATUS_AREA_X	= 240;
-	const int STATUS_AREA_Y = 0;
+	const int STATUS_AREA_X1	= 240;
+	const int STATUS_AREA_Y1    = 0;
+
+	// The bottom right corner of the status area
+	const int STATUS_AREA_X2 = 319;
+	const int STATUS_AREA_Y2 = 206;
 
 	// The location on the screen (in pixels) where the normal text area is placed
-	const int TEXT_AREA_STD_X = 0;
-	const int TEXT_AREA_STD_Y = 208;
+	const int TEXT_AREA_STD_X1 = 0;
+	const int TEXT_AREA_STD_Y1 = 208;
 
 	// The location on the screen (in pixels) where the extended text area is placed
-	const int TEXT_AREA_EXT_X = 0;
-	const int TEXT_AREA_EXT_Y = 160;
+	const int TEXT_AREA_EXT_X1 = 0;
+	const int TEXT_AREA_EXT_Y1 = 160;
+
+	// The bottom right corner of the text area
+	const int TEXT_AREA_X2 = 319;
+	const int TEXT_AREA_Y2 = 239;
 
 	// The offset (relative to the top left corner of the text log) of where
 	// the first line of text goes
 	const int TEXT_AREA_LINE_X_OFFSET = 4;
-	const int TEXT_AREA_LINE_Y_OFFSET = 8;
+	const int TEXT_AREA_LINE_Y_OFFSET = 4;
 
 	// The number of lines shown in the text log
 	const int TEXT_AREA_NORMAL_NUM_LINES = 2;
-	const int TEXT_AREA_EXT_NUM_LINES = 7;
+	const int TEXT_AREA_EXT_NUM_LINES = 8;
+
+	// When the extended text dialog is up, this is how many rows of the maze area we
+	// can skip drawing due to them being obscured.
+	const int TEXT_AREA_EXT_MAZE_ROWS_OBSCURED = 3;
 
 	// The offset (in tiles) into the player graphic where the player is.  
 	const int PLAYER_TILE_OFFSET = 9;
@@ -367,6 +379,7 @@ class Render {
 		void render_inventory_content(BITMAP *destination);
 		void render_description_fields(BITMAP *destination, Item *it);
 		void render_item_submenu(BITMAP *destination);
+		void render_ui_box(BITMAP *destination, int x1, int x2, int y1, int y2);
 		int get_prop_text_width(char *text, int style);	
 	public:
 		Render();

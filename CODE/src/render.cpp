@@ -238,9 +238,9 @@ void Render::copy_data_to_offscreen_vram(void) {
 	//   The map will be constructed as the player explores, and by doing this as 
 	//   exploration occurs, there's no need to generate it at the time the map is
 	//   displayed (which would be a very slow operation).
-	BITMAP *b = (BITMAP *)g_game_data[DAMRL_MAIN_MAP].dat;	
-	blit(b, screen, 0, 0, UiConsts::MAP_VMEM_X, UiConsts::MAP_VMEM_Y, 
-	     UiConsts::MAP_VMEM_WIDTH, UiConsts::MAP_VMEM_HEIGHT);
+	render_ui_box(screen, UiConsts::MAP_VMEM_X + 1, UiConsts::MAP_VMEM_Y + 1, 
+				  UiConsts::MAP_VMEM_X + UiConsts::MAP_VMEM_WIDTH - 2,
+				  UiConsts::MAP_VMEM_Y + UiConsts::MAP_VMEM_HEIGHT - 2);
 }
 
 //------------------------------------------------------------------------------
@@ -347,6 +347,16 @@ void Render::render_map(BITMAP *destination) {
 				FontConsts::TEXT_CENTERED);
   }
 
+//------------------------------------------------------------------------------
+// Draws the submenu for the item under the cursor, with the appropriate
+// context items highlighted or grayed out.
+//
+// Arguments:
+//   b - the BITMAP to render to
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
 void Render::render_item_submenu(BITMAP *destination) {
 
 	// Determine the x position of the menu
@@ -603,6 +613,23 @@ void Render::render_inventory(BITMAP *destination) {
 }
 
 //------------------------------------------------------------------------------
+// Draws a generic UI bitmap to the specified location on the target BITMAP.
+//
+// Arguments:
+//   destination - the BITMAP to render to
+//   x1, y1, x2, y2 - the extents of the box to be rendered
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Render::render_ui_box(BITMAP *destination, int x1, int y1, int x2, int y2) {
+	rectfill(destination, x1 + 3, y1 + 3, x2 - 3, y2 - 3, 23);
+	rect(destination, x1 + 2, y1 + 2, x2 - 2, y2 - 2, 19);
+	rect(destination, x1 + 1, y1 + 1, x2 - 1, y2 - 1, 16);
+	rect(destination, x1, y1, x2, y2, 30);
+}
+
+//------------------------------------------------------------------------------
 // Draws the contents of the status area (Name/Level/HP/EXP/gold) to the screen
 //
 // Arguments:
@@ -677,8 +704,8 @@ void Render::render_status_ui(BITMAP *destination) {
 //   Nothing
 //------------------------------------------------------------------------------
 void Render::render_status_base(BITMAP *destination) {
-	BITMAP *b = (BITMAP *)g_game_data[DAMRL_MAIN_STATUS].dat;
-	blit(b, destination, 0, 0, UiConsts::STATUS_AREA_X, UiConsts::STATUS_AREA_Y, b->w, b->h);
+	render_ui_box(destination, UiConsts::STATUS_AREA_X1, UiConsts::STATUS_AREA_Y1,
+				  UiConsts::STATUS_AREA_X2, UiConsts::STATUS_AREA_Y2);
 }
 
 //------------------------------------------------------------------------------
@@ -692,15 +719,18 @@ void Render::render_status_base(BITMAP *destination) {
 //   Nothing
 //------------------------------------------------------------------------------
 void Render::render_text_base(BITMAP *destination, bool extended) {
-	BITMAP *bstd = (BITMAP *)g_game_data[DAMRL_MAIN_TEXT].dat;
-	BITMAP *bext = (BITMAP *)g_game_data[DAMRL_MAIN_TEXT_EXT].dat;
-	
+	int x1, y1;
+
 	if(extended == true) {
-		blit(bext, destination, 0, 0, UiConsts::TEXT_AREA_EXT_X, UiConsts::TEXT_AREA_EXT_Y, bext->w, bext->h);
+		x1 = UiConsts::TEXT_AREA_EXT_X1;
+		y1 = UiConsts::TEXT_AREA_EXT_Y1;
 	}
 	else {
-		blit(bstd, destination, 0, 0, UiConsts::TEXT_AREA_STD_X, UiConsts::TEXT_AREA_STD_Y, bstd->w, bstd->h);		
+		x1 = UiConsts::TEXT_AREA_STD_X1;
+		y1 = UiConsts::TEXT_AREA_STD_Y1;
 	}
+
+	render_ui_box(destination, x1, y1, UiConsts::TEXT_AREA_X2, UiConsts::TEXT_AREA_Y2);
 }
 
 //------------------------------------------------------------------------------
@@ -731,14 +761,14 @@ void Render::render_text_log(BITMAP *destination, bool extended) {
 
 	if (extended) {
 		size = UiConsts::TEXT_AREA_EXT_NUM_LINES;
-		x_off = UiConsts::TEXT_AREA_EXT_X + UiConsts::TEXT_AREA_LINE_X_OFFSET;
-		y_off = UiConsts::TEXT_AREA_EXT_Y + UiConsts::TEXT_AREA_LINE_Y_OFFSET;
+		x_off = UiConsts::TEXT_AREA_EXT_X1 + UiConsts::TEXT_AREA_LINE_X_OFFSET;
+		y_off = UiConsts::TEXT_AREA_EXT_Y1 + UiConsts::TEXT_AREA_LINE_Y_OFFSET;
 		log_start = 0;
  	} 
 	else {
 		size = UiConsts::TEXT_AREA_NORMAL_NUM_LINES;
-		x_off = UiConsts::TEXT_AREA_STD_X + UiConsts::TEXT_AREA_LINE_X_OFFSET;
-		y_off = UiConsts::TEXT_AREA_STD_Y + UiConsts::TEXT_AREA_LINE_Y_OFFSET;
+		x_off = UiConsts::TEXT_AREA_STD_X1 + UiConsts::TEXT_AREA_LINE_X_OFFSET;
+		y_off = UiConsts::TEXT_AREA_STD_Y1 + (2 * UiConsts::TEXT_AREA_LINE_Y_OFFSET);
 		if (lines_to_draw > size) {
 			log_start = lines_to_draw - size;
 		} 
@@ -775,8 +805,18 @@ void Render::render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_
 	//   any check done to see if those tiles are valid, but the default Maze class will 
 	//   always have a valid tile to the left and above any carved tile, so this shouldn't
 	//   cause a problem.  If weird crashes happen, try looking here.
+	int num_y_tiles;
+
+	// If the extended text dialog is up, don't draw the last 3 rows of tiles
+	if (g_state_flags.text_log_extended) {
+		num_y_tiles = UiConsts::PLAY_AREA_TILE_HEIGHT - UiConsts::TEXT_AREA_EXT_MAZE_ROWS_OBSCURED;
+	}
+	else {
+		num_y_tiles = UiConsts::PLAY_AREA_TILE_HEIGHT;
+	}
+
 	for (int screen_x = 0; screen_x < UiConsts::PLAY_AREA_TILE_WIDTH; screen_x++) {
-		for (int screen_y = 0; screen_y < UiConsts::PLAY_AREA_TILE_HEIGHT; screen_y++) {
+		for (int screen_y = 0; screen_y < num_y_tiles; screen_y++) {
 			int tile_to_render_x = maze_x + screen_x;
 			int tile_to_render_y = maze_y + screen_y;
 			int tile_to_use;

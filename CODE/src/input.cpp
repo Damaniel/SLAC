@@ -208,11 +208,11 @@ void process_game_state(int key) {
 	    	        g_state_flags.update_display = true;
                     break;
                 case KEY_I:
-                    // Set some globals for the inventory screen and menu
-                    //g_ui_globals.inv_cursor_x = 0;
-                    //g_ui_globals.inv_cursor_y = 0;
-                    //g_ui_globals.inv_menu_active = false;
-                    //g_ui_globals.sel_item_option = 0;
+                    // Reset the cursor position to the top left
+                    g_ui_globals.inv_cursor_x = 0;
+                    g_ui_globals.inv_cursor_y = 0;
+                    g_ui_globals.inv_menu_active = false;
+                    g_ui_globals.sel_item_option = 0;
                     // Change to the inventory substate
                     g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY;
                     // Update the graphics
