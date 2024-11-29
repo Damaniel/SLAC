@@ -84,6 +84,7 @@ void change_state(int new_state);
 void pick_up_item_at(int x, int y);
 void process_equip(Item *i);
 void process_unequip(Item *i);
+void apply_item_values_to_stats(Item *i, Stats &fixed, MultiplicativeStats &multiplicative);
 
 // Inventory functions
 void perform_inventory_menu_action(void);

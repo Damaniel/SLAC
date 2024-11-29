@@ -508,98 +508,25 @@ void pick_up_item_at(int x, int y) {
 }
 
 //----------------------------------------------------------------------------
-// Processes equipping - determines the slot to be equipped to, unequips
-// any existing item there, then equips the new one
+// Do the action associated with the selected inventory context menu item.
 //
 // Arguments:
-//   i - the item to be unequipped
+//   None
 //
 // Returns:
 //   Nothing
 //----------------------------------------------------------------------------
-// void process_equip(Item *i) {
-// 	int item_type = i->get_item_class();
-// 	Item **item_slot;
-
-// 	if (item_type != ItemConsts::WEAPON_CLASS && item_type != ItemConsts::ARMOR_CLASS) {
-// 		return;
-// 	}
-
-// 	if (item_type == ItemConsts::WEAPON_CLASS) {
-// 		item_slot = &(g_player.equipment.weapon);
-// 	}
-// 	else {
-// 		item_slot = g_player.get_item_slot_by_type(i->get_type_id());
-// 		// If the item slot isn't empty, unequip it
-// 		if (item_slot == NULL) {
-// 			std::cout << "process_equip: Not a valid item slot!" << std::endl;
-// 			return;
-// 		}
-// 	}
-	
-// 	process_unequip(i);
-
-// 	// Attach the item to the slot and equip it
-// 	std::cout << "process_equip: Attaching item to item slot" << std::endl;
-// 	*item_slot = i;
-// 	(*item_slot)->mark_equipped();
-
-// }
-
-//----------------------------------------------------------------------------
-// Processes unequipping - determines the slot to be unequipped and removes
-// the item.
-//
-// Arguments:
-//   i - the item to be unequipped
-//
-// Returns:
-//   Nothing
-//----------------------------------------------------------------------------
-// void process_unequip(Item *i) {
-// 	int item_type = i->get_item_class();
-// 	Item **item_slot;
-
-// 	if (item_type != ItemConsts::WEAPON_CLASS && item_type != ItemConsts::ARMOR_CLASS) {
-// 		return;
-// 	}
-
-// 	if (item_type == ItemConsts::WEAPON_CLASS) {
-// 		item_slot = &(g_player.equipment.weapon);
-// 		std::cout << "process_unequip: Item is a weapon" << std::endl;
-// 	}
-// 	else {
-// 		std::cout << "process_unequip: Item is an armor" << std::endl;
-// 		item_slot = g_player.get_item_slot_by_type(item_type);
-// 		// If the item slot isn't empty, unequip it
-// 		if (item_slot == NULL) {
-// 			std::cout << "process_equip: Invalid item slot!" << std::endl;
-// 			return;
-// 		}
-// 	} 
-	
-// 	std::cout << "process_unequip:  The item slot requested appears to be valid" << std::endl;
-
-// 	// Free the item slot.  Note that the item still exists in
-// 	// the inventory so it's not actually deleted here.
-// 	if (*item_slot != NULL) {
-// 		std::cout << "process_unequip: calling remove on item" << std::endl;
-// 		(*item_slot)->mark_removed();
-// 		std::cout << "process_unequip:  Remove called" << std::endl;
-// 		*item_slot = NULL;
-// 	}
-// }
-
 void perform_inventory_menu_action(void) {
-	// Get the item
+	// Get the item under the cursor
 	int slot = g_ui_globals.inv_cursor_y * UiConsts::INVENTORY_ITEMS_PER_ROW + g_ui_globals.inv_cursor_x;
     Item *i = g_inventory->get_item_in_slot(slot);
 	
 	// Determine if the action can be done by the item
 	switch (g_ui_globals.sel_item_option) {
 		case UiConsts::ITEM_OPTION_USE:
+			// If the item can be used, use it
 			if (i->can_be_used()) {
-				// Use the item
+				// Use the item.  Take one from the stack, or delete the item if there was only 1
 				i->use();
 				i->adjust_quantity(-1);
 				if (i->get_quantity() <= 0) {
@@ -610,24 +537,28 @@ void perform_inventory_menu_action(void) {
 			}
 			break;
 		case UiConsts::ITEM_OPTION_EQUIP:
+			// If it can be equipped and isn't, have the player equip it
 			if (i->can_be_equipped() && !i->is_it_equipped()) {
 				//std::cout << "perform_inventory_menu_action: equipping item" << std::endl;
 				g_player.equip(i);
 			}
 			break;
 		case UiConsts::ITEM_OPTION_UNEQUIP:
+			// If it can be equipped and currently is, have the player unequip it
 			if (i->can_be_equipped() && i->is_it_equipped()) {
 				//std::cout << "perform_inventory_menu_action: unequipping item" << std::endl;
 				g_player.unequip(i);
 			}
 			break;
 		case UiConsts::ITEM_OPTION_DROP:
+			// If the item can be dropped, and currently isn't equipped, drop it on the ground
 			if (i->can_be_dropped() && !i->is_it_equipped()) {
 				std::cout << "perform_inventory_menu_action: dropping item" << std::endl;
 				// TODO: drop here
 			}
 			break;
 		case UiConsts::ITEM_OPTION_DESTROY:
+			// If the item can be dropped and currently isn't equipped, destroy it
 			if (i->can_be_dropped() && !i->is_it_equipped()) {
 				// Delete the item; it will delete the entire stack
 				//std::cout << "perform_inventory_menu_action: deleting item(s)" << std::endl;
@@ -680,4 +611,31 @@ void use_stairs(int x, int y) {
 
     // Generate a new dungeon with the new floor value
     generate_new_dungeon_floor(g_dungeon, depth, stairs); 
+}
+
+//----------------------------------------------------------------------------
+// Gets the base stats and mods for an item, determine what stats the mods
+// affect, and adjust the fixed and mulitplicative stats accordingly
+//
+// Arguments:
+//   i - the item to process
+//   fixed - a set of stats to apply fixed increases/decreases to
+//   multiplicative - a set of stats to apply multiplicative 
+//                    increases/decreases to
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void apply_item_values_to_stats(Item *i, Stats &fixed, MultiplicativeStats &multiplicative) {
+	// If a weapon
+	//  - get the attack and add it
+	//  - get the prefix, get the mods attached to it, and add them
+	//  - get the suffix, get the mods attached to it, and add them
+
+	// If an armor
+	//  - get the defense and add it
+	//  - get the prefix, get the mods attached to it, and add them
+	//  - get the suffix, get the mods attached to it, and add them
+
+	// TODO: do items here?
 }

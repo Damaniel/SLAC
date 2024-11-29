@@ -24,6 +24,8 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
+#include "globals.h"
+
 typedef struct {
 	unsigned short max_hp;		// Max HP
 	unsigned short str;			// Strength
@@ -41,6 +43,24 @@ typedef struct {
 	unsigned short apt;			// Attacks per turn
 	unsigned short block;		// Absolute chance to block
 } Stats;
+
+typedef struct {
+	float max_hp;		// Max HP
+	float str;			// Strength
+	float con;			// Constitution
+	float dex;			// Dexterity
+	float atk;			// Attack
+	float def;			// Defense
+	float spd;			// Speed
+	float f_def;		// Fire defense
+	float i_def;		// Ice defense
+	float l_def;		// Lightning defense
+	float f_atk;		// Fire attack damage
+	float i_atk;		// Ice attack damage
+	float l_atk;		// Lightning attack damage
+	float apt;			// Attacks per turn
+	float block;		// Absolute chance to block
+} MultiplicativeStats;
 
 typedef struct {
 	Item *weapon;
@@ -83,6 +103,8 @@ public:
 	int get_last_room_entered() { return last_room_entered; }
 	void set_last_room_entered(int room) { last_room_entered = room; }
 	void set_position(int x, int y);
+	void assign_base_stats_to_actual();
+	void apply_stats_to_actual(Stats &fixed, MultiplicativeStats &multiplicative);
 	int get_x_pos();
 	int get_y_pos();
 	void set_x_pos(int pos);

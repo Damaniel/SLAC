@@ -312,6 +312,60 @@ void Player::unequip(Item *i) {
 	recalculate_actual_stats();
 }
 
+void Player::assign_base_stats_to_actual(void) {
+	actual.apt = base.apt;
+	actual.atk = base.atk;
+	actual.block = base.block;
+	actual.con = base.con;
+	actual.def = base.def;
+	actual.dex = base.dex;
+	actual.f_atk = base.f_atk;
+	actual.f_def = base.f_def;
+	actual.i_atk = base.i_atk;
+	actual.i_def = base.i_def;
+	actual.l_atk = base.l_atk;
+	actual.l_def = base.l_def;
+	actual.max_hp = base.max_hp;
+	actual.spd = base.spd;
+	actual.str = base.str;
+}
+
+void Player::apply_stats_to_actual(Stats &fixed, MultiplicativeStats &multiplicative) {
+	// Additive first
+	actual.apt += fixed.apt;
+	actual.atk += fixed.atk;
+	actual.block += fixed.block;
+	actual.con += fixed.con;
+	actual.def += fixed.def;
+	actual.dex += fixed.dex;
+	actual.f_atk += fixed.f_atk;
+	actual.f_def += fixed.f_def;
+	actual.i_atk += fixed.i_atk;
+	actual.i_def += fixed.i_def;
+	actual.l_atk += fixed.l_atk;
+	actual.l_def += fixed.l_def;
+	actual.max_hp += fixed.max_hp;
+	actual.spd += fixed.spd;
+	actual.str += fixed.str;
+
+	// Then multiplicative
+	actual.apt = (int)((float)actual.apt * multiplicative.apt);
+	actual.atk = (int)((float)actual.atk * multiplicative.atk);
+	actual.block = (int)((float)actual.block * multiplicative.block);	
+	actual.con = (int)((float)actual.con * multiplicative.con);
+	actual.def = (int)((float)actual.def * multiplicative.def);
+	actual.dex = (int)((float)actual.dex * multiplicative.dex);
+	actual.f_atk = (int)((float)actual.f_atk * multiplicative.f_atk);
+	actual.f_def = (int)((float)actual.f_def * multiplicative.f_def);
+	actual.i_atk = (int)((float)actual.i_atk * multiplicative.i_atk);
+	actual.i_def = (int)((float)actual.i_def * multiplicative.i_def);
+	actual.l_atk = (int)((float)actual.l_atk * multiplicative.l_atk);
+	actual.l_def = (int)((float)actual.l_def * multiplicative.l_def);
+	actual.max_hp = (int)((float)actual.max_hp * multiplicative.max_hp);
+	actual.spd = (int)((float)actual.spd * multiplicative.spd);
+	actual.str = (int)((float)actual.str * multiplicative.str);
+}
+
 //------------------------------------------------------------------------------
 // Iterates through all equipped items and used items with active effects,
 // calculating what the player's modified (that is, actual) stats are.
@@ -323,23 +377,41 @@ void Player::unequip(Item *i) {
 //   Nothing.
 //------------------------------------------------------------------------------
 void Player::recalculate_actual_stats(void) {
-	//std::cout << "recalculate_actual_stats:  performing recalculation" << std::endl;
+	Stats fixed;
+	MultiplicativeStats multiplicative;
 
-	// Iterate through the player's equipped items
+	std::cout << "recalculate_actual_stats:  performing recalculation" << std::endl;
 
-	// Add together all fixed increases to stats and save them
-	
-	// Add all multiplicative increases to stats and save them
+	// Assign the base stat values to the actual stats
+	assign_base_stats_to_actual();
 
+	// Iterate through the player's equipped items, adding fixed and multiplicitive 
+	// totals
+	if(equipment.amulet != NULL) 
+		apply_item_values_to_stats(equipment.amulet, fixed, multiplicative);
+	if(equipment.chest != NULL)
+		apply_item_values_to_stats(equipment.chest, fixed, multiplicative);
+	if(equipment.feet != NULL)
+		apply_item_values_to_stats(equipment.feet, fixed, multiplicative);
+	if(equipment.hands != NULL)
+		apply_item_values_to_stats(equipment.hands, fixed, multiplicative);
+	if(equipment.head != NULL)
+		apply_item_values_to_stats(equipment.head, fixed, multiplicative);
+	if(equipment.legs != NULL)
+		apply_item_values_to_stats(equipment.legs, fixed, multiplicative);
+	if(equipment.ring != NULL)
+		apply_item_values_to_stats(equipment.ring, fixed, multiplicative);
+	if(equipment.shield != NULL)
+		apply_item_values_to_stats(equipment.shield, fixed, multiplicative);
+	if(equipment.weapon != NULL)
+		apply_item_values_to_stats(equipment.weapon, fixed, multiplicative);
 
 	// Add together all increases from item effects and save them
-
-	// Apply the base stats to the actual stats
+	// TODO - get item effects up and running
 
 	// Add all of the fixed increases to the actual stats
+	apply_stats_to_actual(fixed, multiplicative);
 
-	// Apply all of the multiplicitive increases to the actual stats
-
-	// The stats should now be updated 
+	std::cout << "Finished" << std::endl;
 }
 
