@@ -471,7 +471,7 @@ Weapon::Weapon(unsigned int idx) {
 }
 
 //----------------------------------------------------------------------------
-// Equips a weapon.
+// Sets the 'is_equipped' state of the item
 // 
 // Arguments:
 //   None
@@ -479,14 +479,12 @@ Weapon::Weapon(unsigned int idx) {
 // Returns:
 //   None
 //----------------------------------------------------------------------------
-void Weapon::equip() {
+void Weapon::mark_equipped() {
     is_equipped = true;
-    std::cout << "equip: equipped weapon '" << get_full_name() << "'"<< std::endl;
-    g_player.recalculate_actual_stats();
 }
 
 //----------------------------------------------------------------------------
-// Removes a weapon.
+// Clears the 'is_equipped' state of the item
 // 
 // Arguments:
 //   None
@@ -494,10 +492,9 @@ void Weapon::equip() {
 // Returns:
 //   None
 //----------------------------------------------------------------------------
-void Weapon::remove() {
+void Weapon::mark_removed() {
+    //std::cout << "weapon removed" << std::endl;
     is_equipped = false;
-    std::cout << "equip: unequipped weapon '" << get_full_name() << "'"<< std::endl;
-    g_player.recalculate_actual_stats();
 }
 
 //----------------------------------------------------------------------------
@@ -624,7 +621,7 @@ Armor::Armor(unsigned int idx) {
 }
 
 //----------------------------------------------------------------------------
-// Equips a piece of armor.
+// Marks the armor as equipped
 // 
 // Arguments:
 //   None
@@ -632,14 +629,12 @@ Armor::Armor(unsigned int idx) {
 // Returns:
 //   None
 //----------------------------------------------------------------------------
-void Armor::equip() {
+void Armor::mark_equipped() {
     is_equipped = true;
-    std::cout << "equip: equipped armor '" << get_full_name() << "'"<< std::endl;
-    g_player.recalculate_actual_stats();
 }
 
 //----------------------------------------------------------------------------
-// Removes a piece of armor.
+// Marks the armor as removed
 // 
 // Arguments:
 //   None
@@ -647,10 +642,9 @@ void Armor::equip() {
 // Returns:
 //   None
 //----------------------------------------------------------------------------
-void Armor::remove() {
+void Armor::mark_removed() {
+    //std::cout << "armor removed" << std::endl;
     is_equipped = false;
-    std::cout << "equip: equipped armor '" << get_full_name() << "'"<< std::endl;
-    g_player.recalculate_actual_stats();
 }
 
 //----------------------------------------------------------------------------
@@ -689,15 +683,6 @@ void Armor::dump_item() {
 //==================================================================
 // Consumable
 //==================================================================
-
-//----------------------------------------------------------------------------
-// Consumable::~Consumable
-//
-// Destructor.
-//----------------------------------------------------------------------------
-Consumable::~Consumable() {
-
-}
 
 //----------------------------------------------------------------------------
 // Gets the full name of the consumable, depending on whether it has been
@@ -958,8 +943,7 @@ Potion::Potion(unsigned int idx) {
 //   Nothing
 //----------------------------------------------------------------------------
 void Potion::use() {
-    std::cout << "use: potion used" << std::endl;
-    g_player.recalculate_actual_stats();
+    //std::cout << "use: potion used" << std::endl;
 }
 
 //----------------------------------------------------------------------------
@@ -1099,8 +1083,7 @@ Scroll::Scroll(unsigned int idx) {
 //   Nothing
 //----------------------------------------------------------------------------
 void Scroll::use() {
-    std::cout << "use: scroll used" << std::endl;
-    g_player.recalculate_actual_stats();
+    //std::cout << "use: scroll used" << std::endl;
 }
 
 //----------------------------------------------------------------------------

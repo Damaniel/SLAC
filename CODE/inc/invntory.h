@@ -248,8 +248,8 @@ public:
     virtual int get_item_class() = 0;
     virtual int get_attack() = 0;
     virtual int get_defense() = 0;
-    virtual void equip() = 0;
-    virtual void remove() = 0;
+    virtual void mark_equipped() = 0;
+    virtual void mark_removed() = 0;
     virtual bool is_it_equipped() = 0;
     void dump_item_common();
     int get_value() { return (int)value; }
@@ -267,6 +267,7 @@ public:
     std::string get_description() { return description; }
     unsigned short get_gid() { return gid; }
     unsigned short get_id() { return id; }
+    unsigned short get_type_id() { return type_id; }
     virtual ~Item() { /*std::cout << "~Item: Deleting item" << std::endl;*/ }
 };
 
@@ -280,8 +281,8 @@ protected:
     bool is_cursed;
     bool is_equipped;
 public:
-    virtual void equip() = 0;
-    virtual void remove() = 0;
+    virtual void mark_equipped() = 0;
+    virtual void mark_removed() = 0;
     virtual void dump_item() = 0;
     virtual void init(int idx) = 0;
     virtual int get_item_class() = 0;
@@ -302,7 +303,7 @@ public:
     void remove_prefix() { add_prefix(-1); }
     void remove_suffix() { add_suffix(-1); }
 
-    virtual ~Equipment() { /*std::cout << "   Deleting equipment" << std::endl;*/ }
+    virtual ~Equipment() { /*std::cout << "   Deleting equipment" << std::endl; */ }
 };
 
 // A weapon - a piece of equipment that has an attack rating and is equipped in a weapon slot
@@ -319,8 +320,8 @@ public:
     int get_defense(void) { return -1; }
     int get_item_class(void);
     void dump_item();
-    void equip();
-    void remove();
+    void mark_equipped();
+    void mark_removed();
 };
 
 // Armor - a piece of equipment that has a defense rating and is equipped in an armor slot
@@ -337,8 +338,8 @@ public:
     int get_defense(void) { return defense; }
     int get_item_class(void);
     void dump_item();
-    void equip();
-    void remove();
+    void mark_equipped();
+    void mark_removed();
 };
 
 // A 'consumable'.  This represents any kind of item which can be used
@@ -368,9 +369,9 @@ public:
     void remove_suffix() {}
     bool is_it_cursed() { return false; }
     bool is_it_equipped() { return false; }
-    void equip() {}
-    void remove() {}
-    virtual ~Consumable();
+    void mark_equipped() {}
+    void mark_removed() {}
+    virtual ~Consumable() { /*std::cout << "   Deleting consumable" << std::endl;*/ } 
 };
 
 // Potions
@@ -431,11 +432,12 @@ public:
     void remove_suffix() {}
     bool is_it_cursed() {return false; }
     bool is_it_equipped() { return false; }
-    void equip() {}
-    void remove() {}
+    void mark_equipped() {}
+    void mark_removed() {}
     void use() {}
     std::string get_full_name();
     std::string get_type_name();
+    ~Artifact() { /*std::cout << "   Deleting artifact" << std::endl; */ }
 };
 
 class Currency: public Item {
@@ -460,11 +462,12 @@ public:
     void remove_suffix() {}
     bool is_it_cursed() {return false; }
     bool is_it_equipped() { return false; }
-    void equip() {}
-    void remove() {}
+    void mark_equipped() {}
+    void mark_removed() {}
     void use() {}
     std::string get_full_name();
     std::string get_type_name();
+    ~Currency() { /* std::cout << "   Deleting currency" << std::endl; */ }
 };
 
 // An inventory.  This consists of a list of Item pointers, plus

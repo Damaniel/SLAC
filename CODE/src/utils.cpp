@@ -507,6 +507,89 @@ void pick_up_item_at(int x, int y) {
     }
 }
 
+//----------------------------------------------------------------------------
+// Processes equipping - determines the slot to be equipped to, unequips
+// any existing item there, then equips the new one
+//
+// Arguments:
+//   i - the item to be unequipped
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+// void process_equip(Item *i) {
+// 	int item_type = i->get_item_class();
+// 	Item **item_slot;
+
+// 	if (item_type != ItemConsts::WEAPON_CLASS && item_type != ItemConsts::ARMOR_CLASS) {
+// 		return;
+// 	}
+
+// 	if (item_type == ItemConsts::WEAPON_CLASS) {
+// 		item_slot = &(g_player.equipment.weapon);
+// 	}
+// 	else {
+// 		item_slot = g_player.get_item_slot_by_type(i->get_type_id());
+// 		// If the item slot isn't empty, unequip it
+// 		if (item_slot == NULL) {
+// 			std::cout << "process_equip: Not a valid item slot!" << std::endl;
+// 			return;
+// 		}
+// 	}
+	
+// 	process_unequip(i);
+
+// 	// Attach the item to the slot and equip it
+// 	std::cout << "process_equip: Attaching item to item slot" << std::endl;
+// 	*item_slot = i;
+// 	(*item_slot)->mark_equipped();
+
+// }
+
+//----------------------------------------------------------------------------
+// Processes unequipping - determines the slot to be unequipped and removes
+// the item.
+//
+// Arguments:
+//   i - the item to be unequipped
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+// void process_unequip(Item *i) {
+// 	int item_type = i->get_item_class();
+// 	Item **item_slot;
+
+// 	if (item_type != ItemConsts::WEAPON_CLASS && item_type != ItemConsts::ARMOR_CLASS) {
+// 		return;
+// 	}
+
+// 	if (item_type == ItemConsts::WEAPON_CLASS) {
+// 		item_slot = &(g_player.equipment.weapon);
+// 		std::cout << "process_unequip: Item is a weapon" << std::endl;
+// 	}
+// 	else {
+// 		std::cout << "process_unequip: Item is an armor" << std::endl;
+// 		item_slot = g_player.get_item_slot_by_type(item_type);
+// 		// If the item slot isn't empty, unequip it
+// 		if (item_slot == NULL) {
+// 			std::cout << "process_equip: Invalid item slot!" << std::endl;
+// 			return;
+// 		}
+// 	} 
+	
+// 	std::cout << "process_unequip:  The item slot requested appears to be valid" << std::endl;
+
+// 	// Free the item slot.  Note that the item still exists in
+// 	// the inventory so it's not actually deleted here.
+// 	if (*item_slot != NULL) {
+// 		std::cout << "process_unequip: calling remove on item" << std::endl;
+// 		(*item_slot)->mark_removed();
+// 		std::cout << "process_unequip:  Remove called" << std::endl;
+// 		*item_slot = NULL;
+// 	}
+// }
+
 void perform_inventory_menu_action(void) {
 	// Get the item
 	int slot = g_ui_globals.inv_cursor_y * UiConsts::INVENTORY_ITEMS_PER_ROW + g_ui_globals.inv_cursor_x;
@@ -521,33 +604,33 @@ void perform_inventory_menu_action(void) {
 				i->adjust_quantity(-1);
 				if (i->get_quantity() <= 0) {
 					// The item was used and there are none left, get rid of it
-					std::cout << "perform_inventory_menu_action: stack is depleted, deleting item" << std::endl;
+					//std::cout << "perform_inventory_menu_action: stack is depleted, deleting item" << std::endl;
 					g_inventory->delete_item_in_slot(slot);
 				}
 			}
 			break;
 		case UiConsts::ITEM_OPTION_EQUIP:
 			if (i->can_be_equipped() && !i->is_it_equipped()) {
-				std::cout << "perform_inventory_menu_action: equipping item" << std::endl;
-				i->equip();
+				//std::cout << "perform_inventory_menu_action: equipping item" << std::endl;
+				g_player.equip(i);
 			}
 			break;
 		case UiConsts::ITEM_OPTION_UNEQUIP:
 			if (i->can_be_equipped() && i->is_it_equipped()) {
-				std::cout << "perform_inventory_menu_action: unequipping item" << std::endl;
-				i->remove();
+				//std::cout << "perform_inventory_menu_action: unequipping item" << std::endl;
+				g_player.unequip(i);
 			}
 			break;
 		case UiConsts::ITEM_OPTION_DROP:
-			if (i->can_be_dropped()) {
+			if (i->can_be_dropped() && !i->is_it_equipped()) {
 				std::cout << "perform_inventory_menu_action: dropping item" << std::endl;
 				// TODO: drop here
 			}
 			break;
 		case UiConsts::ITEM_OPTION_DESTROY:
-			if (i->can_be_dropped()) {
+			if (i->can_be_dropped() && !i->is_it_equipped()) {
 				// Delete the item; it will delete the entire stack
-				std::cout << "perform_inventory_menu_action: deleting item(s)" << std::endl;
+				//std::cout << "perform_inventory_menu_action: deleting item(s)" << std::endl;
 				g_inventory->delete_item_in_slot(slot);
 			}
 			break;

@@ -423,7 +423,7 @@ void Render::render_item_submenu(BITMAP *destination) {
 
 	rectfill(destination, inv_menu_x + 3, inv_menu_selection_y,
 	         inv_menu_x + UiConsts::INVENTORY_MENU_WIDTH - 3, 
-			 inv_menu_selection_y + 8, 29);
+			 inv_menu_selection_y + 8, 25);
 
 	// Get the item at the highlighed slot
 	Item *i = g_inventory->get_item_in_slot(g_ui_globals.inv_cursor_y * 
@@ -598,7 +598,16 @@ void Render::render_inventory_content(BITMAP *destination) {
 		 					(x * (UiConsts::TILE_PIXEL_WIDTH + 1)) + UiConsts::INVENTORY_ITEMS_X + 1,
 		 					(y * (UiConsts::TILE_PIXEL_HEIGHT + 1)) + UiConsts::INVENTORY_ITEMS_Y + 1,
 		 					UiConsts::TILE_PIXEL_WIDTH,
-		 					UiConsts::TILE_PIXEL_HEIGHT);	
+		 					UiConsts::TILE_PIXEL_HEIGHT);
+				// Draw the equipped icon if the item is equipped
+				if (it->is_it_equipped()) {
+					masked_blit((BITMAP *)g_game_data[DAMRL_EQUIPPED].dat,
+								destination,
+								0, 0, 
+								(x * (UiConsts::TILE_PIXEL_WIDTH + 1)) + UiConsts::INVENTORY_ITEMS_X + 13,
+		 					    (y * (UiConsts::TILE_PIXEL_HEIGHT + 1)) + UiConsts::INVENTORY_ITEMS_Y + 11,
+								3, 5);
+				}
 			}
 		}
 		g_state_flags.update_inventory_items = false;

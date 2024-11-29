@@ -51,6 +51,34 @@ namespace ItemConsts {
         MULTIPART_ARTIFACT,
         MULTIGEN_ARTIFACT
     };
+
+    enum {
+        ARMOR_TYPE_HAT,
+        ARMOR_TYPE_HELM,
+        ARMOR_TYPE_GLOVES,
+        ARMOR_TYPE_GAUNTLETS,
+        ARMOR_TYPE_SHIRT,
+        ARMOR_TYPE_MAIL,
+        ARMOR_TYPE_PANTS,
+        ARMOR_TYPE_LEGGINGS,
+        ARMOR_TYPE_SHOES,
+        ARMOR_TYPE_BOOTS,
+        ARMOR_TYPE_BUCKLER,
+        ARMOR_TYPE_SHIELD,
+        ARMOR_TYPE_RING,
+        ARMOR_TYPE_AMULET,
+        NUM_ARMOR_TYPES
+    };
+
+    enum {
+        WEAPON_TYPE_DAGGER,
+        WEAPON_TYPE_SWORD,
+        WEAPON_TYPE_BROADSWORD,
+        WEAPON_TYPE_AXE,
+        WEAPON_TYPE_BATTLEAXE,
+        WEAPON_TYPE_MACE,
+        WEAPON_TYPE_MAUL
+    };
 }
 
 // A class that generates instances of items according to weighting rules.  All
