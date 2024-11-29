@@ -282,11 +282,12 @@ public:
     virtual void remove() = 0;
     virtual void dump_item() = 0;
     virtual void init(int idx) = 0;
-    virtual void use() = 0;
+    virtual int get_item_class() = 0;
     virtual int get_attack() = 0;
     virtual int get_defense() = 0;
     std::string get_full_name();
     std::string get_type_name();
+    void use() {}
     int get_prefix() { return prefix_id; }
     int get_suffix() { return suffix_id; }
     void dump_prefix();
@@ -295,7 +296,6 @@ public:
     void add_prefix(int pid) { can_have_prefix ? prefix_id = pid : prefix_id = -1; }
     void add_suffix(int sid) { can_have_suffix ? suffix_id = sid : suffix_id = -1; }
     bool is_it_cursed() { return is_cursed; }
-    virtual int get_item_class() = 0;
     void remove_prefix() { add_prefix(-1); }
     void remove_suffix() { add_suffix(-1); }
     virtual ~Equipment() { /*std::cout << "   Deleting equipment" << std::endl;*/ }
@@ -317,7 +317,6 @@ public:
     void dump_item();
     void equip();
     void remove();
-    void use() {}
 };
 
 // Armor - a piece of equipment that has a defense rating and is equipped in an armor slot
@@ -336,7 +335,6 @@ public:
     void dump_item();
     void equip();
     void remove();
-    void use() {}
 };
 
 // A 'consumable'.  This represents any kind of item which can be used
