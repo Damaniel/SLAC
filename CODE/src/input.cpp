@@ -166,7 +166,8 @@ void process_inventory_substate(int key) {
                     g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY_MENU;
                     g_state_flags.update_inventory_submenu = true;
                     g_state_flags.update_display = true;
-                    g_ui_globals.sel_item_option = 0;
+                    // Highlight 'close' by default
+                    g_ui_globals.sel_item_option = UiConsts::NUM_ITEM_SUBMENU_OPTIONS - 1;
                 }
             }
             break;

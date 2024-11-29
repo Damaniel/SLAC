@@ -463,6 +463,7 @@ void Render::render_item_submenu(BITMAP *destination) {
 				FontConsts::TEXT_LEFT_JUSTIFIED);	
 
 	// The close option
+	text_color == FontConsts::FONT_YELLOW;
 	render_text(destination, "Close", inv_menu_x + 4, UiConsts::INVENTORY_MENU_Y + 3 + 51, 
 	            text_color, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_LEFT_JUSTIFIED);	

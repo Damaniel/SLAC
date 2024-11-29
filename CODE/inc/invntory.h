@@ -230,7 +230,6 @@ protected:
     bool can_use;
     bool is_identified;
 public:
-    void dump_item_common();
     virtual std::string get_full_name() = 0;
     virtual std::string get_type_name() = 0;
     virtual void init(int idx) = 0;
@@ -240,17 +239,19 @@ public:
     virtual void add_prefix(int pid) = 0;
     virtual void add_suffix(int sid) = 0;
     virtual void set_curse_state(bool curse) = 0;
-    virtual int get_prefix() = 0;
-    virtual int get_suffix() = 0;
-    virtual void use() = 0;
-    virtual void remove_prefix() = 0;
-    virtual void remove_suffix() = 0;
-    virtual bool is_it_cursed() = 0;
-    virtual int get_item_class() = 0;
-    virtual int get_attack() = 0;
-    virtual int get_defense() = 0;
-    virtual void equip() = 0;
-    virtual void remove() = 0;
+    void dump_item_common();
+    void remove_prefix() {}
+    void remove_suffix() {}
+    void equip() {}
+    void remove() {}
+    void use() {}
+    int get_item_class() { return -1; }
+    int get_prefix() { return -1; }
+    int get_suffix() { return -1; }
+    int get_attack() { return -1; }
+    int get_defense() { return -1; }
+    bool is_it_equipped() { return false; }
+    bool is_it_cursed() { return false; }
     int get_value() { return (int)value; }
     bool can_have_a_prefix() { return can_have_prefix; }
     bool can_have_a_suffix() { return can_have_suffix; }
@@ -278,13 +279,8 @@ protected:
     bool is_cursed;
     bool is_equipped;
 public:
-    virtual void equip() = 0;
-    virtual void remove() = 0;
     virtual void dump_item() = 0;
     virtual void init(int idx) = 0;
-    virtual void use() = 0;
-    virtual int get_attack() = 0;
-    virtual int get_defense() = 0;
     std::string get_full_name();
     std::string get_type_name();
     int get_prefix() { return prefix_id; }
@@ -295,7 +291,7 @@ public:
     void add_prefix(int pid) { can_have_prefix ? prefix_id = pid : prefix_id = -1; }
     void add_suffix(int sid) { can_have_suffix ? suffix_id = sid : suffix_id = -1; }
     bool is_it_cursed() { return is_cursed; }
-    virtual int get_item_class() = 0;
+    bool is_it_equipped() { return is_equipped; }
     void remove_prefix() { add_prefix(-1); }
     void remove_suffix() { add_suffix(-1); }
     virtual ~Equipment() { /*std::cout << "   Deleting equipment" << std::endl;*/ }
@@ -312,12 +308,10 @@ public:
     Weapon(unsigned int idx);
     void init(int idx);
     int get_attack(void) { return attack; }
-    int get_defense(void) { return -1; }
     int get_item_class(void);
     void dump_item();
     void equip();
     void remove();
-    void use() {}
 };
 
 // Armor - a piece of equipment that has a defense rating and is equipped in an armor slot
@@ -330,13 +324,11 @@ public:
     Armor(ArmorBaseType *b);
     Armor(unsigned int idx);
     void init(int idx);
-    int get_attack(void) { return -1; }
     int get_defense(void) { return defense; }
     int get_item_class(void);
     void dump_item();
     void equip();
     void remove();
-    void use() {}
 };
 
 // A 'consumable'.  This represents any kind of item which can be used
@@ -347,23 +339,12 @@ public:
     virtual std::string get_full_name();
     virtual std::string get_type_name() = 0;
     virtual void dump_item() = 0;
-    virtual void use() = 0;
     virtual void init(int idx) = 0;
-    virtual int get_item_class() = 0;
-    int get_prefix() { return -1; }
-    int get_suffix() { return -1; }
-    int get_attack() { return -1; }
-    int get_defense() { return -1; }
     void dump_prefix() {}
     void dump_suffix() {}
     void add_prefix(int pid) {}
     void add_suffix(int sid) {}
     void set_curse_state(bool curse) {}
-    void remove_prefix() {}
-    void remove_suffix() {}
-    bool is_it_cursed() { return false; }
-    void equip() {}
-    void remove() {}
     virtual ~Consumable();
 };
 
@@ -412,21 +393,11 @@ public:
     void init(int idx);
     int get_item_class();
     void dump_item();
-    int get_prefix() { return -1; }
-    int get_suffix() { return -1; }
-    int get_attack() { return -1; }
-    int get_defense() { return -1; }
     void dump_prefix() {}
     void dump_suffix() {}
     void add_prefix(int pid) {}
     void add_suffix(int sid) {}
     void set_curse_state(bool curse) {}
-    void remove_prefix() {}
-    void remove_suffix() {}
-    bool is_it_cursed() {return false; }
-    void equip() {}
-    void remove() {}
-    void use() {}
     std::string get_full_name();
     std::string get_type_name();
 };
@@ -440,21 +411,11 @@ public:
     void init(int idx);
     int get_item_class();
     void dump_item();
-    int get_prefix() { return -1; }
-    int get_suffix() { return -1; }
-    int get_attack() { return -1; }
-    int get_defense() { return -1; }
     void dump_prefix() {}
     void dump_suffix() {}
     void add_prefix(int pid) {}
     void add_suffix(int sid) {}
     void set_curse_state(bool curse) {}
-    void remove_prefix() {}
-    void remove_suffix() {}
-    bool is_it_cursed() {return false; }
-    void equip() {}
-    void remove() {}
-    void use() {}
     std::string get_full_name();
     std::string get_type_name();
 };
