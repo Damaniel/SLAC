@@ -38,8 +38,9 @@ Render::Render() {
 	g_ui_globals.prev_inv_cursor_x = 0;
 	g_ui_globals.prev_inv_cursor_y = 0;
 
+	// Default the inventory menu to sane defaults
 	g_ui_globals.inv_menu_active = false;
-	g_ui_globals.sel_item_option = 0;
+	g_ui_globals.sel_item_option = UiConsts::ITEM_OPTION_CLOSE;
 }
 
 //------------------------------------------------------------------------------
@@ -408,14 +409,14 @@ void Render::render_item_submenu(BITMAP *destination) {
 
 	// Draw the highlight over what will be the selected text option
 	switch (g_ui_globals.sel_item_option) {
-		case 0:
-		case 1:
-		case 2:
-		case 3:
-		case 4:
+		case UiConsts::ITEM_OPTION_USE:
+		case UiConsts::ITEM_OPTION_EQUIP:
+		case UiConsts::ITEM_OPTION_UNEQUIP:
+		case UiConsts::ITEM_OPTION_DROP:
+		case UiConsts::ITEM_OPTION_DESTROY:
 			inv_menu_selection_y = UiConsts::INVENTORY_MENU_Y + 3 + (g_ui_globals.sel_item_option * 9);
 			break;
-		case 5:
+		case UiConsts::ITEM_OPTION_CLOSE:
 			inv_menu_selection_y = UiConsts::INVENTORY_MENU_Y + 53;
 			break;
 	}
@@ -441,17 +442,24 @@ void Render::render_item_submenu(BITMAP *destination) {
 				FontConsts::TEXT_LEFT_JUSTIFIED);
 
 	// The equip/unequip options
-	// TODO - get player equip/unequip stuff figured out.  For now, gray them out
-	text_color = FontConsts::FONT_GRAY;
+	if(i->can_be_equipped() && !i->is_it_equipped()) 
+		text_color = FontConsts::FONT_YELLOW;
+	else
+		text_color = FontConsts::FONT_GRAY;
 	render_text(destination, "Equip", inv_menu_x + 4, UiConsts::INVENTORY_MENU_Y + 3 + 10, 
 	            text_color, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_LEFT_JUSTIFIED);
+
+	if(i->can_be_equipped() && i->is_it_equipped()) 
+		text_color = FontConsts::FONT_YELLOW;
+	else
+		text_color = FontConsts::FONT_GRAY;
 	render_text(destination, "Unequip", inv_menu_x + 4, UiConsts::INVENTORY_MENU_Y + 3 + 19, 
 	            text_color, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_LEFT_JUSTIFIED);	
 
 	// The drop / destroy options
-	if (i->can_be_dropped())
+	if (i->can_be_dropped() && !i->is_it_equipped())
 		text_color = FontConsts::FONT_YELLOW;
 	else
 		text_color = FontConsts::FONT_GRAY;

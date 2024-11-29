@@ -230,7 +230,6 @@ protected:
     bool can_use;
     bool is_identified;
 public:
-    void dump_item_common();
     virtual std::string get_full_name() = 0;
     virtual std::string get_type_name() = 0;
     virtual void init(int idx) = 0;
@@ -251,6 +250,8 @@ public:
     virtual int get_defense() = 0;
     virtual void equip() = 0;
     virtual void remove() = 0;
+    virtual bool is_it_equipped() = 0;
+    void dump_item_common();
     int get_value() { return (int)value; }
     bool can_have_a_prefix() { return can_have_prefix; }
     bool can_have_a_suffix() { return can_have_suffix; }
@@ -258,6 +259,7 @@ public:
     bool can_it_stack() { return can_stack; }
     bool can_be_used() { return can_use; }
     bool can_be_dropped() { return can_drop; }
+    bool can_be_equipped() { return can_equip; }
     void identify() { is_identified = true; }
     bool is_it_identified() { return is_identified; }
     unsigned short get_quantity() { return quantity; }
@@ -296,8 +298,10 @@ public:
     void add_prefix(int pid) { can_have_prefix ? prefix_id = pid : prefix_id = -1; }
     void add_suffix(int sid) { can_have_suffix ? suffix_id = sid : suffix_id = -1; }
     bool is_it_cursed() { return is_cursed; }
+    bool is_it_equipped() { return is_equipped; }
     void remove_prefix() { add_prefix(-1); }
     void remove_suffix() { add_suffix(-1); }
+
     virtual ~Equipment() { /*std::cout << "   Deleting equipment" << std::endl;*/ }
 };
 
@@ -341,6 +345,9 @@ public:
 // in some way, but not equipped.  This includes items like potions
 // and scrolls.
 class Consumable: public Item {
+private:
+    bool  effect_active;
+    short effect_turns_remaining;
 public:
     virtual std::string get_full_name();
     virtual std::string get_type_name() = 0;
@@ -360,6 +367,7 @@ public:
     void remove_prefix() {}
     void remove_suffix() {}
     bool is_it_cursed() { return false; }
+    bool is_it_equipped() { return false; }
     void equip() {}
     void remove() {}
     virtual ~Consumable();
@@ -422,6 +430,7 @@ public:
     void remove_prefix() {}
     void remove_suffix() {}
     bool is_it_cursed() {return false; }
+    bool is_it_equipped() { return false; }
     void equip() {}
     void remove() {}
     void use() {}
@@ -450,6 +459,7 @@ public:
     void remove_prefix() {}
     void remove_suffix() {}
     bool is_it_cursed() {return false; }
+    bool is_it_equipped() { return false; }
     void equip() {}
     void remove() {}
     void use() {}
@@ -471,7 +481,7 @@ public:
     int get_first_empty_slot();
     bool inventory_is_full();
     int get_num_slots_in_use();
-    void drop_item_in_slot(int slot);
+    void delete_item_in_slot(int slot);
     void dump_inventory(void);
     int get_stackable_item_slot(Item *it);
     //void drop_item_qty_in_slot(int slot, int quantity);

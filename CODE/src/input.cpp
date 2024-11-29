@@ -73,14 +73,14 @@ void process_inventory_menu_substate(int key) {
         case KEY_UP:
             g_ui_globals.sel_item_option -= 1;
             if (g_ui_globals.sel_item_option < 0) {
-                g_ui_globals.sel_item_option = UiConsts::NUM_ITEM_SUBMENU_OPTIONS - 1;
+                g_ui_globals.sel_item_option = UiConsts::NUM_ITEM_OPTIONS - 1;
             }
             g_state_flags.update_inventory_submenu = true;
             g_state_flags.update_display = true;
             break;
         case KEY_DOWN:
             g_ui_globals.sel_item_option += 1;
-            if (g_ui_globals.sel_item_option >= UiConsts::NUM_ITEM_SUBMENU_OPTIONS) {
+            if (g_ui_globals.sel_item_option >= UiConsts::NUM_ITEM_OPTIONS) {
                 g_ui_globals.sel_item_option = 0;
             }
             g_state_flags.update_inventory_submenu = true;
@@ -88,17 +88,28 @@ void process_inventory_menu_substate(int key) {
             break;
         case KEY_ENTER:
             // If 'Close' is selected, exit the inventory menu
-            if (g_ui_globals.sel_item_option == UiConsts::NUM_ITEM_SUBMENU_OPTIONS - 1) {
+            if (g_ui_globals.sel_item_option == UiConsts::NUM_ITEM_OPTIONS - 1) {
                 g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY;
                 g_state_flags.update_inventory_dialog = true;
                 g_state_flags.update_inventory_cursor = true;
                 g_state_flags.update_inventory_items = true;
                 g_state_flags.update_inventory_description = true;
-                g_state_flags.update_display = true;               
+                g_state_flags.update_display = true;    
             } 
             else {
                 // Do the thing that the selected menu option does, if valid
-            }
+                perform_inventory_menu_action();
+                // If the menu action didn't trigger another substate, return to the
+                // main inventory screen
+                if (g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY_MENU) {
+                    g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY;
+                    g_state_flags.update_inventory_dialog = true;
+                    g_state_flags.update_inventory_cursor = true;
+                    g_state_flags.update_inventory_items = true;
+                    g_state_flags.update_inventory_description = true;
+                    g_state_flags.update_display = true;    
+                }
+            }           
             break;
         case KEY_ESC:
             g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY;
@@ -167,7 +178,7 @@ void process_inventory_substate(int key) {
                     g_state_flags.update_inventory_submenu = true;
                     g_state_flags.update_display = true;
                     // Highlight 'close' by default
-                    g_ui_globals.sel_item_option = UiConsts::NUM_ITEM_SUBMENU_OPTIONS - 1;
+                    g_ui_globals.sel_item_option = UiConsts::NUM_ITEM_OPTIONS - 1;
                 }
             }
             break;

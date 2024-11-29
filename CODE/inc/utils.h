@@ -44,7 +44,7 @@ struct StateFlags {
     bool update_inventory_description;  // Should the description area be redrawn?
     bool update_inventory_items;        // Should the inventory items be redrawn?
     bool update_inventory_submenu;      // Should the inventory submenu be redrawn?
-    
+
     //--------------------------------------------------------------------------
     // Other data
     //--------------------------------------------------------------------------
@@ -82,5 +82,8 @@ void change_state(int new_state);
 
 // Item functions
 void pick_up_item_at(int x, int y);
+
+// Inventory functions
+void perform_inventory_menu_action(void);
 
 #endif

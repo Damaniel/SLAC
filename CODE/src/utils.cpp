@@ -507,6 +507,55 @@ void pick_up_item_at(int x, int y) {
     }
 }
 
+void perform_inventory_menu_action(void) {
+	// Get the item
+	int slot = g_ui_globals.inv_cursor_y * UiConsts::INVENTORY_ITEMS_PER_ROW + g_ui_globals.inv_cursor_x;
+    Item *i = g_inventory->get_item_in_slot(slot);
+	
+	// Determine if the action can be done by the item
+	switch (g_ui_globals.sel_item_option) {
+		case UiConsts::ITEM_OPTION_USE:
+			if (i->can_be_used()) {
+				// Use the item
+				i->use();
+				i->adjust_quantity(-1);
+				if (i->get_quantity() <= 0) {
+					// The item was used and there are none left, get rid of it
+					std::cout << "perform_inventory_menu_action: stack is depleted, deleting item" << std::endl;
+					g_inventory->delete_item_in_slot(slot);
+				}
+			}
+			break;
+		case UiConsts::ITEM_OPTION_EQUIP:
+			if (i->can_be_equipped() && !i->is_it_equipped()) {
+				std::cout << "perform_inventory_menu_action: equipping item" << std::endl;
+				i->equip();
+			}
+			break;
+		case UiConsts::ITEM_OPTION_UNEQUIP:
+			if (i->can_be_equipped() && i->is_it_equipped()) {
+				std::cout << "perform_inventory_menu_action: unequipping item" << std::endl;
+				i->remove();
+			}
+			break;
+		case UiConsts::ITEM_OPTION_DROP:
+			if (i->can_be_dropped()) {
+				std::cout << "perform_inventory_menu_action: dropping item" << std::endl;
+				// TODO: drop here
+			}
+			break;
+		case UiConsts::ITEM_OPTION_DESTROY:
+			if (i->can_be_dropped()) {
+				// Delete the item; it will delete the entire stack
+				std::cout << "perform_inventory_menu_action: deleting item(s)" << std::endl;
+				g_inventory->delete_item_in_slot(slot);
+			}
+			break;
+		default:
+			break;
+	} 
+}
+
 //----------------------------------------------------------------------------
 // 'Uses' a set of stairs - adjusts floor, generates new maze, etc
 //

@@ -159,5 +159,22 @@ int Player::get_gold(void) {
 //   Nothing.
 //------------------------------------------------------------------------------
 void Player::recalculate_actual_stats(void) {
+	std::cout << "recalculate_actual_stats:  performing recalculation" << std::endl;
 
+	// Iterate through the player's equipped items
+	
+	// Add together all fixed increases to stats and save them
+	
+	// Add all multiplicative increases to stats and save them
+
+
+	// Add together all increases from item effects and save them
+
+	// Apply the base stats to the actual stats
+
+	// Add all of the fixed increases to the actual stats
+
+	// Apply all of the multiplicitive increases to the actual stats
+
+	// The stats should now be updated 
 }

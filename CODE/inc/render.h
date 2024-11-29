@@ -229,8 +229,6 @@ namespace UiConsts {
 	const int GOLD_VALUE_X = 313;
 	const int GOLD_VALUE_Y = 178;
 
-	const int NUM_ITEM_SUBMENU_OPTIONS = 6;
-	
 	// The base tiles that make up the fixed portions of a dungeon level
 	// They map to tile offsets in the dungeon world tiles
 	enum {
@@ -268,6 +266,17 @@ namespace UiConsts {
 		MAP_DOT_14,
 		MAP_DOT_WALL
 	};
+
+	enum {
+		ITEM_OPTION_USE,
+		ITEM_OPTION_EQUIP,
+		ITEM_OPTION_UNEQUIP,
+		ITEM_OPTION_DROP,
+		ITEM_OPTION_DESTROY,
+		ITEM_OPTION_CLOSE,
+		NUM_ITEM_OPTIONS
+	};
+
 }
 
 namespace FontConsts {

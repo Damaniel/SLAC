@@ -80,7 +80,7 @@ Item *Inventory::get_item_in_slot(int slot) {
 //   'slot'.
 //----------------------------------------------------------------------------
 int Inventory::add_at_slot(Item *i, int slot) {
-    drop_item_in_slot(slot);
+    delete_item_in_slot(slot);
     inv[slot] = i;
     return slot;
 }
@@ -171,7 +171,7 @@ bool Inventory::inventory_is_full() {
 // Returns:
 //   Nothing.
 //----------------------------------------------------------------------------
-void Inventory::drop_item_in_slot(int slot) {
+void Inventory::delete_item_in_slot(int slot) {
     if (inv[slot] != NULL) { 
         delete inv[slot];
         inv[slot] = NULL;
@@ -481,6 +481,8 @@ Weapon::Weapon(unsigned int idx) {
 //----------------------------------------------------------------------------
 void Weapon::equip() {
     is_equipped = true;
+    std::cout << "equip: equipped weapon '" << get_full_name() << "'"<< std::endl;
+    g_player.recalculate_actual_stats();
 }
 
 //----------------------------------------------------------------------------
@@ -494,6 +496,8 @@ void Weapon::equip() {
 //----------------------------------------------------------------------------
 void Weapon::remove() {
     is_equipped = false;
+    std::cout << "equip: unequipped weapon '" << get_full_name() << "'"<< std::endl;
+    g_player.recalculate_actual_stats();
 }
 
 //----------------------------------------------------------------------------
@@ -630,6 +634,8 @@ Armor::Armor(unsigned int idx) {
 //----------------------------------------------------------------------------
 void Armor::equip() {
     is_equipped = true;
+    std::cout << "equip: equipped armor '" << get_full_name() << "'"<< std::endl;
+    g_player.recalculate_actual_stats();
 }
 
 //----------------------------------------------------------------------------
@@ -643,6 +649,8 @@ void Armor::equip() {
 //----------------------------------------------------------------------------
 void Armor::remove() {
     is_equipped = false;
+    std::cout << "equip: equipped armor '" << get_full_name() << "'"<< std::endl;
+    g_player.recalculate_actual_stats();
 }
 
 //----------------------------------------------------------------------------
@@ -950,7 +958,8 @@ Potion::Potion(unsigned int idx) {
 //   Nothing
 //----------------------------------------------------------------------------
 void Potion::use() {
-    std::cout << "potion used" << std::endl;
+    std::cout << "use: potion used" << std::endl;
+    g_player.recalculate_actual_stats();
 }
 
 //----------------------------------------------------------------------------
@@ -1090,7 +1099,8 @@ Scroll::Scroll(unsigned int idx) {
 //   Nothing
 //----------------------------------------------------------------------------
 void Scroll::use() {
-    std::cout << "scroll used" << std::endl;
+    std::cout << "use: scroll used" << std::endl;
+    g_player.recalculate_actual_stats();
 }
 
 //----------------------------------------------------------------------------
