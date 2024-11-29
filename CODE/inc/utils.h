@@ -43,7 +43,8 @@ struct StateFlags {
     bool update_inventory_cursor;       // Should the inventory cursor be redrawn?
     bool update_inventory_description;  // Should the description area be redrawn?
     bool update_inventory_items;        // Should the inventory items be redrawn?
-
+    bool update_inventory_submenu;      // Should the inventory submenu be redrawn?
+    
     //--------------------------------------------------------------------------
     // Other data
     //--------------------------------------------------------------------------

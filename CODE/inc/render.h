@@ -178,9 +178,9 @@ namespace UiConsts {
 	const int INVENTORY_DESC_AREA_W = 214;
 	const int INVENTORY_DESC_AREA_H = 38;
 
-	const int INVENTORY_MENU_Y = 57;
+	const int INVENTORY_MENU_Y = 53;
 	const int INVENTORY_MENU_WIDTH = 47;
-	const int INVENTORY_MENU_HEIGHT = 63;
+	const int INVENTORY_MENU_HEIGHT = 65;
 
 	const int NAME_TEXT_X = 280;
 	const int NAME_TEXT_Y = 7;
@@ -229,6 +229,8 @@ namespace UiConsts {
 	const int GOLD_VALUE_X = 313;
 	const int GOLD_VALUE_Y = 178;
 
+	const int NUM_ITEM_SUBMENU_OPTIONS = 6;
+	
 	// The base tiles that make up the fixed portions of a dungeon level
 	// They map to tile offsets in the dungeon world tiles
 	enum {
@@ -355,10 +357,6 @@ typedef struct {
 	// Is the context menu active?
 	bool inv_menu_active;
 
-	// The x position of the context menu (which depends on which inventory item
-	// is selected).  Note that the y position is always fixed.
-	int inv_menu_x;
-
 	// The place where the cursor was before it was last moved
     int prev_inv_cursor_x;
     int prev_inv_cursor_y;
@@ -379,7 +377,7 @@ class Render {
 		void render_inventory_content(BITMAP *destination);
 		void render_description_fields(BITMAP *destination, Item *it);
 		void render_item_submenu(BITMAP *destination);
-		void render_ui_box(BITMAP *destination, int x1, int x2, int y1, int y2);
+		void render_ui_box(BITMAP *destination, int x1, int x2, int y1, int);
 		int get_prop_text_width(char *text, int style);	
 	public:
 		Render();

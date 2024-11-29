@@ -30,7 +30,7 @@ void update_main_game_display(void) {
 	if (g_state_flags.cur_substate == GAME_SUBSTATE_MAP) {
 		g_render.render_map(g_back_buffer);
 	}
-	else if (g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY) {
+	else if (g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY || g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY_MENU) {
 		g_render.render_inventory(g_back_buffer);
 	}
 	else {		

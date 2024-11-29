@@ -37,10 +37,15 @@ enum {
     STATE_EXIT
 };
 
+// Substates of the main game state.  Each of these has different controls
+// from the main game state, so the state handler should hand control off
+// to the relevant substate functions
 enum {
     GAME_SUBSTATE_DEFAULT,
     GAME_SUBSTATE_MAP,
-    GAME_SUBSTATE_INVENTORY
+    GAME_SUBSTATE_INVENTORY,
+    GAME_SUBSTATE_INVENTORY_MENU,       // The item context menu
+    GAME_SUBSTATE_USE_ON_ITEM           // Used when selecting an item to use another item on 
 };
 
 enum {

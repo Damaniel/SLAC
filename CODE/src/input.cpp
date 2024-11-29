@@ -60,6 +60,58 @@ void process_inventory_movement_flags(void) {
 }
 
 //----------------------------------------------------------------------------
+// Handles all input for the inventory submenu substate.
+//
+// Arguments:
+//   key - the key that was pressed.
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void process_inventory_menu_substate(int key) {
+    switch(key) {
+        case KEY_UP:
+            g_ui_globals.sel_item_option -= 1;
+            if (g_ui_globals.sel_item_option < 0) {
+                g_ui_globals.sel_item_option = UiConsts::NUM_ITEM_SUBMENU_OPTIONS - 1;
+            }
+            g_state_flags.update_inventory_submenu = true;
+            g_state_flags.update_display = true;
+            break;
+        case KEY_DOWN:
+            g_ui_globals.sel_item_option += 1;
+            if (g_ui_globals.sel_item_option >= UiConsts::NUM_ITEM_SUBMENU_OPTIONS) {
+                g_ui_globals.sel_item_option = 0;
+            }
+            g_state_flags.update_inventory_submenu = true;
+            g_state_flags.update_display = true;
+            break;
+        case KEY_ENTER:
+            // If 'Close' is selected, exit the inventory menu
+            if (g_ui_globals.sel_item_option == UiConsts::NUM_ITEM_SUBMENU_OPTIONS - 1) {
+                g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY;
+                g_state_flags.update_inventory_dialog = true;
+                g_state_flags.update_inventory_cursor = true;
+                g_state_flags.update_inventory_items = true;
+                g_state_flags.update_inventory_description = true;
+                g_state_flags.update_display = true;               
+            } 
+            else {
+                // Do the thing that the selected menu option does, if valid
+            }
+            break;
+        case KEY_ESC:
+            g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY;
+            g_state_flags.update_inventory_dialog = true;
+            g_state_flags.update_inventory_cursor = true;
+            g_state_flags.update_inventory_items = true;
+            g_state_flags.update_inventory_description = true;
+            g_state_flags.update_display = true;
+            break;
+    }
+}
+
+//----------------------------------------------------------------------------
 // Handles all input for the inventory substate (that is, when the inventory
 // is on screen)
 //
@@ -104,15 +156,30 @@ void process_inventory_substate(int key) {
                 g_ui_globals.inv_cursor_x = 0;
             process_inventory_movement_flags();
             break;
-        // If I or ESC is pressed, exit the inventory screen
+        // If Enter is pressed, bring up the inventory submenu, but only if there's an item
+        // in the slot.
+        case KEY_ENTER:
+            {
+                Item *i = g_inventory->get_item_in_slot(g_ui_globals.inv_cursor_y * 
+                                       UiConsts::INVENTORY_ITEMS_PER_ROW + g_ui_globals.inv_cursor_x);
+                if (i != NULL) {    
+                    g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY_MENU;
+                    g_state_flags.update_inventory_submenu = true;
+                    g_state_flags.update_display = true;
+                    g_ui_globals.sel_item_option = 0;
+                }
+            }
+            break;
+        // If I is pressed, exit the inventory screen
+        // If Esc is pressed, exit the inventory screen or the
+        // inventory submenu
         case KEY_I:
         case KEY_ESC:
             g_state_flags.cur_substate = GAME_SUBSTATE_DEFAULT;
-
             g_state_flags.update_maze_area = true;
             if (g_state_flags.text_log_extended) {
                 g_state_flags.update_text_dialog = true;
-            }
+            }        
             g_state_flags.update_display = true;
             break;
     }
@@ -160,6 +227,9 @@ void process_game_state(int key) {
             break;
         case GAME_SUBSTATE_INVENTORY:
             process_inventory_substate(key);
+            break;
+        case GAME_SUBSTATE_INVENTORY_MENU:
+            process_inventory_menu_substate(key);
             break;
         case GAME_SUBSTATE_DEFAULT:
             // Handle lighting status for the current room.

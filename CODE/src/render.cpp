@@ -359,19 +359,113 @@ void Render::render_map(BITMAP *destination) {
 //------------------------------------------------------------------------------
 void Render::render_item_submenu(BITMAP *destination) {
 
-	// Determine the x position of the menu
-	// if (UiGlobals::inv_cursor_x < 6) {
-	// 	UiGlobals::
-	// }
-	// Create the filled box
+	int inv_menu_x;
+	int inv_menu_selection_y;
 
-	// Create the rest of the box
+	// Determine the x position of the menu
+	if (g_ui_globals.inv_cursor_x < 6) {
+	 	inv_menu_x = UiConsts::INVENTORY_ITEMS_X + 
+		             (g_ui_globals.inv_cursor_x + 1) * (UiConsts::INVENTORY_CURSOR_SIZE - 1);
+	}
+	else {
+	 	inv_menu_x = UiConsts::INVENTORY_ITEMS_X + 
+		             ((g_ui_globals.inv_cursor_x * (UiConsts::INVENTORY_CURSOR_SIZE - 1))) -
+					 UiConsts::INVENTORY_MENU_WIDTH;		
+	}
+
+	// Create the box interior
+	rectfill(destination, inv_menu_x + 3, UiConsts::INVENTORY_MENU_Y + 3, 
+	         (inv_menu_x + UiConsts::INVENTORY_MENU_WIDTH - 3),
+			 (UiConsts::INVENTORY_MENU_Y + UiConsts::INVENTORY_MENU_HEIGHT - 3 - 1),
+			 23);
+
+	// Create the common borders
+	rect(destination, inv_menu_x, UiConsts::INVENTORY_MENU_Y, 
+	     (inv_menu_x + UiConsts::INVENTORY_MENU_WIDTH),
+		 (UiConsts::INVENTORY_MENU_Y + UiConsts::INVENTORY_MENU_HEIGHT - 1), 30);
+
+	// { 103 }
+	// Create the interior borders
+	rect(destination, inv_menu_x + 2, UiConsts::INVENTORY_MENU_Y + 2,
+	     (inv_menu_x + UiConsts::INVENTORY_MENU_WIDTH - 2),
+		 (UiConsts::INVENTORY_MENU_Y + 48), 19);
+
+	rect(destination, inv_menu_x + 1, UiConsts::INVENTORY_MENU_Y + 1,
+	     (inv_menu_x + UiConsts::INVENTORY_MENU_WIDTH - 1),
+		 (UiConsts::INVENTORY_MENU_Y + 49), 16);
+
+	rect(destination, inv_menu_x + 2 , UiConsts::INVENTORY_MENU_Y + 52,
+	     (inv_menu_x + UiConsts::INVENTORY_MENU_WIDTH - 2),
+		 (UiConsts::INVENTORY_MENU_Y + UiConsts::INVENTORY_MENU_HEIGHT - 2 - 1), 19);
+
+	rect(destination, inv_menu_x + 1 , UiConsts::INVENTORY_MENU_Y + 51,
+	     (inv_menu_x + UiConsts::INVENTORY_MENU_WIDTH - 1),
+		 (UiConsts::INVENTORY_MENU_Y + UiConsts::INVENTORY_MENU_HEIGHT - 1 - 1), 16);
+
+	// Create the separator
+	hline(destination, inv_menu_x , UiConsts::INVENTORY_MENU_Y + 50,
+	      inv_menu_x + UiConsts::INVENTORY_MENU_WIDTH, 30);
 
 	// Draw the highlight over what will be the selected text option
+	switch (g_ui_globals.sel_item_option) {
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+			inv_menu_selection_y = UiConsts::INVENTORY_MENU_Y + 3 + (g_ui_globals.sel_item_option * 9);
+			break;
+		case 5:
+			inv_menu_selection_y = UiConsts::INVENTORY_MENU_Y + 53;
+			break;
+	}
+
+	rectfill(destination, inv_menu_x + 3, inv_menu_selection_y,
+	         inv_menu_x + UiConsts::INVENTORY_MENU_WIDTH - 3, 
+			 inv_menu_selection_y + 8, 29);
 
 	// Get the item at the highlighed slot
+	Item *i = g_inventory->get_item_in_slot(g_ui_globals.inv_cursor_y * 
+                UiConsts::INVENTORY_ITEMS_PER_ROW + g_ui_globals.inv_cursor_x);
 
 	// Fill in the text in the menu
+
+	// The use option
+	int text_color;
+	if (i->can_be_used()) 
+		text_color = FontConsts::FONT_YELLOW;
+	else
+		text_color = FontConsts::FONT_GRAY;
+	render_text(destination, "Use", inv_menu_x + 4, UiConsts::INVENTORY_MENU_Y + 3 + 1, 
+	            text_color, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+
+	// The equip/unequip options
+	// TODO - get player equip/unequip stuff figured out.  For now, gray them out
+	text_color = FontConsts::FONT_GRAY;
+	render_text(destination, "Equip", inv_menu_x + 4, UiConsts::INVENTORY_MENU_Y + 3 + 10, 
+	            text_color, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	render_text(destination, "Unequip", inv_menu_x + 4, UiConsts::INVENTORY_MENU_Y + 3 + 19, 
+	            text_color, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);	
+
+	// The drop / destroy options
+	if (i->can_be_dropped())
+		text_color = FontConsts::FONT_YELLOW;
+	else
+		text_color = FontConsts::FONT_GRAY;
+	render_text(destination, "Drop", inv_menu_x + 4, UiConsts::INVENTORY_MENU_Y + 3 + 28, 
+	            text_color, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	render_text(destination, "Destroy", inv_menu_x + 4, UiConsts::INVENTORY_MENU_Y + 3 + 37, 
+	            text_color, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);	
+
+	// The close option
+	render_text(destination, "Close", inv_menu_x + 4, UiConsts::INVENTORY_MENU_Y + 3 + 51, 
+	            text_color, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);	
 
 	// Done
 
@@ -610,6 +704,11 @@ void Render::render_inventory(BITMAP *destination) {
 	}
 
 	render_inventory_content(destination);
+
+	if(g_state_flags.update_inventory_submenu) {
+		render_item_submenu(destination);
+		g_state_flags.update_inventory_submenu = false;
+	}
 }
 
 //------------------------------------------------------------------------------

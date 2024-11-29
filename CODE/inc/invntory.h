@@ -256,6 +256,8 @@ public:
     bool can_have_a_suffix() { return can_have_suffix; }
     bool can_have_curse() { return can_be_cursed; }
     bool can_it_stack() { return can_stack; }
+    bool can_be_used() { return can_use; }
+    bool can_be_dropped() { return can_drop; }
     void identify() { is_identified = true; }
     bool is_it_identified() { return is_identified; }
     unsigned short get_quantity() { return quantity; }
