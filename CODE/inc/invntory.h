@@ -485,6 +485,7 @@ public:
     bool inventory_is_full();
     int get_num_slots_in_use();
     void delete_item_in_slot(int slot);
+    void remove_item_in_slot(int slot);
     void dump_inventory(void);
     int get_stackable_item_slot(Item *it);
     //void drop_item_qty_in_slot(int slot, int quantity);

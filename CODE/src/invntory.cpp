@@ -222,6 +222,18 @@ int Inventory::get_stackable_item_slot(Item *item) {
     return -1;
 }
 
+//----------------------------------------------------------------------------
+// Clears an existing item slot (after a transfer to somewhere else)
+//
+// Arguments: 
+//   slot - the slot of the item to clear out
+//
+// Returns:
+//----------------------------------------------------------------------------
+void Inventory::remove_item_in_slot(int slot) {
+    inv[slot] = NULL;
+}
+
 //==================================================================
 // Item
 //==================================================================

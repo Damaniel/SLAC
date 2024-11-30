@@ -428,6 +428,28 @@ void add_items_at_player_to_log(void) {
 	}
 }
 
+void drop_item_at(int slot, int x, int y) {
+	bool dropped = false;
+	Item *i;
+
+	if(g_dungeon.maze->stairs_here(x, y) != MazeConsts::NO_STAIRS) {
+		g_text_log.put_line("Unable to drop an item onto stairs.");
+	}
+	else {
+		i = g_inventory->get_item_in_slot(slot);
+		if (i != NULL) {
+			g_text_log.put_line("Dropped the " + i->get_full_name() + ".");
+			g_dungeon.maze->add_item(x, y, i);
+			g_inventory->remove_item_in_slot(slot);
+			g_state_flags.update_inventory_items = true;
+			g_state_flags.update_inventory_items = true;
+			g_state_flags.update_inventory_description = true;
+		}
+	}
+	g_state_flags.update_text_dialog = true;
+	g_state_flags.update_display = true;
+
+}
 //----------------------------------------------------------------------------
 // 'Picks up' an item (adding it to the inventory or gold total, removing it
 // from the ground)
@@ -554,6 +576,7 @@ void perform_inventory_menu_action(void) {
 			// If the item can be dropped, and currently isn't equipped, drop it on the ground
 			if (i->can_be_dropped() && !i->is_it_equipped()) {
 				std::cout << "perform_inventory_menu_action: dropping item" << std::endl;
+				drop_item_at(slot, g_player.get_x_pos(), g_player.get_y_pos());
 				// TODO: drop here
 			}
 			break;
