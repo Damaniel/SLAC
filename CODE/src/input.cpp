@@ -224,6 +224,32 @@ void process_map_substate(int key) {
 }
 
 //----------------------------------------------------------------------------
+// Handles all input for the stats substate (that is, when the stats are
+// on screen)
+//
+// Arguments:
+//   key - the key that was pressed
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void process_stats_substate(int key) {
+    switch (key) {
+        // If S or ESC is pressed, exit the stats screen
+        case KEY_S:
+        case KEY_ESC:
+    		g_state_flags.cur_substate = GAME_SUBSTATE_DEFAULT;
+            // Redraw the maze area, and the extended log if enabled
+		    g_state_flags.update_maze_area = true;
+		    if (g_state_flags.text_log_extended) {
+    		    g_state_flags.update_text_dialog = true;
+		    }
+            g_state_flags.update_display = true;
+            break;
+    } 
+}
+
+//----------------------------------------------------------------------------
 // Handles all input for the main game state, plus any current substate
 //
 // Arguments:
@@ -242,6 +268,9 @@ void process_game_state(int key) {
             break;
         case GAME_SUBSTATE_INVENTORY_MENU:
             process_inventory_menu_substate(key);
+            break;
+        case GAME_SUBSTATE_STATS:
+            process_stats_substate(key);
             break;
         case GAME_SUBSTATE_DEFAULT:
             // Handle lighting status for the current room.
@@ -283,6 +312,11 @@ void process_game_state(int key) {
 			            process_movement_flags();
 			            add_items_at_player_to_log();
 		            }
+                    break;
+                case KEY_S:
+                    g_state_flags.cur_substate = GAME_SUBSTATE_STATS;
+                    g_state_flags.update_stats_screen = true;
+                    g_state_flags.update_display = true;
                     break;
 	            case KEY_M:
                     g_state_flags.cur_substate = GAME_SUBSTATE_MAP;

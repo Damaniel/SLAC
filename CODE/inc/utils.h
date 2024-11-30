@@ -45,6 +45,9 @@ struct StateFlags {
     bool update_inventory_items;        // Should the inventory items be redrawn?
     bool update_inventory_submenu;      // Should the inventory submenu be redrawn?
 
+    // - stats
+    bool update_stats_screen;            // Should the stats screen be displayed
+
     //--------------------------------------------------------------------------
     // Other data
     //--------------------------------------------------------------------------

@@ -41,6 +41,10 @@ Player::Player(void) {
 	exp = 0;
 
 	init_base_stats();
+	// Move a copy of the base stats into the actual stats
+	assign_base_stats_to_actual();
+
+	// Set the base HP
 	hp = (int)base.max_hp;
 
 	// Null out the item slots
@@ -489,6 +493,7 @@ void Player::recalculate_actual_stats(void) {
 	// Assign the base stat values to the actual stats
 	assign_base_stats_to_actual();
 
+	// reset the two temporary stat tables
 	init_temp_stats(&fixed, &multiplicative);
 
 	//std::cout << "recalculate_actual_stats: before" << std::endl;

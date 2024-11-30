@@ -229,6 +229,112 @@ namespace UiConsts {
 	const int GOLD_VALUE_X = 313;
 	const int GOLD_VALUE_Y = 178;
 
+	// The stats screen
+	const int STATS_SCREEN_X1 = 48;
+	const int STATS_SCREEN_Y1 = 46;
+	const int STATS_SCREEN_X2 = 191;
+	const int STATS_SCREEN_Y2 = 162;
+
+	// The header text for the stats screen
+	const int STATS_HEADER_X = 117;
+	const int STATS_HEADER_Y = 53;
+
+ 	// Positions on the stats screen for each element displayed there
+	const int STATS_STR_TEXT_X = 54;
+	const int STATS_STR_TEXT_Y = 65;
+	const int STATS_STR_VAL_X = 114;
+	const int STATS_STR_VAL_Y =  65;
+
+	const int STATS_CON_TEXT_X = 54;
+	const int STATS_CON_TEXT_Y = 74;
+	const int STATS_CON_VAL_X = 114;
+	const int STATS_CON_VAL_Y =  74;
+
+	const int STATS_DEX_TEXT_X = 54;
+	const int STATS_DEX_TEXT_Y = 83;
+	const int STATS_DEX_VAL_X = 114;
+	const int STATS_DEX_VAL_Y =  83;
+
+	const int STATS_ATK_TEXT_X = 54;
+	const int STATS_ATK_TEXT_Y = 92;
+	const int STATS_ATK_VAL_X = 114;
+	const int STATS_ATK_VAL_Y =  92;
+
+	const int STATS_DEF_TEXT_X =  54;
+	const int STATS_DEF_TEXT_Y = 101;
+	const int STATS_DEF_VAL_X =  114;
+	const int STATS_DEF_VAL_Y =  101;
+
+	const int STATS_SPD_TEXT_X =  54;
+	const int STATS_SPD_TEXT_Y = 110;
+	const int STATS_SPD_VAL_X =  114;
+	const int STATS_SPD_VAL_Y =  110;
+
+	const int STATS_FRES_TEXT_X =  54;
+	const int STATS_FRES_TEXT_Y = 119;
+	const int STATS_FRES_VAL_X =  114;
+	const int STATS_FRES_VAL_Y =  119;
+
+	const int STATS_IRES_TEXT_X =  54;
+	const int STATS_IRES_TEXT_Y = 128;
+	const int STATS_IRES_VAL_X =  114;
+	const int STATS_IRES_VAL_Y =  128;
+
+	const int STATS_LRES_TEXT_X =  54;
+	const int STATS_LRES_TEXT_Y = 137;
+	const int STATS_LRES_VAL_X =  114;
+	const int STATS_LRES_VAL_Y =  137;
+
+	const int STATS_FATK_TEXT_X = 125;
+	const int STATS_FATK_TEXT_Y =  65;
+	const int STATS_FATK_VAL_X =  185;
+	const int STATS_FATK_VAL_Y =   65;
+
+	const int STATS_IATK_TEXT_X = 125;
+	const int STATS_IATK_TEXT_Y =  74;
+	const int STATS_IATK_VAL_X =  185;
+	const int STATS_IATK_VAL_Y =   74;
+
+	const int STATS_LATK_TEXT_X = 125;
+	const int STATS_LATK_TEXT_Y =  83;
+	const int STATS_LATK_VAL_X =  185;
+	const int STATS_LATK_VAL_Y =   83;
+
+	const int STATS_FDMG_TEXT_X = 125;
+	const int STATS_FDMG_TEXT_Y =  92;
+	const int STATS_FDMG_VAL_X =  185;
+	const int STATS_FDMG_VAL_Y =   92;
+
+	const int STATS_IDMG_TEXT_X = 125;
+	const int STATS_IDMG_TEXT_Y = 101;
+	const int STATS_IDMG_VAL_X =  185;
+	const int STATS_IDMG_VAL_Y =  101;
+
+	const int STATS_LDMG_TEXT_X = 125;
+	const int STATS_LDMG_TEXT_Y = 110;
+	const int STATS_LDMG_VAL_X =  185;
+	const int STATS_LDMG_VAL_Y =  110;
+	
+	const int STATS_ADMG_TEXT_X = 125;
+	const int STATS_ADMG_TEXT_Y = 119;
+	const int STATS_ADMG_VAL_X =  185;
+	const int STATS_ADMG_VAL_Y =  119;
+
+	const int STATS_APT_TEXT_X = 125;
+	const int STATS_APT_TEXT_Y = 128;
+	const int STATS_APT_VAL_X =  185;
+	const int STATS_APT_VAL_Y =  128;
+
+	const int STATS_BLOCK_TEXT_X = 125;
+	const int STATS_BLOCK_TEXT_Y = 137;
+	const int STATS_BLOCK_VAL_X =  185;
+	const int STATS_BLOCK_VAL_Y =  137;
+
+	const int STATS_HP_TEXT_X = 88;
+	const int STATS_HP_TEXT_Y = 148;
+	const int STATS_HP_VAL_X =  149;
+	const int STATS_HP_VAL_Y =  148;
+
 	// The base tiles that make up the fixed portions of a dungeon level
 	// They map to tile offsets in the dungeon world tiles
 	enum {
@@ -404,6 +510,7 @@ class Render {
 		void render_text_log(BITMAP *destination, bool extended);
 		void render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_y);
 		void render_world_at_player(BITMAP *destination, Maze *m, int maze_x, int maze_y);
+		void render_stats_screen(BITMAP *destination);
 };
 
 #endif	

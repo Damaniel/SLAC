@@ -837,6 +837,199 @@ void Render::render_status_base(BITMAP *destination) {
 }
 
 //------------------------------------------------------------------------------
+// Draws the stats screen.
+//
+// Arguments:
+//   destination - the bitmap to write to
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Render::render_stats_screen(BITMAP *destination) {
+	char text[32];
+
+	// The main window
+	render_ui_box(destination, UiConsts::STATS_SCREEN_X1, UiConsts::STATS_SCREEN_Y1,
+				   UiConsts::STATS_SCREEN_X2, UiConsts::STATS_SCREEN_Y2);
+
+	// Stats header
+	render_text(destination, "Stats", UiConsts::STATS_HEADER_X, UiConsts::STATS_HEADER_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_CENTERED);
+
+	// STR
+	render_text(destination, "STR:", UiConsts::STATS_STR_TEXT_X, UiConsts::STATS_STR_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%d", (int)g_player.actual.str);
+	render_text(destination, text, UiConsts::STATS_STR_VAL_X, UiConsts::STATS_STR_VAL_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// CON
+	render_text(destination, "CON:", UiConsts::STATS_CON_TEXT_X, UiConsts::STATS_CON_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%d", (int)g_player.actual.con);
+	render_text(destination, text, UiConsts::STATS_CON_VAL_X, UiConsts::STATS_CON_VAL_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// DEX
+	render_text(destination, "DEX:", UiConsts::STATS_DEX_TEXT_X, UiConsts::STATS_DEX_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%d", (int)g_player.actual.dex);
+	render_text(destination, text, UiConsts::STATS_DEX_VAL_X, UiConsts::STATS_DEX_VAL_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// ATK
+	render_text(destination, "ATK:", UiConsts::STATS_ATK_TEXT_X, UiConsts::STATS_ATK_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%d", (int)g_player.actual.atk);
+	render_text(destination, text, UiConsts::STATS_ATK_VAL_X, UiConsts::STATS_ATK_VAL_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// DEF
+	render_text(destination, "DEF:", UiConsts::STATS_DEF_TEXT_X, UiConsts::STATS_DEF_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%d", (int)g_player.actual.def);
+	render_text(destination, text, UiConsts::STATS_DEF_VAL_X, UiConsts::STATS_DEF_VAL_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// SPD
+	render_text(destination, "SPD:", UiConsts::STATS_SPD_TEXT_X, UiConsts::STATS_SPD_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%d", (int)g_player.actual.spd);
+	render_text(destination, text, UiConsts::STATS_SPD_VAL_X, UiConsts::STATS_SPD_VAL_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// FRes
+	render_text(destination, "FRes:", UiConsts::STATS_FRES_TEXT_X, UiConsts::STATS_FRES_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%d%%", (int)g_player.actual.f_def);
+	render_text(destination, text, UiConsts::STATS_FRES_VAL_X, UiConsts::STATS_FRES_VAL_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+	
+	// IRes
+	render_text(destination, "IRes:", UiConsts::STATS_IRES_TEXT_X, UiConsts::STATS_IRES_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%d%%", (int)g_player.actual.i_def);
+	render_text(destination, text, UiConsts::STATS_IRES_VAL_X, UiConsts::STATS_IRES_VAL_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// LRes
+	render_text(destination, "LRes:", UiConsts::STATS_LRES_TEXT_X, UiConsts::STATS_LRES_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%d%%", (int)g_player.actual.l_def);
+	render_text(destination, text, UiConsts::STATS_LRES_VAL_X, UiConsts::STATS_LRES_VAL_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// FAtk
+	render_text(destination, "FAtk:", UiConsts::STATS_FATK_TEXT_X, UiConsts::STATS_FATK_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%d", (int)g_player.actual.f_atk);
+	render_text(destination, text, UiConsts::STATS_FATK_VAL_X, UiConsts::STATS_FATK_VAL_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// IAtk
+	render_text(destination, "IAtk:", UiConsts::STATS_IATK_TEXT_X, UiConsts::STATS_IATK_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%d", (int)g_player.actual.i_atk);
+	render_text(destination, text, UiConsts::STATS_IATK_VAL_X, UiConsts::STATS_IATK_VAL_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// FAtk
+	render_text(destination, "LAtk:", UiConsts::STATS_LATK_TEXT_X, UiConsts::STATS_LATK_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%d", (int)g_player.actual.l_atk);
+	render_text(destination, text, UiConsts::STATS_LATK_VAL_X, UiConsts::STATS_LATK_VAL_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// FDmg
+	render_text(destination, "FDmg:", UiConsts::STATS_FDMG_TEXT_X, UiConsts::STATS_FDMG_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%.0f%%", (g_player.actual.f_dmg * 100));
+	render_text(destination, text, UiConsts::STATS_FDMG_VAL_X, UiConsts::STATS_FDMG_VAL_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// IDmg
+	render_text(destination, "IDmg:", UiConsts::STATS_IDMG_TEXT_X, UiConsts::STATS_IDMG_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%.0f%%", (g_player.actual.i_dmg * 100));
+	render_text(destination, text, UiConsts::STATS_IDMG_VAL_X, UiConsts::STATS_IDMG_VAL_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// LDmg
+	render_text(destination, "LDmg:", UiConsts::STATS_LDMG_TEXT_X, UiConsts::STATS_LDMG_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%.0f%%", (g_player.actual.l_dmg * 100));
+	render_text(destination, text, UiConsts::STATS_LDMG_VAL_X, UiConsts::STATS_LDMG_VAL_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// ADmg
+	render_text(destination, "ADmg:", UiConsts::STATS_ADMG_TEXT_X, UiConsts::STATS_ADMG_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%.0f%%", (g_player.actual.a_dmg * 100));
+	render_text(destination, text, UiConsts::STATS_ADMG_VAL_X, UiConsts::STATS_ADMG_VAL_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// APT
+	render_text(destination, "APT:", UiConsts::STATS_APT_TEXT_X, UiConsts::STATS_APT_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%d", (int)g_player.actual.apt);
+	render_text(destination, text, UiConsts::STATS_APT_VAL_X, UiConsts::STATS_APT_VAL_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// Block
+	render_text(destination, "Block:", UiConsts::STATS_BLOCK_TEXT_X, UiConsts::STATS_BLOCK_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%.0f%%", (g_player.actual.block * 100));
+	render_text(destination, text, UiConsts::STATS_BLOCK_VAL_X, UiConsts::STATS_BLOCK_VAL_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// MAX_HP
+	render_text(destination, "MaxHP:", UiConsts::STATS_HP_TEXT_X, UiConsts::STATS_HP_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_LEFT_JUSTIFIED);
+	sprintf(text, "%d", (int)g_player.actual.max_hp);
+	render_text(destination, text, UiConsts::STATS_HP_VAL_X, UiConsts::STATS_HP_VAL_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_RIGHT_JUSTIFIED);
+}
+
+//------------------------------------------------------------------------------
 // Draws the text area graphic to the screen.
 //
 // Arguments:

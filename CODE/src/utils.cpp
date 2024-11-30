@@ -33,6 +33,9 @@ void update_main_game_display(void) {
 	else if (g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY || g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY_MENU) {
 		g_render.render_inventory(g_back_buffer);
 	}
+	else if (g_state_flags.cur_substate == GAME_SUBSTATE_STATS) {
+		g_render.render_stats_screen(g_back_buffer);
+	}
 	else {		
 		if (g_state_flags.update_maze_area == true) {
 			// Add the areas around the player to the map bitmap
