@@ -291,26 +291,29 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 
 	// Set the current ilevel based on the dungeon the player is in and the
 	// floor they're on
-	switch (d.maze_id) {
-		case DUSTY_TUNNELS:
-			d.ilevel = level / 2;
-			if (d.ilevel < 1 ) d.ilevel = 1;
-			if (d.ilevel > 25) d.ilevel = 25;
-			break;
-		case MARBLE_HALLS:
-			d.ilevel = 20 + (level / 2);
-			if (d.ilevel < 20 ) d.ilevel = 20;
-			if (d.ilevel > 70) d.ilevel = 70;
-			break;
-		case CRYSTAL_DEPTHS:
-			d.ilevel = 30 + (level / 2);
-			if (d.ilevel < 30 ) d.ilevel = 30;
-			if (d.ilevel > 100) d.ilevel = 100;
-			break;
-		default:
-			d.ilevel = 100;
-			break;
-	}
+	// switch (d.maze_id) {
+	// 	case DUSTY_TUNNELS:
+	// 		d.ilevel = level / 2;
+	// 		if (d.ilevel < 1 ) d.ilevel = 1;
+	// 		if (d.ilevel > 25) d.ilevel = 25;
+	// 		break;
+	// 	case MARBLE_HALLS:
+	// 		d.ilevel = 20 + (level / 2);
+	// 		if (d.ilevel < 20 ) d.ilevel = 20;
+	// 		if (d.ilevel > 70) d.ilevel = 70;
+	// 		break;
+	// 	case CRYSTAL_DEPTHS:
+	// 		d.ilevel = 30 + (level / 2);
+	// 		if (d.ilevel < 30 ) d.ilevel = 30;
+	// 		if (d.ilevel > 100) d.ilevel = 100;
+	// 		break;
+	// 	default:
+	// 		d.ilevel = 100;
+	// 		break;
+	// }
+
+	// TODO: remove this after testing
+	d.ilevel = 100;
 
 	d.maze = new Maze(d.width, d.height, d.ilevel);
 
@@ -644,6 +647,135 @@ void use_stairs(int x, int y) {
 }
 
 //----------------------------------------------------------------------------
+// Applies a modifier based on a mode (absolute or relative) to the 
+// specified locations
+//
+// Arguments:
+//   mode - the magnifier mode (0 = relative, 1 = fixed)
+//	 value - the value to set
+//   fixed - the variable to hold the fixed value
+//   multiplicative - the variable to hold the multiplicative value
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void apply_modifier_value(int mode, float value, float *fixed, float *multiplicative) {
+	//std::cout << "apply_modifier_value: fixed = " << *fixed << ", mult = " << *multiplicative << ", value = " << value << std::endl;
+	if (mode == 0)					// Relative increase
+		*multiplicative += (value - 1.0);
+	else if (mode == 1)				// Absolute increase
+		*fixed += (int)value;
+	// Note: mode 2 will be handled after all other calculations are done by the recalculate function,
+	// since the percentage will be based on the primary stat's adjusted value
+	//std::cout << "apply_modifier_value: after - fixed = " << *fixed << ", mult = " << *multiplicative << ", value = " << value << std::endl;
+}
+
+//----------------------------------------------------------------------------
+// Applies a single modifier to the multiplicative and fixed value lists
+//
+// Arguments:
+//   m - the modifier to adjust
+//   fixed - the fixed values structure
+//   multiplicative - the multiplicative values structure
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void apply_single_modifier(ModifierMagType m, Stats *fixed, Stats *multiplicative) {
+// This function is Ug. Ly.  I think this could be managed better by function pointers that do the
+// application of the values directly.  But for now, I'm doing this to get something in place.
+	switch (m.modifier_id) {
+		case 0:		// STR
+			//std::cout << "apply_single_modifier: Adjusting STR - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
+			//std::cout << "apply_single_modifier: Fixed = " << fixed->str << ", mult = " << multiplicative->str << std::endl;
+			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->str), &(multiplicative->str));
+			break;
+		case 1:		// CON
+			//std::cout << "apply_single_modifier: Adjusting CON - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
+			//std::cout << "apply_single_modifier: Fixed = " << fixed->con << ", mult = " << multiplicative->con << std::endl;
+			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->con), &(multiplicative->con));
+			break;
+		case 2:		// DEX
+			//std::cout << "apply_single_modifier: Adjusting DEX - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
+			//std::cout << "apply_single_modifier: Fixed = " << fixed->dex << ", mult = " << multiplicative->dex << std::endl;
+			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->dex), &(multiplicative->dex));
+			break;
+		case 3:		// ATK
+			//std::cout << "apply_single_modifier: Adjusting ATK - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
+			//std::cout << "apply_single_modifier: Fixed = " << fixed->atk << ", mult = " << multiplicative->atk << std::endl;
+			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->atk), &(multiplicative->atk));
+			break;
+		case 4:		// DEF
+			//std::cout << "apply_single_modifier: Adjusting DEF - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
+			//std::cout << "apply_single_modifier: Fixed = " << fixed->def << ", mult = " << multiplicative->def << std::endl;
+			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->def), &(multiplicative->def));
+			break;
+		case 5:		// SPD
+			//std::cout << "apply_single_modifier: Adjusting SPD - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
+			//std::cout << "apply_single_modifier: Fixed = " << fixed->spd << ", mult = " << multiplicative->spd << std::endl;
+			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->spd), &(multiplicative->spd));
+			break;
+		case 6:		// FAtk
+			//std::cout << "apply_single_modifier: Adjusting FAtk - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
+			//std::cout << "apply_single_modifier: Fixed = " << fixed->f_atk << ", mult = " << multiplicative->f_atk << std::endl;
+			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->f_atk), &(multiplicative->f_atk));
+			break;
+		case 7:		// IAtk
+			//std::cout << "apply_single_modifier: Adjusting IAtk - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
+			(m.modifier_mode, m.magnitude, &(fixed->i_atk), &(multiplicative->i_atk));
+			break;
+		case 8: 	// LAtk
+			//std::cout << "apply_single_modifier: Adjusting LAtk - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
+			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->l_atk), &(multiplicative->l_atk));
+			break;
+		case 9:		// FDef
+			//std::cout << "apply_single_modifier: Adjusting FDef - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
+			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->f_def), &(multiplicative->f_def));
+			break;
+		case 10:	// IDef
+			//std::cout << "apply_single_modifier: Adjusting IDef - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
+			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->i_def), &(multiplicative->i_def));
+			break;
+		case 11:	// LDef
+			//std::cout << "apply_single_modifier: Adjusting LDef - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
+			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->l_def), &(multiplicative->l_def));
+			break;
+		case 12:	// Attacks per turn
+			//std::cout << "apply_single_modifier: Adjusting APT - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
+			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->apt), &(multiplicative->apt));
+			break;
+		case 13:	// Max HP
+			//std::cout << "apply_single_modifier: Adjusting Max HP - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
+			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->max_hp), &(multiplicative->max_hp));
+			break;
+		case 14:	// Fire damage taken
+			//std::cout << "apply_single_modifier: Adjusting FDmg  - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
+			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->f_dmg), &(multiplicative->f_dmg));
+			break;
+		case 15:	// Ice damage taken
+			//std::cout << "apply_single_modifier: Adjusting IDmg - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
+			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->i_dmg), &(multiplicative->i_dmg));
+			break;
+		case 16:	// Lightning damage taken
+			//std::cout << "apply_single_modifier: Adjusting LDmg - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
+			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->l_dmg), &(multiplicative->l_dmg));
+			break;
+		case 17:	// Poisoned
+			//std::cout << "apply_single_modifier: Turning on equipment poison" << std::endl;
+			g_player.is_equip_poisoned = true;
+			break;
+		case 18:	// Chance to block
+			//std::cout << "apply_single_modifier: Adjusting Block - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
+			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->block), &(multiplicative->block));
+			break;
+		case 19: 	// All damage taken
+			//std::cout << "apply_single_modifier: Adjusting ADmg - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
+			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->a_dmg), &(multiplicative->a_dmg));
+			break;
+	}
+}
+
+//----------------------------------------------------------------------------
 // Gets the base stats and mods for an item, determine what stats the mods
 // affect, and adjust the fixed and mulitplicative stats accordingly
 //
@@ -656,16 +788,47 @@ void use_stairs(int x, int y) {
 // Returns:
 //   Nothing
 //----------------------------------------------------------------------------
-void apply_item_values_to_stats(Item *i, Stats &fixed, MultiplicativeStats &multiplicative) {
-	// If a weapon
-	//  - get the attack and add it
-	//  - get the prefix, get the mods attached to it, and add them
-	//  - get the suffix, get the mods attached to it, and add them
+void apply_item_values_to_stats(Item *i, Stats *fixed, Stats *multiplicative) {
+	if (i->get_item_class() == ItemConsts::WEAPON_CLASS) {
+		//std::cout << "apply_item_values_to_stats: attack was " << fixed->atk << std::endl;
+		fixed->atk += i->get_attack();
+		//std::cout << "apply_item_values_to_stats: attack is now " << fixed->atk << std::endl;
+	}
+	if (i->get_item_class() == ItemConsts::ARMOR_CLASS) {
+		//std::cout << "apply_item_values_to_stats: defense was " << fixed->def << std::endl;
+		fixed->def += i->get_defense();
+		//std::cout << "apply_item_values_to_stats: defense is now " << fixed->def << std::endl;
+	}
 
-	// If an armor
-	//  - get the defense and add it
-	//  - get the prefix, get the mods attached to it, and add them
-	//  - get the suffix, get the mods attached to it, and add them
-
-	// TODO: do items here?
+	int idx;
+	if(i->get_prefix() != -1) {
+		ItemPrefixType p;
+		int prefix = i->get_prefix();
+		if (i->is_it_cursed()) {
+			p = g_cursed_item_prefix_ids[prefix];
+		}
+		else {
+			p = g_item_prefix_ids[prefix];
+		}
+		//std::cout << "apply_item_values_to_stats: name: " << p.name << ", num mods = " << (int)p.num_modifiers << std::endl;
+		for (idx=0; idx < p.num_modifiers; idx++) {
+			//std::cout << "apply_item_values_to_stats: applying prefix id " << idx << std::endl;
+			apply_single_modifier(p.modifiers[idx], fixed, multiplicative);
+		}
+	}
+	if(i->get_suffix() != -1) {
+		ItemSuffixType p;
+		int suffix = i->get_suffix();
+		if (i->is_it_cursed()) {
+			p = g_cursed_item_suffix_ids[suffix];
+		}
+		else {
+			p = g_item_suffix_ids[suffix];
+		}
+		//std::cout << "apply_item_values_to_stats: name: " << p.name << ", num mods = " << (int)p.num_modifiers << std::endl;
+		for (idx=0; idx < p.num_modifiers; idx++) {
+			//std::cout << "apply_item_values_to_stats: applying suffix id " << idx << std::endl;
+			apply_single_modifier(p.modifiers[idx], fixed, multiplicative);
+		}
+	}
 }

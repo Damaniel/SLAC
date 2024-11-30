@@ -438,14 +438,14 @@ ItemPrefixType g_item_prefix_ids[] = {
    {16, "Freezing", "+50% of damage as ice", 16, 96, 50, 1, {{3, 2, 0.5, 7}}},
    {17, "Sparking", "+10% of damage as lightning", 17, 192, 15, 1, {{3, 2, 0.1, 8}}},
    {18, "Shocking", "+50% of damage as lightning", 18, 96, 50, 1, {{3, 2, 0.5, 8}}},
-   {19, "Fire-shrouded", "20% fire damage reduction", 19, 128, 15, 1, {{14, 0, 0.8, 0}}},
-   {20, "Fire-cloaked", "40% fire damage reduction", 20, 32, 55, 1, {{14, 0, 0.6, 0}}},
-   {21, "Ice-shrouded", "20% ice damage reduction", 21, 128, 15, 1, {{15, 0, 0.8, 0}}},
-   {22, "Ice-cloaked", "40% ice damage reduction", 22, 32, 55, 1, {{15, 0, 0.6, 0}}},
-   {23, "Spark-shrouded", "20% lightning damage reduction", 23, 128, 15, 1, {{16, 0, 0.8, 0}}},
-   {24, "Spark-cloaked", "40% lightning damage reduction", 24, 32, 55, 1, {{16, 0, 0.6, 0}}},
-   {25, "Elemental-shrouded", "10% elemental damage reduction", 25, 64, 15, 3, {{14, 0, 0.9, 0}, {15, 0, 0.9, 0}, {16, 0, 0.9, 0}}},
-   {26, "Elemental-cloaked", "20% elemental damage reduction", 26, 8, 55, 3, {{14, 0, 0.8, 0}, {15, 0, 0.8, 0}, {16, 0, 0.8, 0}}}
+   {19, "Fire-shrouded", "20% fire damage reduction", 19, 128, 15, 1, {{14, 1, -0.2, 0}}},
+   {20, "Fire-cloaked", "40% fire damage reduction", 20, 32, 55, 1, {{14, 1, -0.4, 0}}},
+   {21, "Ice-shrouded", "20% ice damage reduction", 21, 128, 15, 1, {{15, 1, -0.2, 0}}},
+   {22, "Ice-cloaked", "40% ice damage reduction", 22, 32, 55, 1, {{15, 1, -0.4, 0}}},
+   {23, "Spark-shrouded", "20% lightning damage reduction", 23, 128, 15, 1, {{16, 1, -0.2, 0}}},
+   {24, "Spark-cloaked", "40% lightning damage reduction", 24, 32, 55, 1, {{16, 1, -0.2, 0}}},
+   {25, "Elemental-shrouded", "10% elemental damage reduction", 25, 64, 15, 3, {{14, 1, -0.1, 0}, {15, 1, -0.1, 0}, {16, 1, -0.1, 0}}},
+   {26, "Elemental-cloaked", "20% elemental damage reduction", 26, 8, 55, 3, {{14, 1, -0.2, 0}, {15, 1, -0.2, 0}, {16, 1, -0.2, 0}}}
 };
 
 // ItemPrefixType g_cursed_item_prefix_ids
@@ -456,14 +456,14 @@ ItemPrefixType g_item_prefix_ids[] = {
 //   {id, name, description, gid, rarity, ilevel, modifier(s)}
 //
 ItemPrefixType g_cursed_item_prefix_ids[] = {
-   {27, "Ignited", "+20% fire damage taken", 27, 192, 10, 1, {{14, 0, 1.2, 0}}},
-   {28, "Engulfed", "+40% fire damage taken", 28, 96, 40, 1, {{14, 0, 1.4, 0}}},
-   {29, "Chilled", "+20% ice damage taken", 29, 192, 10, 1, {{15, 0, 1.2, 0}}},
-   {30, "Chilled", "+40% ice damage taken", 30, 96, 40, 1, {{15, 0, 1.4, 0}}},
-   {31, "Shocked", "+20% lightning damage taken", 31, 192, 10, 1, {{16, 0, 1.2, 0}}},
-   {32, "Electrified", "+40 lightning damage taken", 32, 96, 40, 1, {{16, 0, 1.4, 0}}},
-   {33, "Element-touched", "+10% elemental damage taken", 33, 32, 20, 3, {{14, 0, 1.1, 0}, {15, 0, 1.1, 0}, {16, 0, 1.1, 0}}},
-   {34, "Element-tangled", "+20% elemental damage taken", 34, 8, 50, 3, {{14, 0, 1.2, 0}, {15, 0, 1.2, 0}, {16, 0, 1.2, 0}}},
+   {27, "Ignited", "+20% fire damage taken", 27, 192, 10, 1, {{14, 1, 0.2, 0}}},
+   {28, "Engulfed", "+40% fire damage taken", 28, 96, 40, 1, {{14, 1, 0.4, 0}}},
+   {29, "Chilled", "+20% ice damage taken", 29, 192, 10, 1, {{15, 1, 0.2, 0}}},
+   {30, "Chilled", "+40% ice damage taken", 30, 96, 40, 1, {{15, 1, 0.4, 0}}},
+   {31, "Shocked", "+20% lightning damage taken", 31, 192, 10, 1, {{16, 1, 0.2, 0}}},
+   {32, "Electrified", "+40 lightning damage taken", 32, 96, 40, 1, {{16, 1, 0.4, 0}}},
+   {33, "Element-touched", "+10% elemental damage taken", 33, 32, 20, 3, {{14, 1, 0.1, 0}, {15, 1, 0.1, 0}, {16, 1, 0.1, 0}}},
+   {34, "Element-tangled", "+20% elemental damage taken", 34, 8, 50, 3, {{14, 1, 0.2, 0}, {15, 1, 0.2, 0}, {16, 1, 0.2, 0}}},
    {35, "Weak", "-10% ATK", 35, 160, 10, 1, {{3, 0, 0.9, 0}}},
    {36, "Crippled", "-25% ATK", 36, 64, 30, 1, {{3, 0, 0.75, 0}}},
    {37, "Slow", "-10% SPD", 37, 160, 20, 1, {{5, 0, 0.9, 0}}},
@@ -505,8 +505,8 @@ ItemSuffixType g_item_suffix_ids[] = {
    {20, "of the Primordials", "+6 STR, +6 DEX, +6 CON", 20, 8, 80, 3, {{0, 1, 6, 0}, {1, 1, 6, 0}, {2, 1, 6, 0}}},
    {21, "of Extra Attacks", "+1 APT", 21, 25, 40, 1, {{12, 1, 1, 0}}},
    {22, "of the Berserker", "+1 APT, +1 STR", 22, 5, 65, 2, {{12, 1, 1, 0}, {0, 1, 3, 0}}},
-   {23, "of Perfect Defense", "15% block, 20% DMG reduction", 23, 4, 75, 2, {{18, 0, 0.15, 0}, {19, 0, 0.8, 0}}},
-   {24, "of the Unstoppable", "+1 APT, +6 all stats, -20% DMG taken", 24, 1, 100, 5, {{12, 1, 1, 0}, {0, 1, 6, 0}, {1, 1, 6, 0}, {2, 1, 6, 0}, {19, 0, 0.75, 0}}}
+   {23, "of Perfect Defense", "15% block, 20% DMG reduction", 23, 4, 75, 2, {{18, 0, 0.15, 0}, {19, 1, -0.2, 0}}},
+   {24, "of the Unstoppable", "+1 APT, +6 all stats, -20% DMG taken", 24, 1, 100, 5, {{12, 1, 1, 0}, {0, 1, 6, 0}, {1, 1, 6, 0}, {2, 1, 6, 0}, {19, 1, -0.2, 0}}}
 };
 
 // ItemSuffixType g_cursed_item_suffix_ids
@@ -531,6 +531,6 @@ ItemSuffixType g_cursed_item_suffix_ids[] = {
    {36, "of Surrender", "-3 ATK", 36, 96, 27, 1, {{3, 1, -3, 0}}},
    {37, "of the Indecisive", "-1 APT", 37, 96, 27, 1, {{12, 1, -1, 0}}},
    {38, "of the Envenomed", "Always poisoned", 38, 32, 35, 1, {{17, 3, 1, 0}}},
-   {39, "of the Damned", "-1 APT, -3 all stats, +20% DMG taken", 39, 1, 100, 5, {{12, 1, -1, 0}, {0, 1, -3, 0}, {1, 1, -3, 0}, {2, 1, -3, 0}, {19, 0, 1.25, 0}}}
+   {39, "of the Damned", "-1 APT, -3 all stats, +20% DMG taken", 39, 1, 100, 5, {{12, 1, -1, 0}, {0, 1, -3, 0}, {1, 1, -3, 0}, {2, 1, -3, 0}, {19, 1, 0.2, 0}}}
 };
 

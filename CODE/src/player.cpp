@@ -39,8 +39,9 @@ Player::Player(void) {
 	generation = 1;
 	level = 1;
 	exp = 0;
-	hp = 100;
-	base.max_hp = 100;
+
+	init_base_stats();
+	hp = (int)base.max_hp;
 
 	// Null out the item slots
 	equipment.amulet = NULL;
@@ -325,9 +326,8 @@ void Player::unequip(Item *i) {
 		(*item_slot)->mark_removed();
 		//std::cout << "process_unequip:  Remove called" << std::endl;
 		*item_slot = NULL;
+		recalculate_actual_stats();
 	}
-
-	recalculate_actual_stats();
 }
 
 //------------------------------------------------------------------------------
@@ -348,10 +348,14 @@ void Player::assign_base_stats_to_actual(void) {
 	actual.dex = base.dex;
 	actual.f_atk = base.f_atk;
 	actual.f_def = base.f_def;
+	actual.f_dmg = base.f_dmg;
 	actual.i_atk = base.i_atk;
 	actual.i_def = base.i_def;
+	actual.i_dmg = base.i_dmg;
 	actual.l_atk = base.l_atk;
 	actual.l_def = base.l_def;
+	actual.l_dmg = base.l_dmg;
+	actual.a_dmg = base.a_dmg;
 	actual.max_hp = base.max_hp;
 	actual.spd = base.spd;
 	actual.str = base.str;
@@ -368,40 +372,100 @@ void Player::assign_base_stats_to_actual(void) {
 // Returns:
 //   Nothing.
 //------------------------------------------------------------------------------
-void Player::apply_stats_to_actual(Stats &fixed, MultiplicativeStats &multiplicative) {
+void Player::apply_stats_to_actual(Stats *fixed, Stats *multiplicative) {
 	// Additive first
-	actual.apt += fixed.apt;
-	actual.atk += fixed.atk;
-	actual.block += fixed.block;
-	actual.con += fixed.con;
-	actual.def += fixed.def;
-	actual.dex += fixed.dex;
-	actual.f_atk += fixed.f_atk;
-	actual.f_def += fixed.f_def;
-	actual.i_atk += fixed.i_atk;
-	actual.i_def += fixed.i_def;
-	actual.l_atk += fixed.l_atk;
-	actual.l_def += fixed.l_def;
-	actual.max_hp += fixed.max_hp;
-	actual.spd += fixed.spd;
-	actual.str += fixed.str;
+	actual.apt += fixed->apt;
+	actual.atk += fixed->atk;
+	actual.block += fixed->block;
+	actual.con += fixed->con;
+	actual.def += fixed->def;
+	actual.dex += fixed->dex;
+	actual.f_atk += fixed->f_atk;
+	actual.f_def += fixed->f_def;
+	actual.f_dmg += fixed->f_dmg;
+	actual.i_atk += fixed->i_atk;
+	actual.i_def += fixed->i_def;
+	actual.i_dmg += fixed->i_dmg;
+	actual.l_atk += fixed->l_atk;
+	actual.l_def += fixed->l_def;
+	actual.l_dmg += fixed->l_dmg;
+	actual.a_dmg += fixed->a_dmg;
+	actual.max_hp += fixed->max_hp;
+	actual.spd += fixed->spd;
+	actual.str += fixed->str;
 
-	// Then multiplicative
-	actual.apt = (int)((float)actual.apt * multiplicative.apt);
-	actual.atk = (int)((float)actual.atk * multiplicative.atk);
-	actual.block = (int)((float)actual.block * multiplicative.block);	
-	actual.con = (int)((float)actual.con * multiplicative.con);
-	actual.def = (int)((float)actual.def * multiplicative.def);
-	actual.dex = (int)((float)actual.dex * multiplicative.dex);
-	actual.f_atk = (int)((float)actual.f_atk * multiplicative.f_atk);
-	actual.f_def = (int)((float)actual.f_def * multiplicative.f_def);
-	actual.i_atk = (int)((float)actual.i_atk * multiplicative.i_atk);
-	actual.i_def = (int)((float)actual.i_def * multiplicative.i_def);
-	actual.l_atk = (int)((float)actual.l_atk * multiplicative.l_atk);
-	actual.l_def = (int)((float)actual.l_def * multiplicative.l_def);
-	actual.max_hp = (int)((float)actual.max_hp * multiplicative.max_hp);
-	actual.spd = (int)((float)actual.spd * multiplicative.spd);
-	actual.str = (int)((float)actual.str * multiplicative.str);
+	// // Then multiplicative
+	actual.apt = (int)((float)actual.apt * multiplicative->apt);
+	actual.atk = (int)((float)actual.atk * multiplicative->atk);
+	actual.block = (int)((float)actual.block * multiplicative->block);	
+	actual.con = (int)((float)actual.con * multiplicative->con);
+	actual.def = (int)((float)actual.def * multiplicative->def);
+	actual.dex = (int)((float)actual.dex * multiplicative->dex);
+	actual.f_atk = (int)((float)actual.f_atk * multiplicative->f_atk);
+	actual.f_def = (int)((float)actual.f_def * multiplicative->f_def);
+	actual.f_dmg = (int)((float)actual.f_dmg * multiplicative->f_dmg);
+	actual.i_atk = (int)((float)actual.i_atk * multiplicative->i_atk);
+	actual.i_def = (int)((float)actual.i_def * multiplicative->i_def);
+	actual.i_dmg = (int)((float)actual.i_dmg * multiplicative->i_dmg);
+	actual.l_atk = (int)((float)actual.l_atk * multiplicative->l_atk);
+	actual.l_def = (int)((float)actual.l_def * multiplicative->l_def);
+	actual.l_dmg = (int)((float)actual.l_dmg * multiplicative->l_dmg);
+	actual.a_dmg = (int)((float)actual.a_dmg * multiplicative->a_dmg);
+	actual.max_hp = (int)((float)actual.max_hp * multiplicative->max_hp);
+	actual.spd = (int)((float)actual.spd * multiplicative->spd);
+	actual.str = (int)((float)actual.str * multiplicative->str);
+}
+
+//------------------------------------------------------------------------------
+// Initializes all of the values of the multiplicative stats table
+// 
+// Arguments:
+//   m - a set of multiplicative stat values
+//
+// Returns:
+//   Nothing.
+//------------------------------------------------------------------------------
+void Player::init_stats(Stats *f, Stats *m) {
+
+	f->apt = 0;
+	f->atk = 0;
+	f->block = 0;
+	f->con = 0;
+	f->def = 0;
+	f->dex = 0;
+	f->f_atk = 0;
+	f->f_def = 0;
+	f->f_dmg = 0;
+	f->i_atk = 0;
+	f->i_def = 0;
+	f->i_dmg = 0;
+	f->l_atk = 0;
+	f->l_def = 0;
+	f->l_dmg = 0;
+	f->a_dmg = 0;
+	f->max_hp = 0;
+	f->spd = 0;
+	f->str = 0;
+
+	m->apt = 1.0;
+	m->atk = 1.0;
+	m->block = 1.0;
+	m->con = 1.0;
+	m->def = 1.0;
+	m->dex = 1.0;
+	m->f_atk = 1.0;
+	m->f_def = 1.0;
+	m->f_dmg = 1.0;
+	m->i_atk = 1.0;
+	m->i_def = 1.0;
+	m->i_dmg = 1.0;
+	m->l_atk = 1.0;
+	m->l_def = 1.0;
+	m->l_dmg = 1.0;
+	m->a_dmg = 1.0;
+	m->max_hp = 1.0;
+	m->spd = 1.0;
+	m->str = 1.0;
 }
 
 //------------------------------------------------------------------------------
@@ -416,40 +480,125 @@ void Player::apply_stats_to_actual(Stats &fixed, MultiplicativeStats &multiplica
 //------------------------------------------------------------------------------
 void Player::recalculate_actual_stats(void) {
 	Stats fixed;
-	MultiplicativeStats multiplicative;
+	Stats multiplicative;
 
 	//std::cout << "recalculate_actual_stats:  performing recalculation" << std::endl;
 
 	// Assign the base stat values to the actual stats
 	assign_base_stats_to_actual();
 
+	init_stats(&fixed, &multiplicative);
+
+	std::cout << "recalculate_actual_stats: before" << std::endl;
+	dump_stats(&actual);
+
 	// Iterate through the player's equipped items, adding fixed and multiplicitive 
 	// totals
-	if(equipment.amulet != NULL) 
-		apply_item_values_to_stats(equipment.amulet, fixed, multiplicative);
-	if(equipment.chest != NULL)
-		apply_item_values_to_stats(equipment.chest, fixed, multiplicative);
-	if(equipment.feet != NULL)
-		apply_item_values_to_stats(equipment.feet, fixed, multiplicative);
-	if(equipment.hands != NULL)
-		apply_item_values_to_stats(equipment.hands, fixed, multiplicative);
-	if(equipment.head != NULL)
-		apply_item_values_to_stats(equipment.head, fixed, multiplicative);
-	if(equipment.legs != NULL)
-		apply_item_values_to_stats(equipment.legs, fixed, multiplicative);
-	if(equipment.ring != NULL)
-		apply_item_values_to_stats(equipment.ring, fixed, multiplicative);
-	if(equipment.shield != NULL)
-		apply_item_values_to_stats(equipment.shield, fixed, multiplicative);
-	if(equipment.weapon != NULL)
-		apply_item_values_to_stats(equipment.weapon, fixed, multiplicative);
+	if(equipment.amulet != NULL) {
+		apply_item_values_to_stats(equipment.amulet, &fixed, &multiplicative);
+	}
+	if(equipment.chest != NULL) {
+		apply_item_values_to_stats(equipment.chest, &fixed, &multiplicative);
+	}
+	if(equipment.feet != NULL) {
+		apply_item_values_to_stats(equipment.feet, &fixed, &multiplicative);
+	}
+	if(equipment.hands != NULL) {
+		apply_item_values_to_stats(equipment.hands, &fixed, &multiplicative);
+	}
+	if(equipment.head != NULL) {
+		apply_item_values_to_stats(equipment.head, &fixed, &multiplicative);
+	}
+	if(equipment.legs != NULL) {
+		apply_item_values_to_stats(equipment.legs, &fixed, &multiplicative);
+	}
+	if(equipment.ring != NULL) {
+		apply_item_values_to_stats(equipment.ring, &fixed, &multiplicative);
+	}
+	if(equipment.shield != NULL) {
+		apply_item_values_to_stats(equipment.shield, &fixed, &multiplicative);
+	}
+	if(equipment.weapon != NULL) {
+		std::cout << "recalcualte_actual_stats:  fixed atk = " << fixed.atk << std::endl;
+		apply_item_values_to_stats(equipment.weapon, &fixed, &multiplicative);
+	}
 
-	// Add together all increases from item effects and save them
 	// TODO - get item effects up and running
 
 	// Add all of the fixed increases to the actual stats
-	apply_stats_to_actual(fixed, multiplicative);
+	apply_stats_to_actual(&fixed, &multiplicative);
+
+	// Finally, apply all type 2 modifiers (take x% of something as something else)
+	// for any items that have them.
+
+	std::cout << "recalculate_actual_stats: after" << std::endl;
+	dump_stats(&actual);
 
 	//std::cout << "Finished" << std::endl;
+}
+
+//------------------------------------------------------------------------------
+// Sets the player's base stats to defaults
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing.
+//------------------------------------------------------------------------------
+void Player::init_base_stats() {
+	base.max_hp = 100;
+	base.str = 10;
+	base.con = 10;
+	base.dex = 10;
+	base.atk = 10;
+	base.def = 10;
+	base.spd = 10;
+	base.f_def = 10;
+	base.i_def = 10;
+	base.l_def = 10;
+	base.f_atk = 10;
+	base.i_atk = 10;
+	base.l_atk = 10;
+	base.f_dmg = 0;
+	base.i_dmg = 0;
+	base.l_dmg = 0;
+	base.a_dmg = 0;
+	base.apt = 1;
+	base.block = 0;
+}
+
+//------------------------------------------------------------------------------
+// Displays a list of the specified stats.
+// 
+// Arguments:
+//   s - the stats to dump
+//
+// Returns:
+//   Nothing.
+//------------------------------------------------------------------------------
+void Player::dump_stats(Stats *s) {
+	std::cout << "--------------------------------------------------------" << std::endl;
+	std::cout << "Max HP : " << s->max_hp << std::endl;
+	std::cout << "STR    : " << s->str << std::endl;
+	std::cout << "CON    : " << s->con << std::endl;
+	std::cout << "DEX    : " << s->dex << std::endl;
+	std::cout << "ATK    : " << s->atk << std::endl;
+	std::cout << "DEF    : " << s->def << std::endl;
+	std::cout << "SPD    : " << s->spd << std::endl;
+	std::cout << "FDef   : " << s->f_def << std::endl;
+	std::cout << "IDef   : " << s->i_def << std::endl;
+	std::cout << "LDef   : " << s->l_def << std::endl;
+	std::cout << "FAtk   : " << s->f_atk << std::endl;
+	std::cout << "IAtk   : " << s->i_atk << std::endl;
+	std::cout << "LAtk   : " << s->l_atk << std::endl;
+	std::cout << "FDmg   : " << s->f_dmg << std::endl;
+	std::cout << "IDmg   : " << s->i_dmg << std::endl;
+	std::cout << "LDmg   : " << s->l_dmg << std::endl;
+	std::cout << "ADmg   : " << s->a_dmg << std::endl;
+	std::cout << "APT    : " << s->apt << std::endl;
+	std::cout << "Block  : " << s->block << std::endl;
+	std::cout << "Pois   : " << g_player.is_equip_poisoned << std::endl;
+	std::cout << "--------------------------------------------------------" << std::endl;
 }
 

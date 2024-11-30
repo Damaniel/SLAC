@@ -27,24 +27,6 @@
 #include "globals.h"
 
 typedef struct {
-	unsigned short max_hp;		// Max HP
-	unsigned short str;			// Strength
-	unsigned short con;			// Constitution
-	unsigned short dex;			// Dexterity
-	unsigned short atk;			// Attack
-	unsigned short def;			// Defense
-	unsigned short spd;			// Speed
-	unsigned short f_def;		// Fire defense
-	unsigned short i_def;		// Ice defense
-	unsigned short l_def;		// Lightning defense
-	unsigned short f_atk;		// Fire attack damage
-	unsigned short i_atk;		// Ice attack damage
-	unsigned short l_atk;		// Lightning attack damage
-	unsigned short apt;			// Attacks per turn
-	unsigned short block;		// Absolute chance to block
-} Stats;
-
-typedef struct {
 	float max_hp;		// Max HP
 	float str;			// Strength
 	float con;			// Constitution
@@ -58,9 +40,13 @@ typedef struct {
 	float f_atk;		// Fire attack damage
 	float i_atk;		// Ice attack damage
 	float l_atk;		// Lightning attack damage
+	float f_dmg;       // Fire damage taken (pre-resist)
+	float i_dmg;       // Ice damage taken (pre-resist)
+	float l_dmg;       // Lightning damage taken (pre-resist)
+	float a_dmg;		// All damage taken (pre-resist)
 	float apt;			// Attacks per turn
 	float block;		// Absolute chance to block
-} MultiplicativeStats;
+} Stats;
 
 typedef struct {
 	Item *weapon;
@@ -90,6 +76,7 @@ public:
 	Stats actual;			// The player's fully modified (by gear, items, etc) stats
 	EquipmentSet equipment;	// Equipment
 	bool is_poisoned;		// Is the player poisoned?
+	bool is_equip_poisoned; // Is cursed equipment poisoning the player
 	bool is_paralyzed;		// Is the player paralyzed?
 
 	// TODO - consider whether these values, and the *_last_room_entered functions
@@ -100,11 +87,13 @@ public:
 
 	Player();
 	Player(int x, int y);
+	void init_base_stats();
 	int get_last_room_entered() { return last_room_entered; }
 	void set_last_room_entered(int room) { last_room_entered = room; }
 	void set_position(int x, int y);
 	void assign_base_stats_to_actual();
-	void apply_stats_to_actual(Stats &fixed, MultiplicativeStats &multiplicative);
+	void apply_stats_to_actual(Stats *fixed, Stats *multiplicative);
+    void init_stats(Stats *f, Stats *m);
 	int get_x_pos();
 	int get_y_pos();
 	void set_x_pos(int pos);
@@ -115,6 +104,7 @@ public:
 	void recalculate_actual_stats();
 	void equip(Item *i);
 	void unequip(Item *i);
+	void dump_stats(Stats *s);
 };
 
 #endif
