@@ -7,25 +7,25 @@
 
 namespace ItemConsts {
     // %chance that an item will generate an affix (prefix or suffix)
-    const int CHANCE_OF_AFFIX  = 20;
+    const int BASE_CHANCE_OF_AFFIX  = 10;
 
-    // %chance that an item will be cursed
-    const int CHANCE_OF_CURSE  = 4;
+    // %chance that an item will be cursed.  This is consistent across all types of equipment
+    const int CHANCE_OF_CURSE  = 10;
 
     // The maximum number of attempts to reroll an item aspect to meet the ilevel requirements
     const int MAX_GENERATOR_REROLLS = 10;
 
     // odds tables for generating main item classes.  Currently:
     //
-    //   weapon: 20% 
-    //   armor 20%
+    //   weapon: 10% 
+    //   armor 30%
     //   currency 29%
     //   potion 15%
     //   scroll: 15%
     //   artifact 1% 
     // 
     // Note: key items will be handled separately.
-    const int g_item_class_pool[]= {20, 40, 69, 84, 99, 100};
+    const int g_item_class_pool[]= {10, 40, 69, 84, 99, 100};
     const int g_item_class_pool_count = 6;
     const int g_item_class_pool_entries = 100;
 

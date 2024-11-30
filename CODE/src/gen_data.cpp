@@ -13,10 +13,14 @@ const int g_scroll_pool_entries = 1553;
 const int g_scroll_pool_count = 12;
 const int g_artifact_pool_entries = 6056;
 const int g_artifact_pool_count = 63;
-const int g_item_prefix_pool_entries = 4610;
-const int g_item_prefix_pool_count = 43;
-const int g_item_suffix_pool_entries = 4877;
-const int g_item_suffix_pool_count = 40;
+const int g_item_prefix_pool_entries = 2810;
+const int g_item_prefix_pool_count = 27;
+const int g_cursed_item_prefix_pool_entries = 1800;
+const int g_cursed_item_prefix_pool_count = 16;
+const int g_item_suffix_pool_entries = 2700;
+const int g_item_suffix_pool_count = 25;
+const int g_cursed_item_suffix_pool_entries = 2177;
+const int g_cursed_item_suffix_pool_count = 15;
 
 int g_weapon_base_pool [] = { 255, 495, 695, 855, 975, 1015, 1270, 1505, 1700, 1855, 1965, 1995, 2250, 2485, 2680, 2835, 2945, 
       2975, 3230, 3465, 3660, 3815, 3925, 3955, 4195, 4420, 4600, 4730, 4830, 4845, 5100, 5330, 5515, 
@@ -35,11 +39,11 @@ int g_artifact_pool [] = { 255, 510, 765, 1020, 1275, 1530, 1770, 1920, 2070, 22
       4482, 4706, 4930, 5042, 5154, 5266, 5298, 5330, 5362, 5458, 5506, 5522, 5538, 5570, 5698, 5826, 
       5858, 5890, 5894, 5898, 5906, 5914, 5946, 5962, 5966, 5970, 5974, 5976, 6040, 6056 };
 int g_item_prefix_pool [] = { 240, 368, 400, 640, 768, 784, 1024, 1152, 1168, 1296, 1328, 1330, 1394, 1586, 1682, 1874, 1970, 
-      2162, 2258, 2386, 2418, 2546, 2578, 2706, 2738, 2802, 2810, 3002, 3098, 3290, 3386, 3578, 3674, 
-      3706, 3714, 3874, 3938, 4098, 4162, 4354, 4450, 4578, 4610 };
+      2162, 2258, 2386, 2418, 2546, 2578, 2706, 2738, 2802, 2810 };
+int g_cursed_item_prefix_pool [] = { 192, 288, 480, 576, 768, 864, 896, 904, 1064, 1128, 1288, 1352, 1544, 1640, 1768, 1800 };
 int g_item_suffix_pool [] = { 240, 368, 432, 687, 815, 879, 1134, 1262, 1326, 1566, 1678, 1726, 1966, 2078, 2126, 2381, 2509, 
-      2573, 2637, 2657, 2665, 2690, 2695, 2699, 2700, 2940, 3052, 3292, 3404, 3644, 3756, 3980, 4076, 
-      4316, 4428, 4652, 4748, 4844, 4876, 4877 };
+      2573, 2637, 2657, 2665, 2690, 2695, 2699, 2700 };
+int g_cursed_item_suffix_pool [] = { 240, 352, 592, 704, 944, 1056, 1280, 1376, 1616, 1728, 1952, 2048, 2144, 2176, 2177 };
 
 // BodyPartType g_body_part_type_ids
 //
@@ -441,7 +445,17 @@ ItemPrefixType g_item_prefix_ids[] = {
    {23, "Spark-shrouded", "20% lightning damage reduction", 23, 128, 15, 1, {{16, 0, 0.8, 0}}},
    {24, "Spark-cloaked", "40% lightning damage reduction", 24, 32, 55, 1, {{16, 0, 0.6, 0}}},
    {25, "Elemental-shrouded", "10% elemental damage reduction", 25, 64, 15, 3, {{14, 0, 0.9, 0}, {15, 0, 0.9, 0}, {16, 0, 0.9, 0}}},
-   {26, "Elemental-cloaked", "20% elemental damage reduction", 26, 8, 55, 3, {{14, 0, 0.8, 0}, {15, 0, 0.8, 0}, {16, 0, 0.8, 0}}},
+   {26, "Elemental-cloaked", "20% elemental damage reduction", 26, 8, 55, 3, {{14, 0, 0.8, 0}, {15, 0, 0.8, 0}, {16, 0, 0.8, 0}}}
+};
+
+// ItemPrefixType g_cursed_item_prefix_ids
+//
+//   Cursed item prefixes
+//
+//   Fields:
+//   {id, name, description, gid, rarity, ilevel, modifier(s)}
+//
+ItemPrefixType g_cursed_item_prefix_ids[] = {
    {27, "Ignited", "+20% fire damage taken", 27, 192, 10, 1, {{14, 0, 1.2, 0}}},
    {28, "Engulfed", "+40% fire damage taken", 28, 96, 40, 1, {{14, 0, 1.4, 0}}},
    {29, "Chilled", "+20% ice damage taken", 29, 192, 10, 1, {{15, 0, 1.2, 0}}},
@@ -492,7 +506,17 @@ ItemSuffixType g_item_suffix_ids[] = {
    {21, "of Extra Attacks", "+1 APT", 21, 25, 40, 1, {{12, 1, 1, 0}}},
    {22, "of the Berserker", "+1 APT, +1 STR", 22, 5, 65, 2, {{12, 1, 1, 0}, {0, 1, 3, 0}}},
    {23, "of Perfect Defense", "15% block, 20% DMG reduction", 23, 4, 75, 2, {{18, 0, 0.15, 0}, {19, 0, 0.8, 0}}},
-   {24, "of the Unstoppable", "+1 APT, +6 all stats, -20% DMG taken", 24, 1, 100, 5, {{12, 1, 1, 0}, {0, 1, 6, 0}, {1, 1, 6, 0}, {2, 1, 6, 0}, {19, 0, 0.75, 0}}},
+   {24, "of the Unstoppable", "+1 APT, +6 all stats, -20% DMG taken", 24, 1, 100, 5, {{12, 1, 1, 0}, {0, 1, 6, 0}, {1, 1, 6, 0}, {2, 1, 6, 0}, {19, 0, 0.75, 0}}}
+};
+
+// ItemSuffixType g_cursed_item_suffix_ids
+//
+//   Cursedtem suffixes
+//
+//   Fields:
+//   {id, name, description, gid, rarity, ilevel, modifier(s)}
+//
+ItemSuffixType g_cursed_item_suffix_ids[] = {
    {25, "of Weakness", "-1 STR", 25, 240, 7, 1, {{0, 1, -1, 0}}},
    {26, "of Fraility", "-3 STR", 26, 112, 24, 1, {{0, 1, -3, 0}}},
    {27, "of Clumsiness", "-1 DEX", 27, 240, 7, 1, {{2, 1, -1, 0}}},

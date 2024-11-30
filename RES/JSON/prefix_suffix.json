@@ -617,7 +617,20 @@
                         "secondary_id": 0
                     }
                 }
-            },
+            }
+        }
+    },
+    "cursed_prefixes": {
+        "metadata": {
+            "struct_name": "g_cursed_item_prefix_ids",
+            "struct_type": "ItemPrefixType",
+            "pool_struct_name": "g_cursed_item_prefix_pool",
+            "pool_define": "g_cursed_item_prefix_pool_entries",
+            "pool_count": "g_cursed_item_prefix_pool_count",
+            "description": "Cursed item prefixes",
+            "fields": ["id", "name", "description", "gid", "rarity", "ilevel", "modifier(s)"]
+        },
+        "items": {
             "Ignited": {
                 "id": 27,
                 "name": "Ignited",
@@ -1382,7 +1395,20 @@
                         "secondary_id": 0
                     }
                 }
-            },
+            }
+        }
+    },
+    "cursed_suffixes": {
+        "metadata": {
+            "struct_name": "g_cursed_item_suffix_ids",
+            "pool_struct_name": "g_cursed_item_suffix_pool",
+            "pool_define": "g_cursed_item_suffix_pool_entries",
+            "pool_count": "g_cursed_item_suffix_pool_count",
+            "struct_type": "ItemSuffixType",
+            "description": "Cursedtem suffixes",
+            "fields": ["id", "name", "description", "gid", "rarity", "ilevel", "modifier(s)"]
+        },
+        "items": {
             "of_weakness": {
                 "id": 25,
                 "name": "of Weakness",

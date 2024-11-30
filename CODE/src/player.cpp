@@ -257,9 +257,15 @@ void Player::equip(Item *i) {
 
 	// Attach the item to the slot and equip it
 	//std::cout << "equip: Attaching item to item slot" << std::endl;
-	*item_slot = i;
-	(*item_slot)->mark_equipped();
-
+	if ((*item_slot == NULL) || !(*item_slot)->is_it_cursed()) {
+		*item_slot = i;
+		(*item_slot)->mark_equipped();
+		if ((*item_slot)->is_it_cursed()) {
+			g_text_log.put_line("Oh no!  The " + (*item_slot)->get_full_name() + " is cursed!");
+			g_state_flags.update_text_dialog = true;
+			g_state_flags.update_display = true;
+		}
+	}
 	recalculate_actual_stats();
 }
 
@@ -290,7 +296,7 @@ void Player::unequip(Item *i) {
 	}
 	else {
 		//std::cout << "unequip: Item is an armor" << std::endl;
-		item_slot = get_item_slot_by_type(item_type);
+		item_slot = get_item_slot_by_type(i->get_type_id());
 		// If the item slot isn't empty, unequip it
 		if (item_slot == NULL) {
 			//std::cout << "unequip: Invalid item slot!" << std::endl;
@@ -300,9 +306,17 @@ void Player::unequip(Item *i) {
 	
 	//std::cout << "unequip:  The item slot requested appears to be valid" << std::endl;
 
-	// Free the item slot.  Note that the item still exists in
-	// the inventory so it's not actually deleted here.
+	// Free the item slot if it has an item and it isn't cursed.  
+	// Note that the item still exists in the inventory so it's not actually deleted here.
 	if (*item_slot != NULL) {
+		// If the item is cursed, it can't be removed.
+		if ((*item_slot)->is_it_cursed()) {
+			g_text_log.put_line("Unfortunately you can't remove that.");
+			g_text_log.put_line("The " + (*item_slot)->get_full_name() + " is cursed.");
+			g_state_flags.update_text_dialog = true;
+			g_state_flags.update_display = true;
+			return;
+		}
 		//std::cout << "process_unequip: calling remove on item" << std::endl;
 		(*item_slot)->mark_removed();
 		//std::cout << "process_unequip:  Remove called" << std::endl;
@@ -380,7 +394,7 @@ void Player::recalculate_actual_stats(void) {
 	Stats fixed;
 	MultiplicativeStats multiplicative;
 
-	std::cout << "recalculate_actual_stats:  performing recalculation" << std::endl;
+	//std::cout << "recalculate_actual_stats:  performing recalculation" << std::endl;
 
 	// Assign the base stat values to the actual stats
 	assign_base_stats_to_actual();
@@ -412,6 +426,6 @@ void Player::recalculate_actual_stats(void) {
 	// Add all of the fixed increases to the actual stats
 	apply_stats_to_actual(fixed, multiplicative);
 
-	std::cout << "Finished" << std::endl;
+	//std::cout << "Finished" << std::endl;
 }
 

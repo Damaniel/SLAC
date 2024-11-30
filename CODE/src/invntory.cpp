@@ -309,13 +309,20 @@ std::string Equipment::get_full_name() {
 
     if (is_identified) {
         if (can_have_prefix && prefix_id >= 0) {
-            prefix_text = g_item_prefix_ids[prefix_id].name + " ";        
+            if (is_cursed) 
+                prefix_text = g_cursed_item_prefix_ids[prefix_id].name + " ";        
+
+            else
+                prefix_text = g_item_prefix_ids[prefix_id].name + " ";        
         }
         else {
             prefix_text = "";
         }
         if (can_have_suffix && suffix_id >= 0) {
-            suffix_text = " " + g_item_suffix_ids[suffix_id].name;
+            if (is_cursed)
+                suffix_text = " " + g_cursed_item_suffix_ids[suffix_id].name;
+            else
+                suffix_text = " " + g_item_suffix_ids[suffix_id].name;
         }
         else {
             suffix_text = "";
@@ -339,7 +346,13 @@ std::string Equipment::get_full_name() {
 //----------------------------------------------------------------------------
 void Equipment::dump_prefix() {
     if (can_have_prefix && prefix_id >= 0) {
-        ItemPrefixType *it = &(g_item_prefix_ids[prefix_id]);
+        ItemPrefixType *it;
+        if (is_cursed) {
+            it = &(g_cursed_item_prefix_ids[prefix_id]);
+        }
+        else {
+            it = &(g_item_prefix_ids[prefix_id]);
+        }
         std::cout << "====== Prefix info ===================" << std::endl;
         std::cout << "Name:      " << it->name << std::endl;
         std::cout << "Num mods:  " << (int)it->num_modifiers << std::endl;
@@ -364,7 +377,13 @@ void Equipment::dump_prefix() {
 //----------------------------------------------------------------------------
 void Equipment::dump_suffix() {
     if (can_have_suffix && suffix_id >= 0) {
-        ItemSuffixType *it = &(g_item_suffix_ids[suffix_id]);
+        ItemSuffixType *it;
+        if (is_cursed) {
+            it = &(g_cursed_item_suffix_ids[suffix_id]);
+        }
+        else {
+            it = &(g_item_suffix_ids[suffix_id]);
+        }
         std::cout << "====== Suffix info ===================" << std::endl;
         std::cout << "Name:      " << it->name << std::endl;
         std::cout << "Num mods:  " << (int)it->num_modifiers << std::endl;
@@ -412,7 +431,7 @@ void Weapon::init(WeaponBaseType *b) {
     can_use = b->can_use;
     is_equipped = false;
     is_cursed = false;
-    is_identified = false;
+    is_identified = true;
     prefix_id = -1;
     suffix_id = -1;
     quantity = 1;
@@ -563,7 +582,7 @@ void Armor::init(ArmorBaseType *b) {
     can_use = b->can_use;
     is_equipped = false;
     is_cursed = false;
-    is_identified = false;
+    is_identified = true;
     prefix_id = -1;
     suffix_id = -1;
     quantity = 1;
@@ -878,7 +897,7 @@ void Potion::init(PotionType *b) {
     can_equip = b->can_equip;
     can_drop = b->can_drop;
     can_use = b->can_use;
-    is_identified = false;
+    is_identified = true;
     quantity = 1;
 }
 
@@ -1019,7 +1038,7 @@ void Scroll::init(ScrollType *b) {
     can_equip = b->can_equip;
     can_drop = b->can_drop;
     can_use = b->can_use;
-    is_identified = false;
+    is_identified = true;
     quantity = 1;
 }
 //----------------------------------------------------------------------------

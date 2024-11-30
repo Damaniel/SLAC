@@ -221,6 +221,13 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
         ItemGenerator::apply_affix(i, ItemConsts::SUFFIX_CLASS, ilevel);
     }
 
+    // If the item is cursed but didn't get a prefix or a suffix, demote it back to 
+    // a non-cursed item (so we don't end up with a cursed item with no adjusted
+    // stats)
+    if (i->is_it_cursed() && i->get_prefix() == -1 && i->get_suffix() == -1) {
+        i->set_curse_state(false);
+    }
+
     // std::cout << std::endl;
     return i;
 }
@@ -238,23 +245,37 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
 //   Nothing
 //----------------------------------------------------------------------------
 void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
-    int roll, rolled_affix_type, attempt, base_ilevel;
+    int roll, rolled_affix_type, attempt, base_ilevel, affix_chance;
     bool generated;
 
+    // This will generate an affix chance between 10% at ilevel 1 and roughly 35% at iLevel 100
+    affix_chance = ItemConsts::BASE_CHANCE_OF_AFFIX + (ilevel / 4);
     roll = rand() % 100;
-    if (roll < ItemConsts::CHANCE_OF_AFFIX) {
+    if (roll < affix_chance) {
         attempt = 0;
         generated = false;
         do {
             // std::cout << "generator: ilevel roll attempt " << (attempt + 1) << " of " << MAX_GENERATOR_REROLLS << std::endl;
             // generate the affix
             if (affix_type == ItemConsts::PREFIX_CLASS) {
-                rolled_affix_type = roll_from_pool(g_item_prefix_pool, g_item_prefix_pool_count, g_item_prefix_pool_entries);
-                base_ilevel = g_item_prefix_ids[rolled_affix_type].ilevel;
+                if (i->is_it_cursed()) {
+                    rolled_affix_type = roll_from_pool(g_cursed_item_prefix_pool, g_cursed_item_prefix_pool_count, g_cursed_item_prefix_pool_entries);
+                    base_ilevel = g_cursed_item_prefix_ids[rolled_affix_type].ilevel;
+                }
+                else {
+                    rolled_affix_type = roll_from_pool(g_item_prefix_pool, g_item_prefix_pool_count, g_item_prefix_pool_entries);
+                    base_ilevel = g_item_prefix_ids[rolled_affix_type].ilevel;
+                }
             }
             if (affix_type == ItemConsts::SUFFIX_CLASS) {
-                rolled_affix_type = roll_from_pool(g_item_suffix_pool, g_item_suffix_pool_count, g_item_suffix_pool_entries);
-                base_ilevel = g_item_suffix_ids[rolled_affix_type].ilevel;
+                if (i->is_it_cursed()) {
+                    rolled_affix_type = roll_from_pool(g_cursed_item_suffix_pool, g_cursed_item_suffix_pool_count, g_cursed_item_suffix_pool_entries);
+                    base_ilevel = g_cursed_item_suffix_ids[rolled_affix_type].ilevel;
+                }
+                else {
+                    rolled_affix_type = roll_from_pool(g_item_suffix_pool, g_item_suffix_pool_count, g_item_suffix_pool_entries);
+                    base_ilevel = g_item_suffix_ids[rolled_affix_type].ilevel;
+                }
             }
 
             // std::cout << "  generator: ilevel is " << ilevel << ", base ilevel of item is " << base_ilevel << std::endl;

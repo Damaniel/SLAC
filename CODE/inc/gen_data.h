@@ -68,6 +68,14 @@ extern const int g_item_prefix_pool_count;
 
 extern int g_item_prefix_pool[];
 
+extern ItemPrefixType g_cursed_item_prefix_ids[];
+
+extern const int g_cursed_item_prefix_pool_entries;
+
+extern const int g_cursed_item_prefix_pool_count;
+
+extern int g_cursed_item_prefix_pool[];
+
 extern ItemSuffixType g_item_suffix_ids[];
 
 extern const int g_item_suffix_pool_entries;
@@ -75,6 +83,14 @@ extern const int g_item_suffix_pool_entries;
 extern const int g_item_suffix_pool_count;
 
 extern int g_item_suffix_pool[];
+
+extern ItemSuffixType g_cursed_item_suffix_ids[];
+
+extern const int g_cursed_item_suffix_pool_entries;
+
+extern const int g_cursed_item_suffix_pool_count;
+
+extern int g_cursed_item_suffix_pool[];
 
 
 #endif

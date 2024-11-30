@@ -450,7 +450,8 @@ void Render::render_item_submenu(BITMAP *destination) {
 	            text_color, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_LEFT_JUSTIFIED);
 
-	if(i->can_be_equipped() && i->is_it_equipped()) 
+	// Allow the item to be unequipped if it's equipped and not cursed
+	if(i->can_be_equipped() && i->is_it_equipped() && !i->is_it_cursed()) 
 		text_color = FontConsts::FONT_YELLOW;
 	else
 		text_color = FontConsts::FONT_GRAY;
@@ -546,14 +547,24 @@ void Render::render_description_fields(BITMAP *destination, Item *it) {
 		if (it->is_it_identified()) {
 			std::string description;
 			if (it->get_prefix() != -1) {
-				description = g_item_prefix_ids[it->get_prefix()].description;
+				if (it->is_it_cursed()) {
+					description = g_cursed_item_prefix_ids[it->get_prefix()].description;
+				}
+				else {
+					description = g_item_prefix_ids[it->get_prefix()].description;
+				}
 				render_text(destination, (char *)description.c_str(), UiConsts::INVENTORY_ITEM_NAME_X, 
 							text_y, FontConsts::FONT_YELLOW, 
 							FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);	
 				text_y += 10;
 			}
 			if (it->get_suffix() != -1) {
-				description = g_item_suffix_ids[it->get_suffix()].description;
+				if (it->is_it_cursed()) {
+					description = g_cursed_item_suffix_ids[it->get_suffix()].description;
+				}
+				else {
+					description = g_item_suffix_ids[it->get_suffix()].description;
+				}
 				render_text(destination, (char *)description.c_str(), UiConsts::INVENTORY_ITEM_NAME_X, 
 							text_y, FontConsts::FONT_YELLOW, 
 							FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);	
