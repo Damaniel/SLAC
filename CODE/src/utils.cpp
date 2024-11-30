@@ -671,77 +671,86 @@ void apply_modifier_value(ModifierMagType m, float *fixed, float *multiplicative
 	//std::cout << "apply_modifier_value: after - fixed = " << *fixed << ", mult = " << *multiplicative << ", value = " << value << std::endl;
 }
 
+//----------------------------------------------------------------------------
+// Applies a mode 2 modifier (% of A as B) to the player's stats
+//
+// Arguments:
+//	 m - a ModifierMagType that holds the source+destintaion stat + amount
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
 void apply_mode_2_modifier_value(ModifierMagType m) {
 	float *from_val, *to_val;
 
 	// Determine where the value comes from 
 	switch (m.modifier_id) {
 		case ItemConsts::MODIFIER_STR:		// STR
-			std::cout << "apply_mode_2_modifier_value: source stat = STR" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: source stat = STR" << std::endl;
 			from_val = &(g_player.actual.str);
 			break;
 		case ItemConsts::MODIFIER_CON:		// CON
-			std::cout << "apply_mode_2_modifier_value: source stat = CON" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: source stat = CON" << std::endl;
 			from_val = &(g_player.actual.con);
 			break;
 		case ItemConsts::MODIFIER_DEX:		// DEX
-			std::cout << "apply_mode_2_modifier_value: source stat = DEX" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: source stat = DEX" << std::endl;
 			from_val = &(g_player.actual.dex);
 			break;
 		case ItemConsts::MODIFIER_ATK:		// ATK
-			std::cout << "apply_mode_2_modifier_value: source stat = ATK" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: source stat = ATK" << std::endl;
 			from_val = &(g_player.actual.atk);
 			break;
 		case ItemConsts::MODIFIER_DEF:		// DEF
-			std::cout << "apply_mode_2_modifier_value: source stat = DEF" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: source stat = DEF" << std::endl;
 			from_val = &(g_player.actual.def);
 			break;
 		case ItemConsts::MODIFIER_SPD:		// SPD
-			std::cout << "apply_mode_2_modifier_value: source stat = SPD" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: source stat = SPD" << std::endl;
 			from_val = &(g_player.actual.spd);
 			break;
 		case ItemConsts::MODIFIER_FATK:		// FAtk
-			std::cout << "apply_mode_2_modifier_value: source stat = FAtk" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: source stat = FAtk" << std::endl;
 			from_val = &(g_player.actual.f_atk);
 			break;
 		case ItemConsts::MODIFIER_IATK:		// IAtk
-			std::cout << "apply_mode_2_modifier_value: source stat = IAtk" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: source stat = IAtk" << std::endl;
 			from_val = &(g_player.actual.i_atk);
 			break;
 		case ItemConsts::MODIFIER_LATK:		// LAtk
-			std::cout << "apply_mode_2_modifier_value: source stat = LAtk" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: source stat = LAtk" << std::endl;
 			from_val = &(g_player.actual.l_atk);
 			break;
 		case ItemConsts::MODIFIER_FDEF:		// FDef
-			std::cout << "apply_mode_2_modifier_value: source stat = FDef" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: source stat = FDef" << std::endl;
 			from_val = &(g_player.actual.f_def);
 			break;
 		case ItemConsts::MODIFIER_IDEF:		// IDef
-			std::cout << "apply_mode_2_modifier_value: source stat = IDef" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: source stat = IDef" << std::endl;
 			from_val = &(g_player.actual.i_def);
 			break;
 		case ItemConsts::MODIFIER_LDEF:		// LDef
-			std::cout << "apply_mode_2_modifier_value: source stat = LDef" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: source stat = LDef" << std::endl;
 			from_val = &(g_player.actual.l_def);
 			break;
 		case ItemConsts::MODIFIER_APT:		// APT
-			std::cout << "apply_mode_2_modifier_value: source stat = APT" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: source stat = APT" << std::endl;
 			from_val = &(g_player.actual.apt);
 			break;
 		case ItemConsts::MODIFIER_MAX_HP:	// Max HP
-			std::cout << "apply_mode_2_modifier_value: source stat = MAX HP" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: source stat = MAX HP" << std::endl;
 			from_val = &(g_player.actual.max_hp);
 			break;
 		case ItemConsts::MODIFIER_FDMG:		// FDmg
-			std::cout << "apply_mode_2_modifier_value: source stat = FDmg" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: source stat = FDmg" << std::endl;
 			from_val = &(g_player.actual.f_dmg);
 			break;
 		case ItemConsts::MODIFIER_IDMG:		// IDmg
-			std::cout << "apply_mode_2_modifier_value: source stat = IDmg" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: source stat = IDmg" << std::endl;
 			from_val = &(g_player.actual.i_dmg);
 			break;
 		case ItemConsts::MODIFIER_LDMG:		// LDmg
-			std::cout << "apply_mode_2_modifier_value: source stat = LDmg" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: source stat = LDmg" << std::endl;
 			from_val = &(g_player.actual.l_dmg);
 			break;
 		case ItemConsts::MODIFIER_POIS:		// Poison
@@ -749,11 +758,11 @@ void apply_mode_2_modifier_value(ModifierMagType m) {
 			return;
 			break;
 		case ItemConsts::MODIFIER_BLOCK:		// Block
-			std::cout << "apply_mode_2_modifier_value: source stat = Block" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: source stat = Block" << std::endl;
 			from_val = &(g_player.actual.block);
 			break;
 		case ItemConsts::MODIFIER_ADMG:			// ADmg
-			std::cout << "apply_mode_2_modifier_value: source stat = ADmg" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: source stat = ADmg" << std::endl;
 			from_val = &(g_player.actual.a_dmg);
 			break;
 	}
@@ -761,71 +770,71 @@ void apply_mode_2_modifier_value(ModifierMagType m) {
 	// Determine where the value goes
 	switch (m.secondary_id) {
 		case ItemConsts::MODIFIER_STR:		// STR
-			std::cout << "apply_mode_2_modifier_value: dest stat = STR" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: dest stat = STR" << std::endl;
 			to_val = &(g_player.actual.str);
 			break;
 		case ItemConsts::MODIFIER_CON:		// CON
-			std::cout << "apply_mode_2_modifier_value: dest stat = CON" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: dest stat = CON" << std::endl;
 			to_val = &(g_player.actual.con);
 			break;
 		case ItemConsts::MODIFIER_DEX:		// DEX
-			std::cout << "apply_mode_2_modifier_value: dest stat = DEX" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: dest stat = DEX" << std::endl;
 			to_val = &(g_player.actual.dex);
 			break;
 		case ItemConsts::MODIFIER_ATK:		// ATK
-			std::cout << "apply_mode_2_modifier_value: dest stat = ATK" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: dest stat = ATK" << std::endl;
 			to_val = &(g_player.actual.atk);
 			break;
 		case ItemConsts::MODIFIER_DEF:		// DEF
-			std::cout << "apply_mode_2_modifier_value: dest stat = DEF" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: dest stat = DEF" << std::endl;
 			to_val = &(g_player.actual.def);
 			break;
 		case ItemConsts::MODIFIER_SPD:		// SPD
-			std::cout << "apply_mode_2_modifier_value: dest stat = SPD" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: dest stat = SPD" << std::endl;
 			to_val = &(g_player.actual.spd);
 			break;
 		case ItemConsts::MODIFIER_FATK:		// FAtk
-			std::cout << "apply_mode_2_modifier_value: dest stat = FAtk" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: dest stat = FAtk" << std::endl;
 			to_val = &(g_player.actual.f_atk);
 			break;
 		case ItemConsts::MODIFIER_IATK:		// IAtk
-			std::cout << "apply_mode_2_modifier_value: dest stat = IAtk" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: dest stat = IAtk" << std::endl;
 			to_val = &(g_player.actual.i_atk);
 			break;
 		case ItemConsts::MODIFIER_LATK:		// LAtk
-			std::cout << "apply_mode_2_modifier_value: dest stat = LAtk" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: dest stat = LAtk" << std::endl;
 			to_val = &(g_player.actual.l_atk);
 			break;
 		case ItemConsts::MODIFIER_FDEF:		// FDef
-			std::cout << "apply_mode_2_modifier_value: dest stat = FDef" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: dest stat = FDef" << std::endl;
 			to_val = &(g_player.actual.f_def);
 			break;
 		case ItemConsts::MODIFIER_IDEF:		// IDef
-			std::cout << "apply_mode_2_modifier_value: dest stat = IDef" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: dest stat = IDef" << std::endl;
 			to_val = &(g_player.actual.i_def);
 			break;
 		case ItemConsts::MODIFIER_LDEF:		// LDef
-			std::cout << "apply_mode_2_modifier_value: dest stat = LDef" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: dest stat = LDef" << std::endl;
 			to_val = &(g_player.actual.l_def);
 			break;
 		case ItemConsts::MODIFIER_APT:		// APT
-			std::cout << "apply_mode_2_modifier_value: dest stat = APT" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: dest stat = APT" << std::endl;
 			to_val = &(g_player.actual.apt);
 			break;
 		case ItemConsts::MODIFIER_MAX_HP:	// Max HP
-			std::cout << "apply_mode_2_modifier_value: dest stat = Max HP" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: dest stat = Max HP" << std::endl;
 			to_val = &(g_player.actual.max_hp);
 			break;
 		case ItemConsts::MODIFIER_FDMG:		// FDmg
-			std::cout << "apply_mode_2_modifier_value: dest stat = FDmg" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: dest stat = FDmg" << std::endl;
 			to_val = &(g_player.actual.f_dmg);
 			break;
 		case ItemConsts::MODIFIER_IDMG:		// IDmg
-			std::cout << "apply_mode_2_modifier_value: dest stat = IDmg" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: dest stat = IDmg" << std::endl;
 			to_val = &(g_player.actual.i_dmg);
 			break;
 		case ItemConsts::MODIFIER_LDMG:		// LDmg
-			std::cout << "apply_mode_2_modifier_value: dest stat = LDmg" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: dest stat = LDmg" << std::endl;
 			to_val = &(g_player.actual.l_dmg);
 			break;
 		case ItemConsts::MODIFIER_POIS:		// Poison
@@ -833,16 +842,16 @@ void apply_mode_2_modifier_value(ModifierMagType m) {
 			return;
 			break;
 		case ItemConsts::MODIFIER_BLOCK:		// Block
-			std::cout << "apply_mode_2_modifier_value: dest stat = Block" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: dest stat = Block" << std::endl;
 			to_val = &(g_player.actual.block);
 			break;
 		case ItemConsts::MODIFIER_ADMG:			// ADmg
-			std::cout << "apply_mode_2_modifier_value: dest stat = ADmg" << std::endl;
+			//std::cout << "apply_mode_2_modifier_value: dest stat = ADmg" << std::endl;
 			to_val = &(g_player.actual.a_dmg);
 			break;
 	}
 
-	std::cout << "apply_mode_2_modifier_value: magnitude = " << m.magnitude << std::endl;
+	//std::cout << "apply_mode_2_modifier_value: magnitude = " << m.magnitude << std::endl;
 
 	// Apply the value
 	*to_val += *from_val * m.magnitude;
