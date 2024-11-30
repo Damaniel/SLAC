@@ -84,7 +84,10 @@ void change_state(int new_state);
 void pick_up_item_at(int x, int y);
 void process_equip(Item *i);
 void process_unequip(Item *i);
-void apply_item_values_to_stats(Item *i, Stats *fixed, Stats *multiplicative);
+void apply_modifier_value(ModifierMagType m, float *fixed, float *multiplicative, std::vector<ModifierMagType> &mods);
+void apply_single_modifier(ModifierMagType m, Stats *fixed, Stats *multiplicative, std::vector<ModifierMagType> &mods);
+void apply_item_values_to_stats(Item *i, Stats *fixed, Stats *multiplicative, std::vector<ModifierMagType> &mods);
+void apply_mode_2_modifier_value(ModifierMagType m);
 void drop_item_at(Item *i, int x, int y);
 
 // Inventory functions

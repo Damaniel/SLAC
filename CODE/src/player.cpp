@@ -395,37 +395,38 @@ void Player::apply_stats_to_actual(Stats *fixed, Stats *multiplicative) {
 	actual.str += fixed->str;
 
 	// // Then multiplicative
-	actual.apt = (int)((float)actual.apt * multiplicative->apt);
-	actual.atk = (int)((float)actual.atk * multiplicative->atk);
-	actual.block = (int)((float)actual.block * multiplicative->block);	
-	actual.con = (int)((float)actual.con * multiplicative->con);
-	actual.def = (int)((float)actual.def * multiplicative->def);
-	actual.dex = (int)((float)actual.dex * multiplicative->dex);
-	actual.f_atk = (int)((float)actual.f_atk * multiplicative->f_atk);
-	actual.f_def = (int)((float)actual.f_def * multiplicative->f_def);
-	actual.f_dmg = (int)((float)actual.f_dmg * multiplicative->f_dmg);
-	actual.i_atk = (int)((float)actual.i_atk * multiplicative->i_atk);
-	actual.i_def = (int)((float)actual.i_def * multiplicative->i_def);
-	actual.i_dmg = (int)((float)actual.i_dmg * multiplicative->i_dmg);
-	actual.l_atk = (int)((float)actual.l_atk * multiplicative->l_atk);
-	actual.l_def = (int)((float)actual.l_def * multiplicative->l_def);
-	actual.l_dmg = (int)((float)actual.l_dmg * multiplicative->l_dmg);
-	actual.a_dmg = (int)((float)actual.a_dmg * multiplicative->a_dmg);
-	actual.max_hp = (int)((float)actual.max_hp * multiplicative->max_hp);
-	actual.spd = (int)((float)actual.spd * multiplicative->spd);
-	actual.str = (int)((float)actual.str * multiplicative->str);
+	actual.apt = actual.apt * multiplicative->apt;
+	actual.atk =actual.atk * multiplicative->atk;
+	actual.block = actual.block * multiplicative->block;	
+	actual.con = actual.con * multiplicative->con;
+	actual.def = actual.def * multiplicative->def;
+	actual.dex = actual.dex * multiplicative->dex;
+	actual.f_atk = actual.f_atk * multiplicative->f_atk;
+	actual.f_def = actual.f_def * multiplicative->f_def;
+	actual.f_dmg = actual.f_dmg * multiplicative->f_dmg;
+	actual.i_atk = actual.i_atk * multiplicative->i_atk;
+	actual.i_def = actual.i_def * multiplicative->i_def;
+	actual.i_dmg = actual.i_dmg * multiplicative->i_dmg;
+	actual.l_atk = actual.l_atk * multiplicative->l_atk;
+	actual.l_def = actual.l_def * multiplicative->l_def;
+	actual.l_dmg = actual.l_dmg * multiplicative->l_dmg;
+	actual.a_dmg = actual.a_dmg * multiplicative->a_dmg;
+	actual.max_hp = actual.max_hp * multiplicative->max_hp;
+	actual.spd = actual.spd * multiplicative->spd;
+	actual.str = actual.str * multiplicative->str;
 }
 
 //------------------------------------------------------------------------------
-// Initializes all of the values of the multiplicative stats table
+// Initializes all of the values of a fixed and multiplicative stats table set
 // 
 // Arguments:
+//   f - a set of fixed stat values
 //   m - a set of multiplicative stat values
 //
 // Returns:
 //   Nothing.
 //------------------------------------------------------------------------------
-void Player::init_stats(Stats *f, Stats *m) {
+void Player::init_temp_stats(Stats *f, Stats *m) {
 
 	f->apt = 0;
 	f->atk = 0;
@@ -481,46 +482,46 @@ void Player::init_stats(Stats *f, Stats *m) {
 void Player::recalculate_actual_stats(void) {
 	Stats fixed;
 	Stats multiplicative;
+	std::vector<ModifierMagType> type_2_mods;
 
 	//std::cout << "recalculate_actual_stats:  performing recalculation" << std::endl;
 
 	// Assign the base stat values to the actual stats
 	assign_base_stats_to_actual();
 
-	init_stats(&fixed, &multiplicative);
+	init_temp_stats(&fixed, &multiplicative);
 
-	std::cout << "recalculate_actual_stats: before" << std::endl;
-	dump_stats(&actual);
+	//std::cout << "recalculate_actual_stats: before" << std::endl;
+	//dump_stats(&actual);
 
 	// Iterate through the player's equipped items, adding fixed and multiplicitive 
 	// totals
 	if(equipment.amulet != NULL) {
-		apply_item_values_to_stats(equipment.amulet, &fixed, &multiplicative);
+		apply_item_values_to_stats(equipment.amulet, &fixed, &multiplicative, type_2_mods);
 	}
 	if(equipment.chest != NULL) {
-		apply_item_values_to_stats(equipment.chest, &fixed, &multiplicative);
+		apply_item_values_to_stats(equipment.chest, &fixed, &multiplicative, type_2_mods);
 	}
 	if(equipment.feet != NULL) {
-		apply_item_values_to_stats(equipment.feet, &fixed, &multiplicative);
+		apply_item_values_to_stats(equipment.feet, &fixed, &multiplicative, type_2_mods);
 	}
 	if(equipment.hands != NULL) {
-		apply_item_values_to_stats(equipment.hands, &fixed, &multiplicative);
+		apply_item_values_to_stats(equipment.hands, &fixed, &multiplicative, type_2_mods);
 	}
 	if(equipment.head != NULL) {
-		apply_item_values_to_stats(equipment.head, &fixed, &multiplicative);
+		apply_item_values_to_stats(equipment.head, &fixed, &multiplicative, type_2_mods);
 	}
 	if(equipment.legs != NULL) {
-		apply_item_values_to_stats(equipment.legs, &fixed, &multiplicative);
+		apply_item_values_to_stats(equipment.legs, &fixed, &multiplicative, type_2_mods);
 	}
 	if(equipment.ring != NULL) {
-		apply_item_values_to_stats(equipment.ring, &fixed, &multiplicative);
+		apply_item_values_to_stats(equipment.ring, &fixed, &multiplicative, type_2_mods);
 	}
 	if(equipment.shield != NULL) {
-		apply_item_values_to_stats(equipment.shield, &fixed, &multiplicative);
+		apply_item_values_to_stats(equipment.shield, &fixed, &multiplicative, type_2_mods);
 	}
 	if(equipment.weapon != NULL) {
-		std::cout << "recalcualte_actual_stats:  fixed atk = " << fixed.atk << std::endl;
-		apply_item_values_to_stats(equipment.weapon, &fixed, &multiplicative);
+		apply_item_values_to_stats(equipment.weapon, &fixed, &multiplicative, type_2_mods);
 	}
 
 	// TODO - get item effects up and running
@@ -530,9 +531,12 @@ void Player::recalculate_actual_stats(void) {
 
 	// Finally, apply all type 2 modifiers (take x% of something as something else)
 	// for any items that have them.
+	for (std::vector<ModifierMagType>::iterator it = type_2_mods.begin(); it != type_2_mods.end(); ++it) {
+		apply_mode_2_modifier_value(*it);
+	}
 
-	std::cout << "recalculate_actual_stats: after" << std::endl;
-	dump_stats(&actual);
+	//std::cout << "recalculate_actual_stats: after" << std::endl;
+	//dump_stats(&actual);
 
 	//std::cout << "Finished" << std::endl;
 }

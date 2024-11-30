@@ -79,6 +79,31 @@ namespace ItemConsts {
         WEAPON_TYPE_MACE,
         WEAPON_TYPE_MAUL
     };
+
+    enum { 
+        MODIFIER_STR,
+        MODIFIER_CON,
+        MODIFIER_DEX,
+        MODIFIER_ATK,
+        MODIFIER_DEF,
+        MODIFIER_SPD,
+        MODIFIER_FATK,
+        MODIFIER_IATK,
+        MODIFIER_LATK,
+        MODIFIER_FDEF,
+        MODIFIER_IDEF,
+        MODIFIER_LDEF,
+        MODIFIER_APT,
+        MODIFIER_MAX_HP,
+        MODIFIER_FDMG,
+        MODIFIER_IDMG,
+        MODIFIER_LDMG,
+        MODIFIER_POIS,
+        MODIFIER_BLOCK,
+        MODIFIER_ADMG,
+        NUM_MODIFIERS
+    };
+    
 }
 
 // A class that generates instances of items according to weighting rules.  All

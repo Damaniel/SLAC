@@ -659,15 +659,193 @@ void use_stairs(int x, int y) {
 // Returns:
 //   Nothing
 //----------------------------------------------------------------------------
-void apply_modifier_value(int mode, float value, float *fixed, float *multiplicative) {
+void apply_modifier_value(ModifierMagType m, float *fixed, float *multiplicative, std::vector<ModifierMagType> &mods) {
 	//std::cout << "apply_modifier_value: fixed = " << *fixed << ", mult = " << *multiplicative << ", value = " << value << std::endl;
-	if (mode == 0)					// Relative increase
-		*multiplicative += (value - 1.0);
-	else if (mode == 1)				// Absolute increase
-		*fixed += (int)value;
-	// Note: mode 2 will be handled after all other calculations are done by the recalculate function,
-	// since the percentage will be based on the primary stat's adjusted value
+	if (m.modifier_mode == 0)					// Relative increase
+		*multiplicative += (m.magnitude - 1.0);
+	else if (m.modifier_mode == 1)				// Absolute increase
+		*fixed += m.magnitude;
+	else if (m.modifier_mode == 2)  			// Increase one stat by another
+		mods.push_back(m);
+
 	//std::cout << "apply_modifier_value: after - fixed = " << *fixed << ", mult = " << *multiplicative << ", value = " << value << std::endl;
+}
+
+void apply_mode_2_modifier_value(ModifierMagType m) {
+	float *from_val, *to_val;
+
+	// Determine where the value comes from 
+	switch (m.modifier_id) {
+		case ItemConsts::MODIFIER_STR:		// STR
+			std::cout << "apply_mode_2_modifier_value: source stat = STR" << std::endl;
+			from_val = &(g_player.actual.str);
+			break;
+		case ItemConsts::MODIFIER_CON:		// CON
+			std::cout << "apply_mode_2_modifier_value: source stat = CON" << std::endl;
+			from_val = &(g_player.actual.con);
+			break;
+		case ItemConsts::MODIFIER_DEX:		// DEX
+			std::cout << "apply_mode_2_modifier_value: source stat = DEX" << std::endl;
+			from_val = &(g_player.actual.dex);
+			break;
+		case ItemConsts::MODIFIER_ATK:		// ATK
+			std::cout << "apply_mode_2_modifier_value: source stat = ATK" << std::endl;
+			from_val = &(g_player.actual.atk);
+			break;
+		case ItemConsts::MODIFIER_DEF:		// DEF
+			std::cout << "apply_mode_2_modifier_value: source stat = DEF" << std::endl;
+			from_val = &(g_player.actual.def);
+			break;
+		case ItemConsts::MODIFIER_SPD:		// SPD
+			std::cout << "apply_mode_2_modifier_value: source stat = SPD" << std::endl;
+			from_val = &(g_player.actual.spd);
+			break;
+		case ItemConsts::MODIFIER_FATK:		// FAtk
+			std::cout << "apply_mode_2_modifier_value: source stat = FAtk" << std::endl;
+			from_val = &(g_player.actual.f_atk);
+			break;
+		case ItemConsts::MODIFIER_IATK:		// IAtk
+			std::cout << "apply_mode_2_modifier_value: source stat = IAtk" << std::endl;
+			from_val = &(g_player.actual.i_atk);
+			break;
+		case ItemConsts::MODIFIER_LATK:		// LAtk
+			std::cout << "apply_mode_2_modifier_value: source stat = LAtk" << std::endl;
+			from_val = &(g_player.actual.l_atk);
+			break;
+		case ItemConsts::MODIFIER_FDEF:		// FDef
+			std::cout << "apply_mode_2_modifier_value: source stat = FDef" << std::endl;
+			from_val = &(g_player.actual.f_def);
+			break;
+		case ItemConsts::MODIFIER_IDEF:		// IDef
+			std::cout << "apply_mode_2_modifier_value: source stat = IDef" << std::endl;
+			from_val = &(g_player.actual.i_def);
+			break;
+		case ItemConsts::MODIFIER_LDEF:		// LDef
+			std::cout << "apply_mode_2_modifier_value: source stat = LDef" << std::endl;
+			from_val = &(g_player.actual.l_def);
+			break;
+		case ItemConsts::MODIFIER_APT:		// APT
+			std::cout << "apply_mode_2_modifier_value: source stat = APT" << std::endl;
+			from_val = &(g_player.actual.apt);
+			break;
+		case ItemConsts::MODIFIER_MAX_HP:	// Max HP
+			std::cout << "apply_mode_2_modifier_value: source stat = MAX HP" << std::endl;
+			from_val = &(g_player.actual.max_hp);
+			break;
+		case ItemConsts::MODIFIER_FDMG:		// FDmg
+			std::cout << "apply_mode_2_modifier_value: source stat = FDmg" << std::endl;
+			from_val = &(g_player.actual.f_dmg);
+			break;
+		case ItemConsts::MODIFIER_IDMG:		// IDmg
+			std::cout << "apply_mode_2_modifier_value: source stat = IDmg" << std::endl;
+			from_val = &(g_player.actual.i_dmg);
+			break;
+		case ItemConsts::MODIFIER_LDMG:		// LDmg
+			std::cout << "apply_mode_2_modifier_value: source stat = LDmg" << std::endl;
+			from_val = &(g_player.actual.l_dmg);
+			break;
+		case ItemConsts::MODIFIER_POIS:		// Poison
+			// This modifier doesn't have this option
+			return;
+			break;
+		case ItemConsts::MODIFIER_BLOCK:		// Block
+			std::cout << "apply_mode_2_modifier_value: source stat = Block" << std::endl;
+			from_val = &(g_player.actual.block);
+			break;
+		case ItemConsts::MODIFIER_ADMG:			// ADmg
+			std::cout << "apply_mode_2_modifier_value: source stat = ADmg" << std::endl;
+			from_val = &(g_player.actual.a_dmg);
+			break;
+	}
+
+	// Determine where the value goes
+	switch (m.secondary_id) {
+		case ItemConsts::MODIFIER_STR:		// STR
+			std::cout << "apply_mode_2_modifier_value: dest stat = STR" << std::endl;
+			to_val = &(g_player.actual.str);
+			break;
+		case ItemConsts::MODIFIER_CON:		// CON
+			std::cout << "apply_mode_2_modifier_value: dest stat = CON" << std::endl;
+			to_val = &(g_player.actual.con);
+			break;
+		case ItemConsts::MODIFIER_DEX:		// DEX
+			std::cout << "apply_mode_2_modifier_value: dest stat = DEX" << std::endl;
+			to_val = &(g_player.actual.dex);
+			break;
+		case ItemConsts::MODIFIER_ATK:		// ATK
+			std::cout << "apply_mode_2_modifier_value: dest stat = ATK" << std::endl;
+			to_val = &(g_player.actual.atk);
+			break;
+		case ItemConsts::MODIFIER_DEF:		// DEF
+			std::cout << "apply_mode_2_modifier_value: dest stat = DEF" << std::endl;
+			to_val = &(g_player.actual.def);
+			break;
+		case ItemConsts::MODIFIER_SPD:		// SPD
+			std::cout << "apply_mode_2_modifier_value: dest stat = SPD" << std::endl;
+			to_val = &(g_player.actual.spd);
+			break;
+		case ItemConsts::MODIFIER_FATK:		// FAtk
+			std::cout << "apply_mode_2_modifier_value: dest stat = FAtk" << std::endl;
+			to_val = &(g_player.actual.f_atk);
+			break;
+		case ItemConsts::MODIFIER_IATK:		// IAtk
+			std::cout << "apply_mode_2_modifier_value: dest stat = IAtk" << std::endl;
+			to_val = &(g_player.actual.i_atk);
+			break;
+		case ItemConsts::MODIFIER_LATK:		// LAtk
+			std::cout << "apply_mode_2_modifier_value: dest stat = LAtk" << std::endl;
+			to_val = &(g_player.actual.l_atk);
+			break;
+		case ItemConsts::MODIFIER_FDEF:		// FDef
+			std::cout << "apply_mode_2_modifier_value: dest stat = FDef" << std::endl;
+			to_val = &(g_player.actual.f_def);
+			break;
+		case ItemConsts::MODIFIER_IDEF:		// IDef
+			std::cout << "apply_mode_2_modifier_value: dest stat = IDef" << std::endl;
+			to_val = &(g_player.actual.i_def);
+			break;
+		case ItemConsts::MODIFIER_LDEF:		// LDef
+			std::cout << "apply_mode_2_modifier_value: dest stat = LDef" << std::endl;
+			to_val = &(g_player.actual.l_def);
+			break;
+		case ItemConsts::MODIFIER_APT:		// APT
+			std::cout << "apply_mode_2_modifier_value: dest stat = APT" << std::endl;
+			to_val = &(g_player.actual.apt);
+			break;
+		case ItemConsts::MODIFIER_MAX_HP:	// Max HP
+			std::cout << "apply_mode_2_modifier_value: dest stat = Max HP" << std::endl;
+			to_val = &(g_player.actual.max_hp);
+			break;
+		case ItemConsts::MODIFIER_FDMG:		// FDmg
+			std::cout << "apply_mode_2_modifier_value: dest stat = FDmg" << std::endl;
+			to_val = &(g_player.actual.f_dmg);
+			break;
+		case ItemConsts::MODIFIER_IDMG:		// IDmg
+			std::cout << "apply_mode_2_modifier_value: dest stat = IDmg" << std::endl;
+			to_val = &(g_player.actual.i_dmg);
+			break;
+		case ItemConsts::MODIFIER_LDMG:		// LDmg
+			std::cout << "apply_mode_2_modifier_value: dest stat = LDmg" << std::endl;
+			to_val = &(g_player.actual.l_dmg);
+			break;
+		case ItemConsts::MODIFIER_POIS:		// Poison
+			// This modifier doesn't have this option
+			return;
+			break;
+		case ItemConsts::MODIFIER_BLOCK:		// Block
+			std::cout << "apply_mode_2_modifier_value: dest stat = Block" << std::endl;
+			to_val = &(g_player.actual.block);
+			break;
+		case ItemConsts::MODIFIER_ADMG:			// ADmg
+			std::cout << "apply_mode_2_modifier_value: dest stat = ADmg" << std::endl;
+			to_val = &(g_player.actual.a_dmg);
+			break;
+	}
+
+	std::cout << "apply_mode_2_modifier_value: magnitude = " << m.magnitude << std::endl;
+
+	// Apply the value
+	*to_val += *from_val * m.magnitude;
 }
 
 //----------------------------------------------------------------------------
@@ -681,96 +859,96 @@ void apply_modifier_value(int mode, float value, float *fixed, float *multiplica
 // Returns:
 //   Nothing
 //----------------------------------------------------------------------------
-void apply_single_modifier(ModifierMagType m, Stats *fixed, Stats *multiplicative) {
+void apply_single_modifier(ModifierMagType m, Stats *fixed, Stats *multiplicative, std::vector<ModifierMagType> &mods) {
 // This function is Ug. Ly.  I think this could be managed better by function pointers that do the
 // application of the values directly.  But for now, I'm doing this to get something in place.
 	switch (m.modifier_id) {
-		case 0:		// STR
+		case ItemConsts::MODIFIER_STR:		// STR
 			//std::cout << "apply_single_modifier: Adjusting STR - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
 			//std::cout << "apply_single_modifier: Fixed = " << fixed->str << ", mult = " << multiplicative->str << std::endl;
-			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->str), &(multiplicative->str));
+			apply_modifier_value(m, &(fixed->str), &(multiplicative->str), mods);
 			break;
-		case 1:		// CON
+		case ItemConsts::MODIFIER_CON:		// CON
 			//std::cout << "apply_single_modifier: Adjusting CON - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
 			//std::cout << "apply_single_modifier: Fixed = " << fixed->con << ", mult = " << multiplicative->con << std::endl;
-			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->con), &(multiplicative->con));
+			apply_modifier_value(m, &(fixed->con), &(multiplicative->con), mods);
 			break;
-		case 2:		// DEX
+		case ItemConsts::MODIFIER_DEX:		// DEX
 			//std::cout << "apply_single_modifier: Adjusting DEX - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
 			//std::cout << "apply_single_modifier: Fixed = " << fixed->dex << ", mult = " << multiplicative->dex << std::endl;
-			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->dex), &(multiplicative->dex));
+			apply_modifier_value(m, &(fixed->dex), &(multiplicative->dex), mods);
 			break;
-		case 3:		// ATK
+		case ItemConsts::MODIFIER_ATK:		// ATK
 			//std::cout << "apply_single_modifier: Adjusting ATK - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
 			//std::cout << "apply_single_modifier: Fixed = " << fixed->atk << ", mult = " << multiplicative->atk << std::endl;
-			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->atk), &(multiplicative->atk));
+			apply_modifier_value(m, &(fixed->atk), &(multiplicative->atk), mods);
 			break;
-		case 4:		// DEF
+		case ItemConsts::MODIFIER_DEF:		// DEF
 			//std::cout << "apply_single_modifier: Adjusting DEF - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
 			//std::cout << "apply_single_modifier: Fixed = " << fixed->def << ", mult = " << multiplicative->def << std::endl;
-			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->def), &(multiplicative->def));
+			apply_modifier_value(m, &(fixed->def), &(multiplicative->def), mods);
 			break;
-		case 5:		// SPD
+		case ItemConsts::MODIFIER_SPD:		// SPD
 			//std::cout << "apply_single_modifier: Adjusting SPD - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
 			//std::cout << "apply_single_modifier: Fixed = " << fixed->spd << ", mult = " << multiplicative->spd << std::endl;
-			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->spd), &(multiplicative->spd));
+			apply_modifier_value(m, &(fixed->spd), &(multiplicative->spd), mods);
 			break;
-		case 6:		// FAtk
+		case ItemConsts::MODIFIER_FATK:		// FAtk
 			//std::cout << "apply_single_modifier: Adjusting FAtk - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
 			//std::cout << "apply_single_modifier: Fixed = " << fixed->f_atk << ", mult = " << multiplicative->f_atk << std::endl;
-			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->f_atk), &(multiplicative->f_atk));
+			apply_modifier_value(m, &(fixed->f_atk), &(multiplicative->f_atk), mods);
 			break;
-		case 7:		// IAtk
+		case ItemConsts::MODIFIER_IATK:		// IAtk
 			//std::cout << "apply_single_modifier: Adjusting IAtk - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
-			(m.modifier_mode, m.magnitude, &(fixed->i_atk), &(multiplicative->i_atk));
+			apply_modifier_value(m, &(fixed->i_atk), &(multiplicative->i_atk), mods);
 			break;
-		case 8: 	// LAtk
+		case ItemConsts::MODIFIER_LATK: 	// LAtk
 			//std::cout << "apply_single_modifier: Adjusting LAtk - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
-			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->l_atk), &(multiplicative->l_atk));
+			apply_modifier_value(m, &(fixed->l_atk), &(multiplicative->l_atk), mods);
 			break;
-		case 9:		// FDef
+		case ItemConsts::MODIFIER_FDEF:		// FDef
 			//std::cout << "apply_single_modifier: Adjusting FDef - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
-			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->f_def), &(multiplicative->f_def));
+			apply_modifier_value(m, &(fixed->f_def), &(multiplicative->f_def), mods);
 			break;
-		case 10:	// IDef
+		case ItemConsts::MODIFIER_IDEF:	// IDef
 			//std::cout << "apply_single_modifier: Adjusting IDef - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
-			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->i_def), &(multiplicative->i_def));
+			apply_modifier_value(m, &(fixed->i_def), &(multiplicative->i_def), mods);
 			break;
-		case 11:	// LDef
+		case ItemConsts::MODIFIER_LDEF:	// LDef
 			//std::cout << "apply_single_modifier: Adjusting LDef - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
-			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->l_def), &(multiplicative->l_def));
+			apply_modifier_value(m, &(fixed->l_def), &(multiplicative->l_def), mods);
 			break;
-		case 12:	// Attacks per turn
+		case ItemConsts::MODIFIER_APT:	// Attacks per turn
 			//std::cout << "apply_single_modifier: Adjusting APT - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
-			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->apt), &(multiplicative->apt));
+			apply_modifier_value(m, &(fixed->apt), &(multiplicative->apt), mods);
 			break;
-		case 13:	// Max HP
+		case ItemConsts::MODIFIER_MAX_HP:	// Max HP
 			//std::cout << "apply_single_modifier: Adjusting Max HP - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
-			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->max_hp), &(multiplicative->max_hp));
+			apply_modifier_value(m, &(fixed->max_hp), &(multiplicative->max_hp), mods);
 			break;
-		case 14:	// Fire damage taken
+		case ItemConsts::MODIFIER_FDMG:	// Fire damage taken
 			//std::cout << "apply_single_modifier: Adjusting FDmg  - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
-			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->f_dmg), &(multiplicative->f_dmg));
+			apply_modifier_value(m, &(fixed->f_dmg), &(multiplicative->f_dmg), mods);
 			break;
-		case 15:	// Ice damage taken
+		case ItemConsts::MODIFIER_IDMG:	// Ice damage taken
 			//std::cout << "apply_single_modifier: Adjusting IDmg - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
-			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->i_dmg), &(multiplicative->i_dmg));
+			apply_modifier_value(m, &(fixed->i_dmg), &(multiplicative->i_dmg), mods);
 			break;
-		case 16:	// Lightning damage taken
+		case ItemConsts::MODIFIER_LDMG:	// Lightning damage taken
 			//std::cout << "apply_single_modifier: Adjusting LDmg - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
-			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->l_dmg), &(multiplicative->l_dmg));
+			apply_modifier_value(m, &(fixed->l_dmg), &(multiplicative->l_dmg), mods);
 			break;
-		case 17:	// Poisoned
+		case ItemConsts::MODIFIER_POIS:	// Poisoned
 			//std::cout << "apply_single_modifier: Turning on equipment poison" << std::endl;
 			g_player.is_equip_poisoned = true;
 			break;
-		case 18:	// Chance to block
+		case ItemConsts::MODIFIER_BLOCK:	// Chance to block
 			//std::cout << "apply_single_modifier: Adjusting Block - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
-			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->block), &(multiplicative->block));
+			apply_modifier_value(m, &(fixed->block), &(multiplicative->block), mods);
 			break;
-		case 19: 	// All damage taken
+		case ItemConsts::MODIFIER_ADMG: 	// All damage taken
 			//std::cout << "apply_single_modifier: Adjusting ADmg - mode " << (int)m.modifier_mode << ", value " << m.magnitude << std::endl;
-			apply_modifier_value(m.modifier_mode, m.magnitude, &(fixed->a_dmg), &(multiplicative->a_dmg));
+			apply_modifier_value(m, &(fixed->a_dmg), &(multiplicative->a_dmg), mods);
 			break;
 	}
 }
@@ -788,7 +966,7 @@ void apply_single_modifier(ModifierMagType m, Stats *fixed, Stats *multiplicativ
 // Returns:
 //   Nothing
 //----------------------------------------------------------------------------
-void apply_item_values_to_stats(Item *i, Stats *fixed, Stats *multiplicative) {
+void apply_item_values_to_stats(Item *i, Stats *fixed, Stats *multiplicative, std::vector<ModifierMagType> &mods) {
 	if (i->get_item_class() == ItemConsts::WEAPON_CLASS) {
 		//std::cout << "apply_item_values_to_stats: attack was " << fixed->atk << std::endl;
 		fixed->atk += i->get_attack();
@@ -813,7 +991,7 @@ void apply_item_values_to_stats(Item *i, Stats *fixed, Stats *multiplicative) {
 		//std::cout << "apply_item_values_to_stats: name: " << p.name << ", num mods = " << (int)p.num_modifiers << std::endl;
 		for (idx=0; idx < p.num_modifiers; idx++) {
 			//std::cout << "apply_item_values_to_stats: applying prefix id " << idx << std::endl;
-			apply_single_modifier(p.modifiers[idx], fixed, multiplicative);
+			apply_single_modifier(p.modifiers[idx], fixed, multiplicative, mods);
 		}
 	}
 	if(i->get_suffix() != -1) {
@@ -828,7 +1006,7 @@ void apply_item_values_to_stats(Item *i, Stats *fixed, Stats *multiplicative) {
 		//std::cout << "apply_item_values_to_stats: name: " << p.name << ", num mods = " << (int)p.num_modifiers << std::endl;
 		for (idx=0; idx < p.num_modifiers; idx++) {
 			//std::cout << "apply_item_values_to_stats: applying suffix id " << idx << std::endl;
-			apply_single_modifier(p.modifiers[idx], fixed, multiplicative);
+			apply_single_modifier(p.modifiers[idx], fixed, multiplicative, mods);
 		}
 	}
 }

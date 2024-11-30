@@ -93,7 +93,7 @@ public:
 	void set_position(int x, int y);
 	void assign_base_stats_to_actual();
 	void apply_stats_to_actual(Stats *fixed, Stats *multiplicative);
-    void init_stats(Stats *f, Stats *m);
+    void init_temp_stats(Stats *f, Stats *m);
 	int get_x_pos();
 	int get_y_pos();
 	void set_x_pos(int pos);
