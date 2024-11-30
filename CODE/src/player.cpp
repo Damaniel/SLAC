@@ -330,6 +330,15 @@ void Player::unequip(Item *i) {
 	recalculate_actual_stats();
 }
 
+//------------------------------------------------------------------------------
+// Moves the player's base stats into their actual (computed) stats
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing.
+//------------------------------------------------------------------------------
 void Player::assign_base_stats_to_actual(void) {
 	actual.apt = base.apt;
 	actual.atk = base.atk;
@@ -348,6 +357,17 @@ void Player::assign_base_stats_to_actual(void) {
 	actual.str = base.str;
 }
 
+//------------------------------------------------------------------------------
+// Takes a set of fixed and multiplicative stats and applies them to the 
+// player's actual (computed) stats
+// 
+// Arguments:
+//   fixed - a set of fixed stat values
+//   multiplicative - a set of multiplicative stat values
+//
+// Returns:
+//   Nothing.
+//------------------------------------------------------------------------------
 void Player::apply_stats_to_actual(Stats &fixed, MultiplicativeStats &multiplicative) {
 	// Additive first
 	actual.apt += fixed.apt;
