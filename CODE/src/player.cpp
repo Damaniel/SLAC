@@ -260,11 +260,12 @@ void Player::equip(Item *i) {
 	if ((*item_slot == NULL) || !(*item_slot)->is_it_cursed()) {
 		*item_slot = i;
 		(*item_slot)->mark_equipped();
+		g_text_log.put_line("Equipped the " + (*item_slot)->get_full_name() + ".");
 		if ((*item_slot)->is_it_cursed()) {
 			g_text_log.put_line("Oh no!  The " + (*item_slot)->get_full_name() + " is cursed!");
-			g_state_flags.update_text_dialog = true;
-			g_state_flags.update_display = true;
 		}
+		g_state_flags.update_text_dialog = true;	
+		g_state_flags.update_display = true;
 	}
 	recalculate_actual_stats();
 }
@@ -318,6 +319,9 @@ void Player::unequip(Item *i) {
 			return;
 		}
 		//std::cout << "process_unequip: calling remove on item" << std::endl;
+		g_text_log.put_line("Removed the " + (*item_slot)->get_full_name() + ".");
+		g_state_flags.update_text_dialog = true;
+		g_state_flags.update_display = true;
 		(*item_slot)->mark_removed();
 		//std::cout << "process_unequip:  Remove called" << std::endl;
 		*item_slot = NULL;

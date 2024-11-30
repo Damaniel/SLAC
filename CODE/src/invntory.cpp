@@ -962,6 +962,9 @@ Potion::Potion(unsigned int idx) {
 //   Nothing
 //----------------------------------------------------------------------------
 void Potion::use() {
+    g_text_log.put_line("You use the " + get_full_name() + ".");
+    g_state_flags.update_text_dialog = 1;
+    g_state_flags.update_display = 1;
     //std::cout << "use: potion used" << std::endl;
 }
 
@@ -1102,6 +1105,9 @@ Scroll::Scroll(unsigned int idx) {
 //   Nothing
 //----------------------------------------------------------------------------
 void Scroll::use() {
+    g_text_log.put_line("You use the " + get_full_name() + ".");
+    g_state_flags.update_text_dialog = 1;
+    g_state_flags.update_display = 1;
     //std::cout << "use: scroll used" << std::endl;
 }
 
