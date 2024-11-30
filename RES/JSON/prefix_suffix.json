@@ -476,8 +476,8 @@
                 "modifiers": {
                     "fire_damage_taken": {
                         "modifier_id": 14,
-                        "modifier_mode": 0,
-                        "amount": 0.8,
+                        "modifier_mode": 1,
+                        "amount": -0.2,
                         "secondary_id": 0
                     }
                 }
@@ -492,8 +492,8 @@
                 "modifiers": {
                     "fire_damage_taken": {
                         "modifier_id": 14,
-                        "modifier_mode": 0,
-                        "amount": 0.6,
+                        "modifier_mode": 1,
+                        "amount": -0.4,
                         "secondary_id": 0
                     }
                 }
@@ -508,8 +508,8 @@
                 "modifiers": {
                     "ice_damage_taken": {
                         "modifier_id": 15,
-                        "modifier_mode": 0,
-                        "amount": 0.8,
+                        "modifier_mode": 1,
+                        "amount": -0.2,
                         "secondary_id": 0
                     }
                 }
@@ -524,8 +524,8 @@
                 "modifiers": {
                     "ice_damage_taken": {
                         "modifier_id": 15,
-                        "modifier_mode": 0,
-                        "amount": 0.6,
+                        "modifier_mode": 1,
+                        "amount": -0.4,
                         "secondary_id": 0
                     }
                 }
@@ -540,8 +540,8 @@
                 "modifiers": {
                     "lightning_damage_taken": {
                         "modifier_id": 16,
-                        "modifier_mode": 0,
-                        "amount": 0.8,
+                        "modifier_mode": 1,
+                        "amount": -0.2,
                         "secondary_id": 0
                     }
                 }
@@ -556,8 +556,8 @@
                 "modifiers": {
                     "lightning_damage_taken": {
                         "modifier_id": 16,
-                        "modifier_mode": 0,
-                        "amount": 0.6,
+                        "modifier_mode": 1,
+                        "amount": -0.2,
                         "secondary_id": 0
                     }
                 }
@@ -572,20 +572,20 @@
                 "modifiers": {
                     "fire_damage_taken": {
                         "modifier_id": 14,
-                        "modifier_mode": 0,
-                        "amount": 0.9,
+                        "modifier_mode": 1,
+                        "amount": -0.1,
                         "secondary_id": 0
                     },
                     "ice_damage_taken": {
                         "modifier_id": 15,
-                        "modifier_mode": 0,
-                        "amount": 0.9,
+                        "modifier_mode": 1,
+                        "amount": -0.1,
                         "secondary_id": 0
                     },
                     "lightning_damage_taken": {
                         "modifier_id": 16,
-                        "modifier_mode": 0,
-                        "amount": 0.9,
+                        "modifier_mode": 1,
+                        "amount": -0.1,
                         "secondary_id": 0
                     }
                 }
@@ -600,20 +600,20 @@
                 "modifiers": {
                     "fire_damage_taken": {
                         "modifier_id": 14,
-                        "modifier_mode": 0,
-                        "amount": 0.8,
+                        "modifier_mode": 1,
+                        "amount": -0.2,
                         "secondary_id": 0
                     },
                     "ice_damage_taken": {
                         "modifier_id": 15,
-                        "modifier_mode": 0,
-                        "amount": 0.8,
+                        "modifier_mode": 1,
+                        "amount": -0.2,
                         "secondary_id": 0
                     },
                     "lightning_damage_taken": {
                         "modifier_id": 16,
-                        "modifier_mode": 0,
-                        "amount": 0.8,
+                        "modifier_mode": 1,
+                        "amount": -0.2,
                         "secondary_id": 0
                     }
                 }
@@ -641,8 +641,8 @@
                 "modifiers": {
                     "fire_damage_taken": {
                         "modifier_id": 14,
-                        "modifier_mode": 0,
-                        "amount": 1.2,
+                        "modifier_mode": 1,
+                        "amount": 0.2,
                         "secondary_id": 0
                     }
                 }
@@ -657,8 +657,8 @@
                 "modifiers": {
                     "fire_damage_taken": {
                         "modifier_id": 14,
-                        "modifier_mode": 0,
-                        "amount": 1.4,
+                        "modifier_mode": 1,
+                        "amount": 0.4,
                         "secondary_id": 0
                     }
                 }
@@ -673,8 +673,8 @@
                 "modifiers": {
                     "ice_damage_taken": {
                         "modifier_id": 15,
-                        "modifier_mode": 0,
-                        "amount": 1.2,
+                        "modifier_mode": 1,
+                        "amount": 0.2,
                         "secondary_id": 0
                     }
                 }
@@ -689,8 +689,8 @@
                 "modifiers": {
                     "ice_damage_taken": {
                         "modifier_id": 15,
-                        "modifier_mode": 0,
-                        "amount": 1.4,
+                        "modifier_mode": 1,
+                        "amount": 0.4,
                         "secondary_id": 0
                     }
                 }
@@ -705,8 +705,8 @@
                 "modifiers": {
                     "lightning_damage_taken": {
                         "modifier_id": 16,
-                        "modifier_mode": 0,
-                        "amount": 1.2,
+                        "modifier_mode": 1,
+                        "amount": 0.2,
                         "secondary_id": 0
                     }
                 }
@@ -721,8 +721,8 @@
                 "modifiers": {
                     "lightning_damage_taken": {
                         "modifier_id": 16,
-                        "modifier_mode": 0,
-                        "amount": 1.4,
+                        "modifier_mode": 1,
+                        "amount": 0.4,
                         "secondary_id": 0
                     }
                 }
@@ -737,20 +737,20 @@
                 "modifiers": {
                     "fire_damage_taken": {
                         "modifier_id": 14,
-                        "modifier_mode": 0,
-                        "amount": 1.1,
+                        "modifier_mode": 1,
+                        "amount": 0.1,
                         "secondary_id": 0
                     },
                     "ice_damage_taken": {
                         "modifier_id": 15,
-                        "modifier_mode": 0,
-                        "amount": 1.1,
+                        "modifier_mode": 1,
+                        "amount": 0.1,
                         "secondary_id": 0
                     },
                     "lightning_damage_taken": {
                         "modifier_id": 16,
-                        "modifier_mode": 0,
-                        "amount": 1.1,
+                        "modifier_mode": 1,
+                        "amount": 0.1,
                         "secondary_id": 0
                     }
                 }
@@ -765,20 +765,20 @@
                 "modifiers": {
                     "fire_damage_taken": {
                         "modifier_id": 14,
-                        "modifier_mode": 0,
-                        "amount": 1.2,
+                        "modifier_mode": 1,
+                        "amount": 0.2,
                         "secondary_id": 0
                     },
                     "ice_damage_taken": {
                         "modifier_id": 15,
-                        "modifier_mode": 0,
-                        "amount": 1.2,
+                        "modifier_mode": 1,
+                        "amount": 0.2,
                         "secondary_id": 0
                     },
                     "lightning_damage_taken": {
                         "modifier_id": 16,
-                        "modifier_mode": 0,
-                        "amount": 1.2,
+                        "modifier_mode": 1,
+                        "amount": 0.2,
                         "secondary_id": 0
                     }
                 }
@@ -1350,8 +1350,8 @@
                     },
                     "damage_reduction": {
                         "modifier_id": 19,
-                        "modifier_mode": 0,
-                        "amount": 0.8,
+                        "modifier_mode": 1,
+                        "amount": -0.2,
                         "secondary_id": 0
                     }
                 }
@@ -1390,8 +1390,8 @@
                     },
                     "damage_reduction": {
                         "modifier_id": 19,
-                        "modifier_mode": 0,
-                        "amount": 0.75,
+                        "modifier_mode": 1,
+                        "amount": -0.2,
                         "secondary_id": 0
                     }
                 }
@@ -1667,8 +1667,8 @@
                     },
                     "damage_taken": {
                         "modifier_id": 19,
-                        "modifier_mode": 0,
-                        "amount": 1.25,
+                        "modifier_mode": 1,
+                        "amount": 0.2,
                         "secondary_id": 0
                     }
                 }
