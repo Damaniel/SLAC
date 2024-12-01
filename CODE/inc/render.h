@@ -511,6 +511,7 @@ class Render {
 		void render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_y);
 		void render_world_at_player(BITMAP *destination, Maze *m, int maze_x, int maze_y);
 		void render_stats_screen(BITMAP *destination);
+		void render_hp_exp_bar(BITMAP *destination);
 };
 
 #endif	

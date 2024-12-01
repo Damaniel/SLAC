@@ -76,6 +76,11 @@ void update_main_game_display(void) {
 		g_state_flags.update_status_dialog = false;
 	}
 
+	if(g_state_flags.update_status_hp_exp == true) {
+		g_render.render_hp_exp_bar(g_back_buffer);
+		g_state_flags.update_status_hp_exp = false;
+	}
+
 	if(g_state_flags.update_text_dialog == true) {
 		g_render.render_text_base(g_back_buffer, g_state_flags.text_log_extended);
 		g_render.render_text_log(g_back_buffer, g_state_flags.text_log_extended);
@@ -349,6 +354,7 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 	// Tell the renderer to draw these first thing.
 	g_state_flags.update_maze_area = true;
 	g_state_flags.update_status_dialog = true;
+	g_state_flags.update_status_hp_exp = true;
 	g_state_flags.update_text_dialog = true;
 
 	// Use the short text log by default

@@ -761,6 +761,36 @@ void Render::render_ui_box(BITMAP *destination, int x1, int y1, int x2, int y2) 
 }
 
 //------------------------------------------------------------------------------
+// Draws filled rectangles to represent the HP and EXP bar
+//
+// Arguments:
+//   destination - the BITMAP to render to
+//   x1, y1, x2, y2 - the extents of the box to be rendered
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Render::render_hp_exp_bar(BITMAP *destination) {
+	int width;
+
+	// HP bar
+	// clear the entire bar
+	rectfill(destination, UiConsts::HP_BAR_X + 3, UiConsts::HP_BAR_Y + 5,
+			 UiConsts::HP_BAR_X + UiConsts::HP_EXP_BAR_WIDTH - 3 - 1,
+			 UiConsts::HP_BAR_Y + UiConsts::HP_EXP_BAR_HEIGHT - 5 - 1,
+			 16);
+	// fill in the HP bar
+	width = (int)(((float)g_player.hp / (float)g_player.actual.max_hp) * (UiConsts::HP_EXP_BAR_WIDTH));
+	rectfill(destination, UiConsts::HP_BAR_X + 3, UiConsts::HP_BAR_Y + 5,
+			 UiConsts::HP_BAR_X + width - 3 - 1, UiConsts::HP_BAR_Y + UiConsts::HP_EXP_BAR_HEIGHT - 5 - 1, 22);
+	
+	// EXP bar
+	width = 0;
+	//width = (int)(((float)g_player.hp / (float)g_player.actual.max_hp) * (UiConsts::HP_EXP_BAR_WIDTH - 10));
+	//std::cout << "render_hp_exp_bar: HP bar width is " << width << std::endl;
+}
+
+//------------------------------------------------------------------------------
 // Draws the contents of the status area (Name/Level/HP/EXP/gold) to the screen
 //
 // Arguments:

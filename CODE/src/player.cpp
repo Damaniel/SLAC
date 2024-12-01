@@ -540,6 +540,10 @@ void Player::recalculate_actual_stats(void) {
 		apply_mode_2_modifier_value(*it);
 	}
 
+	// Our HP vs max HP may have changed; update the display.
+	g_state_flags.update_status_hp_exp = true;
+	g_state_flags.update_display = true;
+
 	//std::cout << "recalculate_actual_stats: after" << std::endl;
 	//dump_stats(&actual);
 

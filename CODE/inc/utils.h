@@ -34,7 +34,8 @@ struct StateFlags {
     bool update_text_dialog;            // Should the text dialog be redrawn?
     bool update_status_dialog;          // Should the status display be redrawn?
     bool update_maze_area;              // Should the maze area be redrawn?
-
+    bool update_status_hp_exp;          // Should the HP/XP bars be updated?
+    
     // - subscreen dialogs
     bool update_map_dialog;             // Should the map screen be redrawn?
     bool update_inventory_dialog;       // Should the inventory dialog be redrawn?
