@@ -582,8 +582,6 @@ void perform_inventory_menu_action(void) {
 		case UiConsts::ITEM_OPTION_USE:
 			// If the item can be used, use it
 			if (i->can_be_used()) {
-				// Use the item.  Take one from the stack, or delete the item if there was only 1
-				i->use();
 				// If the item was a potion or scroll, using it identifies all items of that kind until
 				// the current gen of player dies.  The 'identify' function works for the current 
 				// stack in the inventory; g_identified_<XYZ> ensures future items are auto-identified
@@ -596,6 +594,8 @@ void perform_inventory_menu_action(void) {
 						g_identified_scrolls[i->get_id()] = true;
 					g_text_log.put_line(old_name + " is actually a " + i->get_full_name() + ".");
 				} 
+				// Use the item.  Take one from the stack, or delete the item if there was only 1
+				i->use();
 				i->adjust_quantity(-1);
 				if (i->get_quantity() <= 0) {
 					// The item was used and there are none left, get rid of it
