@@ -288,6 +288,7 @@ void process_game_state(int key) {
         		    if (g_dungeon.maze->is_carved(g_player.get_x_pos()-1, g_player.get_y_pos()) == true) {
 			            g_player.set_x_pos(g_player.get_x_pos() - 1);
 			            process_movement_flags();
+                        identify_previously_known_items_at_player();
 			            add_items_at_player_to_log();
 		            }
                     break;           
@@ -295,6 +296,7 @@ void process_game_state(int key) {
             		if (g_dungeon.maze->is_carved(g_player.get_x_pos()+1, g_player.get_y_pos()) == true) {			
 	    		        g_player.set_x_pos(g_player.get_x_pos() + 1);
 		    	        process_movement_flags();
+                        identify_previously_known_items_at_player();
 			            add_items_at_player_to_log();
 		            }
                     break;
@@ -302,6 +304,7 @@ void process_game_state(int key) {
         	    	if (g_dungeon.maze->is_carved(g_player.get_x_pos(), g_player.get_y_pos()-1) == true) {
     			        g_player.set_y_pos(g_player.get_y_pos() - 1);
 	    		        process_movement_flags();
+                        identify_previously_known_items_at_player();
 		    	        add_items_at_player_to_log();
 		            }
                     break;
@@ -310,6 +313,7 @@ void process_game_state(int key) {
 	    	        {
         	    		g_player.set_y_pos(g_player.get_y_pos() + 1);
 			            process_movement_flags();
+                        identify_previously_known_items_at_player();
 			            add_items_at_player_to_log();
 		            }
                     break;

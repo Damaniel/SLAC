@@ -35,7 +35,7 @@ struct StateFlags {
     bool update_status_dialog;          // Should the status display be redrawn?
     bool update_maze_area;              // Should the maze area be redrawn?
     bool update_status_hp_exp;          // Should the HP/XP bars be updated?
-    
+
     // - subscreen dialogs
     bool update_map_dialog;             // Should the map screen be redrawn?
     bool update_inventory_dialog;       // Should the inventory dialog be redrawn?
@@ -96,6 +96,8 @@ void drop_item_at(Item *i, int x, int y);
 void scramble_potion_icons(void);
 void scramble_scroll_icons(void);
 int get_tile_to_render(Item *i);
+void identify_previously_known_items_at_player();
+void identify_if_previously_known(Item *i);
 
 // Inventory functions
 void perform_inventory_menu_action(void);

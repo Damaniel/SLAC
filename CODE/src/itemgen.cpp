@@ -228,6 +228,10 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
         i->set_curse_state(false);
     }
 
+    // If the item is a potion or scroll and has been previously identified, 
+    // mark it as such
+    identify_if_previously_known(i);
+
     // std::cout << std::endl;
     return i;
 }

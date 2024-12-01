@@ -384,6 +384,7 @@ void initialize_main_game_state(void) {
 
 	g_identified_potions.clear();
 	g_identified_scrolls.clear();
+
 	// Reset the identified state for all scrolls and potions
 	for (int i = 0; i < ItemConsts::NUM_POTIONS; ++i) {
 		g_identified_potions.push_back(false);
@@ -522,6 +523,7 @@ void pick_up_item_at(int x, int y) {
             g_player.add_gold(i->get_quantity());
 		    delete i;
             g_state_flags.update_status_dialog = true;
+			g_state_flags.update_status_hp_exp = true;
             picked_up = true;
         }
         else {
@@ -582,6 +584,18 @@ void perform_inventory_menu_action(void) {
 			if (i->can_be_used()) {
 				// Use the item.  Take one from the stack, or delete the item if there was only 1
 				i->use();
+				// If the item was a potion or scroll, using it identifies all items of that kind until
+				// the current gen of player dies.  The 'identify' function works for the current 
+				// stack in the inventory; g_identified_<XYZ> ensures future items are auto-identified
+				if (i->get_item_class() == ItemConsts::POTION_CLASS || i->get_item_class() == ItemConsts::SCROLL_CLASS) {
+					std::string old_name = i->get_full_name();
+					i->identify();
+					if (i->get_item_class() == ItemConsts::POTION_CLASS)
+						g_identified_potions[i->get_id()] = true;
+					else
+						g_identified_scrolls[i->get_id()] = true;
+					g_text_log.put_line(old_name + " is actually a " + i->get_full_name() + ".");
+				} 
 				i->adjust_quantity(-1);
 				if (i->get_quantity() <= 0) {
 					// The item was used and there are none left, get rid of it
@@ -1106,5 +1120,51 @@ int get_tile_to_render(Item *i) {
 	else {
 		return i->get_gid();
 	}
+}
+
+//----------------------------------------------------------------------------
+// For any items sitting at the player's feet, identify them if they're a
+// potion or scroll that has previously been identified
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void identify_previously_known_items_at_player() {
+	int item_count = g_dungeon.maze->get_num_items_at(g_player.get_x_pos(), g_player.get_y_pos());
+
+	if (item_count > 0) {
+		std::list<Item *> items = g_dungeon.maze->get_items_at(g_player.get_x_pos(), g_player.get_y_pos());
+		for (std::list<Item *>::iterator it = items.begin(); it != items.end(); ++ it) {
+			identify_if_previously_known((*it));
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+// If the specified item type (potion or scroll) has been previously 
+// identified, identify it automatically
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void identify_if_previously_known(Item *i) {
+    // If the item is a potion or scroll and has been previously identified, 
+    // mark it as such
+    if(i->get_item_class() == ItemConsts::POTION_CLASS){
+        if (g_identified_potions[i->get_id()] == true)
+            i->identify();
+    }        
+    if(i->get_item_class() == ItemConsts::SCROLL_CLASS)
+    {
+        if (g_identified_scrolls[i->get_id()] == true) {
+            i->identify();
+        }
+    }
 }
 
