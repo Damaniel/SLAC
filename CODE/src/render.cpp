@@ -598,7 +598,10 @@ void Render::render_inventory_content(BITMAP *destination) {
 			int y = i / UiConsts::INVENTORY_ITEMS_PER_ROW;
 			Item *it = g_inventory->get_item_in_slot(i);
 			if (it != NULL) {
-				int gid = it->get_gid();
+				// If a potion or scroll, get the GID from the scrambled
+				// icon table to ensure the correct scrambled icon 
+				// is drawn
+				int gid = get_tile_to_render(it);
 				int tilex = gid % UiConsts::ITEM_TILE_ENTRY_WIDTH;
 				int tiley = gid / UiConsts::ITEM_TILE_ENTRY_WIDTH;
 
@@ -1185,7 +1188,8 @@ void Render::render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_
 					if (num_items_here > 0) {
 						std::list<Item *> items = m->get_items_at(tile_to_render_x, tile_to_render_y);
 						Item *it = items.back();
-						render_item(destination, it->get_gid(), screen_x, screen_y);
+						int gid = get_tile_to_render(it);
+						render_item(destination, gid, screen_x, screen_y);
 					}
 				} else {
 					render_base_tile(destination, UiConsts::TILE_WALL, screen_x, screen_y);

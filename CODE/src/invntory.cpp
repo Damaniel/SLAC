@@ -25,6 +25,10 @@
 #include "globals.h"
 
 Inventory *g_inventory;
+std::vector<int> g_scrambled_potion_icons;
+std::vector<int> g_scrambled_scroll_icons;
+std::vector<bool> g_identified_potions;
+std::vector<bool> g_identified_scrolls;
 
 //==================================================================
 // Inventory
@@ -443,7 +447,7 @@ void Weapon::init(WeaponBaseType *b) {
     can_use = b->can_use;
     is_equipped = false;
     is_cursed = false;
-    is_identified = true;
+    is_identified = false;
     prefix_id = -1;
     suffix_id = -1;
     quantity = 1;
@@ -594,7 +598,7 @@ void Armor::init(ArmorBaseType *b) {
     can_use = b->can_use;
     is_equipped = false;
     is_cursed = false;
-    is_identified = true;
+    is_identified = false;
     prefix_id = -1;
     suffix_id = -1;
     quantity = 1;
@@ -909,7 +913,7 @@ void Potion::init(PotionType *b) {
     can_equip = b->can_equip;
     can_drop = b->can_drop;
     can_use = b->can_use;
-    is_identified = true;
+    is_identified = g_identified_potions[id];
     quantity = 1;
 }
 
@@ -1053,7 +1057,7 @@ void Scroll::init(ScrollType *b) {
     can_equip = b->can_equip;
     can_drop = b->can_drop;
     can_use = b->can_use;
-    is_identified = true;
+    is_identified = g_identified_scrolls[id];
     quantity = 1;
 }
 //----------------------------------------------------------------------------
@@ -1196,7 +1200,7 @@ void Artifact::init(ArtifactType *b) {
     can_equip = b->can_equip;
     can_drop = b->can_drop;
     can_use = b->can_use;
-    is_identified = false;
+    is_identified = true;
     quantity = 1;
 }
 

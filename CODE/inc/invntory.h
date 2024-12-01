@@ -493,4 +493,11 @@ public:
 
 extern Inventory *g_inventory;
 
+// The list of scrambled tile IDs for the potions and scrolls
+extern std::vector<int> g_scrambled_potion_icons;
+extern std::vector<int> g_scrambled_scroll_icons;
+
+// A set of bools - for each potion/scroll, true if identified, false if not
+extern std::vector<bool> g_identified_potions;
+extern std::vector<bool> g_identified_scrolls;
 #endif

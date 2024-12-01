@@ -104,6 +104,13 @@ namespace ItemConsts {
         NUM_MODIFIERS
     };
     
+    const int FIRST_POTION_GID =  130;
+    const int LAST_POTION_GID =   141;
+    const int NUM_POTIONS = (LAST_POTION_GID - FIRST_POTION_GID) + 1;
+
+    const int FIRST_SCROLL_GID = 142;
+    const int LAST_SCROLL_GID = 153;
+    const int NUM_SCROLLS = (LAST_SCROLL_GID - FIRST_SCROLL_GID) + 1;
 }
 
 // A class that generates instances of items according to weighting rules.  All

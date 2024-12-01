@@ -294,29 +294,26 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 
 	// Set the current ilevel based on the dungeon the player is in and the
 	// floor they're on
-	// switch (d.maze_id) {
-	// 	case DUSTY_TUNNELS:
-	// 		d.ilevel = level / 2;
-	// 		if (d.ilevel < 1 ) d.ilevel = 1;
-	// 		if (d.ilevel > 25) d.ilevel = 25;
-	// 		break;
-	// 	case MARBLE_HALLS:
-	// 		d.ilevel = 20 + (level / 2);
-	// 		if (d.ilevel < 20 ) d.ilevel = 20;
-	// 		if (d.ilevel > 70) d.ilevel = 70;
-	// 		break;
-	// 	case CRYSTAL_DEPTHS:
-	// 		d.ilevel = 30 + (level / 2);
-	// 		if (d.ilevel < 30 ) d.ilevel = 30;
-	// 		if (d.ilevel > 100) d.ilevel = 100;
-	// 		break;
-	// 	default:
-	// 		d.ilevel = 100;
-	// 		break;
-	// }
-
-	// TODO: remove this after testing
-	d.ilevel = 100;
+	switch (d.maze_id) {
+		case DUSTY_TUNNELS:
+			d.ilevel = level / 2;
+			if (d.ilevel < 1 ) d.ilevel = 1;
+			if (d.ilevel > 25) d.ilevel = 25;
+			break;
+		case MARBLE_HALLS:
+			d.ilevel = 20 + (level / 2);
+			if (d.ilevel < 20 ) d.ilevel = 20;
+			if (d.ilevel > 70) d.ilevel = 70;
+			break;
+		case CRYSTAL_DEPTHS:
+			d.ilevel = 30 + (level / 2);
+			if (d.ilevel < 30 ) d.ilevel = 30;
+			if (d.ilevel > 100) d.ilevel = 100;
+			break;
+		default:
+			d.ilevel = 100;
+			break;
+	}
 
 	d.maze = new Maze(d.width, d.height, d.ilevel);
 
@@ -374,6 +371,22 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 //   Nothing
 //------------------------------------------------------------------------------
 void initialize_main_game_state(void) {
+
+	// Scramble the potions and scrolls
+	scramble_potion_icons();
+	scramble_scroll_icons();
+
+	g_identified_potions.clear();
+	g_identified_scrolls.clear();
+	// Reset the identified state for all scrolls and potions
+	for (int i = 0; i < ItemConsts::NUM_POTIONS; ++i) {
+		g_identified_potions.push_back(false);
+	}
+	for (int i = 0; i < ItemConsts::NUM_SCROLLS; ++i) {
+		g_identified_scrolls.push_back(false);
+	}
+
+	// If a maze already exists for some reason, delete it
 	if (g_dungeon.maze != NULL) {
 		delete g_dungeon.maze;
 		g_dungeon.maze = NULL;
@@ -1022,3 +1035,70 @@ void apply_item_values_to_stats(Item *i, Stats *fixed, Stats *multiplicative, st
 		}
 	}
 }
+
+//----------------------------------------------------------------------------
+// Generates a scrambled list of potion tiles, so the player can't recognize
+// unidentified potions.
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void scramble_potion_icons(void) {
+	g_scrambled_potion_icons.clear();
+
+	for (int i = ItemConsts::FIRST_POTION_GID; i <= ItemConsts::LAST_POTION_GID; ++i) {
+		g_scrambled_potion_icons.push_back(i);
+	}
+	std::random_shuffle(g_scrambled_potion_icons.begin(), g_scrambled_potion_icons.end());
+
+}
+
+//----------------------------------------------------------------------------
+// Generates a scrambled list of scroll tiles, so the player can't recognize
+// unidentified scrolls
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void scramble_scroll_icons(void) {
+	g_scrambled_scroll_icons.clear();
+
+	for (int i = ItemConsts::FIRST_SCROLL_GID; i <= ItemConsts::LAST_SCROLL_GID; ++i) {
+		g_scrambled_scroll_icons.push_back(i);
+	}
+	std::random_shuffle(g_scrambled_scroll_icons.begin(), g_scrambled_scroll_icons.end());
+}
+
+//----------------------------------------------------------------------------
+// Gets the tile ID of the item to be rendered.  For most items, this is just
+// the GID.  For scrolls and potions, the offset is stored in a list of
+// scrambled tile IDs.
+//
+// Arguments:
+//   i - the item to get the tile ID of
+//
+// Returns:
+//   the tile ID
+//----------------------------------------------------------------------------
+int get_tile_to_render(Item *i) {
+
+	int i_class = i->get_item_class();
+	int i_id = i->get_id();
+
+	if (i_class == ItemConsts::POTION_CLASS) {
+		return g_scrambled_potion_icons[i_id];
+	}
+	else if (i_class == ItemConsts::SCROLL_CLASS) {
+		return g_scrambled_scroll_icons[i_id];	
+	}
+	else {
+		return i->get_gid();
+	}
+}
+

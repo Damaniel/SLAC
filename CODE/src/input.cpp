@@ -235,8 +235,8 @@ void process_map_substate(int key) {
 //----------------------------------------------------------------------------
 void process_stats_substate(int key) {
     switch (key) {
-        // If S or ESC is pressed, exit the stats screen
-        case KEY_S:
+        // If C or ESC is pressed, exit the stats screen
+        case KEY_C:
         case KEY_ESC:
     		g_state_flags.cur_substate = GAME_SUBSTATE_DEFAULT;
             // Redraw the maze area, and the extended log if enabled
@@ -313,7 +313,7 @@ void process_game_state(int key) {
 			            add_items_at_player_to_log();
 		            }
                     break;
-                case KEY_S:
+                case KEY_C:
                     g_state_flags.cur_substate = GAME_SUBSTATE_STATS;
                     g_state_flags.update_stats_screen = true;
                     g_state_flags.update_display = true;

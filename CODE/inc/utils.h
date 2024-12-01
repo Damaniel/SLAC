@@ -92,6 +92,9 @@ void apply_single_modifier(ModifierMagType m, Stats *fixed, Stats *multiplicativ
 void apply_item_values_to_stats(Item *i, Stats *fixed, Stats *multiplicative, std::vector<ModifierMagType> &mods);
 void apply_mode_2_modifier_value(ModifierMagType m);
 void drop_item_at(Item *i, int x, int y);
+void scramble_potion_icons(void);
+void scramble_scroll_icons(void);
+int get_tile_to_render(Item *i);
 
 // Inventory functions
 void perform_inventory_menu_action(void);
