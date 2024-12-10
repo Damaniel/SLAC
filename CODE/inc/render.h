@@ -205,8 +205,13 @@ namespace UiConsts {
 	const int EXP_BAR_X = 246;
 	const int EXP_BAR_Y = 89;
 
-	const int HP_EXP_BAR_WIDTH = 68;
-	const int HP_EXP_BAR_HEIGHT = 14;
+	// the width and height of the full bar area (including graphics) in the UI
+	const int HP_EXP_BAR_AREA_WIDTH = 68;
+	const int HP_EXP_BAR_AREA_HEIGHT = 14;
+
+	// The width and height of the actual filled in bar area
+	const int HP_EXP_BAR_WIDTH = 62;
+	const int HP_EXP_BAR_HEIGHT = 9;
 
 	// Positions of area indicators on the right side of the main screen
 	const int DUNGEON_TEXT_X = 246;

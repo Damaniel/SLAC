@@ -551,6 +551,77 @@ void Player::recalculate_actual_stats(void) {
 }
 
 //------------------------------------------------------------------------------
+// Adds experience to the player's experience pool, leveling up if needed
+//
+// Arguments:
+//   quantity - the amount of experience to add
+//
+// Returns:
+//   Nothing.
+//------------------------------------------------------------------------------
+void Player::apply_experience(int quantity) {
+	exp += quantity;
+
+	//std::cout << "exp = " << exp << ", next level = " << PlayerConsts::g_player_exp_table[level] << std::endl;
+	// Check the total experience to the table and level up if ready
+	if (exp >= PlayerConsts::g_player_exp_table[level]) {
+		level_up();
+	}
+}
+
+//------------------------------------------------------------------------------
+// Performs level up tasks (assigns new base stats, recalculates actual stats)
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing.
+//------------------------------------------------------------------------------
+void Player::level_up() {
+	char text[40];
+	level += 1;
+
+	base.max_hp = PlayerConsts::g_player_base_stats[level - 1].max_hp;
+	base.str = PlayerConsts::g_player_base_stats[level - 1].str;
+	base.con = PlayerConsts::g_player_base_stats[level - 1].con;
+	base.dex = PlayerConsts::g_player_base_stats[level - 1].dex;
+	base.atk = PlayerConsts::g_player_base_stats[level - 1].atk;
+	base.def = PlayerConsts::g_player_base_stats[level - 1].def;
+	base.spd = PlayerConsts::g_player_base_stats[level - 1].spd;
+
+	recalculate_actual_stats();
+	
+	// Refill the player's health now that we've recalculated
+	hp = (unsigned short)base.max_hp;
+
+	sprintf(text, "You have reached level %d!", level);
+	g_text_log.put_line(text);
+	g_state_flags.update_text_dialog = true;
+	g_state_flags.update_status_dialog = true;
+	g_state_flags.update_status_hp_exp = true;
+	g_state_flags.update_display = true;
+}
+
+//------------------------------------------------------------------------------
+// Returns the required amount of experience required for the next level
+// threshold
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing.
+//------------------------------------------------------------------------------
+float Player::pct_exp_to_next_level() {
+	int cur = exp - PlayerConsts::g_player_exp_table[level - 1];
+	int next = PlayerConsts::g_player_exp_table[level] - PlayerConsts::g_player_exp_table[level - 1];
+
+	//std::cout << "pct_exp_to_next_level: " << cur << ", " << next << ", " << (float)((float)cur / (float)next) << std::endl;
+	return (float)((float)cur / (float)next);
+}
+
+//------------------------------------------------------------------------------
 // Sets the player's base stats to defaults
 // 
 // Arguments:

@@ -776,18 +776,22 @@ void Render::render_hp_exp_bar(BITMAP *destination) {
 	// HP bar
 	// clear the entire bar
 	rectfill(destination, UiConsts::HP_BAR_X + 3, UiConsts::HP_BAR_Y + 5,
-			 UiConsts::HP_BAR_X + UiConsts::HP_EXP_BAR_WIDTH - 3 - 1,
-			 UiConsts::HP_BAR_Y + UiConsts::HP_EXP_BAR_HEIGHT - 5 - 1,
+			 UiConsts::HP_BAR_X + UiConsts::HP_EXP_BAR_WIDTH - 1,
+			 UiConsts::HP_BAR_Y + UiConsts::HP_EXP_BAR_HEIGHT - 1,
 			 16);
 	// fill in the HP bar
 	width = (int)(((float)g_player.hp / (float)g_player.actual.max_hp) * (UiConsts::HP_EXP_BAR_WIDTH));
-	rectfill(destination, UiConsts::HP_BAR_X + 3, UiConsts::HP_BAR_Y + 5,
-			 UiConsts::HP_BAR_X + width - 3 - 1, UiConsts::HP_BAR_Y + UiConsts::HP_EXP_BAR_HEIGHT - 5 - 1, 22);
-	
+	if (width > 0) {
+		rectfill(destination, UiConsts::HP_BAR_X + 3, UiConsts::HP_BAR_Y + 5,
+				 UiConsts::HP_BAR_X + 3 + width - 1, UiConsts::HP_BAR_Y + UiConsts::HP_EXP_BAR_HEIGHT - 1, 22);
+	}
+
 	// EXP bar
-	width = 0;
-	//width = (int)(((float)g_player.hp / (float)g_player.actual.max_hp) * (UiConsts::HP_EXP_BAR_WIDTH - 10));
-	//std::cout << "render_hp_exp_bar: HP bar width is " << width << std::endl;
+	width = (int)(g_player.pct_exp_to_next_level() * (UiConsts::HP_EXP_BAR_WIDTH));
+	if (width > 0) {
+		rectfill(destination, UiConsts::EXP_BAR_X + 3, UiConsts::EXP_BAR_Y + 5,
+				 UiConsts::EXP_BAR_X + 3 + width - 1, UiConsts::EXP_BAR_Y + UiConsts::HP_EXP_BAR_HEIGHT - 1, 29);	
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -821,14 +825,14 @@ void Render::render_status_ui(BITMAP *destination) {
 				FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);
 	masked_blit((BITMAP *)g_game_data[DAMRL_STATUS_BAR].dat,
 				destination, 0, 0, UiConsts::HP_BAR_X, UiConsts::HP_BAR_Y, 
-				UiConsts::HP_EXP_BAR_WIDTH, UiConsts::HP_EXP_BAR_HEIGHT);
+				UiConsts::HP_EXP_BAR_AREA_WIDTH, UiConsts::HP_EXP_BAR_AREA_HEIGHT);
 
 	// EXP status bar
 	render_text(destination, "EXP:", UiConsts::EXP_TEXT_X, UiConsts::EXP_TEXT_Y,
 				FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);
 	masked_blit((BITMAP *)g_game_data[DAMRL_STATUS_BAR].dat,
 				destination, 0, 0, UiConsts::EXP_BAR_X, UiConsts::EXP_BAR_Y,
-				UiConsts::HP_EXP_BAR_WIDTH, UiConsts::HP_EXP_BAR_HEIGHT);
+				UiConsts::HP_EXP_BAR_AREA_WIDTH, UiConsts::HP_EXP_BAR_AREA_HEIGHT);
 
 	// Area text
 	render_text(destination, "Area:", UiConsts::DUNGEON_TEXT_X, UiConsts::DUNGEON_TEXT_Y,

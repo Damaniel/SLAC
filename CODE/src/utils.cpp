@@ -560,6 +560,14 @@ void pick_up_item_at(int x, int y) {
             g_state_flags.update_text_dialog = true;
             g_state_flags.update_display = true;
         }
+
+		// TODO - remove this once enemies have been added
+		// Add some experience when the player picks a thing up
+		if (picked_up) {
+			g_state_flags.update_status_hp_exp = true;
+			g_state_flags.update_display = true;
+			g_player.apply_experience(2 * g_player.level);
+		}
     }
 }
 
