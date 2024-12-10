@@ -894,6 +894,23 @@ void Render::render_stats_screen(BITMAP *destination) {
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_CENTERED);
 
+	// HP
+	sprintf(text, "HP: %d / %d", g_player.hp, (int)g_player.actual.max_hp);
+	render_text(destination, text, UiConsts::STATS_HP_X, UiConsts::STATS_HP_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_CENTERED);
+	// EXP
+	sprintf(text, "EXP: %d", g_player.exp);
+	render_text(destination, text, UiConsts::STATS_EXP_X, UiConsts::STATS_EXP_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_CENTERED);
+
+ 	// EXP
+	sprintf(text, "To next: %d", PlayerConsts::g_player_exp_table[g_player.level] - g_player.exp);
+	render_text(destination, text, UiConsts::STATS_NEXT_X, UiConsts::STATS_NEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_CENTERED);
+
 	// STR
 	render_text(destination, "STR:", UiConsts::STATS_STR_TEXT_X, UiConsts::STATS_STR_TEXT_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
@@ -1053,15 +1070,6 @@ void Render::render_stats_screen(BITMAP *destination) {
 				FontConsts::TEXT_LEFT_JUSTIFIED);
 	sprintf(text, "%.0f%%", (g_player.actual.block * 100));
 	render_text(destination, text, UiConsts::STATS_BLOCK_VAL_X, UiConsts::STATS_BLOCK_VAL_Y, 
-	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
-				FontConsts::TEXT_RIGHT_JUSTIFIED);
-
-	// MAX_HP
-	render_text(destination, "MaxHP:", UiConsts::STATS_HP_TEXT_X, UiConsts::STATS_HP_TEXT_Y, 
-	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
-				FontConsts::TEXT_LEFT_JUSTIFIED);
-	sprintf(text, "%d", (int)g_player.actual.max_hp);
-	render_text(destination, text, UiConsts::STATS_HP_VAL_X, UiConsts::STATS_HP_VAL_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_RIGHT_JUSTIFIED);
 }

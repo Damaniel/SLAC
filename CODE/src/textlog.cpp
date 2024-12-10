@@ -44,6 +44,11 @@ void TextLog::put_line(std::string s) {
     }
     // add the line
     log.push_back(s);
+
+    // Since adding a line is always going to trigger a new render, just do it
+    // here
+    g_state_flags.update_text_dialog = true;
+    g_state_flags.update_display = true;
 }
 
 //----------------------------------------------------------------------------

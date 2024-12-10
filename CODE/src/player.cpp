@@ -269,8 +269,6 @@ void Player::equip(Item *i) {
 		if ((*item_slot)->is_it_cursed()) {
 			g_text_log.put_line("Oh no!  The " + (*item_slot)->get_full_name() + " is cursed!");
 		}
-		g_state_flags.update_text_dialog = true;	
-		g_state_flags.update_display = true;
 	}
 	recalculate_actual_stats();
 }
@@ -319,14 +317,10 @@ void Player::unequip(Item *i) {
 		if ((*item_slot)->is_it_cursed()) {
 			g_text_log.put_line("Unfortunately you can't remove that.");
 			g_text_log.put_line("The " + (*item_slot)->get_full_name() + " is cursed.");
-			g_state_flags.update_text_dialog = true;
-			g_state_flags.update_display = true;
 			return;
 		}
 		//std::cout << "process_unequip: calling remove on item" << std::endl;
 		g_text_log.put_line("Removed the " + (*item_slot)->get_full_name() + ".");
-		g_state_flags.update_text_dialog = true;
-		g_state_flags.update_display = true;
 		(*item_slot)->mark_removed();
 		//std::cout << "process_unequip:  Remove called" << std::endl;
 		*item_slot = NULL;
@@ -597,7 +591,6 @@ void Player::level_up() {
 
 	sprintf(text, "You have reached level %d!", level);
 	g_text_log.put_line(text);
-	g_state_flags.update_text_dialog = true;
 	g_state_flags.update_status_dialog = true;
 	g_state_flags.update_status_hp_exp = true;
 	g_state_flags.update_display = true;

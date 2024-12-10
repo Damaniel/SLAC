@@ -449,8 +449,6 @@ void add_items_at_player_to_log(void) {
 				g_text_log.put_line("You also see " + (*it)->get_full_name() + ".");
 			++idx;
 		}
-		g_state_flags.update_text_dialog = true;
-		g_state_flags.update_display = true;
 	}
 }
 
@@ -478,9 +476,6 @@ void drop_item_at(Item *i, int x, int y) {
 			g_state_flags.update_inventory_description = true;
 		}
 	}
-	g_state_flags.update_text_dialog = true;
-	g_state_flags.update_display = true;
-
 }
 
 //----------------------------------------------------------------------------
@@ -557,7 +552,6 @@ void pick_up_item_at(int x, int y) {
             g_dungeon.maze->remove_item_from_end_at(x, y);
             g_text_log.put_line("Picked up " + item_name + ".");
             g_state_flags.update_maze_area = true;
-            g_state_flags.update_text_dialog = true;
             g_state_flags.update_display = true;
         }
 
