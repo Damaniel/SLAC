@@ -588,13 +588,7 @@ void perform_inventory_menu_action(void) {
 				// the current gen of player dies.  The 'identify' function works for the current 
 				// stack in the inventory; g_identified_<XYZ> ensures future items are auto-identified
 				if (i->get_item_class() == ItemConsts::POTION_CLASS || i->get_item_class() == ItemConsts::SCROLL_CLASS) {
-					std::string old_name = i->get_full_name();
-					i->identify();
-					if (i->get_item_class() == ItemConsts::POTION_CLASS)
-						g_identified_potions[i->get_id()] = true;
-					else
-						g_identified_scrolls[i->get_id()] = true;
-					g_text_log.put_line(old_name + " is actually a " + i->get_full_name() + ".");
+					perform_identification_action(i, true);
 				} 
 				// Use the item.  Take one from the stack, or delete the item if there was only 1
 				i->use();
@@ -1170,3 +1164,27 @@ void identify_if_previously_known(Item *i) {
     }
 }
 
+//----------------------------------------------------------------------------
+// Do all tasks related to identification.  This includes marking the 
+// item as identified, marking all potions and scrolls of the identified type
+// as identified, and optionally displaying a message to the log
+//
+// Arguments:
+//   i - the item to identify
+//   log - log to game log if true, don't log otherwise
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void perform_identification_action(Item *i, bool log) {
+	std::string old_name = i->get_full_name();
+                
+	i->identify();
+	if (i->get_item_class() == ItemConsts::POTION_CLASS)
+		g_identified_potions[i->get_id()] = true;
+	if (i->get_item_class() == ItemConsts::SCROLL_CLASS)
+		g_identified_scrolls[i->get_id()] = true;
+    if (log) {
+        g_text_log.put_line(old_name + " is " + i->get_full_name() + ".");
+    }
+}

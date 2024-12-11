@@ -3,6 +3,7 @@ import json, os, sys
 types_json_file = os.path.join("..", "JSON", "types.json")
 bases_json_file = os.path.join("..", "JSON", "bases.json")
 prefix_suffix_json_file = os.path.join('..', 'JSON', 'prefix_suffix.json')
+enum_json_file = os.path.join('..', 'JSON', 'enums.json')
 output_file = "gen_data.cpp"
 header_file = "gen_data.h"
 header_guard = "__GEN_DATA_H__"
@@ -213,6 +214,27 @@ def generate_prototypes(filename, outfile):
             pass
     f.close()
 
+def generate_enums(filename, outfile):
+    f = open(filename)
+    loaded_json = json.load(f)
+    namespace = loaded_json['metadata']['namespace']
+
+    print("Processing enums...")
+
+    outfile.write(f'\nnamespace {namespace}')
+    outfile.write(' {\n\n')
+
+    items = loaded_json['items']
+    for i in items:
+        enum_entries = loaded_json['items'][i]
+        outfile.write('\tenum {\n')
+        for (idx, val) in enumerate(enum_entries):
+            if idx == len(enum_entries) - 1:
+                outfile.write(f'\t\t{enum_entries[val]['name']}\n')
+            else:
+                outfile.write(f'\t\t{enum_entries[val]['name']},\n')
+        outfile.write('\t};\n\n')
+    outfile.write('}\n\n')
 # Create the header file from all of the JSON files
 def generate_header_file(outfile=None):
     if outfile != None:
@@ -229,6 +251,7 @@ def generate_header_file(outfile=None):
     generate_prototypes(types_json_file, out)
     generate_prototypes(bases_json_file, out)
     generate_prototypes(prefix_suffix_json_file, out)
+    generate_enums(enum_json_file, out)
     out.write('\n#endif')
 
 generate_source_file(output_file)

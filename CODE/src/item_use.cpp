@@ -81,11 +81,7 @@ bool identify_item(bool log)
         i = g_inventory->get_item_in_slot(count);
         if (i != NULL) {
             if (!i->is_it_identified()) {
-                std::string old_name = i->get_full_name();
-                i->identify();
-                if (log) {
-                    g_text_log.put_line(old_name + " is actually a " + i->get_full_name() + ".");
-                }
+                perform_identification_action(i, log);
                 return true;
             }
         }
@@ -143,15 +139,14 @@ void use_potion_action(int id) {
     bool result;
     char text[40];
 
-    // TODO - make the JSON file create an enum with item names
     switch (id) {
-        case 0:     // Scroll of light healing
+        case ItemConsts::POT_OF_LIGHT_HEAL:     // Scroll of light healing
             heal_player(10);
             break;
-        case 1:     // scroll of healing
+        case ItemConsts::POT_OF_MOD_HEAL:     // scroll of healing
             heal_player(50);
             break;
-        case 2:     // scroll of full healing
+        case ItemConsts::POT_OF_FULL_HEAL:     // scroll of full healing
             heal_player(100);
             break;
         default:
@@ -175,15 +170,14 @@ void use_scroll_action(int id) {
     bool result;
     char text[40];
 
-    // TODO - make the JSON file create an enum with item names
     switch (id) {
-        case 0:     // Scroll of identify
+        case ItemConsts::SCROLL_OF_IDENT:     // Scroll of identify
             result = identify_item(true);
             if (result == false) {
                 g_text_log.put_line("You have no unidentified items.");
             }
             break;
-        case 1:     // scroll of identify all
+        case ItemConsts::SCROLL_OF_IDENT_ALL:     // scroll of identify all
             count = identify_all();
             sprintf(text, "%d items were identified.", count);
             g_text_log.put_line(text);
