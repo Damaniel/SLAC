@@ -144,11 +144,11 @@ private:
     int room_id;
 	int ilevel;
 	int stair_gen_behavior;
+	bool globally_lit;
 
 	void add_stairs(int num_up_stairs, int num_down_stairs);
 	void carve(int x, int y, int tag);
 	void carve_direction(int x, int y, int direction, int tag);	
-	void change_lit_status_at(int x, int y, bool lit);
 	bool create_room(int x, int y, int w, int h);
 	void generate_passages(int x, int y);
 	void generate_rooms(int num_attempts, int min_size, int max_size);
@@ -169,6 +169,7 @@ public:
 	void remove_item_from_end_at(int x, int y);
 	int get_num_items_at(int x, int y);
 	void change_lit_status_around(int x, int y, bool lit);	
+	void change_lit_status_at(int x, int y, bool lit);
 	void change_room_lit_status(int room, bool lit);
 	void generate(void);
 	int get_height(void) { return rows; }
@@ -186,6 +187,8 @@ public:
 	void print_room_ids(void);
 	void set_room_as_entered(int room_id);
 	void set_stair_gen_behavior(int behavior) { stair_gen_behavior = behavior; }
+	bool is_globally_lit() { return globally_lit; }
+	void set_globally_lit_state(bool state) { globally_lit = state; }
 	int stairs_here(int x, int y);
 	bool was_seen(int x, int y);
 };

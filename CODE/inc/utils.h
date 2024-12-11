@@ -6,12 +6,12 @@
 // Utility structures
 struct DungeonFloor {
     Maze *maze;
-    int maze_id;        // which maze we're in
-    int depth;          // The current depth
-    int max_depth;      // The deepest floor allowed
-    int ilevel;         // The ilevel of the current floor
-    int width;          // The width of the dungeon floor
-    int height;         // The height of the dungeon floor
+    int maze_id;            // which maze we're in
+    int depth;              // The current depth
+    int max_depth;          // The deepest floor allowed
+    int ilevel;             // The ilevel of the current floor
+    int width;              // The width of the dungeon floor
+    int height;             // The height of the dungeon floor
 };
 
 // A collection of flags relevant to the game loop.  The game loop will want
