@@ -49,6 +49,7 @@
 #include "invntory.h"
 #include "player.h"
 #include "itemgen.h"
+#include "item_use.h"
 #include "gen_data.h"
 #include "maze.h"
 #include "render.h"

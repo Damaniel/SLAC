@@ -979,6 +979,7 @@ Potion::Potion(unsigned int idx) {
 //----------------------------------------------------------------------------
 void Potion::use() {
     g_text_log.put_line("You use the " + get_full_name() + ".");
+    use_potion_action(id);
     //std::cout << "use: potion used" << std::endl;
 }
 
@@ -1120,6 +1121,8 @@ Scroll::Scroll(unsigned int idx) {
 //----------------------------------------------------------------------------
 void Scroll::use() {
     g_text_log.put_line("You use the " + get_full_name() + ".");
+    // Do the thing based on the particular item
+    use_scroll_action(id);
     //std::cout << "use: scroll used" << std::endl;
 }
 
