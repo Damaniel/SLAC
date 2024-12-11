@@ -335,7 +335,7 @@ void Maze::change_lit_status_at(int x, int y, bool lit) {
 
 	// Otherwise, change the lighting status
 	m[y * cols + x].is_lit = lit;
-	m[y * cols + x].was_seen = true;
+	mark_seen_state(x, y, true);
 }
 
 //------------------------------------------------------------------------------
@@ -868,10 +868,24 @@ void Maze::change_room_lit_status(int room_id, bool lit) {
 		for (int j = r.y-1; j < r.y + r.h + 1; j++) {
 			change_lit_status_at(i, j, lit);
 			if(lit == true) {
-				m[j * cols + i].was_seen = true;
+				mark_seen_state(i, j, true);
 			}
 		}
 	}
+}
+
+//------------------------------------------------------------------------------
+// Marks a square of the maze as seen or unseen
+//
+// Arguments:
+//	 x, y - the square to mark
+//   state - true for seen, false for unseen
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Maze::mark_seen_state(int x, int y, int state) {
+	m[y * cols + x].was_seen = state;
 }
 
 //------------------------------------------------------------------------------
@@ -1110,16 +1124,17 @@ void Maze::print_room_ids(void) {
 }
 
 //------------------------------------------------------------------------------
-// Flags an entire room as having been entered.
+// Flags an entire room as having been entered or not
 //
 // Arguments:
-//   room_id - the room to mark as entered
+//   room_id - the room to mark
+//   state - true if entered, false otherwise
 //
 // Returns:
 //   Nothing
 //------------------------------------------------------------------------------
-void Maze::set_room_as_entered(int room_id) {
-	rooms[room_id - MazeConsts::STARTING_ROOM].has_been_entered = true;
+void Maze::set_room_entered_state(int room_id, bool state) {
+	rooms[room_id - MazeConsts::STARTING_ROOM].has_been_entered = state;
 }
 
 //------------------------------------------------------------------------------

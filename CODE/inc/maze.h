@@ -185,12 +185,13 @@ public:
 	void print(void);
 	void print_memory_usage(void); 
 	void print_room_ids(void);
-	void set_room_as_entered(int room_id);
+	void set_room_entered_state(int room_id, bool state);
 	void set_stair_gen_behavior(int behavior) { stair_gen_behavior = behavior; }
 	bool is_globally_lit() { return globally_lit; }
 	void set_globally_lit_state(bool state) { globally_lit = state; }
 	int stairs_here(int x, int y);
 	bool was_seen(int x, int y);
+	void mark_seen_state(int x, int y, int state);
 };
 
 #endif

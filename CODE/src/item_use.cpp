@@ -301,6 +301,78 @@ void expose_map() {
 }
 
 //----------------------------------------------------------------------------
+// Performs the action of a darkness scroll 
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void darken_area() {
+    // A darkness scroll should:
+    // If in a room
+    //   - Darken the room you're in
+    //   - Mark the room as unseen
+    // If not in a room
+    //   - mark the spaces around the player (5x5) as unseen
+    g_text_log.put_line("The darken scroll does nothing yet.");
+}
+
+//----------------------------------------------------------------------------
+// Performs the action of a forget area scroll (darkens every square in the 
+// maze) and forgets it
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void hide_map() {
+    int room;
+    for (int i=0; i < g_dungeon.maze->get_width(); ++i) {
+        for (int j=0; j < g_dungeon.maze->get_height(); ++j) {
+            // darken the square
+            g_dungeon.maze->change_lit_status_at(i, j, false);
+            // mark as unseen
+            g_dungeon.maze->mark_seen_state(i, j, false);
+            // mark the room corresponding to this square (if there is one)
+            // as unentered.
+            room = g_dungeon.maze->get_room_id_at(i, j);
+            if (room != -1) {
+                g_dungeon.maze->set_room_entered_state(room, false);
+            }
+        }
+    }
+
+    // Mark the maze as not globally lit
+    g_dungeon.maze->set_globally_lit_state(false);
+    
+    // Clear the map bitmap
+    g_render.initialize_map_bitmap(g_dungeon.maze);
+
+    g_text_log.put_line("The dungeon is engulfed in darkness.");
+
+    // Darkening the maze requires a lot of redrawing.
+    // This includes the maze itself, plus the inventory screen (which is still 
+    // visible since we're using an item), plus the text dialog if it's in extended
+    // mode.
+    g_state_flags.update_maze_area = true;
+    g_state_flags.update_text_dialog = true;
+    if(g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY || 
+       g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY_MENU) {
+            if(g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY_MENU) {
+                g_state_flags.update_inventory_submenu = true;
+            }
+            g_state_flags.update_inventory_cursor = true;
+            g_state_flags.update_inventory_description = true;
+            g_state_flags.update_inventory_items = true;
+    }
+    g_state_flags.update_display = true;
+}
+
+//----------------------------------------------------------------------------
 // Performs the specific action for a particular type of potion based on its
 // ID
 //
@@ -399,8 +471,16 @@ void use_scroll_action(int id) {
         case ItemConsts::SCROLL_OF_TELEPORT:
             teleport_player();
             break;
+        case ItemConsts::SCROLL_OF_DARKNESS:
+            darken_area();
+            break;
+        case ItemConsts::SCROLL_OF_FORGET_AREA:
+            hide_map();
+            break;
         case ItemConsts::SCROLL_OF_DISCOVERY:
         case ItemConsts::SCROLL_OF_RECALL:
+        case ItemConsts::SCROLL_OF_SUMMON_ITEM:
+        case ItemConsts::SCROLL_OF_CURSE:
             g_text_log.put_line("This scroll does nothing (yet).");
             break;
 

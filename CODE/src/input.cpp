@@ -349,6 +349,9 @@ void process_game_state(int key) {
                 case KEY_G:
                     pick_up_item_at(g_player.get_x_pos(), g_player.get_y_pos());    
                     break;
+                case KEY_H:
+                    hide_map();
+                    break;
                 case KEY_COMMA:
                 case KEY_STOP:
                     use_stairs(g_player.get_x_pos(), g_player.get_y_pos());

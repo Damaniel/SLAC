@@ -59,7 +59,7 @@ void update_main_game_display(void) {
 				// TODO: restructure this!
 				// Mark the room itself as visited so rendering the map will
 				// show the room even at the start of the game
-				g_dungeon.maze->set_room_as_entered(room_to_light);
+				g_dungeon.maze->set_room_entered_state(room_to_light, true);
 			}
 			//std::cout << "update_display: Finished processing lighting" << std::endl;
 
