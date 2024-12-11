@@ -103,4 +103,8 @@ void perform_identification_action(Item *i, bool log);
 // Inventory functions
 void perform_inventory_menu_action(void);
 
+// Game math functions
+int get_manhattan_distance_between(int x1, int y1, int x2, int y2);
+int get_distance_between(int x1, int y1, int x2, int y2);
+
 #endif

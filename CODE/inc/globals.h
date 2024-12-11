@@ -34,6 +34,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <cstring>
+#include <cmath>
 #include <stack>
 #include <iostream>
 #include <algorithm>

@@ -1188,3 +1188,35 @@ void perform_identification_action(Item *i, bool log) {
         g_text_log.put_line(old_name + " is " + i->get_full_name() + ".");
     }
 }
+
+//----------------------------------------------------------------------------
+// Get the Manhattan distance between two points.  Not as accurate as the
+// Pythagorean method, but much faster
+//
+// Arguments:
+//   x1, y1 - the first point 
+//   x2, y2 - the second point
+//
+// Returns:
+//   The distance
+//----------------------------------------------------------------------------
+int get_manhattan_distance_between(int x1, int y1, int x2, int y2) {
+	return (abs(x2 - x1) + abs(y2 - y1));
+}
+
+//----------------------------------------------------------------------------
+// Get the Pythagorean distance between two points.  The most accurate method,
+// but the square root makes it slower
+//
+// Arguments:
+//   x1, y1 - the first point 
+//   x2, y2 - the second point
+//
+// Returns:
+//   The distance
+//----------------------------------------------------------------------------
+int get_distance_between(int x1, int y1, int x2, int y2) {
+	int a = abs(x2 - x1);
+	int b = abs(y2 - y1);
+	return (int)sqrt((a * a) + (b *b));
+}
