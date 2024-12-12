@@ -350,7 +350,7 @@ void process_game_state(int key) {
                     pick_up_item_at(g_player.get_x_pos(), g_player.get_y_pos());    
                     break;
                 case KEY_H:
-                    hide_map();
+                    expose_map();
                     break;
                 case KEY_COMMA:
                 case KEY_STOP:

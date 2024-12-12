@@ -337,14 +337,12 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 
 	// Place the player at the stair location
 	g_player.set_position(stairLoc.first, stairLoc.second);
-	
-	// Hack to force lighting in the initial room the player is in
+
+	// Light the room and mark it as visited	
 	int initial_room = d.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos());
 	g_player.set_last_room_entered(initial_room);	
 	if (initial_room != -1) {
-		// double hack to mark the room as seen so that the map renderer can
-		// display it
-		d.maze->change_room_lit_status(initial_room, false);		
+		//d.maze->change_room_lit_status(initial_room, false);		
 		d.maze->change_room_lit_status(initial_room, true);			
 	}
 	

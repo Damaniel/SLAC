@@ -176,8 +176,8 @@ int decurse_all() {
     bool result;
     int count = 0;
 
-    // The identify all scroll doesn't list each identified item;
-    // it will just display a generic 'X items were identified'
+    // The decurse all scroll doesn't list each decursed item;
+    // it will just display a generic 'X items were decursed'
     // message
     result = decurse_item(false);
     if (result == false) {
@@ -191,6 +191,32 @@ int decurse_all() {
     }
     return count;
 
+}
+
+//----------------------------------------------------------------------------
+// Sets a collection of screen update flags needed when updating the state
+// of the maze while in the item screen (as is the case for a few different
+// scrolls)
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void item_use_update_screen_flags() {
+    g_state_flags.update_maze_area = true;
+    g_state_flags.update_text_dialog = true;
+    if(g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY || 
+       g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY_MENU) {
+            if(g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY_MENU) {
+                g_state_flags.update_inventory_submenu = true;
+            }
+            g_state_flags.update_inventory_cursor = true;
+            g_state_flags.update_inventory_description = true;
+            g_state_flags.update_inventory_items = true;
+    }
+    g_state_flags.update_display = true;
 }
 
 //----------------------------------------------------------------------------
@@ -239,29 +265,22 @@ void teleport_player() {
     g_player.set_x_pos(new_x);
     g_player.set_y_pos(new_y);
 
+    // If the player was teleported into a room, light it
+	int room_id = g_dungeon.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos());
+	g_player.set_last_room_entered(room_id);	
+	if (room_id != -1) {
+		//g_dungeon.maze->change_room_lit_status(room_id, false);		
+		g_dungeon.maze->change_room_lit_status(room_id, true);			
+	}
+
     g_text_log.put_line("You are whisked away to somewhere new...");
 
-    // Moving the portion of the map the player is on requires a lot of redrawing.
-    // This includes the maze itself, plus the inventory screen (which is still 
-    // visible since we're using an item), plus the text dialog if it's in extended
-    // mode.
-    g_state_flags.update_maze_area = true;
-    g_state_flags.update_text_dialog = true;
-    if(g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY || 
-       g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY_MENU) {
-            if(g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY_MENU) {
-                g_state_flags.update_inventory_submenu = true;
-            }
-            g_state_flags.update_inventory_cursor = true;
-            g_state_flags.update_inventory_description = true;
-            g_state_flags.update_inventory_items = true;
-    }
-    g_state_flags.update_display = true;
+    item_use_update_screen_flags();
 }
 
 //----------------------------------------------------------------------------
-// Performs the action of a magic map scroll (lights every square in the 
-// maze)
+// Performs the action of a magic map scroll (marks every square in the 
+// maze as seen, as if the player had walked through each square)
 //
 // Arguments:
 //   None
@@ -270,34 +289,29 @@ void teleport_player() {
 //   Nothing
 //----------------------------------------------------------------------------
 void expose_map() {
+    // Mark all carved space in the maze, and each square immediately adjacent
     for (int i=0; i < g_dungeon.maze->get_width(); ++i) {
         for (int j=0; j < g_dungeon.maze->get_height(); ++j) {
-            g_dungeon.maze->change_lit_status_at(i, j, true);
+            if (g_dungeon.maze->is_carved(i, j)) {
+                g_dungeon.maze->mark_seen_state(i-1, j-1, true);
+                g_dungeon.maze->mark_seen_state(i, j-1, true);
+                g_dungeon.maze->mark_seen_state(i+1, j-1, true);
+                g_dungeon.maze->mark_seen_state(i-1, j, true);
+                g_dungeon.maze->mark_seen_state(i, j, true);
+                g_dungeon.maze->mark_seen_state(i+1, j, true);
+                g_dungeon.maze->mark_seen_state(i-1, j+1, true);
+                g_dungeon.maze->mark_seen_state(i, j+1, true);
+                g_dungeon.maze->mark_seen_state(i+1, j+1, true);
+            }
         }
     }
-
-    // Mark the maze as globally lit, so rooms don't darken when entering/
-    // leaving them
-    g_dungeon.maze->set_globally_lit_state(true);
+    
+    // Draw it all on the map
+    g_render.fill_in_entire_map(g_dungeon.maze);
     
     g_text_log.put_line("The walls of the dungeon are revealed.");
 
-    // Lighting the maze requires a lot of redrawing.
-    // This includes the maze itself, plus the inventory screen (which is still 
-    // visible since we're using an item), plus the text dialog if it's in extended
-    // mode.
-    g_state_flags.update_maze_area = true;
-    g_state_flags.update_text_dialog = true;
-    if(g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY || 
-       g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY_MENU) {
-            if(g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY_MENU) {
-                g_state_flags.update_inventory_submenu = true;
-            }
-            g_state_flags.update_inventory_cursor = true;
-            g_state_flags.update_inventory_description = true;
-            g_state_flags.update_inventory_items = true;
-    }
-    g_state_flags.update_display = true;
+    item_use_update_screen_flags();
 }
 
 //----------------------------------------------------------------------------
@@ -331,6 +345,7 @@ void darken_area() {
 //----------------------------------------------------------------------------
 void hide_map() {
     int room;
+    // for every square in the maze
     for (int i=0; i < g_dungeon.maze->get_width(); ++i) {
         for (int j=0; j < g_dungeon.maze->get_height(); ++j) {
             // darken the square
@@ -354,22 +369,7 @@ void hide_map() {
 
     g_text_log.put_line("The dungeon is engulfed in darkness.");
 
-    // Darkening the maze requires a lot of redrawing.
-    // This includes the maze itself, plus the inventory screen (which is still 
-    // visible since we're using an item), plus the text dialog if it's in extended
-    // mode.
-    g_state_flags.update_maze_area = true;
-    g_state_flags.update_text_dialog = true;
-    if(g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY || 
-       g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY_MENU) {
-            if(g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY_MENU) {
-                g_state_flags.update_inventory_submenu = true;
-            }
-            g_state_flags.update_inventory_cursor = true;
-            g_state_flags.update_inventory_description = true;
-            g_state_flags.update_inventory_items = true;
-    }
-    g_state_flags.update_display = true;
+    item_use_update_screen_flags();
 }
 
 //----------------------------------------------------------------------------

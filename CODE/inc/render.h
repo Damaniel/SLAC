@@ -503,10 +503,12 @@ class Render {
 		void render_item_submenu(BITMAP *destination);
 		void render_ui_box(BITMAP *destination, int x1, int x2, int y1, int);
 		int get_prop_text_width(char *text, int style);	
+		void fill_in_map_square(Maze *m, int x, int y);
 	public:
 		Render();
 		void initialize_map_bitmap(Maze *m);
 		void add_area_to_map_bitmap(Maze *m, int x, int y);
+		void fill_in_entire_map(Maze *m);
 		void copy_data_to_offscreen_vram(void);		
 		void render_fixed_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx);		
 		void render_prop_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx, int style);

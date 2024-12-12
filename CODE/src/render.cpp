@@ -145,6 +145,57 @@ void Render::initialize_map_bitmap(Maze *m) {
 }
 
 //------------------------------------------------------------------------------
+// Marks the selected square on the map as a wall or empty space
+//
+// Arguments:
+//   m - the maze to use to determine what squares to draw
+//   x, y - the position in the maze to draw
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Render::fill_in_map_square(Maze *m, int x, int y) {
+	if (m->was_seen(x, y)) {
+		if (m->is_carved(x, y) == false) {
+			blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat,
+				screen,
+				UiConsts::MAP_DOT_WALL * UiConsts::MAP_DOT_WIDTH,
+				0,
+				g_ui_globals.map_maze_xoffset + (x * UiConsts::MAP_DOT_WIDTH),
+				g_ui_globals.map_maze_yoffset + (y * UiConsts::MAP_DOT_HEIGHT),
+				UiConsts::MAP_DOT_WIDTH,
+				UiConsts::MAP_DOT_HEIGHT);
+		} else {
+			blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat,
+				screen,
+				UiConsts::MAP_DOT_FLOOR * UiConsts::MAP_DOT_WIDTH,
+				0,
+				g_ui_globals.map_maze_xoffset + (x * UiConsts::MAP_DOT_WIDTH),
+				g_ui_globals.map_maze_yoffset + (y * UiConsts::MAP_DOT_HEIGHT),
+				UiConsts::MAP_DOT_WIDTH,
+				UiConsts::MAP_DOT_HEIGHT);			
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+// Exposes the entire map into the map bitmap
+//
+// Arguments:
+//   m - the maze to use to determine what squares to draw
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Render::fill_in_entire_map(Maze *m) {
+	for(int i=0; i<m->get_width(); i++) {
+		for(int j=0; j<m->get_height(); j++) {
+			fill_in_map_square(m, i, j);
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
 // Adds small squares to the map bitmap corresponding to the area in the 
 // immediate vicinity of the location specified by (x, y)
 //
@@ -156,31 +207,12 @@ void Render::initialize_map_bitmap(Maze *m) {
 //   Nothing
 //------------------------------------------------------------------------------
 void Render::add_area_to_map_bitmap(Maze *m, int x, int y) {
+	// Fill in the squares immediately surrounding the player
 	for(int i=x-1; i<=x+1; i++) {
 		for(int j=y-1; j<=y+1; j++) {
 			//std::cout << "add_area_to_map_bitmap: processing (" << i << ", " << j << ")" << std::endl;
 			if(i >=0 && i < m->get_width() && j >=0 && j < m->get_height()) {
-				if (m->is_carved(i, j) == false) {
-					//std::cout << "  add_area_to_map_bitmap: not carved" << std::endl;
-					blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat,
-				     	screen,
-					 	UiConsts::MAP_DOT_WALL * UiConsts::MAP_DOT_WIDTH,
-					 	0,
-					 	g_ui_globals.map_maze_xoffset + (i * UiConsts::MAP_DOT_WIDTH),
-					 	g_ui_globals.map_maze_yoffset + (j * UiConsts::MAP_DOT_HEIGHT),
-					 	UiConsts::MAP_DOT_WIDTH,
-					 	UiConsts::MAP_DOT_HEIGHT);
-				} else {
-					//std::cout << "  add_area_to_map_bitmap: carved" << std::endl;
-					blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat,
-				     	screen,
-					 	UiConsts::MAP_DOT_FLOOR * UiConsts::MAP_DOT_WIDTH,
-					 	0,
-					 	g_ui_globals.map_maze_xoffset + (i * UiConsts::MAP_DOT_WIDTH),
-					 	g_ui_globals.map_maze_yoffset + (j * UiConsts::MAP_DOT_HEIGHT),
-					 	UiConsts::MAP_DOT_WIDTH,
-					 	UiConsts::MAP_DOT_HEIGHT);			
-				}
+				fill_in_map_square(m, i, j);
 			}
 		}
 	}
