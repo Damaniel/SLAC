@@ -360,9 +360,6 @@ void hide_map() {
             }
         }
     }
-
-    // Mark the maze as not globally lit
-    g_dungeon.maze->set_globally_lit_state(false);
     
     // Clear the map bitmap
     g_render.initialize_map_bitmap(g_dungeon.maze);

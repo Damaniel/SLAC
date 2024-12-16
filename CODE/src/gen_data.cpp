@@ -21,6 +21,8 @@ const int g_item_suffix_pool_entries = 2700;
 const int g_item_suffix_pool_count = 25;
 const int g_cursed_item_suffix_pool_entries = 2177;
 const int g_cursed_item_suffix_pool_count = 15;
+const int g_enemy_pool_entries = 2550;
+const int g_enemy_pool_count = 10;
 
 int g_weapon_base_pool [] = { 255, 495, 695, 855, 975, 1015, 1270, 1505, 1700, 1855, 1965, 1995, 2250, 2485, 2680, 2835, 2945, 
       2975, 3230, 3465, 3660, 3815, 3925, 3955, 4195, 4420, 4600, 4730, 4830, 4845, 5100, 5330, 5515, 
@@ -44,6 +46,7 @@ int g_cursed_item_prefix_pool [] = { 192, 288, 480, 576, 768, 864, 896, 904, 106
 int g_item_suffix_pool [] = { 240, 368, 432, 687, 815, 879, 1134, 1262, 1326, 1566, 1678, 1726, 1966, 2078, 2126, 2381, 2509, 
       2573, 2637, 2657, 2665, 2690, 2695, 2699, 2700 };
 int g_cursed_item_suffix_pool [] = { 240, 352, 592, 704, 944, 1056, 1280, 1376, 1616, 1728, 1952, 2048, 2144, 2176, 2177 };
+int g_enemy_pool [] = { 255, 510, 765, 1020, 1275, 1530, 1785, 2040, 2295, 2550 };
 
 // BodyPartType g_body_part_type_ids
 //
@@ -532,5 +535,25 @@ ItemSuffixType g_cursed_item_suffix_ids[] = {
    {37, "of the Indecisive", "-1 APT", 37, 96, 27, 1, {{12, 1, -1, 0}}},
    {38, "of the Envenomed", "Always poisoned", 38, 32, 35, 1, {{17, 3, 1, 0}}},
    {39, "of the Damned", "-1 APT, -3 all stats, +20% DMG taken", 39, 1, 100, 5, {{12, 1, -1, 0}, {0, 1, -3, 0}, {1, 1, -3, 0}, {2, 1, -3, 0}, {19, 1, 0.2, 0}}}
+};
+
+// EnemyType g_enemy_ids
+//
+//   A list of enemy types
+//
+//   Fields:
+//   {id, name, gid, bid, hp, str, atk, def, spd, apt, f_atk, i_atk, l_atk, f_def, i_def, l_def, exp, elevel, rarity, ilevel, max_items}
+//
+EnemyType g_enemy_ids[] = {
+   {0, "slime", 0, 0, 3, 3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 2, 1, 255, 1, 1},
+   {1, "brown rat", 1, 0, 3, 3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 2, 1, 255, 1, 1},
+   {2, "skeleton", 2, 0, 3, 3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 2, 1, 255, 1, 1},
+   {3, "zombie", 3, 0, 3, 3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 2, 1, 255, 1, 1},
+   {4, "ant", 4, 0, 3, 3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 2, 1, 255, 1, 1},
+   {5, "spider", 5, 0, 3, 3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 2, 1, 255, 1, 1},
+   {6, "brown bat", 6, 0, 3, 3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 2, 1, 255, 1, 1},
+   {7, "kobold", 7, 0, 3, 3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 2, 1, 255, 1, 1},
+   {8, "archdemon", 8, 0, 3, 3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 2, 1, 255, 1, 1},
+   {9, "wolf", 9, 0, 3, 3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 2, 1, 255, 1, 1}
 };
 

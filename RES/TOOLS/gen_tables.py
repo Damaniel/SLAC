@@ -4,6 +4,7 @@ types_json_file = os.path.join("..", "JSON", "types.json")
 bases_json_file = os.path.join("..", "JSON", "bases.json")
 prefix_suffix_json_file = os.path.join('..', 'JSON', 'prefix_suffix.json')
 enum_json_file = os.path.join('..', 'JSON', 'enums.json')
+enemy_json_file = os.path.join('..', 'JSON', 'enemy.json')
 output_file = "gen_data.cpp"
 header_file = "gen_data.h"
 header_guard = "__GEN_DATA_H__"
@@ -187,14 +188,17 @@ def generate_source_file(outfile=None):
     process_breakpoint_count(types_json_file, out)
     process_breakpoint_count(bases_json_file, out)
     process_breakpoint_count(prefix_suffix_json_file, out)
+    process_breakpoint_count(enemy_json_file, out)
     out.write('\n')
     process_breakpoints(types_json_file, out)
     process_breakpoints(bases_json_file, out)
     process_breakpoints(prefix_suffix_json_file, out)
+    process_breakpoints(enemy_json_file, out)
     out.write('\n')
     process_item_file(types_json_file, out)
     process_item_file(bases_json_file, out)
     process_item_file(prefix_suffix_json_file, out)
+    process_item_file(enemy_json_file, out)
 
 def generate_prototypes(filename, outfile):
     f = open(filename)
@@ -251,6 +255,7 @@ def generate_header_file(outfile=None):
     generate_prototypes(types_json_file, out)
     generate_prototypes(bases_json_file, out)
     generate_prototypes(prefix_suffix_json_file, out)
+    generate_prototypes(enemy_json_file, out)
     generate_enums(enum_json_file, out)
     out.write('\n#endif')
 

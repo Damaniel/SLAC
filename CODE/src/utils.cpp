@@ -346,9 +346,6 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 		d.maze->change_room_lit_status(initial_room, true);			
 	}
 	
-	// Dungeons are not globally lit by default
-	d.maze->set_globally_lit_state(false);
-
 	// Does the display need to be refreshed?
 	g_state_flags.update_display = true;
 	

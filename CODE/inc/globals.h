@@ -49,6 +49,7 @@
 #include "textlog.h"
 #include "invntory.h"
 #include "player.h"
+#include "enemy.h"
 #include "itemgen.h"
 #include "item_use.h"
 #include "gen_data.h"

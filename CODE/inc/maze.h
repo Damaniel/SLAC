@@ -139,12 +139,12 @@ private:
 	std::vector<Room> rooms;
 	std::vector<Stair> stairs;
 	std::map <std::pair<int, int>, std::list<Item*> > items;
+	std::list<Enemy*> enemies;
 	int rows;
 	int cols;
     int room_id;
 	int ilevel;
 	int stair_gen_behavior;
-	bool globally_lit;
 
 	void add_stairs(int num_up_stairs, int num_down_stairs);
 	void carve(int x, int y, int tag);
@@ -187,8 +187,6 @@ public:
 	void print_room_ids(void);
 	void set_room_entered_state(int room_id, bool state);
 	void set_stair_gen_behavior(int behavior) { stair_gen_behavior = behavior; }
-	bool is_globally_lit() { return globally_lit; }
-	void set_globally_lit_state(bool state) { globally_lit = state; }
 	int stairs_here(int x, int y);
 	bool was_seen(int x, int y);
 	void mark_seen_state(int x, int y, int state);

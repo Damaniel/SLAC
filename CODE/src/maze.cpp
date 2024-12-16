@@ -329,11 +329,6 @@ void Maze::carve_direction(int x, int y, int direction, int tag) {
 //   Nothing	
 //------------------------------------------------------------------------------
 void Maze::change_lit_status_at(int x, int y, bool lit) {
-	// If is_globally_lit is true, darkness isn't allowed.
-	if (is_globally_lit() && lit == false) 
-		return;
-
-	// Otherwise, change the lighting status
 	m[y * cols + x].is_lit = lit;
 	mark_seen_state(x, y, true);
 }

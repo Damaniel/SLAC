@@ -92,6 +92,14 @@ extern const int g_cursed_item_suffix_pool_count;
 
 extern int g_cursed_item_suffix_pool[];
 
+extern EnemyType g_enemy_ids[];
+
+extern const int g_enemy_pool_entries;
+
+extern const int g_enemy_pool_count;
+
+extern int g_enemy_pool[];
+
 
 namespace ItemConsts {
 
