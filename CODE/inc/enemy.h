@@ -3,6 +3,16 @@
 
 #include "globals.h"
 
+namespace EnemyConsts {
+    const int MAX_GENERATOR_REROLLS = 20;
+    // Used in the generator function.  When rolling an enemy with a target elevel,
+    // the actual elevel range considered will be 
+    // (elevel - MIN_ELEVEL_RANGE) to (elevel + MAX_ELEVEL_RANGE), inclusive and
+    // capped at 0 and 100 at each end.
+    const int MIN_ELEVEL_RANGE = 15;
+    const int MAX_ELEVEL_RANGE = 5;
+}
+
 typedef struct {
     // Ids for different things
     int id;         // Offset into the enemy array
@@ -43,6 +53,40 @@ private:
     // The other stats live in the enemy table, for now.
     // If we add the ability for skills to adjust enemy stats,
     // we'll add 'actual' status as needed
+public:
+    Enemy();
+    Enemy(int eid);
+    void init(int eid);
+    int get_hp() { return (int)hp; }
+    int get_id() { return id; }
+    std::string get_name();
+    int get_gid();
+    int get_bid();
+    int get_max_hp();
+    int get_str();
+    int get_atk();
+    int get_def();
+    int get_spd();
+    int get_apt();
+    int get_fatk();
+    int get_iatk();
+    int get_latk();
+    int get_fdef();
+    int get_idef();
+    int get_ldef();
+    int get_exp();
+    int get_elevel();
+    int get_rarity();
+    int get_ilevel();
+    int get_max_items();
 };
+
+class EnemyGenerator {
+public:
+    static Enemy* generate();
+    static Enemy* generate(int elevel);
+    static Enemy* generate_arbitrary(int id);
+};
+
 
 #endif

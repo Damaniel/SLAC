@@ -24,31 +24,6 @@
 #include "globals.h"
 
 //----------------------------------------------------------------------------
-// Generates a random item index from the given pool
-//
-// Arguments:
-//  pool - the pool to draw from
-//  pool_size - the number of elements in the pool to consider
-//  max_val - the highest possible value in the pool
-//
-// Returns:
-//  The index from the pool selected, or 0 (the default item) if something
-//  went wrong
-//----------------------------------------------------------------------------
-int ItemGenerator::roll_from_pool(const int *pool, int pool_size, int max_val) {
-    int val = rand() % max_val;
-    //std::cout << "size = " << pool_size << ", max val =  " << max_val << ", rolled val = " << val << std::endl;
-    for (int i = 0; i < pool_size; ++i) {
-        //std::cout << "i = " << i << ", pool[i] = " << pool[i] << std::endl;
-        if (val < pool[i]) {
-            //std::cout << "Rolled " << val << " in a pool of " << max_val << ", index is " << i << std::endl;
-            return i;
-        }
-    }
-    return 0;
-}
-
-//----------------------------------------------------------------------------
 // Generates an item.  This can be anything, weighted by overall item class, 
 // item base type and mod types, assuming a max item level of 100
 //
@@ -76,9 +51,9 @@ Item *ItemGenerator::generate() {
 //----------------------------------------------------------------------------
 Item *ItemGenerator::generate(int ilevel) {
     Item *i;
-    int item_type = ItemGenerator::roll_from_pool(ItemConsts::g_item_class_pool, 
-                                                  ItemConsts::g_item_class_pool_count, 
-                                                  ItemConsts::g_item_class_pool_entries);
+    int item_type = roll_from_pool(ItemConsts::g_item_class_pool, 
+                                   ItemConsts::g_item_class_pool_count, 
+                                   ItemConsts::g_item_class_pool_entries);
     i = ItemGenerator::generate(item_type, ilevel);
 
     // i->dump_item();
@@ -142,27 +117,27 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
         // std::cout << "generator: ilevel roll attempt " << (attempt + 1) << " of " << MAX_GENERATOR_REROLLS << std::endl;
         switch (item_type) {
             case ItemConsts::WEAPON_CLASS:
-                rolled_base_type = ItemGenerator::roll_from_pool(g_weapon_base_pool, g_weapon_base_pool_count, g_weapon_base_pool_entries);
+                rolled_base_type = roll_from_pool(g_weapon_base_pool, g_weapon_base_pool_count, g_weapon_base_pool_entries);
                 base_ilevel = g_weapon_base_ids[rolled_base_type].ilevel;
                 break;
             case ItemConsts::ARMOR_CLASS:
-                rolled_base_type = ItemGenerator::roll_from_pool(g_armor_base_pool, g_armor_base_pool_count, g_armor_base_pool_entries);
+                rolled_base_type = roll_from_pool(g_armor_base_pool, g_armor_base_pool_count, g_armor_base_pool_entries);
                 base_ilevel = g_armor_base_ids[rolled_base_type].ilevel;
                 break;
             case ItemConsts::CURRENCY_CLASS:
-                rolled_base_type = ItemGenerator::roll_from_pool(g_currency_pool, g_currency_pool_count, g_currency_pool_entries);
+                rolled_base_type = roll_from_pool(g_currency_pool, g_currency_pool_count, g_currency_pool_entries);
                 base_ilevel = g_currency_ids[rolled_base_type].ilevel;
                 break;        
              case ItemConsts::POTION_CLASS:
-                rolled_base_type = ItemGenerator::roll_from_pool(g_potion_pool, g_potion_pool_count, g_potion_pool_entries);
+                rolled_base_type = roll_from_pool(g_potion_pool, g_potion_pool_count, g_potion_pool_entries);
                 base_ilevel = g_potion_ids[rolled_base_type].ilevel;
                 break;
             case ItemConsts::SCROLL_CLASS:                               
-                rolled_base_type = ItemGenerator::roll_from_pool(g_scroll_pool, g_scroll_pool_count, g_scroll_pool_entries);
+                rolled_base_type = roll_from_pool(g_scroll_pool, g_scroll_pool_count, g_scroll_pool_entries);
                 base_ilevel = g_scroll_ids[rolled_base_type].ilevel;
                 break;        
             case ItemConsts::ARTIFACT_CLASS:                               
-                rolled_base_type = ItemGenerator::roll_from_pool(g_artifact_pool, g_artifact_pool_count, g_artifact_pool_entries);
+                rolled_base_type = roll_from_pool(g_artifact_pool, g_artifact_pool_count, g_artifact_pool_entries);
                 base_ilevel = g_artifact_ids[rolled_base_type].ilevel;
                 break;        
         }

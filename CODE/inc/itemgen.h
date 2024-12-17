@@ -118,7 +118,6 @@ namespace ItemConsts {
 // affixes and other modifiers already applied.
 class ItemGenerator {
 private:
-    static int roll_from_pool(const int *pool, int pool_size, int max_val);
     static void apply_affix(Item *i, int affix_type, int ilevel);
     static void apply_curse(Item *i);
 public:

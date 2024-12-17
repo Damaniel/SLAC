@@ -99,6 +99,7 @@ int get_tile_to_render(Item *i);
 void identify_previously_known_items_at_player();
 void identify_if_previously_known(Item *i);
 void perform_identification_action(Item *i, bool log);
+int roll_from_pool(const int *pool, int pool_size, int max_val);
 
 // Inventory functions
 void perform_inventory_menu_action(void);

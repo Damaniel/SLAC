@@ -345,7 +345,7 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 		//d.maze->change_room_lit_status(initial_room, false);		
 		d.maze->change_room_lit_status(initial_room, true);			
 	}
-	
+
 	// Does the display need to be refreshed?
 	g_state_flags.update_display = true;
 	
@@ -1185,6 +1185,28 @@ void perform_identification_action(Item *i, bool log) {
     if (log) {
         g_text_log.put_line(old_name + " is " + i->get_full_name() + ".");
     }
+}
+
+//----------------------------------------------------------------------------
+// Generates a random item index from the given pool
+//
+// Arguments:
+//  pool - the pool to draw from
+//  pool_size - the number of elements in the pool to consider
+//  max_val - the highest possible value in the pool
+//
+// Returns:
+//  The index from the pool selected, or 0 (the default item) if something
+//  went wrong
+//----------------------------------------------------------------------------
+int roll_from_pool(const int *pool, int pool_size, int max_val) {
+    int val = rand() % max_val;
+    for (int i = 0; i < pool_size; ++i) {
+        if (val < pool[i]) {
+            return i;
+        }
+    }
+    return 0;
 }
 
 //----------------------------------------------------------------------------
