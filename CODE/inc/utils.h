@@ -23,10 +23,10 @@ struct DungeonFloor {
     void add_enemy(int x, int y, Enemy *e);
 	void generate_enemies(int min_enemies, int max_enemies);
 	void add_item(int x, int y, Item *i);
+	void generate_items(int min_items, int max_items);
 	std::list<Item *> get_items_at(int x, int y);
 	void remove_item_from_end_at(int x, int y);
 	int get_num_items_at(int x, int y);
-	void generate_items(int min_items, int max_items);
 };
 
 // A collection of flags relevant to the game loop.  The game loop will want
@@ -126,5 +126,6 @@ int get_distance_between(int x1, int y1, int x2, int y2);
 // Enemy functions
 bool distance_sort(Enemy *first, Enemy *second);
 void sort_enemy_list(std::list<Enemy *> &el);
+void get_enemy_distances(std::list<Enemy *> &el, int x, int y);
 
 #endif

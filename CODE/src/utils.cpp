@@ -106,6 +106,7 @@ void DungeonFloor::generate_enemies(int min_enemies, int max_enemies) {
 			}
 		} while (!is_placed);
 	}
+
 }
 
 //------------------------------------------------------------------------------
@@ -586,6 +587,9 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 		//d.maze->change_room_lit_status(initial_room, false);		
 		d.maze->change_room_lit_status(initial_room, true);			
 	}
+
+	// Update the distance from the player to each enemy and sort
+	get_enemy_distances(d.enemies, g_player.get_x_pos(), g_player.get_y_pos());
 
 	// Does the display need to be refreshed?
 	g_state_flags.update_display = true;
@@ -1507,4 +1511,25 @@ bool enemy_distance_sort(Enemy *first, Enemy *second) {
 //----------------------------------------------------------------------------
 void sort_enemy_list(std::list<Enemy *> &el) {
 	el.sort(enemy_distance_sort);
+}
+
+//----------------------------------------------------------------------------
+// Calculates the distance from an arbitrary point to each enemy and
+// sorts the resulting list by distance
+//
+// Arguments:
+//	el - the enemy list
+//  x, y - the point
+//
+// Returns:
+//	Nothing
+//----------------------------------------------------------------------------
+void get_enemy_distances(std::list<Enemy *> &el, int x, int y) {
+	std::list<Enemy *>::iterator enemy_it;
+
+	for(enemy_it = el.begin(); enemy_it != el.end(); ++enemy_it) {
+		(*enemy_it)->set_distance(get_manhattan_distance_between((*enemy_it)->get_x_pos(), (*enemy_it)->get_y_pos(), x, y));
+	}
+
+	sort_enemy_list(el);
 }

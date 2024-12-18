@@ -40,6 +40,10 @@ void process_movement_common_tasks(void) {
     // Show the items on the ground in the player log
 	add_items_at_player_to_log();
 
+    // Recalculate enemy distances
+    // TODO: This (and enemy updates) should be handled in a dedicated function
+	get_enemy_distances(g_dungeon.enemies, g_player.get_x_pos(), g_player.get_y_pos());
+    
     // Redraw the maze area
 	g_state_flags.update_maze_area = true;
     // Redraw the log if the text log is in extended mode (as it

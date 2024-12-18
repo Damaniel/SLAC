@@ -88,6 +88,9 @@ namespace UiConsts {
 	// The number of tiles in a row of the item spritesheet
 	const int ITEM_TILE_ENTRY_WIDTH = 32;
 
+	// The number of tiles in a row of the enemy spritesheet
+	const int ENEMY_TILE_ENTRY_WIDTH = 32;
+	
 	// The size of the visible play area (in tiles)
 	// PLAY_AREA_TILE_HEIGHT_EXT measures the height in tiles when the extended message
 	// log is displayed.
@@ -346,6 +349,11 @@ namespace UiConsts {
 
 	const int STATS_NEXT_X = 117;
 	const int STATS_NEXT_Y = 75;
+
+	// Only consider enemies closer than this when rendering on the screen
+	// This distance includes the maximum manhattan distance for an enemy
+	// from the player to the edge of the screen, plus a little bit more
+	const int MAXIMUM_ENEMY_RENDER_DISTANCE = 18;
 
 	// The base tiles that make up the fixed portions of a dungeon level
 	// They map to tile offsets in the dungeon world tiles

@@ -45,7 +45,7 @@ Render::Render() {
 
 //------------------------------------------------------------------------------
 // Renders all non-static dungeon elements.  This includes the player and all
-// enemies.  
+// visible enemies.  
 //
 // Arguments:
 //   destination - the bitmap to render to
@@ -61,11 +61,60 @@ Render::Render() {
 void Render::render_actors(BITMAP *destination, int maze_x, int maze_y) {
 	BITMAP *bpc = (BITMAP *)g_game_data[DAMRL_PLAYER_SPRITES].dat;
 
-	// For now, just draw the player.  He's always centered in the play area.
+	// Draw the player.  He's always centered in the play area.
 	masked_blit(bpc, destination, UiConsts::PLAYER_TILE_OFFSET * UiConsts::TILE_PIXEL_WIDTH, 0, 
 	            UiConsts::PLAYER_PLAY_AREA_X * UiConsts::TILE_PIXEL_WIDTH, 
 				UiConsts::PLAYER_PLAY_AREA_Y * UiConsts::TILE_PIXEL_HEIGHT,
 		        UiConsts::TILE_PIXEL_WIDTH, UiConsts::TILE_PIXEL_HEIGHT);
+
+	// Iterate through the (sorted) monster list, and calculate/render each monster until
+	// the distance of the next monster is further than the render limit
+	std::list<Enemy *>::iterator enemy_it = g_dungeon.enemies.begin();
+	bool done = false;
+	while (enemy_it != g_dungeon.enemies.end() && !done) {
+		if ((*enemy_it)->get_distance() <= UiConsts::MAXIMUM_ENEMY_RENDER_DISTANCE) {
+			// Get the enemy position and tile id
+			int ex = (*enemy_it)->get_x_pos();
+			int ey = (*enemy_it)->get_y_pos();
+			int eid = (*enemy_it)->get_gid();
+			//std::cout << "  maze_x = " << maze_x << ", maze_y = " << maze_y << std::endl;
+			//std::cout << "  ex = " << ex << ", ey = " << ey << ", px = " << ex - maze_x << ", py = " << ey - maze_y << std::endl;
+			// If the enemy is on a square that's currently lit, then draw it
+			if (g_dungeon.maze->is_square_lit(ex, ey)) {
+				//std::cout << "  Enemy is on a lit square" << std::endl;
+				// Get the on-screen position of the enemy
+				int px = ex - maze_x;
+				int py = ey - maze_y;
+				// Since the enemy we're considering may be slightly off-screen, we'll check for that and skip 
+				// drawing those enemies
+				if (px >= 0 && py >= 0 && px < UiConsts::PLAY_AREA_TILE_WIDTH && py < UiConsts::PLAY_AREA_TILE_HEIGHT) {
+					int tx = eid % UiConsts::ENEMY_TILE_ENTRY_WIDTH;
+					int ty = eid / UiConsts::ENEMY_TILE_ENTRY_WIDTH;
+					//std::cout << "  tx = " << tx << ", ty = " << ty << std::endl;
+					masked_blit((BITMAP *)g_game_data[DAMRL_ENEMIES].dat,
+								destination,
+								tx * UiConsts::TILE_PIXEL_WIDTH,
+								ty * UiConsts::TILE_PIXEL_HEIGHT,
+								px * UiConsts::TILE_PIXEL_WIDTH,
+								py * UiConsts::TILE_PIXEL_WIDTH,
+								UiConsts::TILE_PIXEL_WIDTH,
+								UiConsts::TILE_PIXEL_HEIGHT);
+				}
+			}
+
+			//std::cout << "Render enemy - distance is " << (*enemy_it)->get_distance() << std::endl;
+			//std::cout << "  Enemy position is (" << (*enemy_it)->get_x_pos() << ", " << (*enemy_it)->get_y_pos() << ")" << std::endl;
+		}
+		else {
+			// Every other enemy is too far away; we're done
+			done = true;
+		}
+		++enemy_it;
+	}
+
+	//std::cout << "=============================" << std::endl;
+
+
 }
 
 //------------------------------------------------------------------------------
