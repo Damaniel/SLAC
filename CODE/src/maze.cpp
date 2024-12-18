@@ -91,8 +91,8 @@ Maze::~Maze() {
 // level.
 //
 // Arguments:
-//	 minItems - the minimum number of items to create
-//   maxItems - the maximum number of items to create
+//	 min_items - the minimum number of items to create
+//   max_items - the maximum number of items to create
 //
 // Returns:
 //   Nothing
@@ -120,6 +120,51 @@ void Maze::generate_items(int min_items, int max_items) {
 }
 
 //------------------------------------------------------------------------------
+// Populates the maze with a quantity of generated enemies of appropriate enemy 
+// level.
+//
+// Arguments:
+//	 min_enemies - the minimum number of enemies to create
+//   max_enemies - the maximum number of enemies to create
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Maze::generate_enemies(int min_enemies, int max_enemies) {
+	// Pick a number of enemies
+	// For each number
+	//	 - Create an enemy
+	// Loop:
+	//   - Pick a location
+	//   - Check existing enemies to see if an enemy already sits there
+	//      - If so, pick another location, repeat loop
+	//      - if not
+	//        - Add the enemy to the list of enemies
+	//        - Mark done with iteration
+	
+	int num_enemies = (rand() % (max_enemies - min_enemies)) + min_enemies;
+	bool is_placed;
+	for (int i = 0; i < num_enemies; ++i) {
+		is_placed = false;
+		do {
+			int x = rand() % get_width();
+			int y = rand() % get_height();
+			// Only place an enemy on a carved square with no stairs
+			if (is_carved(x, y) && stairs_here(x, y) == MazeConsts::NO_STAIRS) {
+				// Check to see if this space is already taken by an enemy
+				if (true) {
+					// If not, create one and put it here
+					Enemy *e = new Enemy(ilevel);
+					add_enemy(x, y, e);
+					is_placed = true;
+				}
+			}
+		} while (!is_placed);
+	}
+
+}
+
+//------------------------------------------------------------------------------
 // Adds an item to the maze at the specified location
 //
 // Arguments:
@@ -132,6 +177,21 @@ void Maze::generate_items(int min_items, int max_items) {
 void Maze::add_item(int x, int y, Item *i) {
 	std::pair<int, int> p = std::make_pair(x, y);
 	items[p].push_back(i);
+}
+
+//------------------------------------------------------------------------------
+// Adds an enemy to the maze at the specified location
+//
+// Arguments:
+//	 x, y - the coordinates of the location of the enemy
+//   e - the enemy to add
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Maze::add_enemy(int x, int y, Enemy *e) {
+	e->set_pos(x, y);
+	enemies.push_back(e);
 }
 
 //------------------------------------------------------------------------------
@@ -920,6 +980,8 @@ void Maze::generate(void) {
 
 	// Generate a few items on the ground
 	generate_items(10, 30);
+
+	// Generate a few monsters in the maze
 
 	// Attempt to remove some additional walls to open things up
 	knock_out_walls(100);

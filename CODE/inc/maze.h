@@ -153,6 +153,7 @@ private:
 	void generate_passages(int x, int y);
 	void generate_rooms(int num_attempts, int min_size, int max_size);
 	void generate_items(int min_items, int max_items);
+	void generate_enemies(int min_enemies, int max_enemies);
 	void get_directions(std::vector<int> & directions, int x, int y);
 	void mark_walls(void);	
 	void open_room(Room &r);
@@ -165,6 +166,7 @@ public:
 	Maze(int x, int y, int il);
 	~Maze();
 	void add_item(int x, int y, Item *i);
+	void add_enemy(int x, int y, Enemy *e);
 	std::list<Item *> get_items_at(int x, int y);
 	void remove_item_from_end_at(int x, int y);
 	int get_num_items_at(int x, int y);

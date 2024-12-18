@@ -1240,3 +1240,30 @@ int get_distance_between(int x1, int y1, int x2, int y2) {
 	int b = abs(y2 - y1);
 	return (int)sqrt((a * a) + (b *b));
 }
+
+//----------------------------------------------------------------------------
+// A utility function used to assist with sorting the enemy list - this
+// function assists with sorting by distance
+//
+// Arguments:
+//	first, second - the enemies to compare
+//
+// Returns:
+//  true if the first is lower, false otherwise
+//----------------------------------------------------------------------------
+bool enemy_distance_sort(Enemy *first, Enemy *second) {
+	return (first->get_distance() < second->get_distance());
+}
+
+//----------------------------------------------------------------------------
+// Sorts a list of enemies by distance, from closest to furthest
+//
+// Arguments:
+//	el - the list to sort
+//
+// Returns:
+//	Nothing
+//----------------------------------------------------------------------------
+void sort_enemy_list(std::list<Enemy *> &el) {
+	el.sort(enemy_distance_sort);
+}

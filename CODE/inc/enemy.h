@@ -59,6 +59,12 @@ public:
     void init(int eid);
     int get_hp() { return (int)hp; }
     int get_id() { return id; }
+    void set_pos(int x, int y) { x_pos = x; y_pos = y; }
+    int get_xpos() { return x_pos; }
+    int get_ypos() { return y_pos; }
+    int get_distance() { return distance; }
+    // All of these fields are stored in a global array; these helper functions
+    // get the appropriate fields at the relevant offset
     std::string get_name();
     int get_gid();
     int get_bid();

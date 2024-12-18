@@ -57,7 +57,7 @@ DungeonFloor   g_dungeon;
 int main(void) {
 
 	srand(time(NULL));
-	
+
 	allegro_init();
 	install_timer();
 	install_keyboard();

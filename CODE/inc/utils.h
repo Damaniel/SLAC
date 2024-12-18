@@ -108,4 +108,8 @@ void perform_inventory_menu_action(void);
 int get_manhattan_distance_between(int x1, int y1, int x2, int y2);
 int get_distance_between(int x1, int y1, int x2, int y2);
 
+// Enemy functions
+bool distance_sort(Enemy *first, Enemy *second);
+void sort_enemy_list(std::list<Enemy *> &el);
+
 #endif
