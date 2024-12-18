@@ -43,7 +43,7 @@ void process_movement_common_tasks(void) {
     // Recalculate enemy distances
     // TODO: This (and enemy updates) should be handled in a dedicated function
 	get_enemy_distances(g_dungeon.enemies, g_player.get_x_pos(), g_player.get_y_pos());
-    
+
     // Redraw the maze area
 	g_state_flags.update_maze_area = true;
     // Redraw the log if the text log is in extended mode (as it
@@ -319,12 +319,39 @@ void process_game_state(int key) {
 		            }
                     break;
                 case KEY_DOWN:
-            		if (g_dungeon.maze->is_carved(g_player.get_x_pos(), g_player.get_y_pos()+1) == true)
-	    	        {
+            		if (g_dungeon.maze->is_carved(g_player.get_x_pos(), g_player.get_y_pos()+1) == true) {
         	    		g_player.set_y_pos(g_player.get_y_pos() + 1);
 			            process_movement_common_tasks();
 		            }
                     break;
+                case KEY_HOME:   // Up and left
+                    if (g_dungeon.maze->is_carved(g_player.get_x_pos() - 1, g_player.get_y_pos() - 1) == true) {
+                        g_player.set_x_pos(g_player.get_x_pos() - 1);
+                        g_player.set_y_pos(g_player.get_y_pos() - 1);
+                        process_movement_common_tasks();
+                    }
+                    break;
+                case KEY_PGUP:   // Up and right
+                    if (g_dungeon.maze->is_carved(g_player.get_x_pos() + 1, g_player.get_y_pos() - 1) == true) {
+                        g_player.set_x_pos(g_player.get_x_pos() + 1);
+                        g_player.set_y_pos(g_player.get_y_pos() - 1);
+                        process_movement_common_tasks();
+                    }
+                    break;         
+                case KEY_END:   // Down and left
+                    if (g_dungeon.maze->is_carved(g_player.get_x_pos() - 1, g_player.get_y_pos() + 1) == true) {
+                        g_player.set_x_pos(g_player.get_x_pos() - 1);
+                        g_player.set_y_pos(g_player.get_y_pos() + 1);
+                        process_movement_common_tasks();
+                    }
+                    break;                         
+                case KEY_PGDN:  // Down and right
+                    if (g_dungeon.maze->is_carved(g_player.get_x_pos() + 1, g_player.get_y_pos() + 1) == true) {
+                        g_player.set_x_pos(g_player.get_x_pos() + 1);
+                        g_player.set_y_pos(g_player.get_y_pos() + 1);
+                        process_movement_common_tasks();
+                    }
+                    break;                   
                 case KEY_C:
                     g_state_flags.cur_substate = GAME_SUBSTATE_STATS;
                     g_state_flags.update_stats_screen = true;
@@ -352,9 +379,6 @@ void process_game_state(int key) {
                     break;
                 case KEY_G:
                     pick_up_item_at(g_player.get_x_pos(), g_player.get_y_pos());    
-                    break;
-                case KEY_H:
-                    expose_map();
                     break;
                 case KEY_COMMA:
                 case KEY_STOP:

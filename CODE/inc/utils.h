@@ -120,6 +120,7 @@ int roll_from_pool(const int *pool, int pool_size, int max_val);
 void perform_inventory_menu_action(void);
 
 // Game math functions
+int get_diagonal_distance_between(int x1, int y1, int x2, int y2);
 int get_manhattan_distance_between(int x1, int y1, int x2, int y2);
 int get_distance_between(int x1, int y1, int x2, int y2);
 

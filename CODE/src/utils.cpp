@@ -1455,6 +1455,21 @@ int roll_from_pool(const int *pool, int pool_size, int max_val) {
 }
 
 //----------------------------------------------------------------------------
+// Get the Chebyshev distance between two points.  Not as efficient as the
+// octile distance would be, but it doesn't use any square roots
+//
+// Arguments:
+//   x1, y1 - the first point 
+//   x2, y2 - the second point
+//
+// Returns:
+//   The distance
+//----------------------------------------------------------------------------
+int get_diagonal_distance_between(int x1, int y1, int x2, int y2) {
+	return max(abs(x2 - x1), abs(y2 - y1));
+}
+
+//----------------------------------------------------------------------------
 // Get the Manhattan distance between two points.  Not as accurate as the
 // Pythagorean method, but much faster
 //
@@ -1470,7 +1485,7 @@ int get_manhattan_distance_between(int x1, int y1, int x2, int y2) {
 }
 
 //----------------------------------------------------------------------------
-// Get the Pythagorean distance between two points.  The most accurate method,
+// Get the Euclidian distance between two points.  The most accurate method,
 // but the square root makes it slower
 //
 // Arguments:
