@@ -145,7 +145,7 @@ bool decurse_item(bool log)
     while (count < InventoryConsts::INVENTORY_SIZE) {
         i = g_inventory->get_item_in_slot(count);
         if (i != NULL) {
-            if (!i->is_it_cursed()) {
+            if (i->is_it_cursed()) {
                 i->set_curse_state(false);
                 if (log) {
                     sprintf(text, "%s was decursed.", i->get_full_name().c_str());
@@ -209,9 +209,9 @@ void item_use_update_screen_flags() {
     g_state_flags.update_text_dialog = true;
     if(g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY || 
        g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY_MENU) {
-            if(g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY_MENU) {
-                g_state_flags.update_inventory_submenu = true;
-            }
+            // Don't actually update the inventory menu since the 
+            // item may be gone and the state will be reverted back
+            // to SUBSTATE_INVENTORY shortly
             g_state_flags.update_inventory_cursor = true;
             g_state_flags.update_inventory_description = true;
             g_state_flags.update_inventory_items = true;
@@ -307,7 +307,7 @@ void expose_map() {
     }
     
     // Draw it all on the map
-    g_render.fill_in_entire_map(g_dungeon.maze);
+    g_render.fill_in_entire_map(&g_dungeon);
     
     g_text_log.put_line("The walls of the dungeon are revealed.");
 
@@ -362,7 +362,7 @@ void hide_map() {
     }
     
     // Clear the map bitmap
-    g_render.initialize_map_bitmap(g_dungeon.maze);
+    g_render.initialize_map_bitmap(&g_dungeon);
 
     g_text_log.put_line("The dungeon is engulfed in darkness.");
 

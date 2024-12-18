@@ -123,7 +123,7 @@ void Render::render_item(BITMAP *destination, int gid, int x, int y) {
 // Returns:
 //   
 //------------------------------------------------------------------------------
-void Render::initialize_map_bitmap(Maze *m) {
+void Render::initialize_map_bitmap(DungeonFloor *f) {
 	for (int y=0; y <= UiConsts::MAP_NUM_Y_DOTS; y++) {
 		for (int x=0; x <= UiConsts::MAP_NUM_X_DOTS; x++) {
 			blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat,
@@ -140,23 +140,23 @@ void Render::initialize_map_bitmap(Maze *m) {
 	// Calculate the center point for the maze on the map (so everything is
 	// nice and centered)
 	// The center location is map_x + (((the whole map width) - (2 * maze_width)) / 2)
-    g_ui_globals.map_maze_xoffset = UiConsts::MAP_AREA_VMEM_X + ((UiConsts::MAP_PIXEL_WIDTH - m->get_width() * UiConsts::MAP_DOT_WIDTH) / 2);
-	g_ui_globals.map_maze_yoffset = UiConsts::MAP_AREA_VMEM_Y + ((UiConsts::MAP_PIXEL_HEIGHT - m->get_height() * UiConsts::MAP_DOT_HEIGHT) / 2);
+    g_ui_globals.map_maze_xoffset = UiConsts::MAP_AREA_VMEM_X + ((UiConsts::MAP_PIXEL_WIDTH - f->maze->get_width() * UiConsts::MAP_DOT_WIDTH) / 2);
+	g_ui_globals.map_maze_yoffset = UiConsts::MAP_AREA_VMEM_Y + ((UiConsts::MAP_PIXEL_HEIGHT - f->maze->get_height() * UiConsts::MAP_DOT_HEIGHT) / 2);
 }
 
 //------------------------------------------------------------------------------
 // Marks the selected square on the map as a wall or empty space
 //
 // Arguments:
-//   m - the maze to use to determine what squares to draw
+//   f - the dungeon to use to determine what squares to draw
 //   x, y - the position in the maze to draw
 //
 // Returns:
 //   Nothing
 //------------------------------------------------------------------------------
-void Render::fill_in_map_square(Maze *m, int x, int y) {
-	if (m->was_seen(x, y)) {
-		if (m->is_carved(x, y) == false) {
+void Render::fill_in_map_square(DungeonFloor *f, int x, int y) {
+	if (f->maze->was_seen(x, y)) {
+		if (f->maze->is_carved(x, y) == false) {
 			blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat,
 				screen,
 				UiConsts::MAP_DOT_WALL * UiConsts::MAP_DOT_WIDTH,
@@ -182,15 +182,15 @@ void Render::fill_in_map_square(Maze *m, int x, int y) {
 // Exposes the entire map into the map bitmap
 //
 // Arguments:
-//   m - the maze to use to determine what squares to draw
+//   f - the dungeon to use to determine what squares to draw
 //
 // Returns:
 //   Nothing
 //------------------------------------------------------------------------------
-void Render::fill_in_entire_map(Maze *m) {
-	for(int i=0; i<m->get_width(); i++) {
-		for(int j=0; j<m->get_height(); j++) {
-			fill_in_map_square(m, i, j);
+void Render::fill_in_entire_map(DungeonFloor *f) {
+	for(int i = 0; i < f->maze->get_width(); i++) {
+		for(int j = 0; j < f->maze->get_height(); j++) {
+			fill_in_map_square(f, i, j);
 		}
 	}
 }
@@ -200,35 +200,35 @@ void Render::fill_in_entire_map(Maze *m) {
 // immediate vicinity of the location specified by (x, y)
 //
 // Arguments:
-//   m - the maze to use to determine what squares to draw
-//   x, y - the 'center' of the portion of the maze to render on the map
+//   f- the dungeon to use to determine what squares to draw
+//   x, y - the 'center' of the portion of the dungeon to render on the map
 //
 // Returns:
 //   Nothing
 //------------------------------------------------------------------------------
-void Render::add_area_to_map_bitmap(Maze *m, int x, int y) {
+void Render::add_area_to_map_bitmap(DungeonFloor *f, int x, int y) {
 	// Fill in the squares immediately surrounding the player
 	for(int i=x-1; i<=x+1; i++) {
 		for(int j=y-1; j<=y+1; j++) {
 			//std::cout << "add_area_to_map_bitmap: processing (" << i << ", " << j << ")" << std::endl;
-			if(i >=0 && i < m->get_width() && j >=0 && j < m->get_height()) {
-				fill_in_map_square(m, i, j);
+			if(i >=0 && i < f->maze->get_width() && j >=0 && j < f->maze->get_height()) {
+				fill_in_map_square(f, i, j);
 			}
 		}
 	}
 
 	// If the player is in a room and hasn't been in the room before, 
 	// draw the room to the map area
-	int room = m->get_room_id_at(x, y);
+	int room = f->maze->get_room_id_at(x, y);
 	//std::cout << "add_area_to_map_bitmap: room id = " << room << std::endl; 
 	if(room != -1) {
-		Room r = m->get_room(room);
+		Room r = f->maze->get_room(room);
 		//std::cout << "  add_area_to_map_bitmap: Got room" << std::endl;
 		if (r.has_been_entered == false) {
 			for(int i = r.x - 1; i < r.x + r.w + 1; i++) {
 				for (int j = r.y - 1; j < r.y + r.h + 1; j++) {
 					//std::cout << "  add_area_to_map_bitmap: Processing room at (" << i << ", " << j << ")" << std::endl;
-					if(m->is_carved(i, j) == false) {
+					if(f->maze->is_carved(i, j) == false) {
 						blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat,
 					     	screen,
 					 		UiConsts::MAP_DOT_WALL * UiConsts::MAP_DOT_WIDTH,
@@ -1188,13 +1188,13 @@ void Render::render_text_log(BITMAP *destination, bool extended) {
 //
 // Arguments:
 //  destination - the bitmap to draw to
-//  m - the maze to draw
+//  f - the dungeon floor to draw
 //  maze_x, maze_y - the maze position corresponding to the upper left corner
 //
 // Returns:
 //   Nothing
 //------------------------------------------------------------------------------
-void Render::render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_y) {
+void Render::render_world_at(BITMAP *destination, DungeonFloor *f, int maze_x, int maze_y) {
 	// Notes:
 	//   Negative values for maze_x and maze_y are allowed, as are values outside of the 
 	//   positive end of the range - maze tiles just won't be drawn for invalid locations	
@@ -1218,15 +1218,15 @@ void Render::render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_
 			int tile_to_render_x = maze_x + screen_x;
 			int tile_to_render_y = maze_y + screen_y;
 			int tile_to_use;
-			bool carved_left = m->is_carved(tile_to_render_x -1, tile_to_render_y);
-			bool carved_up = m->is_carved(tile_to_render_x, tile_to_render_y - 1);
+			bool carved_left = f->maze->is_carved(tile_to_render_x -1, tile_to_render_y);
+			bool carved_up = f->maze->is_carved(tile_to_render_x, tile_to_render_y - 1);
 			
-			if(tile_to_render_x >=0 && tile_to_render_y >=0 && tile_to_render_x < m->get_width() && tile_to_render_y < m->get_height()) {
-				int stairs = m->stairs_here(tile_to_render_x, tile_to_render_y);				
+			if(tile_to_render_x >=0 && tile_to_render_y >=0 && tile_to_render_x < f->maze->get_width() && tile_to_render_y < f->maze->get_height()) {
+				int stairs = f->maze->stairs_here(tile_to_render_x, tile_to_render_y);				
 				// Before checking any other status, draw darkness if the square isn't lit
-				if (m->is_square_lit(tile_to_render_x, tile_to_render_y) == false) { 
+				if (f->maze->is_square_lit(tile_to_render_x, tile_to_render_y) == false) { 
 					// If the square has previously been seen and isn't carved, draw a darker wall
-					if (m->is_carved(tile_to_render_x, tile_to_render_y) == false && m->was_seen(tile_to_render_x, tile_to_render_y) == true) {
+					if (f->maze->is_carved(tile_to_render_x, tile_to_render_y) == false && f->maze->was_seen(tile_to_render_x, tile_to_render_y) == true) {
 						render_base_tile(destination, UiConsts::TILE_DARKER_WALL, screen_x, screen_y);
 					} else {
 						// Otherwise, draw darkness
@@ -1243,7 +1243,7 @@ void Render::render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_
 				// Render floor if present.  There are 4 different floor tiles - one with no
 				// highlighting and 3 with different types of highlighting
 				// If the location is a wall, render that instead.
-				else if (m->is_carved(tile_to_render_x, tile_to_render_y) == true) {
+				else if (f->maze->is_carved(tile_to_render_x, tile_to_render_y) == true) {
 					if (carved_left == false && carved_up == true) {
 						tile_to_use = UiConsts::TILE_FLOOR_LEFT_HIGHLIGHT;
 					}
@@ -1258,9 +1258,9 @@ void Render::render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_
 					}
 					render_base_tile(destination, tile_to_use, screen_x, screen_y);
 					// Get any items at the location and draw the first on the list
-					int num_items_here = m->get_num_items_at(tile_to_render_x, tile_to_render_y);
+					int num_items_here = f->get_num_items_at(tile_to_render_x, tile_to_render_y);
 					if (num_items_here > 0) {
-						std::list<Item *> items = m->get_items_at(tile_to_render_x, tile_to_render_y);
+						std::list<Item *> items = f->get_items_at(tile_to_render_x, tile_to_render_y);
 						Item *it = items.back();
 						int gid = get_tile_to_render(it);
 						render_item(destination, gid, screen_x, screen_y);
@@ -1285,15 +1285,15 @@ void Render::render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_
 //
 // Arguments:
 //   destination - the bitmap to draw to
-//   m - the maze to render
+//   f - the dungeon floor to render
 //   maze_x, maze_y - the position of the maze at the player's current location
 //
 // Returns:
 //   Nothing
 //----------------------------------------------------------------------------------
-void Render::render_world_at_player(BITMAP *destination, Maze *m, int maze_x, int maze_y) {
+void Render::render_world_at_player(BITMAP *destination, DungeonFloor *f, int maze_x, int maze_y) {
 	// Render the world with the tile at the player's position (7,6) equal to (maze_x, maze_y)
-	render_world_at(destination, m, maze_x - UiConsts::PLAYER_PLAY_AREA_X, maze_y - UiConsts::PLAYER_PLAY_AREA_Y);
+	render_world_at(destination, f, maze_x - UiConsts::PLAYER_PLAY_AREA_X, maze_y - UiConsts::PLAYER_PLAY_AREA_Y);
 }
 
 //------------------------------------------------------------------------------

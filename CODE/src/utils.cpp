@@ -24,67 +24,301 @@
 
 #include "globals.h"
 
-// Non-class update functions.  They might go into the class eventually
+//------------------------------------------------------------------------------
+// Deallocates memory used by the item and enemies lists.
+//
+// Arguments:
+//	 None
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void DungeonFloor::clear_lists() {
+	// An iterator for the entire map structure
+	std::map <std::pair<int, int>, std::list<Item*> >::iterator it;
+	// An iterator for a list in the structure
+	std::list<Item *>::iterator list_it;
 
-void update_main_game_display(void) {
-	if (g_state_flags.cur_substate == GAME_SUBSTATE_MAP) {
-		g_render.render_map(g_back_buffer);
-	}
-	else if (g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY || g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY_MENU) {
-		g_render.render_inventory(g_back_buffer);
-	}
-	else if (g_state_flags.cur_substate == GAME_SUBSTATE_STATS) {
-		g_render.render_stats_screen(g_back_buffer);
-	}
-	else {		
-		if (g_state_flags.update_maze_area == true) {
-			// Add the areas around the player to the map bitmap
-			//std::cout << "update_display: adding area to map bitmap" << std::endl;
-			g_render.add_area_to_map_bitmap(g_dungeon.maze, g_player.get_x_pos(), g_player.get_y_pos());
-			//std::cout << "update_display: Added area to map bitmap" << std::endl;
-			// Light the space around the player
-			g_dungeon.maze->change_lit_status_around(g_player.get_x_pos(), g_player.get_y_pos(), true);
-			//std::cout << "update_display: Changed lit status" << std::endl;
-			// Check what room the player is in, if any
-			int room_to_light = g_dungeon.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos());
-			int last_player_room = g_player.get_last_room_entered();
-			//std::cout << "update_display: Got last room player was in" << std::endl;
-			// If the player was in a room but no longer is, then darken the room
-			if(last_player_room != -1 && room_to_light == -1) {
-				g_dungeon.maze->change_room_lit_status(last_player_room, false);
+	// Iterate through the item map and remove individual sublists found
+	for (it = items.begin(); it != items.end(); ++it) {
+		//std::cout << "Found a list" << std::endl;
+		// Iterate through the found list and delete any items found in it
+		for (list_it = it->second.begin(); list_it != it->second.end(); ++list_it) {
+			if (*list_it != NULL) {
+				//std::cout << "  Found an Item" << std::endl;
+				delete *list_it;
 			}
-			// If the player wasn't in a room but now is, then light up the room
-			if(last_player_room == -1 && room_to_light != -1) {
-				g_dungeon.maze->change_room_lit_status(room_to_light, true);
-				// TODO: restructure this!
-				// Mark the room itself as visited so rendering the map will
-				// show the room even at the start of the game
-				g_dungeon.maze->set_room_entered_state(room_to_light, true);
-			}
-			//std::cout << "update_display: Finished processing lighting" << std::endl;
+		}
+	}	
 
-			// Draw the world display area
-			g_render.render_world_at_player(g_back_buffer, g_dungeon.maze, g_player.get_x_pos(), g_player.get_y_pos());
-			//std::cout << "update_display: rendered world" << std::endl;
-			g_state_flags.update_maze_area = false;
+	// Deallocate any remaining Enemies in the list before clearing it
+	std::list<Enemy *>::iterator enemy_it;
+	for (enemy_it = enemies.begin(); enemy_it != enemies.end(); ++enemy_it) {
+		if (*enemy_it != NULL) {
+			delete *enemy_it;
 		}
 	}
 
+	// Reset the actual maps/lists
+	items.clear();
+	enemies.clear();
+}
+
+//------------------------------------------------------------------------------
+// Populates the maze with a quantity of generated enemies of appropriate enemy 
+// level.
+//
+// Arguments:
+//	 min_enemies - the minimum number of enemies to create
+//   max_enemies - the maximum number of enemies to create
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void DungeonFloor::generate_enemies(int min_enemies, int max_enemies) {
+	// Pick a number of enemies
+	// For each number
+	//	 - Create an enemy
+	// Loop:
+	//   - Pick a location
+	//   - Check existing enemies to see if an enemy already sits there
+	//      - If so, pick another location, repeat loop
+	//      - if not
+	//        - Add the enemy to the list of enemies
+	//        - Mark done with iteration
+	
+	int num_enemies = (rand() % (max_enemies - min_enemies)) + min_enemies;
+	bool is_placed;
+	for (int i = 0; i < num_enemies; ++i) {
+		is_placed = false;
+		do {
+			int x = rand() % maze->get_width();
+			int y = rand() % maze->get_height();
+			// Only place an enemy on a carved square with no stairs
+			if (maze->is_carved(x, y) && maze->stairs_here(x, y) == MazeConsts::NO_STAIRS) {
+				// Check to see if this space is already taken by an enemy
+				if (true) {
+					// If not, create one and put it here
+					Enemy *e = EnemyGenerator::generate(ilevel);
+					add_enemy(x, y, e);
+					is_placed = true;
+				}
+			}
+		} while (!is_placed);
+	}
+}
+
+//------------------------------------------------------------------------------
+// Adds an enemy to the maze at the specified location
+//
+// Arguments:
+//	 x, y - the coordinates of the location of the enemy
+//   e - the enemy to add
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void DungeonFloor::add_enemy(int x, int y, Enemy *e) {
+	e->set_pos(x, y);
+	enemies.push_back(e);
+}
+
+
+//------------------------------------------------------------------------------
+// Populates the maze with a quantity of generated items of appropriate item
+// level.
+//
+// Arguments:
+//	 min_items - the minimum number of items to create
+//   max_items - the maximum number of items to create
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void DungeonFloor::generate_items(int min_items, int max_items) {
+	int num_items = (rand() % (max_items - min_items)) + min_items;
+	bool is_placed;
+	//std::cout << "maze_generator: Adding " << num_items << " items..." << std::endl;
+
+	for (int i = 0; i < num_items; ++i) {
+		is_placed = false;
+		do {
+			int x = rand() % maze->get_width();
+			int y = rand() % maze->get_height();
+			if (maze->is_carved(x, y) && maze->stairs_here(x, y) == MazeConsts::NO_STAIRS) {
+				std::pair<int, int> p = std::make_pair(x, y);
+				Item *item = ItemGenerator::generate(ilevel);
+				add_item(x, y, item);
+				//std::cout << "maze_generator: Added item " << item->get_full_name() << " at position (" << x << ", " << y << ")" << std::endl;
+				is_placed = true;
+			}
+		} while (!is_placed);
+	}
+	//std::cout << "maze_generator:  Finished adding items" << std::endl;
+}
+
+//------------------------------------------------------------------------------
+// Adds an item to the maze at the specified location
+//
+// Arguments:
+//	 x, y - the coordinates of the location of the item
+//   i - the item to add
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void DungeonFloor::add_item(int x, int y, Item *i) {
+	std::pair<int, int> p = std::make_pair(x, y);
+	items[p].push_back(i);
+}
+
+//------------------------------------------------------------------------------
+// Gets a list of items at the specified location
+//
+// Arguments:
+//   x, y - the coordinates of the location to retreive items
+//
+// Returns:
+//   A list of Item* containing any items at that location.  Returns
+//   an empty list if there are no items.
+//------------------------------------------------------------------------------
+std::list<Item *> DungeonFloor::get_items_at(int x, int y) {
+	std::list<Item *> item_list;
+	std::map <std::pair<int, int>, std::list<Item*> >::iterator it;
+
+	std::pair<int, int> p = std::make_pair(x, y);
+	it = items.find(p);
+	if (it != items.end()) {
+		//std::cout << "get_items_at: Found a list!" << std::endl;
+		item_list = it->second;
+	}
+	else {
+		//std::cout << "get_items_at: Didn't find a list, will return the default" << std::endl;
+	}
+
+	return item_list;
+}
+
+//------------------------------------------------------------------------------
+// Gets the number of items sitting at the specified location
+//
+// Arguments:
+//   x, y - the coordinates of the item to check
+//
+// Returns:
+//   The number of items at the location
+//------------------------------------------------------------------------------
+int DungeonFloor::get_num_items_at(int x, int y) {
+	std::list<Item *> item_list = get_items_at(x, y);
+	return item_list.size();
+}
+
+//------------------------------------------------------------------------------
+// Removes the last item from the item list for the specified spot in the maze
+//
+// Arguments:
+//   x, y - the coordinates of the location to process
+// 
+// Returns:
+//   nothing
+//
+// Notes:
+//   When picking up an item, it's always pulled from the back of the list,
+//   so there's no equivalent (remove_item_from_front_at) function.
+//------------------------------------------------------------------------------
+
+void DungeonFloor::remove_item_from_end_at(int x, int y) {
+	Item *i;
+	int num_items = get_num_items_at(x, y);
+	if (num_items > 0) {
+		//std::cout << "Number of items was " << num_items << std::endl;
+		std::pair<int, int> p = std::make_pair(x, y);
+
+		// Remove the pointer from the list
+		items[p].pop_back();
+
+		num_items = get_num_items_at(x, y);
+		//std::cout << "Number of items is now " << num_items << std::endl;
+	}
+}
+
+//------------------------------------------------------------------------------
+// Updates the main display for the main game state
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void update_main_game_display(void) {
+	// Update the maze area if requested
+	if (g_state_flags.update_maze_area == true) {
+		// Add the areas around the player to the map bitmap
+		//std::cout << "update_display: adding area to map bitmap" << std::endl;
+		g_render.add_area_to_map_bitmap(&g_dungeon, g_player.get_x_pos(), g_player.get_y_pos());
+		//std::cout << "update_display: Added area to map bitmap" << std::endl;
+		// Light the space around the player
+		g_dungeon.maze->change_lit_status_around(g_player.get_x_pos(), g_player.get_y_pos(), true);
+		//std::cout << "update_display: Changed lit status" << std::endl;
+		// Check what room the player is in, if any
+		int room_to_light = g_dungeon.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos());
+		int last_player_room = g_player.get_last_room_entered();
+		//std::cout << "update_display: Got last room player was in" << std::endl;
+		// If the player was in a room but no longer is, then darken the room
+		if(last_player_room != -1 && room_to_light == -1) {
+			g_dungeon.maze->change_room_lit_status(last_player_room, false);
+		}
+		// If the player wasn't in a room but now is, then light up the room
+		if(last_player_room == -1 && room_to_light != -1) {
+			g_dungeon.maze->change_room_lit_status(room_to_light, true);
+			// TODO: restructure this!
+			// Mark the room itself as visited so rendering the map will
+			// show the room even at the start of the game
+			g_dungeon.maze->set_room_entered_state(room_to_light, true);
+		}
+		//std::cout << "update_display: Finished processing lighting" << std::endl;
+
+		// Draw the world display area
+		g_render.render_world_at_player(g_back_buffer, &g_dungeon, g_player.get_x_pos(), g_player.get_y_pos());
+		//std::cout << "update_display: rendered world" << std::endl;
+		g_state_flags.update_maze_area = false;
+	}
+
+	// Update the status area if requested
 	if(g_state_flags.update_status_dialog == true) {
 		g_render.render_status_base(g_back_buffer);
 		g_render.render_status_ui(g_back_buffer);
 		g_state_flags.update_status_dialog = false;
 	}
 
+	// Update the HP and exp bars if requested
 	if(g_state_flags.update_status_hp_exp == true) {
 		g_render.render_hp_exp_bar(g_back_buffer);
 		g_state_flags.update_status_hp_exp = false;
 	}
 
+	// Update the text dialog if requested
 	if(g_state_flags.update_text_dialog == true) {
 		g_render.render_text_base(g_back_buffer, g_state_flags.text_log_extended);
 		g_render.render_text_log(g_back_buffer, g_state_flags.text_log_extended);
 		g_state_flags.update_text_dialog = false;
+	}
+
+	// If we're in a substate, render on top of everything else as needed
+	switch (g_state_flags.cur_substate) {
+		case GAME_SUBSTATE_MAP:
+			g_render.render_map(g_back_buffer);
+			break;
+		case GAME_SUBSTATE_INVENTORY:
+		case GAME_SUBSTATE_INVENTORY_MENU:
+			g_render.render_inventory(g_back_buffer);
+			break;
+		case GAME_SUBSTATE_STATS:
+			g_render.render_stats_screen(g_back_buffer);
+			break;
+		default:
+			break;
 	}
 }
 
@@ -96,8 +330,6 @@ void update_main_game_display(void) {
 //
 // Returns:
 //   Nothing
-//
-// TODO: Move this to render.cpp
 //------------------------------------------------------------------------------
 void update_display(void) {
 	switch (g_state_flags.cur_state) {
@@ -287,8 +519,10 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 		delete d.maze;
 	}
 
-	//std::cout << "generate_new_dungeon_floor: Generating floor " << level << "..." << std::endl;
+	// Clear the enemies and items lists
+	d.clear_lists();
 
+	//std::cout << "generate_new_dungeon_floor: Generating floor " << level << "..." << std::endl;
 	d.depth = level;
 
 	// Set the maximum depth and size for the current dungeon
@@ -326,7 +560,14 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 	if(d.depth >= d.max_depth)
 		d.maze->set_stair_gen_behavior(MazeConsts::GENERATE_NO_DOWN_STAIRS);
 
+	// Generate the maze structure itself
 	d.maze->generate();
+
+	// Generate a few items on the ground
+	d.generate_items(10, 30);
+
+	// Populate the maze with an assortment of enemies
+	d.generate_enemies(20, 30);
 
 	std::pair<int, int> stairLoc;
 	// Place the player on a random set of stairs based on where they came from
@@ -359,7 +600,7 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 	g_state_flags.text_log_extended = false;
 
 	// Clear the map bitmap
-	g_render.initialize_map_bitmap(g_dungeon.maze);
+	g_render.initialize_map_bitmap(&g_dungeon);
 
 	// Force an explicit display update so the user can see the world right away
 	update_display();
@@ -435,11 +676,11 @@ void change_state(int new_state) {
 //   Nothing
 //------------------------------------------------------------------------------
 void add_items_at_player_to_log(void) {
-	int item_count = g_dungeon.maze->get_num_items_at(g_player.get_x_pos(), g_player.get_y_pos());
+	int item_count = g_dungeon.get_num_items_at(g_player.get_x_pos(), g_player.get_y_pos());
 	int idx = 0;
 
 	if (item_count > 0) {
-		std::list<Item *> items = g_dungeon.maze->get_items_at(g_player.get_x_pos(), g_player.get_y_pos());
+		std::list<Item *> items = g_dungeon.get_items_at(g_player.get_x_pos(), g_player.get_y_pos());
 		for (std::list<Item *>::iterator it = items.begin(); it != items.end(); ++ it) {
 			if (idx == 0)
 				g_text_log.put_line("You see " + (*it)->get_full_name() + ".");
@@ -468,7 +709,7 @@ void drop_item_at(Item *i, int x, int y) {
 	else {
 		if (i != NULL) {
 			g_text_log.put_line("Dropped the " + i->get_full_name() + ".");
-			g_dungeon.maze->add_item(x, y, i);
+			g_dungeon.add_item(x, y, i);
 			g_state_flags.update_inventory_items = true;
 			g_state_flags.update_inventory_items = true;
 			g_state_flags.update_inventory_description = true;
@@ -494,13 +735,13 @@ void pick_up_item_at(int x, int y) {
     std::string item_name;
 
     // Check for items.  Only do something if there are.
-    if (g_dungeon.maze->get_num_items_at(x, y) <= 0) {
+    if (g_dungeon.get_num_items_at(x, y) <= 0) {
         return;
     } 
     else {
         // Get the item list and process the one at the end 
         // (which is the one that the player can see)
-        std::list<Item *> items = g_dungeon.maze->get_items_at(x, y);
+        std::list<Item *> items = g_dungeon.get_items_at(x, y);
 
         // Get the item name.  Currency items and stackable items
         // will be deleted before the end of the function so we'll 
@@ -547,7 +788,7 @@ void pick_up_item_at(int x, int y) {
         
         // If an item was picked up, tell the player.
         if (picked_up) {
-            g_dungeon.maze->remove_item_from_end_at(x, y);
+            g_dungeon.remove_item_from_end_at(x, y);
             g_text_log.put_line("Picked up " + item_name + ".");
             g_state_flags.update_maze_area = true;
             g_state_flags.update_display = true;
@@ -1127,10 +1368,10 @@ int get_tile_to_render(Item *i) {
 //   Nothing
 //----------------------------------------------------------------------------
 void identify_previously_known_items_at_player() {
-	int item_count = g_dungeon.maze->get_num_items_at(g_player.get_x_pos(), g_player.get_y_pos());
+	int item_count = g_dungeon.get_num_items_at(g_player.get_x_pos(), g_player.get_y_pos());
 
 	if (item_count > 0) {
-		std::list<Item *> items = g_dungeon.maze->get_items_at(g_player.get_x_pos(), g_player.get_y_pos());
+		std::list<Item *> items = g_dungeon.get_items_at(g_player.get_x_pos(), g_player.get_y_pos());
 		for (std::list<Item *>::iterator it = items.begin(); it != items.end(); ++ it) {
 			identify_if_previously_known((*it));
 		}

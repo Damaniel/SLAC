@@ -108,6 +108,9 @@ int main(void) {
 		delete g_dungeon.maze;
 	}
 	
+	//std::cout << "main: clearing remaining items/enemies" << std::endl;
+	g_dungeon.clear_lists();
+	
 	unload_resources();
 	set_gfx_mode(GFX_TEXT, 80, 25, 0, 0);
 

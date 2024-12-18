@@ -303,7 +303,7 @@ public:
     void remove_prefix() { add_prefix(-1); }
     void remove_suffix() { add_suffix(-1); }
 
-    virtual ~Equipment() { /*std::cout << "   Deleting equipment" << std::endl; */ }
+    virtual ~Equipment() { /*std::cout << "   Deleting equipment" << std::endl;*/ }
 };
 
 // A weapon - a piece of equipment that has an attack rating and is equipped in a weapon slot
@@ -437,7 +437,7 @@ public:
     void use() {}
     std::string get_full_name();
     std::string get_type_name();
-    ~Artifact() { /*std::cout << "   Deleting artifact" << std::endl; */ }
+    ~Artifact() { /*std::cout << "   Deleting artifact" << std::endl;*/ }
 };
 
 class Currency: public Item {
@@ -467,7 +467,7 @@ public:
     void use() {}
     std::string get_full_name();
     std::string get_type_name();
-    ~Currency() { /* std::cout << "   Deleting currency" << std::endl; */ }
+    ~Currency() { /*std::cout << "   Deleting currency" << std::endl;*/  }
 };
 
 // An inventory.  This consists of a list of Item pointers, plus
@@ -488,7 +488,6 @@ public:
     void remove_item_in_slot(int slot);
     void dump_inventory(void);
     int get_stackable_item_slot(Item *it);
-    //void drop_item_qty_in_slot(int slot, int quantity);
 };
 
 extern Inventory *g_inventory;

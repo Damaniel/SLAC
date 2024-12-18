@@ -27,6 +27,9 @@
 // Game-specific includes
 #include "globals.h"
 
+// Forward declaration for DungeonFloor
+struct DungeonFloor;
+
 namespace UiConsts {
 	// Number of characters defined in each instance of a font
 	const int FONT_ENTRIES = 96;
@@ -503,12 +506,12 @@ class Render {
 		void render_item_submenu(BITMAP *destination);
 		void render_ui_box(BITMAP *destination, int x1, int x2, int y1, int);
 		int get_prop_text_width(char *text, int style);	
-		void fill_in_map_square(Maze *m, int x, int y);
+		void fill_in_map_square(DungeonFloor *f, int x, int y);
 	public:
 		Render();
-		void initialize_map_bitmap(Maze *m);
-		void add_area_to_map_bitmap(Maze *m, int x, int y);
-		void fill_in_entire_map(Maze *m);
+		void initialize_map_bitmap(DungeonFloor *f);
+		void add_area_to_map_bitmap(DungeonFloor *f, int x, int y);
+		void fill_in_entire_map(DungeonFloor *f);
 		void copy_data_to_offscreen_vram(void);		
 		void render_fixed_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx);		
 		void render_prop_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx, int style);
@@ -519,8 +522,8 @@ class Render {
 		void render_text(BITMAP *dest, char *text, int x_pos, int y_pos, int font_idx, int style, int alignment);
 		void render_text_base(BITMAP *destination, bool extended);		
 		void render_text_log(BITMAP *destination, bool extended);
-		void render_world_at(BITMAP *destination, Maze *m, int maze_x, int maze_y);
-		void render_world_at_player(BITMAP *destination, Maze *m, int maze_x, int maze_y);
+		void render_world_at(BITMAP *destination, DungeonFloor *f, int maze_x, int maze_y);
+		void render_world_at_player(BITMAP *destination, DungeonFloor *f, int maze_x, int maze_y);
 		void render_stats_screen(BITMAP *destination);
 		void render_hp_exp_bar(BITMAP *destination);
 };

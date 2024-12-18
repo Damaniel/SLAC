@@ -3,15 +3,30 @@
 
 #include "globals.h"
 
+// Forward declaration for Render class
+class Render;
+
 // Utility structures
 struct DungeonFloor {
-    Maze *maze;
-    int maze_id;            // which maze we're in
-    int depth;              // The current depth
-    int max_depth;          // The deepest floor allowed
-    int ilevel;             // The ilevel of the current floor
-    int width;              // The width of the dungeon floor
-    int height;             // The height of the dungeon floor
+    Maze *maze;                                                 // The maze itself
+	std::map <std::pair<int, int>, std::list<Item*> > items;    // The items in the maze
+	std::list<Enemy*> enemies;                                  // The enemies in the maze
+    int maze_id;                                                // which maze we're in
+    int depth;                                                  // The current depth
+    int max_depth;                                              // The deepest floor allowed
+    int ilevel;                                                 // The ilevel of the current floor
+    int width;                                                  // The width of the dungeon floor
+    int height;                                                 // The height of the dungeon floor
+
+    // Functions to add features to the maze
+    void clear_lists();
+    void add_enemy(int x, int y, Enemy *e);
+	void generate_enemies(int min_enemies, int max_enemies);
+	void add_item(int x, int y, Item *i);
+	std::list<Item *> get_items_at(int x, int y);
+	void remove_item_from_end_at(int x, int y);
+	int get_num_items_at(int x, int y);
+	void generate_items(int min_items, int max_items);
 };
 
 // A collection of flags relevant to the game loop.  The game loop will want
