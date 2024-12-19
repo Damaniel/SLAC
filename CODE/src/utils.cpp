@@ -1548,3 +1548,125 @@ void get_enemy_distances(std::list<Enemy *> &el, int x, int y) {
 
 	sort_enemy_list(el);
 }
+
+bool is_enemy_here(std::list<Enemy *> &el, int x, int y) {
+	std::list<Enemy *>::iterator enemy_it;
+
+	for(enemy_it = el.begin(); enemy_it != el.end(); ++enemy_it) {
+		if ((*enemy_it)->get_x_pos() == x && (*enemy_it)->get_y_pos() == y)
+			return true;
+	}
+
+	return false;
+}
+
+bool is_valid_enemy_position(int x, int y) {
+	if (!g_dungeon.maze->is_carved(x,y))
+		return false;
+	if (is_enemy_here(g_dungeon.enemies, x, y))
+		return false;
+	if (x == g_player.get_x_pos() && y == g_player.get_y_pos())
+		return false;
+
+	return true;
+}
+
+void update_enemy_position(Enemy *e) {
+	// Does the following :
+	//   - For each of 8 directions
+	//      - If the position can be moved to (no wall, no enemy, no player)
+	//          - calculate the distance from the player
+	//          - push a pair <direction, distance> to a vector
+	//	 - With the resulting vector:
+	//   - Make a pass, find the lowest distance and add each one
+	//   - Pick a random element from the second vector
+	//   - Use the direction component of the selected element to move the enemy
+
+	// Being greedy, this will lead to non-optimal behavior (enemies getting stuck
+	// behind walls, and such), but non-optimal behavior is much better than the
+	// cost and complexity of A*, and behavior in more open spaces will be just fine.
+	int x = e->get_x_pos();
+	int y = e->get_y_pos();
+	int px = g_player.get_x_pos();
+	int py = g_player.get_y_pos();
+
+	std::vector<std::pair<int, int> > directions;
+	std::vector<int> lowest;
+
+	if (is_valid_enemy_position(x - 1, y - 1))
+		directions.push_back(std::make_pair(MazeConsts::DIRECTION_NORTHWEST, get_diagonal_distance_between(x - 1, y - 1, px, py)));
+	if (is_valid_enemy_position(x, y - 1))
+		directions.push_back(std::make_pair(MazeConsts::DIRECTION_NORTH, get_diagonal_distance_between(x, y - 1, px, py)));
+	if (is_valid_enemy_position(x + 1, y - 1))
+		directions.push_back(std::make_pair(MazeConsts::DIRECTION_NORTHEAST, get_diagonal_distance_between(x + 1, y - 1, px, py)));
+	if (is_valid_enemy_position(x - 1, y))
+		directions.push_back(std::make_pair(MazeConsts::DIRECTION_WEST, get_diagonal_distance_between(x - 1, y, px, py)));
+	if (is_valid_enemy_position(x + 1, y))
+		directions.push_back(std::make_pair(MazeConsts::DIRECTION_EAST, get_diagonal_distance_between(x + 1, y, px, py)));
+	if (is_valid_enemy_position(x - 1, y + 1))
+		directions.push_back(std::make_pair(MazeConsts::DIRECTION_SOUTHWEST, get_diagonal_distance_between(x - 1, y + 1, px, py)));
+	if (is_valid_enemy_position(x, y + 1))
+		directions.push_back(std::make_pair(MazeConsts::DIRECTION_SOUTH, get_diagonal_distance_between(x, y + 1, px, py)));
+	if (is_valid_enemy_position(x + 1, y + 1))
+		directions.push_back(std::make_pair(MazeConsts::DIRECTION_SOUTHEAST, get_diagonal_distance_between(x + 1, y + 1, px, py)));
+
+	// The enemy can't move in any direction; return
+	if (directions.size() == 0) {
+		std::cout << "  Enemy can't move" << std::endl;
+		return;
+	}
+
+	int lowest_distance = 1000;
+	// Loop through, find the lowest distance
+	for (std::vector<std::pair<int, int> >::iterator it = directions.begin(); it != directions.end(); ++it) {
+		if ((*it).second <= lowest_distance)
+			lowest_distance = (*it).second;
+	}
+
+	// Loop through again, pull out all that have the lowest distance
+	for (std::vector<std::pair<int, int> >::iterator it = directions.begin(); it != directions.end(); ++it) {
+		if ((*it).second == lowest_distance)
+			lowest.push_back((*it).first);
+	}
+
+	std::cout << "Number of lowest values = " << lowest.size() << std::endl;
+
+	int dir = rand() % lowest.size();
+	switch (dir) {
+		case MazeConsts::DIRECTION_NORTHWEST:
+			std::cout << "  Enemy moves northwest" << std::endl;
+			e->set_pos(x - 1, y - 1);
+			break;
+		case MazeConsts::DIRECTION_NORTH:
+			std::cout << "  Enemy moves north" << std::endl;
+			e->set_pos(x, y - 1);
+			break;
+		case MazeConsts::DIRECTION_NORTHEAST:
+			std::cout << "  Enemy moves northeast" << std::endl;
+			e->set_pos(x + 1, y - 1);
+			break;
+		case MazeConsts::DIRECTION_WEST:
+			std::cout << "  Enemy moves west" << std::endl;
+			e->set_pos(x - 1, y);
+			break;
+		case MazeConsts::DIRECTION_EAST:
+			std::cout << "  Enemy moves east" << std::endl;
+			e->set_pos(x + 1, y);
+			break;
+		case MazeConsts::DIRECTION_SOUTHWEST:
+			std::cout << "  Enemy moves southwest" << std::endl;
+			e->set_pos(x - 1, y + 1);
+			break;
+		case MazeConsts::DIRECTION_SOUTH:
+			std::cout << "  Enemy moves south" << std::endl;
+			e->set_pos(x, y + 1);
+			break;
+		case MazeConsts::DIRECTION_SOUTHEAST:
+			std::cout << "  Enemy moves southeast" << std::endl;
+			e->set_pos(x + 1, y + 1);
+			break;
+		default:
+			std::cout << "  Enemy doesn't move" << std::endl;
+			break;
+	}
+}

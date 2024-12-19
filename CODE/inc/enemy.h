@@ -42,6 +42,7 @@ typedef struct {
 
 class Enemy {
 private:
+    // positional
     int id;                   // The enemy id in the enemy definition array
     unsigned short x_pos;     // Position in the dungeon
     unsigned short y_pos;             
@@ -49,6 +50,10 @@ private:
                               // which enemies to process on a turn)
     // stats
     unsigned short hp;        // The current enemy HP
+
+    // behavior
+    bool has_seen_player;      // Has the enemy seen the player before?
+    bool is_pursuing_player;   // Is the enemy currently chasing the player?
 
     // The other stats live in the enemy table, for now.
     // If we add the ability for skills to adjust enemy stats,

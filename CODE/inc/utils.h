@@ -125,8 +125,13 @@ int get_manhattan_distance_between(int x1, int y1, int x2, int y2);
 int get_distance_between(int x1, int y1, int x2, int y2);
 
 // Enemy functions
-bool distance_sort(Enemy *first, Enemy *second);
+bool enemy_distance_sort(Enemy *first, Enemy *second);
 void sort_enemy_list(std::list<Enemy *> &el);
 void get_enemy_distances(std::list<Enemy *> &el, int x, int y);
+bool is_valid_enemy_position(int x, int y);
+bool is_enemy_here(std::list<Enemy *> &el, int x, int y);
+
+// Search functions
+void update_enemy_position(Enemy *e);
 
 #endif

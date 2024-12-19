@@ -33,6 +33,12 @@ namespace MazeConsts {
 	const int DIRECTION_EAST = 2;
 	const int DIRECTION_WEST = 3;
 
+	// Additional directions used by consumers of the maze
+	const int DIRECTION_NORTHWEST = 4;
+	const int DIRECTION_NORTHEAST = 5;
+	const int DIRECTION_SOUTHWEST = 6;
+	const int DIRECTION_SOUTHEAST = 7;
+	
 	// Square types used by the maze generator
 	const int EMPTY = 0;
 	const int PASSAGE = 1;

@@ -30,6 +30,7 @@
 // C++ includes
 #include <vector>
 #include <string>
+#include <queue>
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
