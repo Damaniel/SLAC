@@ -1549,6 +1549,16 @@ void get_enemy_distances(std::list<Enemy *> &el, int x, int y) {
 	sort_enemy_list(el);
 }
 
+//----------------------------------------------------------------------------
+// Checks if an enemy is located in the specified position
+//
+// Arguments:
+//	el - the enemy list
+//  x, y - the point
+//
+// Returns:
+//	True if an enemy is located there, false otherwise
+//----------------------------------------------------------------------------
 bool is_enemy_here(std::list<Enemy *> &el, int x, int y) {
 	std::list<Enemy *>::iterator enemy_it;
 
@@ -1560,17 +1570,39 @@ bool is_enemy_here(std::list<Enemy *> &el, int x, int y) {
 	return false;
 }
 
+//----------------------------------------------------------------------------
+// Checks if the specified location is a place an enemy can be
+//
+// Arguments:
+//  x, y - the point
+//
+// Returns:
+//	True if an enemy can be there, false otherwise
+//----------------------------------------------------------------------------
 bool is_valid_enemy_position(int x, int y) {
+	// Is the square a floor?
 	if (!g_dungeon.maze->is_carved(x,y))
 		return false;
+	// Does the square already contain an enemy?
 	if (is_enemy_here(g_dungeon.enemies, x, y))
 		return false;
+	// Does the square contain the player?
 	if (x == g_player.get_x_pos() && y == g_player.get_y_pos())
 		return false;
 
+	// If none are true, the enemy can be here.
 	return true;
 }
 
+//----------------------------------------------------------------------------
+// Determines the direction an enemy should move on its turn
+//
+// Arguments:
+//  e - the enemy
+//
+// Returns:
+//   Nothing.  This function directly moves the enemy.
+//----------------------------------------------------------------------------
 void update_enemy_position(Enemy *e) {
 	// Does the following :
 	//   - For each of 8 directions
@@ -1612,7 +1644,7 @@ void update_enemy_position(Enemy *e) {
 
 	// The enemy can't move in any direction; return
 	if (directions.size() == 0) {
-		std::cout << "  Enemy can't move" << std::endl;
+		//std::cout << "  Enemy can't move" << std::endl;
 		return;
 	}
 
@@ -1629,44 +1661,44 @@ void update_enemy_position(Enemy *e) {
 			lowest.push_back((*it).first);
 	}
 
-	std::cout << "Number of lowest values = " << lowest.size() << std::endl;
+	//std::cout << "Number of lowest values = " << lowest.size() << std::endl;
 
 	int dir = rand() % lowest.size();
-	switch (dir) {
+	switch (lowest[dir]) {
 		case MazeConsts::DIRECTION_NORTHWEST:
-			std::cout << "  Enemy moves northwest" << std::endl;
+			//std::cout << "  Enemy moves northwest" << std::endl;
 			e->set_pos(x - 1, y - 1);
 			break;
 		case MazeConsts::DIRECTION_NORTH:
-			std::cout << "  Enemy moves north" << std::endl;
+			//std::cout << "  Enemy moves north" << std::endl;
 			e->set_pos(x, y - 1);
 			break;
 		case MazeConsts::DIRECTION_NORTHEAST:
-			std::cout << "  Enemy moves northeast" << std::endl;
+			//std::cout << "  Enemy moves northeast" << std::endl;
 			e->set_pos(x + 1, y - 1);
 			break;
 		case MazeConsts::DIRECTION_WEST:
-			std::cout << "  Enemy moves west" << std::endl;
+			//std::cout << "  Enemy moves west" << std::endl;
 			e->set_pos(x - 1, y);
 			break;
 		case MazeConsts::DIRECTION_EAST:
-			std::cout << "  Enemy moves east" << std::endl;
+			//std::cout << "  Enemy moves east" << std::endl;
 			e->set_pos(x + 1, y);
 			break;
 		case MazeConsts::DIRECTION_SOUTHWEST:
-			std::cout << "  Enemy moves southwest" << std::endl;
+			//std::cout << "  Enemy moves southwest" << std::endl;
 			e->set_pos(x - 1, y + 1);
 			break;
 		case MazeConsts::DIRECTION_SOUTH:
-			std::cout << "  Enemy moves south" << std::endl;
+			//std::cout << "  Enemy moves south" << std::endl;
 			e->set_pos(x, y + 1);
 			break;
 		case MazeConsts::DIRECTION_SOUTHEAST:
-			std::cout << "  Enemy moves southeast" << std::endl;
+			//std::cout << "  Enemy moves southeast" << std::endl;
 			e->set_pos(x + 1, y + 1);
 			break;
 		default:
-			std::cout << "  Enemy doesn't move" << std::endl;
+			//std::cout << "  Enemy doesn't move" << std::endl;
 			break;
 	}
 }

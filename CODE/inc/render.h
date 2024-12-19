@@ -355,6 +355,11 @@ namespace UiConsts {
 	// from the player to the edge of the screen, plus a little bit more
 	const int MAXIMUM_ENEMY_RENDER_DISTANCE = 18;
 
+	// Only consider enemies closer than this when performing enemy 
+	// actions.  This distance is the same as the render distance for
+	// the time being
+	const int MAXIMUM_ENEMY_AI_DISTANCE = 18;
+	
 	// The base tiles that make up the fixed portions of a dungeon level
 	// They map to tile offsets in the dungeon world tiles
 	enum {

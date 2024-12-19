@@ -40,9 +40,29 @@ void process_movement_common_tasks(void) {
     // Show the items on the ground in the player log
 	add_items_at_player_to_log();
 
+    // TODO: both this section (and player movement) need to be moved into a common
+    // function that accounts for player and enemy speed, and which handles
+    // enemy and player interaction
+    // ----------------------------------------------------------------------------
+
     // Recalculate enemy distances
-    // TODO: This (and enemy updates) should be handled in a dedicated function
 	get_enemy_distances(g_dungeon.enemies, g_player.get_x_pos(), g_player.get_y_pos());
+
+    // Iterate through each enemy in range and move them
+    std::list<Enemy *>::iterator enemy_it = g_dungeon.enemies.begin();
+	bool done = false;
+	while (enemy_it != g_dungeon.enemies.end() && !done) {
+		if ((*enemy_it)->get_distance() <= UiConsts::MAXIMUM_ENEMY_AI_DISTANCE) {
+            update_enemy_position(*enemy_it);
+		}
+		else {
+			// Every other enemy is too far away; we're done
+			done = true;
+		}
+		++enemy_it;
+	}
+    
+    //------------------------------------------------------------------------------
 
     // Redraw the maze area
 	g_state_flags.update_maze_area = true;
