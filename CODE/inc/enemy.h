@@ -99,6 +99,7 @@ public:
     int get_rarity();
     int get_ilevel();
     int get_max_items();
+    bool check_if_can_see(int x, int y);
 };
 
 class EnemyGenerator {

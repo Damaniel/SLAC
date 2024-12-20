@@ -38,6 +38,7 @@ void Enemy::init(int eid) {
     y_pos = 0;
     distance = 0;
     residual_action_points = 0;
+    has_seen_player = false;
 }
 
 //----------------------------------------------------------------------------
@@ -369,4 +370,54 @@ Enemy* EnemyGenerator::generate(int elevel) {
 Enemy* EnemyGenerator::generate_arbitrary(int id) {
     Enemy *e = new Enemy(id);
     return e;
+}
+
+//----------------------------------------------------------------------------
+// Determines if the enemy can see a target at the specified position
+//
+// Arguments:
+//   x, y - the position to check
+//
+// Returns:
+//   True if the target can be seen, false otherwise
+//----------------------------------------------------------------------------
+bool Enemy::check_if_can_see(int x, int y) {
+    // To do the check, we'll essentially use an integer-only version of 
+    // something like Bresenham's algorithm.  As we iterate through 
+    // each point of the 'line', if it hits a wall, the target can't be seen.
+    int dx = abs(x - x_pos);
+    int sx = (x_pos < x) ? 1 : -1;
+    int dy = -abs(y - y_pos);
+    int sy = (y_pos < y) ? 1 : -1;
+    int error = dx + dy;
+    bool carved;
+
+    int cur_x = x_pos;
+    int cur_y = y_pos;
+    int e2;
+
+    //std::cout << "check_if_can_see: sx = " << sx << ", sy = " << sy << ", dx = " << dx << ", dy = " << dy << ", error = " << error << std::endl;
+    //std::cout << "check_if_can_see: " << get_name() << " at (" << x_pos << ", " << y_pos << "), player at (" << x << ", " << y << ")" << std::endl;
+
+    while(true) {
+        //std::cout << "  - Checking position (" << cur_x << ", " << cur_y << ")" << std::endl;
+        carved = g_dungeon.maze->is_carved(cur_x, cur_y);
+        if (carved == false) {
+            //std::cout << "  - The " << get_name() << " has not seen player" << std::endl;
+            return false;
+        }
+        if (cur_x == x && cur_y == y) {
+            //std::cout << "  - The " << get_name() << " has seen player" << std::endl;
+            return true;
+        }
+        e2 = 2 * error;
+        if (e2 >= dy) {
+            error += dy;
+            cur_x += sx;
+        }     
+        if (e2 <= dx) {
+            error += dx;
+            cur_y += sy;
+        }
+    }
 }

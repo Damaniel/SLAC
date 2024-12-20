@@ -568,7 +568,7 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 	d.generate_items(10, 30);
 
 	// Populate the maze with an assortment of enemies
-	d.generate_enemies(20, 30);
+	d.generate_enemies(10, 20);
 
 	std::pair<int, int> stairLoc;
 	// Place the player on a random set of stairs based on where they came from
@@ -590,6 +590,9 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 
 	// Update the distance from the player to each enemy and sort
 	get_enemy_distances(d.enemies, g_player.get_x_pos(), g_player.get_y_pos());
+
+	// Process initial vision for the enemies
+	process_enemy_vision(d.enemies);
 
 	// Does the display need to be refreshed?
 	g_state_flags.update_display = true;
@@ -1551,6 +1554,39 @@ void get_enemy_distances(std::list<Enemy *> &el, int x, int y) {
 }
 
 //----------------------------------------------------------------------------
+// For any sufficiently close enemies, check to see if they can see the 
+// player.
+//
+// Arguments:
+//	el - the enemy list
+//
+// Returns:
+//	Nothing
+//----------------------------------------------------------------------------
+void process_enemy_vision(std::list<Enemy *> &el) {
+	std::list<Enemy *>::iterator enemy_it;
+
+	for(enemy_it = el.begin(); enemy_it != el.end(); ++enemy_it) {
+		if ((*enemy_it)->has_seen_the_player()) {
+			//std::cout << "process_enemy_vision: the " << (*enemy_it)->get_name() << " has already seen player" << std::endl;
+		} 
+		else {
+			//std::cout << "process_enemy_vision: processing the " << (*enemy_it)->get_name() << std::endl;
+			int distance = get_diagonal_distance_between((*enemy_it)->get_x_pos(), (*enemy_it)->get_y_pos(), g_player.get_x_pos(), g_player.get_y_pos());
+			if (distance <= UtilConsts::MAXIMUM_ENEMY_AI_DISTANCE_FAR && (*enemy_it)->has_seen_the_player() == false) {
+				bool seen = (*enemy_it)->check_if_can_see(g_player.get_x_pos(), g_player.get_y_pos());
+				if (seen) {
+					(*enemy_it)->mark_has_seen_player(true);
+				}	
+			}
+			else {
+				//std::cout << "  - enemy is too far away to care" << std::endl;
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
 // Marks every enemy too far from the player as having forgotten that the 
 // player exists. 
 //
@@ -1566,9 +1602,13 @@ void process_enemy_forgetting_player(std::list<Enemy *> &el) {
 	std::list<Enemy *>::iterator enemy_it;
 
 	for(enemy_it = el.begin(); enemy_it != el.end(); ++enemy_it) {
-		int distance = get_diagonal_distance_between((*enemy_it)->get_x_pos(), (*enemy_it)->get_y_pos(), px, py);
-		if (distance >= UtilConsts::MAXIMUM_ENEMY_REMEMBER_DISTANCE)
-			(*enemy_it)->mark_has_seen_player(false);
+		if ((*enemy_it)->has_seen_the_player()) {
+			int distance = get_diagonal_distance_between((*enemy_it)->get_x_pos(), (*enemy_it)->get_y_pos(), px, py);
+			if (distance >= UtilConsts::MAXIMUM_ENEMY_REMEMBER_DISTANCE) {
+				(*enemy_it)->mark_has_seen_player(false);
+				//std::cout << "process_enemy_forgetting_player: the " << (*enemy_it)->get_name() << " has forgotten the player" << std::endl;
+			}
+		}
 	}
 }
 
@@ -1974,6 +2014,9 @@ void process_move(std::pair<int, int> proposed_location) {
 
 	// Recalculate enemy distances
 	get_enemy_distances(g_dungeon.enemies, g_player.get_x_pos(), g_player.get_y_pos());
+
+	// Process enemy vision
+	process_enemy_vision(g_dungeon.enemies);
 
 	// Update whether enemies remember the player or not
 	process_enemy_forgetting_player(g_dungeon.enemies);
