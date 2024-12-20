@@ -29,12 +29,24 @@ struct DungeonFloor {
 	int get_num_items_at(int x, int y);
 };
 
-// An enum to specify actors in the action queue
-const int ACTION_PLAYER = 0;
-const int ACTION_ENEMY = 1;
-const int ACTION_PLAYER_DEFER_SPEED = 2;
-const int ACTION_ENEMY_DEFER_SPEED = 3;
+namespace UtilConsts {
+    // An enum to specify actors in the action queue
+    const int ACTION_PLAYER = 0;
+    const int ACTION_ENEMY = 1;
+    const int ACTION_PLAYER_DEFER_SPEED = 2;
+    const int ACTION_ENEMY_DEFER_SPEED = 3;
 
+    // Only consider processing an enemy action if the player hasn't been
+    // seen yet and is at least this close
+    const int MAXIMUM_ENEMY_AI_DISTANCE_NEAR = 6;
+
+    // Only consider processing an enemy action if the player has been
+    // seen yet and is at least this close
+    const int MAXIMUM_ENEMY_AI_DISTANCE_FAR  = 12;
+
+    // Enemies further away than this will no longer pursue the player
+    const int MAXIMUM_ENEMY_REMEMBER_DISTANCE = 16;
+}
 
 // A collection of flags relevant to the game loop.  The game loop will want
 // to farm tasks out to other functions; this provides a way to have them all
@@ -139,6 +151,7 @@ bool is_valid_enemy_position(int x, int y);
 bool is_enemy_here(std::list<Enemy *> &el, int x, int y);
 void perform_enemy_action(Enemy *e);
 Enemy *get_enemy_at(int x, int y);
+void process_enemy_forgetting_player(std::list<Enemy *> &el);
 
 // Action functions
 void process_move(std::pair<int, int> proposed_location);

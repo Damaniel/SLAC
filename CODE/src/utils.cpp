@@ -1543,10 +1543,33 @@ void get_enemy_distances(std::list<Enemy *> &el, int x, int y) {
 	std::list<Enemy *>::iterator enemy_it;
 
 	for(enemy_it = el.begin(); enemy_it != el.end(); ++enemy_it) {
-		(*enemy_it)->set_distance(get_manhattan_distance_between((*enemy_it)->get_x_pos(), (*enemy_it)->get_y_pos(), x, y));
+		int distance = get_manhattan_distance_between((*enemy_it)->get_x_pos(), (*enemy_it)->get_y_pos(), x, y);
+		(*enemy_it)->set_distance(distance);
 	}
 
 	sort_enemy_list(el);
+}
+
+//----------------------------------------------------------------------------
+// Marks every enemy too far from the player as having forgotten that the 
+// player exists. 
+//
+// Arguments:
+//	el - the enemy list
+//
+// Returns:
+//	Nothing
+//----------------------------------------------------------------------------
+void process_enemy_forgetting_player(std::list<Enemy *> &el) {
+	int px = g_player.get_x_pos();
+	int py = g_player.get_y_pos();
+	std::list<Enemy *>::iterator enemy_it;
+
+	for(enemy_it = el.begin(); enemy_it != el.end(); ++enemy_it) {
+		int distance = get_manhattan_distance_between((*enemy_it)->get_x_pos(), (*enemy_it)->get_y_pos(), px, py);
+		if (distance >= UtilConsts::MAXIMUM_ENEMY_REMEMBER_DISTANCE)
+			(*enemy_it)->mark_has_seen_player(false);
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -1811,10 +1834,14 @@ void process_move(std::pair<int, int> proposed_location) {
 	std::vector<Enemy *> enemies;
 
 	// get a list of enemies that are close enough to be processed
+	// For enemies that haven't seen the player, it's MAXIMUM_ENEMY_AI_DISTANCE
+	// For enemies that have seen the player, it's 2 x MAXIMUM_ENEMY_AI_DISTANCE
     std::list<Enemy *>::iterator enemy_it = g_dungeon.enemies.begin();
 	bool done = false;
 	while (enemy_it != g_dungeon.enemies.end() && !done) {
-		if ((*enemy_it)->get_distance() <= UiConsts::MAXIMUM_ENEMY_AI_DISTANCE) {
+		int distance = (*enemy_it)->get_distance();
+		if (((*enemy_it)->has_seen_the_player() && distance <= UtilConsts::MAXIMUM_ENEMY_AI_DISTANCE_FAR) ||
+		    (!(*enemy_it)->has_seen_the_player() && distance  <= UtilConsts::MAXIMUM_ENEMY_AI_DISTANCE_NEAR)) {
             enemies.push_back(*enemy_it);
 		}
 		else {
@@ -1831,7 +1858,7 @@ void process_move(std::pair<int, int> proposed_location) {
 	if (g_player.get_action_residual() >= 100) {
 		//std::cout << "process_move:  player has action residual of " << g_player.get_action_residual() << std::endl;
 		// Queue player move
-	 	actions.push_back(std::make_pair(ACTION_PLAYER_DEFER_SPEED, 0));
+	 	actions.push_back(std::make_pair(UtilConsts::ACTION_PLAYER_DEFER_SPEED, 0));
 		//std::cout << "  process_move:  queued player action (deferred speed)" << std::endl;
 		// Check to see if any of the enemies also have over 100 residual.
 		// If so, queue their moves until they'll have less than 100 residual
@@ -1840,7 +1867,7 @@ void process_move(std::pair<int, int> proposed_location) {
 			if (e_res >= 100) {
 				//std::cout << "  process_move: enemy has an action residual of " << e_res << std::endl;
 				while (e_res >= 100) {
-					actions.push_back(std::make_pair(ACTION_ENEMY_DEFER_SPEED, i));
+					actions.push_back(std::make_pair(UtilConsts::ACTION_ENEMY_DEFER_SPEED, i));
 					//std::cout << "    process_move: queued enemy action (deferred speed)" << std::endl;
 					e_res -= 100;
 				}
@@ -1857,19 +1884,19 @@ void process_move(std::pair<int, int> proposed_location) {
 				//std::cout << "  process_move: enemy has an action residual of " << e_res << std::endl;
 				while (e_res >= 100) {
 					//std::cout << "    process_move: queued enemy action (deferred speed)" << std::endl;
-					actions.push_back(std::make_pair(ACTION_ENEMY_DEFER_SPEED, i));
+					actions.push_back(std::make_pair(UtilConsts::ACTION_ENEMY_DEFER_SPEED, i));
 					e_res -= 100;
 				}
 			}
 		}
 
 		// Queue the player move
-	 	actions.push_back(std::make_pair(ACTION_PLAYER, 0));
+	 	actions.push_back(std::make_pair(UtilConsts::ACTION_PLAYER, 0));
 		//std::cout << "  process_move: queued player action" << std::endl;
 
 		// Now append all enemy moves in non-deferred state
 		for (int i = 0; i < enemies.size(); ++i) {
-			actions.push_back(std::make_pair(ACTION_ENEMY, i));
+			actions.push_back(std::make_pair(UtilConsts::ACTION_ENEMY, i));
 			//std::cout << "  process_move: queued action for enemy " << i << std::endl;
 		}
 	}
@@ -1887,18 +1914,18 @@ void process_move(std::pair<int, int> proposed_location) {
 		int act = actions[i].first;
 		int target = actions[i].second;
 		// If non-deferred, add speed
-		if (act == ACTION_PLAYER) {
+		if (act == UtilConsts::ACTION_PLAYER) {
 			g_player.set_action_residual(g_player.get_action_residual() + (int)g_player.actual.spd);
 			//std::cout << "  process_move: adding non-deferred speed to player action pool" << std::endl;
 			//std::cout << "    process_move: player action pool is now " << g_player.get_action_residual() << std::endl;
 		}
-		if (act == ACTION_ENEMY) {
+		if (act == UtilConsts::ACTION_ENEMY) {
 			enemies[target]->set_action_residual(enemies[target]->get_action_residual() + enemies[target]->get_spd());
 			//std::cout << "  process_move: adding non-deferred speed to enemy " << target << std::endl;
 			//std::cout << "    process:_move: enemy action pool is now " << enemies[target]->get_action_residual() << std::endl;
 		}
 		// If a player action, do the player thing
-		if (act == ACTION_PLAYER || act == ACTION_PLAYER_DEFER_SPEED) {
+		if (act == UtilConsts::ACTION_PLAYER || act == UtilConsts::ACTION_PLAYER_DEFER_SPEED) {
 			if (g_player.get_action_residual() >= 100) {
 				//std::cout << "  process_move: attempting to perform player action" << std::endl;
 				int x = proposed_location.first;
@@ -1930,7 +1957,7 @@ void process_move(std::pair<int, int> proposed_location) {
 
 		}
 		// If an enemy action, do the enemy thing for the current enemy
-		if (act == ACTION_ENEMY || act == ACTION_ENEMY_DEFER_SPEED) {
+		if (act == UtilConsts::ACTION_ENEMY || act == UtilConsts::ACTION_ENEMY_DEFER_SPEED) {
 			Enemy *e = enemies[target];
 			if (e->get_action_residual() >= 100) {
 				//std::cout << "  process_move: attempting to perform enemy action" << std::endl;
@@ -1944,6 +1971,9 @@ void process_move(std::pair<int, int> proposed_location) {
 
 	// Recalculate enemy distances
 	get_enemy_distances(g_dungeon.enemies, g_player.get_x_pos(), g_player.get_y_pos());
+
+	// Update whether enemies remember the player or not
+	process_enemy_forgetting_player(g_dungeon.enemies);
 
     // Redraw the maze area
 	g_state_flags.update_maze_area = true;

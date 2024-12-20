@@ -75,6 +75,8 @@ public:
     void set_distance(int d) { distance = d; }
     int get_action_residual() { return residual_action_points; }
     void set_action_residual(int amount) { residual_action_points = amount; }
+    bool has_seen_the_player() { return has_seen_player; }
+    void mark_has_seen_player(bool status) { has_seen_player = status; }
     // All of these fields are stored in a global array; these helper functions
     // get the appropriate fields at the relevant offset
     std::string get_name();
