@@ -32,13 +32,38 @@
 //   None
 //------------------------------------------------------------------------------
 Player::Player(void) {
-	x_pos = 0;
-	y_pos = 0;
+	init(0, 0);
+}
+
+//------------------------------------------------------------------------------
+// Player::Player
+//
+// Constructor.  Initializes the player at the specified location
+//
+// Arguments:
+//   x, y - the position to place the player
+//------------------------------------------------------------------------------
+Player::Player(int x, int y) {
+	init(x, y);
+}
+
+//------------------------------------------------------------------------------
+// Player::init
+//
+// Sets basic values for a new player
+//
+// Arguments:
+//   x, y - the position to place the player
+//------------------------------------------------------------------------------
+void Player::init(int x, int y) {
+	x_pos = x;
+	y_pos = y;
 	gold = 0;
 	name = "Damaniel";
 	generation = 1;
 	level = 1;
 	exp = 0;
+	residual_action_points = 0;
 
 	init_base_stats();
 	// Move a copy of the base stats into the actual stats
@@ -57,19 +82,6 @@ Player::Player(void) {
 	equipment.ring = NULL;
 	equipment.shield = NULL;
 	equipment.weapon = NULL;
-}
-
-//------------------------------------------------------------------------------
-// Player::Player
-//
-// Constructor.  Initializes the player at the specified location
-//
-// Arguments:
-//   x, y - the position to place the player
-//------------------------------------------------------------------------------
-Player::Player(int x, int y) {
-	x_pos = x;
-	y_pos = y;
 }
 
 //------------------------------------------------------------------------------
@@ -624,19 +636,19 @@ float Player::pct_exp_to_next_level() {
 //   Nothing.
 //------------------------------------------------------------------------------
 void Player::init_base_stats() {
-	base.max_hp = 100;
-	base.str = 10;
-	base.con = 10;
-	base.dex = 10;
-	base.atk = 10;
-	base.def = 10;
-	base.spd = 10;
-	base.f_def = 10;
-	base.i_def = 10;
-	base.l_def = 10;
-	base.f_atk = 10;
-	base.i_atk = 10;
-	base.l_atk = 10;
+	base.max_hp = PlayerConsts::g_player_base_stats[0].max_hp;
+	base.str = PlayerConsts::g_player_base_stats[0].str;
+	base.con = PlayerConsts::g_player_base_stats[0].con;
+	base.dex = PlayerConsts::g_player_base_stats[0].dex;
+	base.atk = PlayerConsts::g_player_base_stats[0].atk;
+	base.def = PlayerConsts::g_player_base_stats[0].def;
+	base.spd = PlayerConsts::g_player_base_stats[0].spd;
+	base.f_def = 0;
+	base.i_def = 0;
+	base.l_def = 0;
+	base.f_atk = 0;
+	base.i_atk = 0;
+	base.l_atk = 0;
 	base.f_dmg = 0;
 	base.i_dmg = 0;
 	base.l_dmg = 0;

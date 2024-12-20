@@ -24,58 +24,6 @@
 #include "globals.h"
 
 //----------------------------------------------------------------------------
-// Handles common tasks required after the player moves into a new square
-//
-// Arguments:
-//   None
-//
-// Returns:
-//   Nothing
-//----------------------------------------------------------------------------
-void process_movement_common_tasks(void) {
-    // Identify known (but not yet identified) potions and scrolls on the ground
-    // to ensure any stragglers on the current floor are dealt with
-    identify_previously_known_items_at_player();
-
-    // Show the items on the ground in the player log
-	add_items_at_player_to_log();
-
-    // TODO: both this section (and player movement) need to be moved into a common
-    // function that accounts for player and enemy speed, and which handles
-    // enemy and player interaction
-    // ----------------------------------------------------------------------------
-
-    // Recalculate enemy distances
-	get_enemy_distances(g_dungeon.enemies, g_player.get_x_pos(), g_player.get_y_pos());
-
-    // Iterate through each enemy in range and move them
-    std::list<Enemy *>::iterator enemy_it = g_dungeon.enemies.begin();
-	bool done = false;
-	while (enemy_it != g_dungeon.enemies.end() && !done) {
-		if ((*enemy_it)->get_distance() <= UiConsts::MAXIMUM_ENEMY_AI_DISTANCE) {
-            update_enemy_position(*enemy_it);
-		}
-		else {
-			// Every other enemy is too far away; we're done
-			done = true;
-		}
-		++enemy_it;
-	}
-    
-    //------------------------------------------------------------------------------
-
-    // Redraw the maze area
-	g_state_flags.update_maze_area = true;
-    // Redraw the log if the text log is in extended mode (as it
-    // will be overdrawn by the maze if this isn't done)
-	if (g_state_flags.text_log_extended) {
-		g_state_flags.update_text_dialog = true;
-	}
-    // Tell the game to do the redraw
-	g_state_flags.update_display = true;
-}
-
-//----------------------------------------------------------------------------
 // Handles common tasks required after the inventory cursor is moved
 //
 // Arguments:
@@ -321,56 +269,28 @@ void process_game_state(int key) {
             	    g_state_flags.exit_game = true;
                     break;
                 case KEY_LEFT:
-        		    if (g_dungeon.maze->is_carved(g_player.get_x_pos()-1, g_player.get_y_pos()) == true) {
-			            g_player.set_x_pos(g_player.get_x_pos() - 1);
-			            process_movement_common_tasks();
-		            }
+                    process_move(std::make_pair(g_player.get_x_pos() - 1, g_player.get_y_pos()));
                     break;           
 	            case KEY_RIGHT:
-            		if (g_dungeon.maze->is_carved(g_player.get_x_pos()+1, g_player.get_y_pos()) == true) {			
-	    		        g_player.set_x_pos(g_player.get_x_pos() + 1);
-		    	        process_movement_common_tasks();
-		            }
+                    process_move(std::make_pair(g_player.get_x_pos() + 1, g_player.get_y_pos()));                
                     break;
     	        case KEY_UP:
-        	    	if (g_dungeon.maze->is_carved(g_player.get_x_pos(), g_player.get_y_pos()-1) == true) {
-    			        g_player.set_y_pos(g_player.get_y_pos() - 1);
-	    		        process_movement_common_tasks();
-		            }
+                    process_move(std::make_pair(g_player.get_x_pos(), g_player.get_y_pos() - 1));
                     break;
                 case KEY_DOWN:
-            		if (g_dungeon.maze->is_carved(g_player.get_x_pos(), g_player.get_y_pos()+1) == true) {
-        	    		g_player.set_y_pos(g_player.get_y_pos() + 1);
-			            process_movement_common_tasks();
-		            }
+                    process_move(std::make_pair(g_player.get_x_pos(), g_player.get_y_pos() + 1));
                     break;
                 case KEY_HOME:   // Up and left
-                    if (g_dungeon.maze->is_carved(g_player.get_x_pos() - 1, g_player.get_y_pos() - 1) == true) {
-                        g_player.set_x_pos(g_player.get_x_pos() - 1);
-                        g_player.set_y_pos(g_player.get_y_pos() - 1);
-                        process_movement_common_tasks();
-                    }
+                    process_move(std::make_pair(g_player.get_x_pos() - 1, g_player.get_y_pos() - 1));
                     break;
                 case KEY_PGUP:   // Up and right
-                    if (g_dungeon.maze->is_carved(g_player.get_x_pos() + 1, g_player.get_y_pos() - 1) == true) {
-                        g_player.set_x_pos(g_player.get_x_pos() + 1);
-                        g_player.set_y_pos(g_player.get_y_pos() - 1);
-                        process_movement_common_tasks();
-                    }
+                    process_move(std::make_pair(g_player.get_x_pos() + 1, g_player.get_y_pos() - 1));
                     break;         
                 case KEY_END:   // Down and left
-                    if (g_dungeon.maze->is_carved(g_player.get_x_pos() - 1, g_player.get_y_pos() + 1) == true) {
-                        g_player.set_x_pos(g_player.get_x_pos() - 1);
-                        g_player.set_y_pos(g_player.get_y_pos() + 1);
-                        process_movement_common_tasks();
-                    }
+                    process_move(std::make_pair(g_player.get_x_pos() - 1, g_player.get_y_pos() + 1));
                     break;                         
                 case KEY_PGDN:  // Down and right
-                    if (g_dungeon.maze->is_carved(g_player.get_x_pos() + 1, g_player.get_y_pos() + 1) == true) {
-                        g_player.set_x_pos(g_player.get_x_pos() + 1);
-                        g_player.set_y_pos(g_player.get_y_pos() + 1);
-                        process_movement_common_tasks();
-                    }
+                    process_move(std::make_pair(g_player.get_x_pos() + 1, g_player.get_y_pos() + 1));
                     break;                   
                 case KEY_C:
                     g_state_flags.cur_substate = GAME_SUBSTATE_STATS;

@@ -43,17 +43,20 @@ typedef struct {
 class Enemy {
 private:
     // positional
-    int id;                   // The enemy id in the enemy definition array
-    unsigned short x_pos;     // Position in the dungeon
+    int id;                     // The enemy id in the enemy definition array
+    unsigned short x_pos;       // Position in the dungeon
     unsigned short y_pos;             
-    int distance;             // The distance to the player (used for sorting and determining 
-                              // which enemies to process on a turn)
+    int distance;               // The distance to the player (used for sorting and determining 
+                                // which enemies to process on a turn)
     // stats
-    unsigned short hp;        // The current enemy HP
+    unsigned short hp;          // The current enemy HP
 
     // behavior
-    bool has_seen_player;      // Has the enemy seen the player before?
-    bool is_pursuing_player;   // Is the enemy currently chasing the player?
+    bool has_seen_player;       // Has the enemy seen the player before?
+    bool is_pursuing_player;    // Is the enemy currently chasing the player?
+
+    // Movement 
+    int residual_action_points; // Any action points left over after their last executed turn
 
     // The other stats live in the enemy table, for now.
     // If we add the ability for skills to adjust enemy stats,
@@ -70,6 +73,8 @@ public:
     int get_y_pos() { return y_pos; }
     int get_distance() { return distance; }
     void set_distance(int d) { distance = d; }
+    int get_action_residual() { return residual_action_points; }
+    void set_action_residual(int amount) { residual_action_points = amount; }
     // All of these fields are stored in a global array; these helper functions
     // get the appropriate fields at the relevant offset
     std::string get_name();

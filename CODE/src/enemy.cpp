@@ -37,6 +37,7 @@ void Enemy::init(int eid) {
     x_pos = 0;
     y_pos = 0;
     distance = 0;
+    residual_action_points = 0;
 }
 
 //----------------------------------------------------------------------------

@@ -1571,6 +1571,26 @@ bool is_enemy_here(std::list<Enemy *> &el, int x, int y) {
 }
 
 //----------------------------------------------------------------------------
+// Returns the Enemy at the specified position, if there is one
+//
+// Arguments:
+//  x, y - the position
+//
+// Returns:
+//	A pointer to the Enemy if present, NULL otherwise.
+//----------------------------------------------------------------------------
+Enemy* get_enemy_at(std::list<Enemy *> &el, int x, int y) {
+	std::list<Enemy *>::iterator enemy_it;
+
+	for(enemy_it = el.begin(); enemy_it != el.end(); ++enemy_it) {
+		if ((*enemy_it)->get_x_pos() == x && (*enemy_it)->get_y_pos() == y)
+			return (*enemy_it);
+	}
+
+	return NULL;
+}
+
+//----------------------------------------------------------------------------
 // Checks if the specified location is a place an enemy can be
 //
 // Arguments:
@@ -1586,11 +1606,8 @@ bool is_valid_enemy_position(int x, int y) {
 	// Does the square already contain an enemy?
 	if (is_enemy_here(g_dungeon.enemies, x, y))
 		return false;
-	// Does the square contain the player?
-	if (x == g_player.get_x_pos() && y == g_player.get_y_pos())
-		return false;
 
-	// If none are true, the enemy can be here.
+	// If neither are true, the enemy can be here.
 	return true;
 }
 
@@ -1603,9 +1620,11 @@ bool is_valid_enemy_position(int x, int y) {
 // Returns:
 //   Nothing.  This function directly moves the enemy.
 //----------------------------------------------------------------------------
-void update_enemy_position(Enemy *e) {
+void perform_enemy_action(Enemy *e) {
 	// Does the following :
-	//   - For each of 8 directions
+	//   - Check to see if the player is adjacent.  
+	//      - If so, attack the player
+	//   - Otherwise, for each of the 8 directions
 	//      - If the position can be moved to (no wall, no enemy, no player)
 	//          - calculate the distance from the player
 	//          - push a pair <direction, distance> to a vector
@@ -1621,6 +1640,14 @@ void update_enemy_position(Enemy *e) {
 	int y = e->get_y_pos();
 	int px = g_player.get_x_pos();
 	int py = g_player.get_y_pos();
+
+	// If the enemy is 0 or 1 away from the player in both the x and y direction, they're 'adjacent',
+	// and should attack the player
+	//std::cout << "perform_enemy_action: abs(px-x) = " << abs(px-x) << ", abs(py-y) = " << abs(py-y) << std::endl;
+	if (abs(px-x) <= 1 && abs(py-y) <= 1) {
+		g_text_log.put_line("The " + e->get_name() + " attacks you!");
+		return;
+	}
 
 	std::vector<std::pair<int, int> > directions;
 	std::vector<int> lowest;
@@ -1702,3 +1729,225 @@ void update_enemy_position(Enemy *e) {
 			break;
 	}
 }
+
+//----------------------------------------------------------------------------
+// Processes the proposed movement of the player and any enemies within
+// range of the player
+//
+// Arguments:
+//  proposed_location - the place the player wants to move to
+//
+// Returns:
+//   Nothing.  This function directly moves the enemy.
+//----------------------------------------------------------------------------
+void process_move(std::pair<int, int> proposed_location) {
+	// Eventually:
+	//  - Put together a queue of enemy and player actions based
+	//    on relative speed
+	//  - Execute each action (move, attack) in turn
+	//  - Store any fractions of a turn not executed in the 
+	//    enemy or player structure
+	//  - If the player moved, describe items on the ground
+	//  - Mark things to be updated
+
+	// Relative speed:
+	//   The player's and enemy's speed is a value (100 by default for the player but
+	//   can increase or decrease with gear; varied by enemy) that determines how
+	//   many move(s) can be made.  A 'move' costs 100 points.
+	//
+	//   For each turn that an actor can act:
+	//     - Take any residual value from the pool and add the SPD value to it
+	//     - Execute a turn
+	//     - Save the residual for the next turn
+	//
+	//   For example, if there is a player and an enemy, and the player has 125
+	//   speed while the enemy has 110 speed:
+	//     Turn 1: Player gets 125 to pool, spends 100, has 25 remainder
+	//			   Enemy gets 110 to pool, spends 100, has 10 remainder
+	//     Turn 2: Player gets 125 to pool + 25 remainder, spends 100, has 50 remainder
+	//             Enemy gets 110 to pool + 10 remainder, spends 100, has 20 remainder
+	//     Turn 3: Player gets 125 to pool + 50 remainder, spends 100, has 75 remainder
+	//			   Enemy gets 110 to pool + 20 remainder, spends 100, has 30 remainder
+	//     Turn 4: Player gets 125 to pool + 75 remainder, spends 100, has 100 remainder
+	//             Enemy (and all other with less than 100 remainder) gets no turn
+	//	   Turn 5: Player gets no additional to pool + 100 remainder, spends 100, has 0 remainder
+	//             Enemy gets 110 to pool + 30 remainder, spends 100, has 40 remainder
+	//	   And so on...
+	// 
+	//   The net result is that the player gets an additional turn every 4th turn, so compared
+	//   to an enemy with a base speed of 100, the player gets 5 turns to the enemy's 4.	
+
+	// The queue consists of a single player turn and any enemy turns that go along with it,
+	// and is executed in order.  It's possible that a queue will have one player move and
+	// zero enemy moves, or one player move and multiple moves from one or more enemies -
+	// and the player and/or enemies can be queued anywhere in the turn depending on 
+	// relative pool size (generally, if both a player and enemy have an extra turn coming,
+	// the one to move first will be the one with the highest residual).
+
+	// Queueing rules
+	//  - If the player has 100 or greater residual:
+	//       If any enemies do as well, queue the player and then the enemy (or enemies)
+	//       with >100 residual and queue no others.  The player is added to
+    //       the queue once, even if they have 200+ residual, 
+	//       but enemies will be queued in turn until their excess residual is spent. 
+	//       Nobody gets additional speed to their pool this turn.
+	//  
+	//    Example:  given a player with 120 residual, and enemies A and B with 210 and 140 residuals,
+	//              the resulting queue would be A, B, player, A
+	//
+	//	- If the player has less than 100 residual:
+	//       - If one or more enemies have >100, queue them first until they have less than 100,
+	//         then the player, then all enemies by distance.  The enemies with >100 
+	//         residual get no extra in their pool at the time of their turn, but get that extra
+	//         after all their overage turns have completed and they run from the rest of the
+	//         queue
+	//       - If no enemies have >100, the player is queued first, then all enemies sorted by
+	//         distance.  The player and all enemies get speed added to their pools
+
+	// The list that holds player and enemy actions.  The first item in the pair is an enum value
+	// (either PLAYER or ENEMY).  The second item in the pair is the offset into the enemy list
+	// of the enemy to take the action.  For PLAYER, the second value has no meaning.
+	std::vector<std::pair<int, int> > actions;
+	std::vector<Enemy *> enemies;
+
+	// get a list of enemies that are close enough to be processed
+    std::list<Enemy *>::iterator enemy_it = g_dungeon.enemies.begin();
+	bool done = false;
+	while (enemy_it != g_dungeon.enemies.end() && !done) {
+		if ((*enemy_it)->get_distance() <= UiConsts::MAXIMUM_ENEMY_AI_DISTANCE) {
+            enemies.push_back(*enemy_it);
+		}
+		else {
+			// Every other enemy is too far away; we're done
+			done = true;
+		}
+		++enemy_it;
+	}	
+
+	//std::cout << "process_move: " << enemies.size() << " enemies are being processed" << std::endl;
+
+	// Assemble the queue
+	// If the player is due an extra turn...
+	if (g_player.get_action_residual() >= 100) {
+		//std::cout << "process_move:  player has action residual of " << g_player.get_action_residual() << std::endl;
+		// Queue player move
+	 	actions.push_back(std::make_pair(ACTION_PLAYER_DEFER_SPEED, 0));
+		//std::cout << "  process_move:  queued player action (deferred speed)" << std::endl;
+		// Check to see if any of the enemies also have over 100 residual.
+		// If so, queue their moves until they'll have less than 100 residual
+		for (int i=0; i < enemies.size(); ++i) {
+			int e_res = enemies[i]->get_action_residual();
+			if (e_res >= 100) {
+				//std::cout << "  process_move: enemy has an action residual of " << e_res << std::endl;
+				while (e_res >= 100) {
+					actions.push_back(std::make_pair(ACTION_ENEMY_DEFER_SPEED, i));
+					//std::cout << "    process_move: queued enemy action (deferred speed)" << std::endl;
+					e_res -= 100;
+				}
+			}
+		}
+	}
+	else {
+		// Check to see if any of the enemies have over 100 residual.
+		// If so, queue their moves until they have less than 100 residual
+		//std::cout << "process_move: player has action residual of < 100" << std::endl;
+		for (int i=0; i < enemies.size(); ++i) {
+			int e_res = enemies[i]->get_action_residual();
+			if (e_res >= 100) {
+				//std::cout << "  process_move: enemy has an action residual of " << e_res << std::endl;
+				while (e_res >= 100) {
+					//std::cout << "    process_move: queued enemy action (deferred speed)" << std::endl;
+					actions.push_back(std::make_pair(ACTION_ENEMY_DEFER_SPEED, i));
+					e_res -= 100;
+				}
+			}
+		}
+
+		// Queue the player move
+	 	actions.push_back(std::make_pair(ACTION_PLAYER, 0));
+		//std::cout << "  process_move: queued player action" << std::endl;
+
+		// Now append all enemy moves in non-deferred state
+		for (int i = 0; i < enemies.size(); ++i) {
+			actions.push_back(std::make_pair(ACTION_ENEMY, i));
+			//std::cout << "  process_move: queued action for enemy " << i << std::endl;
+		}
+	}
+
+	// Execute the queue
+	// For each entry in the queue
+	//  - If non-deferred, add the total SPD to the entity's residual
+	//  - If deferred, or non-deferred and residual >= 100
+	//     - If player, perform the player movement action
+	//       (or combat action - TBD)
+	//     - If enemy, perform the enemy movement action
+	//       (or combat action - TBD)
+	for (int i = 0; i < actions.size(); ++i) {
+		//std::cout << "process_move: performing action " << (i+1) << "..." << std::endl;
+		int act = actions[i].first;
+		int target = actions[i].second;
+		// If non-deferred, add speed
+		if (act == ACTION_PLAYER) {
+			g_player.set_action_residual(g_player.get_action_residual() + (int)g_player.actual.spd);
+			//std::cout << "  process_move: adding non-deferred speed to player action pool" << std::endl;
+			//std::cout << "    process_move: player action pool is now " << g_player.get_action_residual() << std::endl;
+		}
+		if (act == ACTION_ENEMY) {
+			enemies[target]->set_action_residual(enemies[target]->get_action_residual() + enemies[target]->get_spd());
+			//std::cout << "  process_move: adding non-deferred speed to enemy " << target << std::endl;
+			//std::cout << "    process:_move: enemy action pool is now " << enemies[target]->get_action_residual() << std::endl;
+		}
+		// If a player action, do the player thing
+		if (act == ACTION_PLAYER || act == ACTION_PLAYER_DEFER_SPEED) {
+			if (g_player.get_action_residual() >= 100) {
+				//std::cout << "  process_move: attempting to perform player action" << std::endl;
+				int x = proposed_location.first;
+				int y = proposed_location.second;
+
+				if (is_enemy_here(g_dungeon.enemies, x, y)) {
+					Enemy *to_attack = get_enemy_at(g_dungeon.enemies, x, y);
+					// Do attack stuff
+					g_text_log.put_line("You attack the " + to_attack->get_name() + "!");
+				}
+    			else if (g_dungeon.maze->is_carved(x, y)) {
+					// Move the player
+					g_player.set_x_pos(x);
+					g_player.set_y_pos(y);
+
+    				// Identify known (but not yet identified) potions and scrolls on the ground
+    				// to ensure any stragglers on the current floor are dealt with
+    				identify_previously_known_items_at_player();
+
+					// Show the items on the ground in the player log
+					add_items_at_player_to_log();
+
+					// Subtract the move points from the residual
+				}
+				// Subtract the action points from the player
+				g_player.set_action_residual(g_player.get_action_residual() - 100);
+				//std::cout << "    process_move: player residual is now " << g_player.get_action_residual() << std::endl;
+			}
+
+		}
+		// If an enemy action, do the enemy thing for the current enemy
+		if (act == ACTION_ENEMY || act == ACTION_ENEMY_DEFER_SPEED) {
+			Enemy *e = enemies[target];
+			if (e->get_action_residual() >= 100) {
+				//std::cout << "  process_move: attempting to perform enemy action" << std::endl;
+				perform_enemy_action(e);
+				e->set_action_residual(e->get_action_residual() - 100);
+				//std::cout << "    process_move: enemy residual is now " << e->get_action_residual() << std::endl;
+			}
+		}
+
+	}
+
+	// Recalculate enemy distances
+	get_enemy_distances(g_dungeon.enemies, g_player.get_x_pos(), g_player.get_y_pos());
+
+    // Redraw the maze area
+	g_state_flags.update_maze_area = true;
+	g_state_flags.update_text_dialog = true;
+    // Tell the game to do the redraw
+	g_state_flags.update_display = true;
+} 

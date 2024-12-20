@@ -29,6 +29,13 @@ struct DungeonFloor {
 	int get_num_items_at(int x, int y);
 };
 
+// An enum to specify actors in the action queue
+const int ACTION_PLAYER = 0;
+const int ACTION_ENEMY = 1;
+const int ACTION_PLAYER_DEFER_SPEED = 2;
+const int ACTION_ENEMY_DEFER_SPEED = 3;
+
+
 // A collection of flags relevant to the game loop.  The game loop will want
 // to farm tasks out to other functions; this provides a way to have them all
 // in one place to make them easy to query, while keeping things manageable. 
@@ -130,8 +137,10 @@ void sort_enemy_list(std::list<Enemy *> &el);
 void get_enemy_distances(std::list<Enemy *> &el, int x, int y);
 bool is_valid_enemy_position(int x, int y);
 bool is_enemy_here(std::list<Enemy *> &el, int x, int y);
+void perform_enemy_action(Enemy *e);
+Enemy *get_enemy_at(int x, int y);
 
-// Search functions
-void update_enemy_position(Enemy *e);
+// Action functions
+void process_move(std::pair<int, int> proposed_location);
 
 #endif
