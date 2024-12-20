@@ -244,7 +244,7 @@ void teleport_player() {
     do {
         new_x = rand() % g_dungeon.width;
         new_y = rand() % g_dungeon.height;
-        distance = get_manhattan_distance_between(g_player.get_x_pos(), g_player.get_y_pos(), new_x, new_y);
+        distance = get_diagonal_distance_between(g_player.get_x_pos(), g_player.get_y_pos(), new_x, new_y);
         if (distance >= 12) {
             // Check to see if the square is not a wall
             if (g_dungeon.maze->is_carved(new_x, new_y)) {

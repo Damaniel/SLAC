@@ -1543,7 +1543,7 @@ void get_enemy_distances(std::list<Enemy *> &el, int x, int y) {
 	std::list<Enemy *>::iterator enemy_it;
 
 	for(enemy_it = el.begin(); enemy_it != el.end(); ++enemy_it) {
-		int distance = get_manhattan_distance_between((*enemy_it)->get_x_pos(), (*enemy_it)->get_y_pos(), x, y);
+		int distance = get_diagonal_distance_between((*enemy_it)->get_x_pos(), (*enemy_it)->get_y_pos(), x, y);
 		(*enemy_it)->set_distance(distance);
 	}
 
@@ -1566,7 +1566,7 @@ void process_enemy_forgetting_player(std::list<Enemy *> &el) {
 	std::list<Enemy *>::iterator enemy_it;
 
 	for(enemy_it = el.begin(); enemy_it != el.end(); ++enemy_it) {
-		int distance = get_manhattan_distance_between((*enemy_it)->get_x_pos(), (*enemy_it)->get_y_pos(), px, py);
+		int distance = get_diagonal_distance_between((*enemy_it)->get_x_pos(), (*enemy_it)->get_y_pos(), px, py);
 		if (distance >= UtilConsts::MAXIMUM_ENEMY_REMEMBER_DISTANCE)
 			(*enemy_it)->mark_has_seen_player(false);
 	}
@@ -1931,7 +1931,10 @@ void process_move(std::pair<int, int> proposed_location) {
 				int x = proposed_location.first;
 				int y = proposed_location.second;
 
-				if (is_enemy_here(g_dungeon.enemies, x, y)) {
+				if (g_player.get_x_pos() == x && g_player.get_y_pos() == y) {
+					std::cout << "Player is sitting still" << std::endl;
+				}
+				else if (is_enemy_here(g_dungeon.enemies, x, y)) {
 					Enemy *to_attack = get_enemy_at(g_dungeon.enemies, x, y);
 					// Do attack stuff
 					g_text_log.put_line("You attack the " + to_attack->get_name() + "!");

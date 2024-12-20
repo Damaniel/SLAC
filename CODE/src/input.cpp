@@ -291,7 +291,10 @@ void process_game_state(int key) {
                     break;                         
                 case KEY_PGDN:  // Down and right
                     process_move(std::make_pair(g_player.get_x_pos() + 1, g_player.get_y_pos() + 1));
-                    break;                   
+                    break;        
+                case KEY_DEL: // Do nothing (sit in place)
+                    process_move(std::make_pair(g_player.get_x_pos(), g_player.get_y_pos()));
+                    break;
                 case KEY_C:
                     g_state_flags.cur_substate = GAME_SUBSTATE_STATS;
                     g_state_flags.update_stats_screen = true;
