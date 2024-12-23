@@ -1,4 +1,4 @@
-import sys, json
+import sys, json, re
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QListWidgetItem
 from PySide6.QtCore import QFile, Slot
 from enemyeditor import Ui_EnemyEditor
@@ -180,13 +180,32 @@ class MainWindow(QMainWindow):
         # structure keyed under the old name, and things will go wrong if the name hasn't actually
         # changed value)
         if (old_key_name != self.ui.EnemyKeyVal.text()):
+            # Replace any spaces with underscores 
+            new_key = self.ui.EnemyKeyVal.text()
+            new_key = re.sub(' ', '_', new_key)
+
+            # Check to see if this key has the same name as an existing key, if so, don't
+            # make the change
+            match = False
+            for name in self.enemy_json['enemy']['items']:
+                if name == new_key:
+                    match = True
+
+            if match == True:
+                print("Warning: key already exists, no change made!")
+                self.ui.EnemyKeyVal.setText(old_key_name)
+                return
+
+            self.ui.EnemyKeyVal.setText(new_key)
+
             # Update the name in the list
-            self.ui.EnemiesList.currentItem().setText(self.ui.EnemyKeyVal.text())
+            self.ui.EnemiesList.currentItem().setText(new_key)
             # Move the old data to the new key in the JSON structure
             old_data = self.enemy_json['enemy']['items'][old_key_name]
             self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()] = old_data
             # Delete the data under the old key
             del self.enemy_json['enemy']['items'][old_key_name]
+            print(json.dumps(self.enemy_json, indent=4))
 
     # Updates the enemy's name in the JSON file
     @Slot()
