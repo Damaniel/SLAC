@@ -16,9 +16,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QGroupBox, QLabel,
-    QLineEdit, QListView, QListWidget, QListWidgetItem,
-    QMainWindow, QPlainTextEdit, QPushButton, QSizePolicy,
-    QTabWidget, QWidget)
+    QLineEdit, QListWidget, QListWidgetItem, QMainWindow,
+    QPlainTextEdit, QPushButton, QSizePolicy, QTabWidget,
+    QWidget)
 
 class Ui_EnemyEditor(object):
     def setupUi(self, EnemyEditor):
@@ -305,7 +305,7 @@ class Ui_EnemyEditor(object):
         self.PlayerAPTVal = QLineEdit(self.PlayerStats)
         self.PlayerAPTVal.setObjectName(u"PlayerAPTVal")
         self.PlayerAPTVal.setGeometry(QRect(100, 300, 51, 22))
-        self.SimEnemiesList = QListView(self.BattleSimulator)
+        self.SimEnemiesList = QListWidget(self.BattleSimulator)
         self.SimEnemiesList.setObjectName(u"SimEnemiesList")
         self.SimEnemiesList.setGeometry(QRect(10, 10, 181, 331))
         self.SimEnemiesList.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)

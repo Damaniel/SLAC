@@ -28,6 +28,7 @@ class MainWindow(QMainWindow):
         self.ui.SaveFile.clicked.connect(self.save_file_button_action)
         self.ui.Exit.clicked.connect(self.exit_program)
         self.ui.EnemiesList.itemClicked.connect(self.update_enemy_data)
+        self.ui.tabWidget.tabBarClicked.connect(self.click_tab_function)
         self.ui.EnemyKeyVal.editingFinished.connect(self.update_active_enemy_key)
         self.ui.EnemyIDVal.editingFinished.connect(self.update_active_enemy_id)
         self.ui.EnemyNameVal.editingFinished.connect(self.update_active_enemy_name)
@@ -71,12 +72,12 @@ class MainWindow(QMainWindow):
         self.enemy_json['enemy']['items'][enemy_key]['name'] = "New Enemy"
         self.enemy_json['enemy']['items'][enemy_key]['bid'] = 0
         self.enemy_json['enemy']['items'][enemy_key]['gid'] = 0
-        self.enemy_json['enemy']['items'][enemy_key]['hp'] = 0
-        self.enemy_json['enemy']['items'][enemy_key]['str'] = 0
-        self.enemy_json['enemy']['items'][enemy_key]['spd'] = 0
-        self.enemy_json['enemy']['items'][enemy_key]['atk'] = 0
-        self.enemy_json['enemy']['items'][enemy_key]['def'] = 0
-        self.enemy_json['enemy']['items'][enemy_key]['apt'] = 0
+        self.enemy_json['enemy']['items'][enemy_key]['hp'] = 10
+        self.enemy_json['enemy']['items'][enemy_key]['str'] = 10
+        self.enemy_json['enemy']['items'][enemy_key]['spd'] = 50
+        self.enemy_json['enemy']['items'][enemy_key]['atk'] = 10
+        self.enemy_json['enemy']['items'][enemy_key]['def'] = 10
+        self.enemy_json['enemy']['items'][enemy_key]['apt'] = 1
         self.enemy_json['enemy']['items'][enemy_key]['f_atk'] = 0
         self.enemy_json['enemy']['items'][enemy_key]['i_atk'] = 0
         self.enemy_json['enemy']['items'][enemy_key]['l_atk'] = 0
@@ -86,8 +87,8 @@ class MainWindow(QMainWindow):
         self.enemy_json['enemy']['items'][enemy_key]['exp'] = 0
         self.enemy_json['enemy']['items'][enemy_key]['elevel'] = 0
         self.enemy_json['enemy']['items'][enemy_key]['ilevel'] = 0
-        self.enemy_json['enemy']['items'][enemy_key]['rarity'] = 0
-        self.enemy_json['enemy']['items'][enemy_key]['max_items'] = 0
+        self.enemy_json['enemy']['items'][enemy_key]['rarity'] = 255
+        self.enemy_json['enemy']['items'][enemy_key]['max_items'] = 1
         # Add the item to the scrollable list and make it the active item
         self.ui.EnemiesList.addItem(enemy_key)
         self.ui.EnemiesList.setCurrentRow(self.ui.EnemiesList.count() - 1)
@@ -179,6 +180,14 @@ class MainWindow(QMainWindow):
             self.save_enemy_json_file(self.active_file)
 
     @Slot()
+    def click_tab_function(self, index):
+        # If swapping to the sim tab, mirror the editor list to the sim list
+        if index == 1:
+            self.ui.SimEnemiesList.clear()
+            for enemy in self.enemy_json['enemy']['items']:
+                self.ui.SimEnemiesList.addItem(enemy)
+
+    @Slot()
     def add_enemy_button_action(self):
         self.create_new_enemy()
 
@@ -222,7 +231,6 @@ class MainWindow(QMainWindow):
             self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()] = old_data
             # Delete the data under the old key
             del self.enemy_json['enemy']['items'][old_key_name]
-            print(json.dumps(self.enemy_json, indent=4))
 
     # Updates the enemy's name in the JSON file
     @Slot()
