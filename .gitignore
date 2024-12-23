@@ -1,3 +1,4 @@
 CODE/SLAC.exe
 CODE/OBJ/*.o
 CODE/OUT.TXT
+RES/TOOLS/__pycache__
