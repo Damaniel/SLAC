@@ -23,6 +23,7 @@ class MainWindow(QMainWindow):
         self.ui.EnemyDeleteButton.clicked.connect(self.delete_enemy_button_action)
         self.ui.LoadFile.clicked.connect(self.load_file_button_action)
         self.ui.SaveFile.clicked.connect(self.save_file_button_action)
+        self.ui.Exit.clicked.connect(self.exit_program)
         self.ui.EnemiesList.itemClicked.connect(self.update_enemy_data)
         self.ui.EnemyKeyVal.editingFinished.connect(self.update_active_enemy_key)
         self.ui.EnemyIDVal.editingFinished.connect(self.update_active_enemy_id)
@@ -49,14 +50,14 @@ class MainWindow(QMainWindow):
 
     # Loads an enemy JSON file
     def load_enemy_json_file(self, filename):
-        f = open(filename)
+        f = open(filename, 'r')
         self.enemy_json = json.load(f)
         f.close()
 
     # Saves an enemy JSON file
     def save_enemy_json_file(self, filename):
-        f = open(filename)
-        json.dump(self.enemy_json)
+        f = open(filename, 'w')
+        json.dump(self.enemy_json, f)
         f.close()
 
     def create_new_enemy(self):
@@ -89,6 +90,7 @@ class MainWindow(QMainWindow):
         self.ui.EnemiesList.setCurrentRow(self.ui.EnemiesList.count() - 1)
         self.populate_enemy_fields()
         print(json.dumps(self.enemy_json, indent=4))
+
     def delete_selected_enemy(self):
         # Delete the active item
         enemy_key = self.ui.EnemiesList.currentItem().text()
@@ -102,8 +104,6 @@ class MainWindow(QMainWindow):
         if self.ui.EnemiesList.count() > 0:
             self.ui.EnemiesList.setCurrentRow(0)
             self.populate_enemy_fields()
-
-        print(json.dumps(self.enemy_json, indent=4))
 
     def populate_enemy_fields(self):
         enemy_name = self.ui.EnemiesList.currentItem().text()
@@ -174,12 +174,19 @@ class MainWindow(QMainWindow):
     def update_active_enemy_key(self):
         # Get the old name of the key for later work
         old_key_name = self.ui.EnemiesList.currentItem().text()
-        # Update the name in the list
-        self.ui.EnemiesList.currentItem().setText(self.ui.EnemyKeyVal.text())
-        # Move the old data to the new key in the JSON structure
-        self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()] = self.enemy_json['enemy']['items'][old_key_name]
-        # Delete the data under the old key
-        del self.enemy_json['enemy']['items'][old_key_name]
+
+        # If the name has actually changed, update the JSON file and UI
+        # (We have to check for a name change here because this function will delete the portion of the
+        # structure keyed under the old name, and things will go wrong if the name hasn't actually
+        # changed value)
+        if (old_key_name != self.ui.EnemyKeyVal.text()):
+            # Update the name in the list
+            self.ui.EnemiesList.currentItem().setText(self.ui.EnemyKeyVal.text())
+            # Move the old data to the new key in the JSON structure
+            old_data = self.enemy_json['enemy']['items'][old_key_name]
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()] = old_data
+            # Delete the data under the old key
+            del self.enemy_json['enemy']['items'][old_key_name]
 
     # Updates the enemy's name in the JSON file
     @Slot()
@@ -265,6 +272,10 @@ class MainWindow(QMainWindow):
     @Slot()
     def update_active_enemy_max_items(self):
         self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['max_items'] = self.ui.EnemyMaxItemsVal.text()
+
+    @Slot()
+    def exit_program(self):
+        self.close()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
