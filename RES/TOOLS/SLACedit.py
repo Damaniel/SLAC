@@ -1,6 +1,7 @@
 import sys, json, re
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QListWidgetItem
-from PySide6.QtCore import QFile, Slot
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QListWidgetItem, QGraphicsScene
+from PySide6.QtCore import QFile, Slot, QRect
+from PySide6.QtGui import QImage, QPixmap, QPainter
 from enemyeditor import Ui_EnemyEditor
 
 class MainWindow(QMainWindow):
@@ -8,12 +9,14 @@ class MainWindow(QMainWindow):
         self.enemy_json = {}
         self.active_file = None
         self.blank_id_idx = 0
+        self.enemy_pixmap = QPixmap('enemies.png')
 
         # Set up the visual part of the UI
         super(MainWindow, self).__init__()
         self.ui = Ui_EnemyEditor()
         self.ui.setupUi(self)
 
+        #
         # Open an empty version of the JSON file with all metadata headers present.
         # (that way, a 'new' file will get the headers too)
         self.load_enemy_json_file('skel.json')
@@ -57,7 +60,7 @@ class MainWindow(QMainWindow):
     # Saves an enemy JSON file
     def save_enemy_json_file(self, filename):
         f = open(filename, 'w')
-        json.dump(self.enemy_json, f)
+        json.dump(self.enemy_json, f, indent=4)
         f.close()
 
     def create_new_enemy(self):
@@ -89,7 +92,7 @@ class MainWindow(QMainWindow):
         self.ui.EnemiesList.addItem(enemy_key)
         self.ui.EnemiesList.setCurrentRow(self.ui.EnemiesList.count() - 1)
         self.populate_enemy_fields()
-        print(json.dumps(self.enemy_json, indent=4))
+        self.update_enemy_bitmap()
 
     def delete_selected_enemy(self):
         # Delete the active item
@@ -131,6 +134,18 @@ class MainWindow(QMainWindow):
         self.ui.EnemyRarityVal.setText(str(json_data['rarity']))
         self.ui.EnemyMaxItemsVal.setText(str(json_data['max_items']))
 
+    def update_enemy_bitmap(self):
+        enemy = self.get_single_enemy_data(self.ui.EnemiesList.currentItem().text())
+        temp_enemy_pixmap = QPixmap(64, 64)
+        index = enemy['gid']
+        x_off = int(int(index) % 64)
+        y_off = int(int(index) / 64)
+        source_rect = QRect(x_off * 64, y_off * 64, 64, 64)
+        dest_rect = QRect(0, 0, 64, 64)
+        painter = QPainter(temp_enemy_pixmap)
+        painter.drawPixmap(dest_rect, self.enemy_pixmap, source_rect)
+        painter.end()
+        self.ui.EnemyBitmap.setPixmap(temp_enemy_pixmap)
 
     # Gets the JSON entry for a single enemy based on its name
     def get_single_enemy_data(self, name):
@@ -139,6 +154,7 @@ class MainWindow(QMainWindow):
     @Slot()
     def update_enemy_data(self):
         self.populate_enemy_fields()
+        self.update_enemy_bitmap()
 
     @Slot()
     def load_file_button_action(self):
@@ -152,6 +168,7 @@ class MainWindow(QMainWindow):
         if self.ui.EnemiesList.count() > 0:
             self.ui.EnemiesList.setCurrentRow(0)
             self.populate_enemy_fields()
+            self.update_enemy_bitmap()
 
     @Slot()
     def save_file_button_action(self):
@@ -223,6 +240,7 @@ class MainWindow(QMainWindow):
     @Slot()
     def update_active_enemy_gid(self):
         self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['gid'] = self.ui.EnemyGIDVal.text()
+        self.update_enemy_bitmap()
 
     @Slot()
     def update_active_enemy_hp(self):

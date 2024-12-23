@@ -579,14 +579,23 @@
         <string>Key</string>
        </property>
       </widget>
-      <widget class="QGraphicsView" name="EnemyTile">
+      <widget class="QLabel" name="EnemyBitmap">
        <property name="geometry">
         <rect>
-         <x>120</x>
+         <x>130</x>
          <y>170</y>
          <width>64</width>
          <height>64</height>
         </rect>
+       </property>
+       <property name="autoFillBackground">
+        <bool>true</bool>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Shape::Box</enum>
+       </property>
+       <property name="text">
+        <string/>
        </property>
       </widget>
      </widget>
@@ -1192,7 +1201,6 @@
   <tabstop>EnemyNameVal</tabstop>
   <tabstop>EnemyBIDVal</tabstop>
   <tabstop>EnemyGIDVal</tabstop>
-  <tabstop>EnemyTile</tabstop>
   <tabstop>EnemyHPVal</tabstop>
   <tabstop>EnemySTRVal</tabstop>
   <tabstop>EnemySPDVal</tabstop>

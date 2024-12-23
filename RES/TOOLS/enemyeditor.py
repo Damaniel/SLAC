@@ -15,7 +15,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QGraphicsView, QGroupBox, QLabel,
+from PySide6.QtWidgets import (QApplication, QFrame, QGroupBox, QLabel,
     QLineEdit, QListView, QListWidget, QListWidgetItem,
     QMainWindow, QPlainTextEdit, QPushButton, QSizePolicy,
     QTabWidget, QWidget)
@@ -174,9 +174,11 @@ class Ui_EnemyEditor(object):
         self.EnemyKey = QLabel(self.EnemyStats)
         self.EnemyKey.setObjectName(u"EnemyKey")
         self.EnemyKey.setGeometry(QRect(10, 30, 21, 16))
-        self.EnemyTile = QGraphicsView(self.EnemyStats)
-        self.EnemyTile.setObjectName(u"EnemyTile")
-        self.EnemyTile.setGeometry(QRect(120, 170, 64, 64))
+        self.EnemyBitmap = QLabel(self.EnemyStats)
+        self.EnemyBitmap.setObjectName(u"EnemyBitmap")
+        self.EnemyBitmap.setGeometry(QRect(130, 170, 64, 64))
+        self.EnemyBitmap.setAutoFillBackground(True)
+        self.EnemyBitmap.setFrameShape(QFrame.Shape.Box)
         self.EnemyAddButton = QPushButton(self.EnemyEdit)
         self.EnemyAddButton.setObjectName(u"EnemyAddButton")
         self.EnemyAddButton.setGeometry(QRect(30, 510, 75, 24))
@@ -340,8 +342,7 @@ class Ui_EnemyEditor(object):
         QWidget.setTabOrder(self.EnemyIDVal, self.EnemyNameVal)
         QWidget.setTabOrder(self.EnemyNameVal, self.EnemyBIDVal)
         QWidget.setTabOrder(self.EnemyBIDVal, self.EnemyGIDVal)
-        QWidget.setTabOrder(self.EnemyGIDVal, self.EnemyTile)
-        QWidget.setTabOrder(self.EnemyTile, self.EnemyHPVal)
+        QWidget.setTabOrder(self.EnemyGIDVal, self.EnemyHPVal)
         QWidget.setTabOrder(self.EnemyHPVal, self.EnemySTRVal)
         QWidget.setTabOrder(self.EnemySTRVal, self.EnemySPDVal)
         QWidget.setTabOrder(self.EnemySPDVal, self.EnemyATKVal)
@@ -419,6 +420,7 @@ class Ui_EnemyEditor(object):
         self.EnemyMaxItemsVal.setText("")
         self.EnemyMaxItems.setText(QCoreApplication.translate("EnemyEditor", u"Max Items", None))
         self.EnemyKey.setText(QCoreApplication.translate("EnemyEditor", u"Key", None))
+        self.EnemyBitmap.setText("")
         self.EnemyAddButton.setText(QCoreApplication.translate("EnemyEditor", u"Add", None))
         self.EnemyDeleteButton.setText(QCoreApplication.translate("EnemyEditor", u"Delete", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.EnemyEdit), QCoreApplication.translate("EnemyEditor", u"Enemy Editor", None))
