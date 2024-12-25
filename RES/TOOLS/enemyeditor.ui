@@ -1135,7 +1135,7 @@
        <string>Attack!</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="PlayerResetHP">
+     <widget class="QPushButton" name="ResetBattle">
       <property name="geometry">
        <rect>
         <x>210</x>
@@ -1145,7 +1145,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Reset HP</string>
+       <string>Reset</string>
       </property>
      </widget>
     </widget>
@@ -1241,7 +1241,7 @@
   <tabstop>PlayerLDMGVal</tabstop>
   <tabstop>PlayerBlockVal</tabstop>
   <tabstop>PlayerAPTVal</tabstop>
-  <tabstop>PlayerResetHP</tabstop>
+  <tabstop>ResetBattle</tabstop>
   <tabstop>PlayerAttack</tabstop>
   <tabstop>CombatLogOutput</tabstop>
  </tabstops>
