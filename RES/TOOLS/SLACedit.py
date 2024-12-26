@@ -1,4 +1,4 @@
-import sys, json, re
+import sys, json, re, random
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QListWidgetItem, QGraphicsScene
 from PySide6.QtCore import QFile, Slot, QRect
 from PySide6.QtGui import QImage, QPixmap, QPainter
@@ -77,7 +77,78 @@ class Hero:
     # Takes the target to attack.
     # Returns a string that will be placed into the combat log
     def attack(self, target):
-        output = "Player attacks!"
+        # For each attack per turn
+        for i in range(self.apt):
+            # Calculate base damage from player
+            base_physical_damage = int(self.atk + (0.2 * self.str) * random.uniform(0.75, 1.25))
+
+            print(f" - player base physical damage = {base_physical_damage}")
+
+            # Calculate elemental damage
+            base_fire_attack_damage = 0
+            base_ice_attack_damage = 0
+            base_lightning_attack_damage = 0
+            fire_attack_done = False
+            ice_attack_done = False
+            lightning_attack_done = False
+            if self.f_atk > 0:
+                base_fire_attack_damage = int(self.f_atk + (0.1 * self.str) * random.uniform(0.75, 1.25))
+                fire_attack_done = True
+                print(f" - player fire damage = {base_fire_attack_damage}")
+            if self.i_atk > 0:
+                base_ice_attack_damage = int(self.i_atk + (0.1 * self.str) * random.uniform(0.75, 1.25))
+                ice_attack_done = True
+                print(f" - player ice damage = {base_ice_attack_damage}")
+            if self.l_atk > 0:
+                base_lightning_attack_damage = int(self.l_atk + (0.1 * self.str) * random.uniform(0.75, 1.25))
+                lightning_attack_done = True
+                print(f" - player lightning damage = {base_lightning_attack_damage}")
+
+            # Does the attack crit?
+            attack_crits = False
+            chance_of_crit = 2 + int(0.1 * self.str)
+            if chance_of_crit > 90:
+                chance_of_crit = 90
+            if random.randint(0, 100) < chance_of_crit:
+                attack_crits = True
+                print(f" - player attack crits!")
+
+            # Calculate base damage actually taken
+            enemy_base_damage_taken = base_physical_damage - (target.defense)
+            print(f" - enemy base damage taken =  {enemy_base_damage_taken}")
+            if enemy_base_damage_taken < 1:
+                enemy_base_damage_taken = 1
+            fire_resist = target.f_def / 100
+            if fire_resist < 0.1:
+                fire_resist = 0.1
+            enemy_fire_damage_taken = int(base_fire_attack_damage * (1.0 - fire_resist))
+            if fire_attack_done == True and enemy_fire_damage_taken < 1:
+                enemy_fire_damage_taken = 1
+            ice_resist = target.i_def / 100
+            if ice_resist < 0.1:
+                ice_resist = 0.1
+            enemy_ice_damage_taken = int(base_ice_attack_damage * (1.0 - ice_resist))
+            if ice_attack_done == True and enemy_ice_damage_taken < 1:
+                enemy_ice_damage_taken = 1
+            lightning_resist = target.l_def / 100
+            if lightning_resist < 0.1:
+                lightning_resist = 0.1
+            enemy_lightning_damage_taken = int(base_lightning_attack_damage * (1.0 - lightning_resist))
+            if lightning_attack_done == True and enemy_lightning_damage_taken < 1:
+                enemy_lightning_damage_taken = 1
+            print(f" - enemy fire damage taken = {enemy_fire_damage_taken}")
+            print(f" - enemy ice damage taken = {enemy_ice_damage_taken}")
+            print(f" - enemy lightning damage taken = {enemy_lightning_damage_taken}")
+
+            # Sum up the total damage
+            total_enemy_damage_taken = int(enemy_base_damage_taken + enemy_fire_damage_taken + enemy_ice_damage_taken + enemy_lightning_damage_taken)
+            # For enemies, crits always land
+            if attack_crits == True:
+                total_enemy_damage_taken = total_enemy_damage_taken * 2
+            print(f" - total enemy damage taken = {total_enemy_damage_taken}")
+            output = f"Player attacks! Enemy takes {total_enemy_damage_taken} damage."
+            target.hp -= total_enemy_damage_taken
+        
         return output
 
 class Mob:
@@ -409,7 +480,7 @@ class MainWindow(QMainWindow):
                 self.player.action_points -= 100
                 self.ui.CombatLogOutput.appendPlainText(f" - Remaining player action points are now {self.player.action_points}")
                 if self.enemy.hp <= 0:
-                    self.ui.CombatLogOutput.appendPlainText("** Enemy is defeated! **")
+                    self.ui.CombatLogOutput.appendPlainText("** Enemy is defeated! Reset to try again. **")
                     self.combat_enabled = False
                     self.ui.PlayerAttack.setEnabled(False)
 
@@ -419,7 +490,7 @@ class MainWindow(QMainWindow):
                 self.enemy.action_points -= 100
                 self.ui.CombatLogOutput.appendPlainText(f" - Remaining enemy action points are now {self.enemy.action_points}")
                 if self.player.hp <= 0:
-                    self.ui.CombatLogOutput.appendPlainText("** Player is defeated! **")
+                    self.ui.CombatLogOutput.appendPlainText("** Player is defeated! Reset to try again. **")
                     self.combat_enabled = False
                     self.ui.PlayerAttack.setEnabled(False)
     
