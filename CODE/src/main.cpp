@@ -55,7 +55,6 @@ DungeonFloor   g_dungeon;
 //   loop of any kind yet, and stuff in here is subject to change and/or removal.
 //----------------------------------------------------------------------------------
 int main(void) {
-
 	srand(time(NULL));
 
 	allegro_init();

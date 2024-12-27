@@ -114,26 +114,27 @@ class Hero:
                 print(f" - player attack crits!")
 
             # Calculate base damage actually taken
-            enemy_base_damage_taken = base_physical_damage - (target.defense)
+            enemy_base_damage_taken = int(base_physical_damage - (target.defense) * random.uniform(0.75, 1.25))
             print(f" - enemy base damage taken =  {enemy_base_damage_taken}")
             if enemy_base_damage_taken < 1:
                 enemy_base_damage_taken = 1
+            print(f" - actual enemy base damage taken =  {enemy_base_damage_taken}")
             fire_resist = target.f_def / 100
             if fire_resist < 0.1:
                 fire_resist = 0.1
-            enemy_fire_damage_taken = int(base_fire_attack_damage * (1.0 - fire_resist))
+            enemy_fire_damage_taken = int(base_fire_attack_damage * (1.0 - fire_resist) * random.uniform(0.75, 1.25))
             if fire_attack_done == True and enemy_fire_damage_taken < 1:
                 enemy_fire_damage_taken = 1
             ice_resist = target.i_def / 100
             if ice_resist < 0.1:
                 ice_resist = 0.1
-            enemy_ice_damage_taken = int(base_ice_attack_damage * (1.0 - ice_resist))
+            enemy_ice_damage_taken = int(base_ice_attack_damage * (1.0 - ice_resist) * random.uniform(0.75, 1.25))
             if ice_attack_done == True and enemy_ice_damage_taken < 1:
                 enemy_ice_damage_taken = 1
             lightning_resist = target.l_def / 100
             if lightning_resist < 0.1:
                 lightning_resist = 0.1
-            enemy_lightning_damage_taken = int(base_lightning_attack_damage * (1.0 - lightning_resist))
+            enemy_lightning_damage_taken = int(base_lightning_attack_damage * (1.0 - lightning_resist) * random.uniform(0.75, 1.25))
             if lightning_attack_done == True and enemy_lightning_damage_taken < 1:
                 enemy_lightning_damage_taken = 1
             print(f" - enemy fire damage taken = {enemy_fire_damage_taken}")
@@ -145,6 +146,7 @@ class Hero:
             # For enemies, crits always land
             if attack_crits == True:
                 total_enemy_damage_taken = total_enemy_damage_taken * 2
+                print(" - Crit hits!")
             print(f" - total enemy damage taken = {total_enemy_damage_taken}")
             output = f"Player attacks! Enemy takes {total_enemy_damage_taken} damage."
             target.hp -= total_enemy_damage_taken
@@ -204,7 +206,93 @@ class Mob:
         self.hp = self.max_hp
 
     def attack(self, target):
-        output = "Enemy attacks!"
+        # For each attack per turn
+        for i in range(self.apt):
+            # Calculate base damage from player
+            base_physical_damage = int(self.atk + (0.2 * self.str) * random.uniform(0.75, 1.25))
+
+            print(f" - enemy base physical damage = {base_physical_damage}")
+
+            # Calculate elemental damage
+            base_fire_attack_damage = 0
+            base_ice_attack_damage = 0
+            base_lightning_attack_damage = 0
+            fire_attack_done = False
+            ice_attack_done = False
+            lightning_attack_done = False
+            if self.f_atk > 0:
+                base_fire_attack_damage = int(self.f_atk + (0.1 * self.str) * random.uniform(0.75, 1.25))
+                fire_attack_done = True
+                print(f" - player fire damage = {base_fire_attack_damage}")
+            if self.i_atk > 0:
+                base_ice_attack_damage = int(self.i_atk + (0.1 * self.str) * random.uniform(0.75, 1.25))
+                ice_attack_done = True
+                print(f" - player ice damage = {base_ice_attack_damage}")
+            if self.l_atk > 0:
+                base_lightning_attack_damage = int(self.l_atk + (0.1 * self.str) * random.uniform(0.75, 1.25))
+                lightning_attack_done = True
+                print(f" - player lightning damage = {base_lightning_attack_damage}")
+
+            # Does the attack crit?
+            attack_crits = False
+            chance_of_crit = 2 + int(0.1 * self.str)
+            if chance_of_crit > 90:
+                chance_of_crit = 90
+            if random.randint(0, 100) < chance_of_crit:
+                attack_crits = True
+                print(f" - player attack crits!")
+
+            # Calculate base damage actually taken
+            if random.randint(0, 100) < (2 + target.block):
+                player_base_damage_taken = 0
+                print(f" - player blocked attack!")
+            else:
+                player_base_damage_taken = int(base_physical_damage - (target.defense + 0.2 * target.con) * random.uniform(0.75, 1.25))
+            print(f" - player base damage taken =  {player_base_damage_taken}")
+            if player_base_damage_taken < 1:
+                player_base_damage_taken = 1
+            print(f" - actual player base damage taken =  {player_base_damage_taken}")
+            fire_resist = target.f_def / 100
+            if fire_resist < 0.1:
+                fire_resist = 0.1
+            player_fire_damage_taken = int((base_fire_attack_damage * target.f_dmg )* (1.0 - fire_resist) * random.uniform(0.75, 1.25))
+            if fire_attack_done == True and player_fire_damage_taken < 1:
+                player_fire_damage_taken = 1
+            ice_resist = target.i_def / 100
+            if ice_resist < 0.1:
+                ice_resist = 0.1
+            player_ice_damage_taken = int((base_ice_attack_damage * target.i_dmg) * (1.0 - ice_resist) * random.uniform(0.75, 1.25))
+            if ice_attack_done == True and player_ice_damage_taken < 1:
+                player_ice_damage_taken = 1
+            lightning_resist = target.l_def / 100
+            if lightning_resist < 0.1:
+                lightning_resist = 0.1
+            player_lightning_damage_taken = int((base_lightning_attack_damage * target.l_dmg) * (1.0 - lightning_resist) * random.uniform(0.75, 1.25))
+            if lightning_attack_done == True and player_lightning_damage_taken < 1:
+                player_lightning_damage_taken = 1
+            print(f" - player fire damage taken = {player_fire_damage_taken}")
+            print(f" - player ice damage taken = {player_ice_damage_taken}")
+            print(f" - player lightning damage taken = {player_lightning_damage_taken}")
+
+            # Sum up the total damage
+            total_player_damage_taken = int(player_base_damage_taken + player_fire_damage_taken + player_ice_damage_taken + player_lightning_damage_taken)
+            # For the player, crits can be blocked/prevented
+            if attack_crits == True:
+                prevent_chance = int(0.5 * target.con)
+                if (prevent_chance > 90):
+                    prevent_chance = 90
+                if random.randint(0, 100) < prevent_chance:
+                    if random.randint(0, 100) < 50:
+                        print(f" - Crit missed, zero damage taken")
+                        total_player_damage_taken = 0
+                    else:
+                        print(f" - Crit missed, standard damage taken")
+                else:
+                    print(' - Crit landed')
+                    total_player_damage_taken = total_player_damage_taken * 2
+            print(f" - total player damage taken = {total_player_damage_taken}")
+            output = f"Enemy attacks! Player takes {total_player_damage_taken} damage."
+            target.hp -= total_player_damage_taken
         return output
 
 class MainWindow(QMainWindow):
@@ -322,7 +410,7 @@ class MainWindow(QMainWindow):
         self.enemy_json['enemy']['items'][enemy_key]['f_def'] = 0
         self.enemy_json['enemy']['items'][enemy_key]['i_def'] = 0
         self.enemy_json['enemy']['items'][enemy_key]['l_def'] = 0
-        self.enemy_json['enemy']['items'][enemy_key]['exp'] = 0
+        self.enemy_json['enemy']['items'][enemy_key]['exp'] = 10
         self.enemy_json['enemy']['items'][enemy_key]['elevel'] = 0
         self.enemy_json['enemy']['items'][enemy_key]['ilevel'] = 0
         self.enemy_json['enemy']['items'][enemy_key]['rarity'] = 255
@@ -347,6 +435,13 @@ class MainWindow(QMainWindow):
             self.ui.EnemiesList.setCurrentRow(0)
             self.populate_enemy_fields()
 
+    def intify_json_fields(self):
+        for enemy in self.enemy_json['enemy']['items']:
+            for field in self.enemy_json['enemy']['items'][enemy]:
+                if field != 'name':
+                    self.enemy_json['enemy']['items'][enemy][field] = int(self.enemy_json['enemy']['items'][enemy][field])
+                    print(self.enemy_json['enemy']['items'][enemy][field])
+
     def populate_enemy_fields(self):
         enemy_name = self.ui.EnemiesList.currentItem().text()
         json_data = self.get_single_enemy_data(enemy_name)
@@ -357,11 +452,12 @@ class MainWindow(QMainWindow):
         self.ui.EnemyGIDVal.setText(str(json_data['gid']))
         self.ui.EnemyHPVal.setText(str(json_data['hp']))
         self.ui.EnemySTRVal.setText(str(json_data['str']))
-        self.ui.EnemySPDVal.setText(str(json_data['spd']))
         self.ui.EnemyATKVal.setText(str(json_data['atk']))
         self.ui.EnemyDEFVal.setText(str(json_data['def']))
+        self.ui.EnemySPDVal.setText(str(json_data['spd']))
         self.ui.EnemyAPTVal.setText(str(json_data['apt']))
         self.ui.EnemyFATKVal.setText(str(json_data['f_atk']))
+        print(str(json_data['f_atk']))
         self.ui.EnemyIATKVal.setText(str(json_data['i_atk']))
         self.ui.EnemyLATKVal.setText(str(json_data['l_atk']))
         self.ui.EnemyFDEFVal.setText(str(json_data['f_def']))
@@ -493,6 +589,9 @@ class MainWindow(QMainWindow):
                     self.ui.CombatLogOutput.appendPlainText("** Player is defeated! Reset to try again. **")
                     self.combat_enabled = False
                     self.ui.PlayerAttack.setEnabled(False)
+
+        print(f" - player HP remaining = {self.player.hp}")
+        print(f" - enemy HP remaining = {self.enemy.hp}")
     
     @Slot()
     def reset_battle(self):
@@ -527,6 +626,8 @@ class MainWindow(QMainWindow):
         self.active_file = filename[0]
         # Load the JSON file
         self.load_enemy_json_file(self.active_file)
+
+        self.intify_json_fields()
 
         # Clear the existing lists
         self.ui.EnemiesList.clear()
@@ -613,103 +714,103 @@ class MainWindow(QMainWindow):
     @Slot()
     def update_active_enemy_id(self):
         if self.ui.EnemyIDVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['id'] = self.ui.EnemyIDVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['id'] = int(self.ui.EnemyIDVal.text())
 
     @Slot()
     def update_active_enemy_bid(self):
         if self.ui.EnemyBIDVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['bid'] = self.ui.EnemyBIDVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['bid'] = int(self.ui.EnemyBIDVal.text())
 
     @Slot()
     def update_active_enemy_gid(self):
         if self.ui.EnemyGIDVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['gid'] = self.ui.EnemyGIDVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['gid'] = int(self.ui.EnemyGIDVal.text())
             self.update_enemy_bitmap()
 
     @Slot()
     def update_active_enemy_hp(self):
         if self.ui.EnemyHPVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['hp'] = self.ui.EnemyHPVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['hp'] = int(self.ui.EnemyHPVal.text())
     
     @Slot()
     def update_active_enemy_str(self):
         if self.ui.EnemySTRVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['str'] = self.ui.EnemySTRVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['str'] = int(self.ui.EnemySTRVal.text())
 
     @Slot()
     def update_active_enemy_spd(self):
         if self.ui.EnemySPDVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['spd'] = self.ui.EnemySPDVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['spd'] = int(self.ui.EnemySPDVal.text())
 
     @Slot()
     def update_active_enemy_atk(self):
         if self.ui.EnemyATKVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['atk'] = self.ui.EnemyATKVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['atk'] = int(self.ui.EnemyATKVal.text())
 
     @Slot()
     def update_active_enemy_def(self):
         if self.ui.EnemyDEFVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['def'] = self.ui.EnemyDEFVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['def'] = int(self.ui.EnemyDEFVal.text())
 
     @Slot()
     def update_active_enemy_apt(self):
         if self.ui.EnemyAPTVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['apt'] = self.ui.EnemyAPTVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['apt'] = int(self.ui.EnemyAPTVal.text())
 
     @Slot()
     def update_active_enemy_fatk(self):
         if self.ui.EnemyFATKVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['f_atk'] = self.ui.EnemyFATKVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['f_atk'] = int(self.ui.EnemyFATKVal.text())
 
     @Slot()
     def update_active_enemy_iatk(self):
         if self.ui.EnemyIATKVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['i_atk'] = self.ui.EnemyIATKVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['i_atk'] = int(self.ui.EnemyIATKVal.text())
 
     @Slot()
     def update_active_enemy_latk(self):
         if self.ui.EnemyLATKVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['l_atk'] = self.ui.EnemyLATKVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['l_atk'] = int(self.ui.EnemyLATKVal.text())
 
     @Slot()
     def update_active_enemy_fdef(self):
         if self.ui.EnemyFDEFVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['f_def'] = self.ui.EnemyFDEFVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['f_def'] = int(self.ui.EnemyFDEFVal.text())
 
     @Slot()
     def update_active_enemy_idef(self):
         if self.ui.EnemyIDEFVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['i_def'] = self.ui.EnemyIDEFVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['i_def'] = int(self.ui.EnemyIDEFVal.text())
 
     @Slot()
     def update_active_enemy_ldef(self):
         if self.ui.EnemyLDEFVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['l_def'] = self.ui.EnemyLDEFVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['l_def'] = int(self.ui.EnemyLDEFVal.text())
 
     @Slot()
     def update_active_enemy_exp(self):
         if self.ui.EnemyExpVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['exp'] = self.ui.EnemyExpVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['exp'] = int(self.ui.EnemyExpVal.text())
 
     @Slot()
     def update_active_enemy_elevel(self):
         if self.ui.EnemyLevelVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['elevel'] = self.ui.EnemyLevelVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['elevel'] = int(self.ui.EnemyLevelVal.text())
 
     @Slot()
     def update_active_enemy_ilevel(self):
         if self.ui.EnemyILevelVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['ilevel'] = self.ui.EnemyILevelVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['ilevel'] = int(self.ui.EnemyILevelVal.text())
 
     @Slot()
     def update_active_enemy_rarity(self):
         if self.ui.EnemyRarityVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['rarity'] = self.ui.EnemyRarityVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['rarity'] = int(self.ui.EnemyRarityVal.text())
 
     @Slot()
     def update_active_enemy_max_items(self):
         if self.ui.EnemyMaxItemsVal.text() != '':
-            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['max_items'] = self.ui.EnemyMaxItemsVal.text()
+            self.enemy_json['enemy']['items'][self.ui.EnemiesList.currentItem().text()]['max_items'] = int(self.ui.EnemyMaxItemsVal.text())
 
     @Slot()
     def exit_program(self):

@@ -4,7 +4,7 @@
 #include "globals.h"
 
 namespace EnemyConsts {
-    const int MAX_GENERATOR_REROLLS = 20;
+    const int MAX_GENERATOR_REROLLS = 100;
     // Used in the generator function.  When rolling an enemy with a target elevel,
     // the actual elevel range considered will be 
     // (elevel - MIN_ELEVEL_RANGE) to (elevel + MAX_ELEVEL_RANGE), inclusive and
@@ -17,14 +17,14 @@ typedef struct {
     // Ids for different things
     int id;         // Offset into the enemy array
     std::string name;
-    int gid;        // The tile index
     int bid;        // An index into AI behavior types
+    int gid;        // The tile index
     // Stats
     unsigned short hp;
     unsigned short str;
+    unsigned short spd;
     unsigned short atk;
     unsigned short def;
-    unsigned short spd;
     unsigned short apt;
     unsigned short f_atk;       // Elemental attack
     unsigned short i_atk;
@@ -35,8 +35,8 @@ typedef struct {
     // rewards
     unsigned short exp;         // Experience on kill
     unsigned short elevel;      // enemy level (for average dungeon floor)
-    unsigned short rarity;      // relative rarity of the enemy
     unsigned short ilevel;      // ilevel for item drops
+    unsigned short rarity;      // relative rarity of the enemy
     unsigned short max_items;   // maximum items the enemy drops on kill
 } EnemyType;
 
