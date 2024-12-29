@@ -6,8 +6,8 @@ from enemyeditor import Ui_EnemyEditor
 
 class Hero:
     def __init__(self):
-        self.hp = 100
-        self.max_hp = 100
+        self.hp = 50
+        self.max_hp = 50
         self.action_points = 0
         self.str = 10
         self.dex = 10
@@ -26,6 +26,7 @@ class Hero:
         self.l_dmg = 0
         self.block = 0
         self.apt = 1
+        self.level = 1
 
     def get_stats(self):
         stats = {}
@@ -48,6 +49,7 @@ class Hero:
         stats['l_dmg'] = self.l_dmg
         stats['block'] = self.block
         stats['apt'] = self.apt
+        stats['level'] = self.level
         return stats
 
     def set_stats(self, stats):
@@ -70,6 +72,7 @@ class Hero:
         self.l_dmg = stats['l_dmg']
         self.block = stats['block']
         self.apt = stats['apt']
+        self.level = stats['level']
 
     def reset_health(self):
         self.hp = self.max_hp
@@ -314,7 +317,12 @@ class MainWindow(QMainWindow):
         # Open an empty version of the JSON file with all metadata headers present.
         # (that way, a 'new' file will get the headers too)
         self.load_enemy_json_file('skel.json')
-        
+    
+        # Load the player level table
+        f = open('levels.json', 'r')
+        self.level_data = json.load(f)
+        f.close()
+
         # initialize the player fields 
         fields = self.player.get_stats()
         self.populate_player_fields(fields)
@@ -372,6 +380,7 @@ class MainWindow(QMainWindow):
         self.ui.PlayerLDMGVal.editingFinished.connect(self.update_player_stats)
         self.ui.PlayerBlockVal.editingFinished.connect(self.update_player_stats)
         self.ui.PlayerAPTVal.editingFinished.connect(self.update_player_stats)
+        self.ui.PlayerLevelVal.editingFinished.connect(self.update_player_level)
         self.ui.EnemyExpVal.editingFinished.connect(self.update_active_enemy_exp)
         self.ui.EnemyLevelVal.editingFinished.connect(self.update_active_enemy_elevel)
         self.ui.EnemyILevelVal.editingFinished.connect(self.update_active_enemy_ilevel)
@@ -440,7 +449,6 @@ class MainWindow(QMainWindow):
             for field in self.enemy_json['enemy']['items'][enemy]:
                 if field != 'name':
                     self.enemy_json['enemy']['items'][enemy][field] = int(self.enemy_json['enemy']['items'][enemy][field])
-                    print(self.enemy_json['enemy']['items'][enemy][field])
 
     def populate_enemy_fields(self):
         enemy_name = self.ui.EnemiesList.currentItem().text()
@@ -457,7 +465,6 @@ class MainWindow(QMainWindow):
         self.ui.EnemySPDVal.setText(str(json_data['spd']))
         self.ui.EnemyAPTVal.setText(str(json_data['apt']))
         self.ui.EnemyFATKVal.setText(str(json_data['f_atk']))
-        print(str(json_data['f_atk']))
         self.ui.EnemyIATKVal.setText(str(json_data['i_atk']))
         self.ui.EnemyLATKVal.setText(str(json_data['l_atk']))
         self.ui.EnemyFDEFVal.setText(str(json_data['f_def']))
@@ -506,6 +513,7 @@ class MainWindow(QMainWindow):
         self.ui.PlayerLDMGVal.setText(str(fields['l_dmg']))
         self.ui.PlayerBlockVal.setText(str(fields['block']))
         self.ui.PlayerAPTVal.setText(str(fields['apt']))
+        self.ui.PlayerLevelVal.setText("1")
 
     def process_field(self, field, key, stats):
         try:
@@ -538,6 +546,37 @@ class MainWindow(QMainWindow):
         self.ui.PlayerAttack.setEnabled(True)
 
     @Slot()
+    def update_player_level(self):
+        level = self.ui.PlayerLevelVal.text()
+        if int(level) < 1:
+            level = "1"
+            self.ui.PlayerLevelVal.setText(level)
+        if int(level) > 100:
+            level = "100"
+            self.ui.PlayerLevelVal.setText(level)
+
+        stats = self.level_data[level]
+        self.ui.PlayerMaxHPVal.setText(str(stats[0]))
+        self.ui.PlayerHPVal.setText(str(stats[0]))
+        self.ui.PlayerSTRVal.setText(str(stats[1]))
+        self.ui.PlayerCONVal.setText(str(stats[2]))
+        self.ui.PlayerDEXVal.setText(str(stats[3]))
+        self.ui.PlayerATKVal.setText(str(stats[4]))
+        self.ui.PlayerDEFVal.setText(str(stats[5]))
+        self.ui.PlayerSPDVal.setText(str(stats[6]))
+        self.ui.PlayerFATKVal.setText(str(stats[7]))
+        self.ui.PlayerIATKVal.setText(str(stats[8]))
+        self.ui.PlayerLATKVal.setText(str(stats[9]))
+        self.ui.PlayerFDEFVal.setText(str(stats[10]))
+        self.ui.PlayerIDEFVal.setText(str(stats[11]))
+        self.ui.PlayerLDEFVal.setText(str(stats[12]))
+        self.ui.PlayerFDMGVal.setText(str(stats[13]))
+        self.ui.PlayerIDMGVal.setText(str(stats[14]))
+        self.ui.PlayerLDMGVal.setText(str(stats[15]))
+        self.ui.PlayerBlockVal.setText(str(stats[16]))
+        self.ui.PlayerAPTVal.setText(str(stats[17]))
+
+    @Slot()
     def update_player_stats(self):
         stats = {}
         self.process_field(self.ui.PlayerHPVal, 'hp', stats)
@@ -559,6 +598,7 @@ class MainWindow(QMainWindow):
         self.process_field(self.ui.PlayerLDMGVal, 'l_dmg', stats)
         self.process_field(self.ui.PlayerBlockVal, 'block', stats)
         self.process_field(self.ui.PlayerAPTVal, 'apt', stats)
+        self.process_field(self.ui.PlayerLevelVal, 'level', stats)
         self.player.set_stats(stats)
 
     @Slot()

@@ -1059,7 +1059,7 @@
       <widget class="QLabel" name="PlayerAPT">
        <property name="geometry">
         <rect>
-         <x>60</x>
+         <x>10</x>
          <y>300</y>
          <width>49</width>
          <height>16</height>
@@ -1072,11 +1072,34 @@
       <widget class="QLineEdit" name="PlayerAPTVal">
        <property name="geometry">
         <rect>
-         <x>100</x>
+         <x>50</x>
          <y>300</y>
          <width>51</width>
          <height>22</height>
         </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="PlayerLevelVal">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>300</y>
+         <width>51</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="PlayerLevel">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>300</y>
+         <width>49</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Level*</string>
        </property>
       </widget>
      </widget>
