@@ -662,7 +662,7 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def load_file_button_action(self):
-        filename = QFileDialog.getOpenFileName(self, caption="Open File", dir="../JSON", filter="JSON files (*.json)")
+        filename = QFileDialog.getOpenFileName(self, caption="Open File", dir="../../JSON", filter="JSON files (*.json)")
         self.active_file = filename[0]
         # Load the JSON file
         self.load_enemy_json_file(self.active_file)
@@ -687,7 +687,7 @@ class MainWindow(QMainWindow):
     @Slot()
     def save_file_button_action(self):
         if self.active_file == None or self.active_file == '':
-            filename = QFileDialog.getSaveFileName(self, caption="Save File", dir="../JSON", filter="JSON files (*.json);;All files (*)")
+            filename = QFileDialog.getSaveFileName(self, caption="Save File", dir="../../JSON", filter="JSON files (*.json);;All files (*)")
             self.active_file = filename[0]
         if self.active_file != None and self.active_file != '':
             self.save_enemy_json_file(self.active_file)

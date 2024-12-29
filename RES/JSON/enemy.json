@@ -3,9 +3,6 @@
         "metadata": {
             "struct_name": "g_enemy_ids",
             "struct_type": "EnemyType",
-            "pool_struct_name": "g_enemy_pool",
-            "pool_define": "g_enemy_pool_entries",
-            "pool_count": "g_enemy_pool_count",
             "description": "A list of enemy types",
             "fields": [
                 "id",

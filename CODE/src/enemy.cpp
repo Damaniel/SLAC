@@ -344,13 +344,12 @@ Enemy* EnemyGenerator::generate(int elevel) {
     if (elevel_high >= 100) 
         elevel_high = 100;
 
-    // Loop until we've found an enemy
-    do {
-        id = roll_from_pool(g_enemy_pool, g_enemy_pool_count, g_enemy_pool_entries);
-        if (g_enemy_ids[id].elevel >= elevel_low && g_enemy_ids[id].elevel <= elevel_high)
-            done = true;
-        ++count;
-    } while (!done && count < EnemyConsts::MAX_GENERATOR_REROLLS);
+    // Take advantage of the fact that there are 2 assigned enemies per elevel
+    // to limit the enemies to choose from to just those in the specific range
+    // corresponding to valid enemies
+    int pool_min = elevel_low * 2;
+    int pool_max = elevel_high * 2;
+    id = (rand() % (pool_max - pool_min)) + pool_min;
 
     // Initialize the enemy with the appropriate stats (mainly HP) for the selected enemy
     e->init(id);

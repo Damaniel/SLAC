@@ -4,7 +4,6 @@
 #include "globals.h"
 
 namespace EnemyConsts {
-    const int MAX_GENERATOR_REROLLS = 100;
     // Used in the generator function.  When rolling an enemy with a target elevel,
     // the actual elevel range considered will be 
     // (elevel - MIN_ELEVEL_RANGE) to (elevel + MAX_ELEVEL_RANGE), inclusive and
