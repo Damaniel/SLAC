@@ -6,10 +6,10 @@
 namespace EnemyConsts {
     // Used in the generator function.  When rolling an enemy with a target elevel,
     // the actual elevel range considered will be 
-    // (elevel - MIN_ELEVEL_RANGE) to (elevel + MAX_ELEVEL_RANGE), inclusive and
+    // (elevel * MIN_ELEVEL_RANGE) to (elevel * MAX_ELEVEL_RANGE), inclusive and
     // capped at 0 and 100 at each end.
-    const int MIN_ELEVEL_RANGE = 15;
-    const int MAX_ELEVEL_RANGE = 5;
+    const float MIN_ELEVEL_RANGE = 0.5;
+    const float MAX_ELEVEL_RANGE = 1.2;
 }
 
 typedef struct {
