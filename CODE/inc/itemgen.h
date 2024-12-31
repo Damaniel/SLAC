@@ -17,15 +17,15 @@ namespace ItemConsts {
 
     // odds tables for generating main item classes.  Currently:
     //
-    //   weapon: 15% 
-    //   armor 37%
-    //   currency 25%
-    //   potion 10%
-    //   scroll: 10%
-    //   artifact 3% 
+    //   weapon: 10% 
+    //   armor 38%
+    //   currency 15%
+    //   potion 15%
+    //   scroll: 20%
+    //   artifact 2% 
     // 
     // Note: key items will be handled separately.
-    const int g_item_class_pool[]= {15, 52, 77, 87, 97, 100};
+    const int g_item_class_pool[]= {10, 48, 63, 78, 98, 100};
     const int g_item_class_pool_count = 6;
     const int g_item_class_pool_entries = 100;
 

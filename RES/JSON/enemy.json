@@ -69,7 +69,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 3,
+                "exp": 2,
                 "elevel": 1,
                 "ilevel": 1,
                 "rarity": 255,
@@ -92,7 +92,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 5,
+                "exp": 4,
                 "elevel": 2,
                 "ilevel": 2,
                 "rarity": 253,
@@ -138,7 +138,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 5,
+                "exp": 7,
                 "elevel": 3,
                 "ilevel": 3,
                 "rarity": 240,
@@ -161,11 +161,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 8,
                 "elevel": 3,
                 "ilevel": 3,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "baby_crab": {
                 "id": 6,
@@ -207,7 +207,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 12,
                 "elevel": 4,
                 "ilevel": 4,
                 "rarity": 255,
@@ -230,7 +230,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 15,
                 "elevel": 5,
                 "ilevel": 5,
                 "rarity": 255,
@@ -253,7 +253,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 17,
                 "elevel": 5,
                 "ilevel": 5,
                 "rarity": 255,
@@ -276,7 +276,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 20,
                 "elevel": 6,
                 "ilevel": 6,
                 "rarity": 255,
@@ -299,7 +299,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 22,
                 "elevel": 6,
                 "ilevel": 6,
                 "rarity": 255,
@@ -322,11 +322,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 28,
                 "elevel": 7,
                 "ilevel": 7,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "green_worm": {
                 "id": 13,
@@ -345,7 +345,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 30,
                 "elevel": 7,
                 "ilevel": 7,
                 "rarity": 255,
@@ -368,11 +368,11 @@
                 "f_def": 10,
                 "i_def": 10,
                 "l_def": 10,
-                "exp": 10,
+                "exp": 33,
                 "elevel": 8,
                 "ilevel": 8,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "brown_ant": {
                 "id": 15,
@@ -391,7 +391,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 35,
                 "elevel": 8,
                 "ilevel": 8,
                 "rarity": 255,
@@ -414,7 +414,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 40,
                 "elevel": 9,
                 "ilevel": 9,
                 "rarity": 255,
@@ -437,7 +437,7 @@
                 "f_def": 10,
                 "i_def": 10,
                 "l_def": 10,
-                "exp": 10,
+                "exp": 42,
                 "elevel": 9,
                 "ilevel": 9,
                 "rarity": 255,
@@ -460,11 +460,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 48,
                 "elevel": 10,
                 "ilevel": 10,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "small_black_bat": {
                 "id": 19,
@@ -483,7 +483,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 52,
                 "elevel": 10,
                 "ilevel": 10,
                 "rarity": 255,
@@ -506,7 +506,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 60,
                 "elevel": 11,
                 "ilevel": 11,
                 "rarity": 255,
@@ -529,7 +529,7 @@
                 "f_def": 5,
                 "i_def": 5,
                 "l_def": 5,
-                "exp": 10,
+                "exp": 62,
                 "elevel": 11,
                 "ilevel": 11,
                 "rarity": 255,
@@ -552,7 +552,7 @@
                 "f_def": 25,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 70,
                 "elevel": 12,
                 "ilevel": 12,
                 "rarity": 255,
@@ -575,11 +575,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 73,
                 "elevel": 12,
                 "ilevel": 12,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "trickster": {
                 "id": 24,
@@ -598,11 +598,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 78,
                 "elevel": 13,
                 "ilevel": 13,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "baby_griffon": {
                 "id": 25,
@@ -621,11 +621,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 82,
                 "elevel": 13,
                 "ilevel": 13,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "baby_green_griffon": {
                 "id": 26,
@@ -644,11 +644,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 86,
                 "elevel": 14,
                 "ilevel": 14,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "baby_white_griffon": {
                 "id": 27,
@@ -667,11 +667,11 @@
                 "f_def": 0,
                 "i_def": 40,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 90,
                 "elevel": 14,
                 "ilevel": 14,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "baby_black_griffon": {
                 "id": 28,
@@ -690,11 +690,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 95,
                 "elevel": 15,
                 "ilevel": 15,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "brigand": {
                 "id": 29,
@@ -713,11 +713,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 99,
                 "elevel": 15,
                 "ilevel": 15,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "antman": {
                 "id": 30,
@@ -736,7 +736,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 105,
                 "elevel": 16,
                 "ilevel": 16,
                 "rarity": 255,
@@ -759,11 +759,11 @@
                 "f_def": 10,
                 "i_def": 10,
                 "l_def": 10,
-                "exp": 10,
+                "exp": 110,
                 "elevel": 16,
                 "ilevel": 16,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "fireworm": {
                 "id": 32,
@@ -782,7 +782,7 @@
                 "f_def": 50,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 115,
                 "elevel": 17,
                 "ilevel": 17,
                 "rarity": 255,
@@ -805,11 +805,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 120,
                 "elevel": 17,
                 "ilevel": 17,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "snail": {
                 "id": 34,
@@ -828,7 +828,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 126,
                 "elevel": 18,
                 "ilevel": 18,
                 "rarity": 255,
@@ -851,11 +851,11 @@
                 "f_def": 0,
                 "i_def": 50,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 131,
                 "elevel": 18,
                 "ilevel": 18,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "crab": {
                 "id": 36,
@@ -874,7 +874,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 137,
                 "elevel": 19,
                 "ilevel": 19,
                 "rarity": 255,
@@ -897,7 +897,7 @@
                 "f_def": 0,
                 "i_def": 50,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 143,
                 "elevel": 19,
                 "ilevel": 19,
                 "rarity": 255,
@@ -920,7 +920,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 149,
                 "elevel": 20,
                 "ilevel": 20,
                 "rarity": 255,
@@ -943,7 +943,7 @@
                 "f_def": 30,
                 "i_def": 30,
                 "l_def": 30,
-                "exp": 10,
+                "exp": 156,
                 "elevel": 20,
                 "ilevel": 20,
                 "rarity": 255,
@@ -966,11 +966,11 @@
                 "f_def": 90,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 161,
                 "elevel": 21,
                 "ilevel": 21,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "fire_swirl": {
                 "id": 41,
@@ -989,7 +989,7 @@
                 "f_def": 80,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 167,
                 "elevel": 21,
                 "ilevel": 21,
                 "rarity": 255,
@@ -1012,7 +1012,7 @@
                 "f_def": 0,
                 "i_def": 80,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 173,
                 "elevel": 22,
                 "ilevel": 22,
                 "rarity": 255,
@@ -1035,7 +1035,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 80,
-                "exp": 10,
+                "exp": 178,
                 "elevel": 22,
                 "ilevel": 22,
                 "rarity": 255,
@@ -1058,11 +1058,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 184,
                 "elevel": 23,
                 "ilevel": 23,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "zombie": {
                 "id": 45,
@@ -1081,11 +1081,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 189,
                 "elevel": 23,
                 "ilevel": 23,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "kobold": {
                 "id": 46,
@@ -1104,11 +1104,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 193,
                 "elevel": 24,
                 "ilevel": 24,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "devil_cat": {
                 "id": 47,
@@ -1127,7 +1127,7 @@
                 "f_def": 10,
                 "i_def": 10,
                 "l_def": 10,
-                "exp": 10,
+                "exp": 198,
                 "elevel": 24,
                 "ilevel": 24,
                 "rarity": 255,
@@ -1150,11 +1150,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 202,
                 "elevel": 25,
                 "ilevel": 25,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "mini_mummy": {
                 "id": 49,
@@ -1173,11 +1173,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 210,
                 "elevel": 25,
                 "ilevel": 25,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "mage": {
                 "id": 50,
@@ -1196,11 +1196,11 @@
                 "f_def": 30,
                 "i_def": 30,
                 "l_def": 30,
-                "exp": 10,
+                "exp": 216,
                 "elevel": 26,
                 "ilevel": 26,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "red_demon": {
                 "id": 51,
@@ -1219,11 +1219,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 222,
                 "elevel": 26,
                 "ilevel": 26,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "tick": {
                 "id": 52,
@@ -1242,7 +1242,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 228,
                 "elevel": 27,
                 "ilevel": 27,
                 "rarity": 255,
@@ -1265,7 +1265,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 234,
                 "elevel": 27,
                 "ilevel": 27,
                 "rarity": 255,
@@ -1288,11 +1288,11 @@
                 "f_def": 0,
                 "i_def": 50,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 240,
                 "elevel": 28,
                 "ilevel": 28,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "pale_spider": {
                 "id": 55,
@@ -1311,7 +1311,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 247,
                 "elevel": 28,
                 "ilevel": 28,
                 "rarity": 255,
@@ -1334,11 +1334,11 @@
                 "f_def": 20,
                 "i_def": 20,
                 "l_def": 20,
-                "exp": 10,
+                "exp": 253,
                 "elevel": 29,
                 "ilevel": 29,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "baby_spider": {
                 "id": 57,
@@ -1357,7 +1357,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 260,
                 "elevel": 29,
                 "ilevel": 29,
                 "rarity": 255,
@@ -1380,11 +1380,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 266,
                 "elevel": 30,
                 "ilevel": 30,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "giant_slug": {
                 "id": 59,
@@ -1403,11 +1403,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 273,
                 "elevel": 30,
                 "ilevel": 30,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "gnome": {
                 "id": 60,
@@ -1426,7 +1426,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 280,
                 "elevel": 31,
                 "ilevel": 31,
                 "rarity": 255,
@@ -1449,7 +1449,7 @@
                 "f_def": 10,
                 "i_def": 10,
                 "l_def": 10,
-                "exp": 10,
+                "exp": 286,
                 "elevel": 31,
                 "ilevel": 31,
                 "rarity": 255,
@@ -1472,7 +1472,7 @@
                 "f_def": 10,
                 "i_def": 10,
                 "l_def": 10,
-                "exp": 10,
+                "exp": 293,
                 "elevel": 32,
                 "ilevel": 32,
                 "rarity": 255,
@@ -1495,7 +1495,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 300,
                 "elevel": 32,
                 "ilevel": 32,
                 "rarity": 255,
@@ -1518,7 +1518,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 306,
                 "elevel": 33,
                 "ilevel": 33,
                 "rarity": 255,
@@ -1541,7 +1541,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 312,
                 "elevel": 33,
                 "ilevel": 33,
                 "rarity": 255,
@@ -1564,11 +1564,11 @@
                 "f_def": 0,
                 "i_def": 80,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 319,
                 "elevel": 34,
                 "ilevel": 34,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "flying_snake": {
                 "id": 67,
@@ -1587,7 +1587,7 @@
                 "f_def": 15,
                 "i_def": 15,
                 "l_def": 15,
-                "exp": 10,
+                "exp": 325,
                 "elevel": 34,
                 "ilevel": 34,
                 "rarity": 255,
@@ -1610,11 +1610,11 @@
                 "f_def": 25,
                 "i_def": 25,
                 "l_def": 25,
-                "exp": 10,
+                "exp": 331,
                 "elevel": 35,
                 "ilevel": 35,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "ladybug": {
                 "id": 69,
@@ -1633,7 +1633,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 338,
                 "elevel": 35,
                 "ilevel": 35,
                 "rarity": 255,
@@ -1656,11 +1656,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 345,
                 "elevel": 36,
                 "ilevel": 36,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "gorgon": {
                 "id": 71,
@@ -1679,11 +1679,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 351,
                 "elevel": 36,
                 "ilevel": 36,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "shambling_dead": {
                 "id": 72,
@@ -1702,11 +1702,11 @@
                 "f_def": 25,
                 "i_def": 25,
                 "l_def": 25,
-                "exp": 10,
+                "exp": 358,
                 "elevel": 37,
                 "ilevel": 37,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "rabbit": {
                 "id": 73,
@@ -1725,7 +1725,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 365,
                 "elevel": 37,
                 "ilevel": 37,
                 "rarity": 255,
@@ -1748,11 +1748,11 @@
                 "f_def": 0,
                 "i_def": 75,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 372,
                 "elevel": 38,
                 "ilevel": 38,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "blue_basilisk": {
                 "id": 75,
@@ -1771,11 +1771,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 380,
                 "elevel": 38,
                 "ilevel": 38,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "black_dragon": {
                 "id": 76,
@@ -1794,11 +1794,11 @@
                 "f_def": 50,
                 "i_def": 50,
                 "l_def": 50,
-                "exp": 10,
+                "exp": 387,
                 "elevel": 39,
                 "ilevel": 39,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "pale_ant": {
                 "id": 77,
@@ -1817,7 +1817,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 394,
                 "elevel": 39,
                 "ilevel": 39,
                 "rarity": 255,
@@ -1840,7 +1840,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 402,
                 "elevel": 40,
                 "ilevel": 40,
                 "rarity": 255,
@@ -1863,11 +1863,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 409,
                 "elevel": 40,
                 "ilevel": 40,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "griffon": {
                 "id": 80,
@@ -1886,11 +1886,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 416,
                 "elevel": 41,
                 "ilevel": 41,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "large_flea": {
                 "id": 81,
@@ -1909,7 +1909,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 424,
                 "elevel": 41,
                 "ilevel": 41,
                 "rarity": 255,
@@ -1932,11 +1932,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 432,
                 "elevel": 42,
                 "ilevel": 42,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "flapper": {
                 "id": 83,
@@ -1955,7 +1955,7 @@
                 "f_def": 90,
                 "i_def": 90,
                 "l_def": 90,
-                "exp": 10,
+                "exp": 439,
                 "elevel": 42,
                 "ilevel": 42,
                 "rarity": 255,
@@ -1978,7 +1978,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 447,
                 "elevel": 43,
                 "ilevel": 43,
                 "rarity": 255,
@@ -2001,7 +2001,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 455,
                 "elevel": 43,
                 "ilevel": 43,
                 "rarity": 255,
@@ -2024,11 +2024,11 @@
                 "f_def": 20,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 462,
                 "elevel": 44,
                 "ilevel": 44,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "brown_spider": {
                 "id": 87,
@@ -2047,7 +2047,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 469,
                 "elevel": 44,
                 "ilevel": 44,
                 "rarity": 255,
@@ -2070,7 +2070,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 477,
                 "elevel": 45,
                 "ilevel": 45,
                 "rarity": 255,
@@ -2093,7 +2093,7 @@
                 "f_def": 50,
                 "i_def": 50,
                 "l_def": 50,
-                "exp": 10,
+                "exp": 485,
                 "elevel": 45,
                 "ilevel": 45,
                 "rarity": 255,
@@ -2116,11 +2116,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 492,
                 "elevel": 46,
                 "ilevel": 46,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "skink": {
                 "id": 91,
@@ -2139,7 +2139,7 @@
                 "f_def": 15,
                 "i_def": 15,
                 "l_def": 15,
-                "exp": 10,
+                "exp": 500,
                 "elevel": 46,
                 "ilevel": 46,
                 "rarity": 255,
@@ -2162,11 +2162,11 @@
                 "f_def": 90,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 507,
                 "elevel": 47,
                 "ilevel": 47,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "ice_naga": {
                 "id": 93,
@@ -2185,11 +2185,11 @@
                 "f_def": 90,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 515,
                 "elevel": 47,
                 "ilevel": 47,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "lightning_naga": {
                 "id": 94,
@@ -2208,11 +2208,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 90,
-                "exp": 10,
+                "exp": 522,
                 "elevel": 48,
                 "ilevel": 48,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "moss_man": {
                 "id": 95,
@@ -2231,11 +2231,11 @@
                 "f_def": 0,
                 "i_def": 20,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 530,
                 "elevel": 48,
                 "ilevel": 48,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "green_griffon": {
                 "id": 96,
@@ -2254,11 +2254,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 10,
-                "exp": 10,
+                "exp": 537,
                 "elevel": 49,
                 "ilevel": 49,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "giant_fireworm": {
                 "id": 97,
@@ -2277,11 +2277,11 @@
                 "f_def": 90,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 543,
                 "elevel": 49,
                 "ilevel": 49,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "feline_brigand": {
                 "id": 98,
@@ -2300,11 +2300,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 550,
                 "elevel": 50,
                 "ilevel": 50,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 4
             },
             "blue_devil": {
                 "id": 99,
@@ -2323,11 +2323,11 @@
                 "f_def": 20,
                 "i_def": 20,
                 "l_def": 20,
-                "exp": 10,
+                "exp": 555,
                 "elevel": 50,
                 "ilevel": 50,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "fire_elemental": {
                 "id": 100,
@@ -2346,7 +2346,7 @@
                 "f_def": 90,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 562,
                 "elevel": 51,
                 "ilevel": 51,
                 "rarity": 255,
@@ -2369,7 +2369,7 @@
                 "f_def": 0,
                 "i_def": 90,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 570,
                 "elevel": 51,
                 "ilevel": 51,
                 "rarity": 255,
@@ -2392,7 +2392,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 90,
-                "exp": 10,
+                "exp": 577,
                 "elevel": 52,
                 "ilevel": 52,
                 "rarity": 255,
@@ -2415,7 +2415,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 585,
                 "elevel": 52,
                 "ilevel": 52,
                 "rarity": 255,
@@ -2438,7 +2438,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 592,
                 "elevel": 53,
                 "ilevel": 53,
                 "rarity": 255,
@@ -2461,11 +2461,11 @@
                 "f_def": 60,
                 "i_def": 60,
                 "l_def": 60,
-                "exp": 10,
+                "exp": 599,
                 "elevel": 53,
                 "ilevel": 53,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "gray_bat": {
                 "id": 106,
@@ -2484,7 +2484,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 607,
                 "elevel": 54,
                 "ilevel": 54,
                 "rarity": 255,
@@ -2507,7 +2507,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 614,
                 "elevel": 54,
                 "ilevel": 54,
                 "rarity": 255,
@@ -2530,11 +2530,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 622,
                 "elevel": 55,
                 "ilevel": 55,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "green_naga": {
                 "id": 109,
@@ -2553,11 +2553,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 629,
                 "elevel": 55,
                 "ilevel": 55,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "toxic_rat": {
                 "id": 110,
@@ -2576,11 +2576,11 @@
                 "f_def": 30,
                 "i_def": 30,
                 "l_def": 30,
-                "exp": 10,
+                "exp": 637,
                 "elevel": 56,
                 "ilevel": 56,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "blue_ant": {
                 "id": 111,
@@ -2599,7 +2599,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 644,
                 "elevel": 56,
                 "ilevel": 56,
                 "rarity": 255,
@@ -2622,11 +2622,11 @@
                 "f_def": 0,
                 "i_def": 90,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 652,
                 "elevel": 57,
                 "ilevel": 57,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "fire_wolf": {
                 "id": 113,
@@ -2645,11 +2645,11 @@
                 "f_def": 90,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 659,
                 "elevel": 57,
                 "ilevel": 57,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "green_fungus": {
                 "id": 114,
@@ -2668,7 +2668,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 667,
                 "elevel": 58,
                 "ilevel": 58,
                 "rarity": 255,
@@ -2691,11 +2691,11 @@
                 "f_def": 25,
                 "i_def": 25,
                 "l_def": 25,
-                "exp": 10,
+                "exp": 674,
                 "elevel": 58,
                 "ilevel": 58,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "toxic_skeleton": {
                 "id": 116,
@@ -2714,11 +2714,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 681,
                 "elevel": 59,
                 "ilevel": 59,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "demonic_ram": {
                 "id": 117,
@@ -2737,11 +2737,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 688,
                 "elevel": 59,
                 "ilevel": 59,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "bodkin": {
                 "id": 118,
@@ -2760,11 +2760,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 696,
                 "elevel": 60,
                 "ilevel": 60,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "jackal": {
                 "id": 119,
@@ -2783,11 +2783,11 @@
                 "f_def": 80,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 703,
                 "elevel": 60,
                 "ilevel": 60,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "devil_dog": {
                 "id": 120,
@@ -2806,11 +2806,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 711,
                 "elevel": 61,
                 "ilevel": 61,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "vampire_fly": {
                 "id": 121,
@@ -2829,7 +2829,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 719,
                 "elevel": 61,
                 "ilevel": 61,
                 "rarity": 255,
@@ -2852,7 +2852,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 726,
                 "elevel": 62,
                 "ilevel": 62,
                 "rarity": 255,
@@ -2875,7 +2875,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 40,
-                "exp": 10,
+                "exp": 735,
                 "elevel": 62,
                 "ilevel": 62,
                 "rarity": 255,
@@ -2898,11 +2898,11 @@
                 "f_def": 0,
                 "i_def": 80,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 742,
                 "elevel": 63,
                 "ilevel": 63,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "black_griffon": {
                 "id": 125,
@@ -2921,11 +2921,11 @@
                 "f_def": 50,
                 "i_def": 0,
                 "l_def": 50,
-                "exp": 10,
+                "exp": 750,
                 "elevel": 63,
                 "ilevel": 63,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "basilisk": {
                 "id": 126,
@@ -2944,11 +2944,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 757,
                 "elevel": 64,
                 "ilevel": 64,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "red_basilisk": {
                 "id": 127,
@@ -2967,11 +2967,11 @@
                 "f_def": 90,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 764,
                 "elevel": 64,
                 "ilevel": 64,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "rabid_gray_squirrel": {
                 "id": 128,
@@ -2990,7 +2990,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 771,
                 "elevel": 65,
                 "ilevel": 65,
                 "rarity": 255,
@@ -3013,7 +3013,7 @@
                 "f_def": 0,
                 "i_def": 50,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 778,
                 "elevel": 65,
                 "ilevel": 65,
                 "rarity": 255,
@@ -3036,7 +3036,7 @@
                 "f_def": 50,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 785,
                 "elevel": 66,
                 "ilevel": 66,
                 "rarity": 255,
@@ -3059,7 +3059,7 @@
                 "f_def": 80,
                 "i_def": 80,
                 "l_def": 80,
-                "exp": 10,
+                "exp": 793,
                 "elevel": 66,
                 "ilevel": 66,
                 "rarity": 255,
@@ -3082,7 +3082,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 800,
                 "elevel": 67,
                 "ilevel": 67,
                 "rarity": 255,
@@ -3105,11 +3105,11 @@
                 "f_def": 80,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 807,
                 "elevel": 67,
                 "ilevel": 67,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "mummy_warrior": {
                 "id": 134,
@@ -3128,11 +3128,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 814,
                 "elevel": 68,
                 "ilevel": 68,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "turtle": {
                 "id": 135,
@@ -3151,7 +3151,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 821,
                 "elevel": 68,
                 "ilevel": 68,
                 "rarity": 255,
@@ -3174,7 +3174,7 @@
                 "f_def": 90,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 828,
                 "elevel": 69,
                 "ilevel": 69,
                 "rarity": 255,
@@ -3197,11 +3197,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 835,
                 "elevel": 69,
                 "ilevel": 69,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "cyclops": {
                 "id": 138,
@@ -3220,11 +3220,11 @@
                 "f_def": 50,
                 "i_def": 50,
                 "l_def": 50,
-                "exp": 10,
+                "exp": 842,
                 "elevel": 70,
                 "ilevel": 70,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "giant_snail": {
                 "id": 139,
@@ -3243,7 +3243,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 850,
                 "elevel": 70,
                 "ilevel": 70,
                 "rarity": 255,
@@ -3266,7 +3266,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 857,
                 "elevel": 71,
                 "ilevel": 71,
                 "rarity": 255,
@@ -3289,11 +3289,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 864,
                 "elevel": 71,
                 "ilevel": 71,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "scorpion": {
                 "id": 142,
@@ -3312,7 +3312,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 871,
                 "elevel": 72,
                 "ilevel": 72,
                 "rarity": 255,
@@ -3335,11 +3335,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 878,
                 "elevel": 72,
                 "ilevel": 72,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "ooze": {
                 "id": 144,
@@ -3358,7 +3358,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 885,
                 "elevel": 73,
                 "ilevel": 73,
                 "rarity": 255,
@@ -3381,11 +3381,11 @@
                 "f_def": 0,
                 "i_def": 80,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 892,
                 "elevel": 73,
                 "ilevel": 73,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "beholder": {
                 "id": 146,
@@ -3404,11 +3404,11 @@
                 "f_def": 90,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 899,
                 "elevel": 74,
                 "ilevel": 74,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "fire_griffon": {
                 "id": 147,
@@ -3427,11 +3427,11 @@
                 "f_def": 90,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 905,
                 "elevel": 74,
                 "ilevel": 74,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "ice_griffon": {
                 "id": 148,
@@ -3450,11 +3450,11 @@
                 "f_def": 0,
                 "i_def": 90,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 905,
                 "elevel": 75,
                 "ilevel": 75,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "gorilla": {
                 "id": 149,
@@ -3473,11 +3473,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 912,
                 "elevel": 75,
                 "ilevel": 75,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "venom_jackal": {
                 "id": 150,
@@ -3496,7 +3496,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 920,
                 "elevel": 76,
                 "ilevel": 76,
                 "rarity": 255,
@@ -3519,11 +3519,11 @@
                 "f_def": 95,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 927,
                 "elevel": 76,
                 "ilevel": 76,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "leopard_gecko": {
                 "id": 152,
@@ -3542,7 +3542,7 @@
                 "f_def": 15,
                 "i_def": 15,
                 "l_def": 15,
-                "exp": 10,
+                "exp": 934,
                 "elevel": 77,
                 "ilevel": 77,
                 "rarity": 255,
@@ -3565,11 +3565,11 @@
                 "f_def": 70,
                 "i_def": 70,
                 "l_def": 70,
-                "exp": 10,
+                "exp": 941,
                 "elevel": 77,
                 "ilevel": 77,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "ghost": {
                 "id": 154,
@@ -3588,7 +3588,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 948,
                 "elevel": 78,
                 "ilevel": 78,
                 "rarity": 255,
@@ -3611,7 +3611,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 956,
                 "elevel": 78,
                 "ilevel": 78,
                 "rarity": 255,
@@ -3634,11 +3634,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 963,
                 "elevel": 79,
                 "ilevel": 79,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "caveman": {
                 "id": 157,
@@ -3657,11 +3657,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 970,
                 "elevel": 79,
                 "ilevel": 79,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "alpha_wolf": {
                 "id": 158,
@@ -3680,11 +3680,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 977,
                 "elevel": 80,
                 "ilevel": 80,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "warlock": {
                 "id": 159,
@@ -3703,11 +3703,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 984,
                 "elevel": 80,
                 "ilevel": 80,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "serpent": {
                 "id": 160,
@@ -3726,7 +3726,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 991,
                 "elevel": 81,
                 "ilevel": 81,
                 "rarity": 255,
@@ -3749,11 +3749,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 999,
                 "elevel": 81,
                 "ilevel": 81,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 4
             },
             "black_serpent": {
                 "id": 162,
@@ -3772,7 +3772,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1006,
                 "elevel": 82,
                 "ilevel": 82,
                 "rarity": 255,
@@ -3795,7 +3795,7 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1013,
                 "elevel": 82,
                 "ilevel": 82,
                 "rarity": 255,
@@ -3818,7 +3818,7 @@
                 "f_def": 75,
                 "i_def": 75,
                 "l_def": 75,
-                "exp": 10,
+                "exp": 1020,
                 "elevel": 83,
                 "ilevel": 83,
                 "rarity": 255,
@@ -3841,11 +3841,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1027,
                 "elevel": 83,
                 "ilevel": 83,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "living_fire": {
                 "id": 166,
@@ -3864,11 +3864,11 @@
                 "f_def": 90,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1034,
                 "elevel": 84,
                 "ilevel": 84,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "living_ice": {
                 "id": 167,
@@ -3887,11 +3887,11 @@
                 "f_def": 0,
                 "i_def": 90,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1042,
                 "elevel": 84,
                 "ilevel": 84,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "living_lightning": {
                 "id": 168,
@@ -3910,11 +3910,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 90,
-                "exp": 10,
+                "exp": 1049,
                 "elevel": 85,
                 "ilevel": 85,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "shadow_wolf": {
                 "id": 169,
@@ -3933,11 +3933,11 @@
                 "f_def": 70,
                 "i_def": 70,
                 "l_def": 70,
-                "exp": 10,
+                "exp": 1056,
                 "elevel": 85,
                 "ilevel": 85,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "walking_dead": {
                 "id": 170,
@@ -3956,11 +3956,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1063,
                 "elevel": 86,
                 "ilevel": 86,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "zombie_king": {
                 "id": 171,
@@ -3979,11 +3979,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1070,
                 "elevel": 86,
                 "ilevel": 86,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "gargoyle": {
                 "id": 172,
@@ -4002,11 +4002,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1077,
                 "elevel": 87,
                 "ilevel": 87,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "mini_goblin": {
                 "id": 173,
@@ -4025,11 +4025,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1085,
                 "elevel": 87,
                 "ilevel": 87,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "green_giant": {
                 "id": 174,
@@ -4048,11 +4048,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1092,
                 "elevel": 88,
                 "ilevel": 88,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "red_devil": {
                 "id": 175,
@@ -4071,11 +4071,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1099,
                 "elevel": 88,
                 "ilevel": 88,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "elder_lamia": {
                 "id": 176,
@@ -4094,11 +4094,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1106,
                 "elevel": 89,
                 "ilevel": 89,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "cyclops_warrior": {
                 "id": 178,
@@ -4117,11 +4117,11 @@
                 "f_def": 80,
                 "i_def": 80,
                 "l_def": 80,
-                "exp": 10,
+                "exp": 1113,
                 "elevel": 90,
                 "ilevel": 90,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 4
             },
             "lizard_king": {
                 "id": 179,
@@ -4140,11 +4140,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1120,
                 "elevel": 90,
                 "ilevel": 90,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "white_dragon": {
                 "id": 180,
@@ -4163,11 +4163,11 @@
                 "f_def": 0,
                 "i_def": 90,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1127,
                 "elevel": 91,
                 "ilevel": 91,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 4
             },
             "green_dragon": {
                 "id": 181,
@@ -4186,11 +4186,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 90,
-                "exp": 10,
+                "exp": 1134,
                 "elevel": 91,
                 "ilevel": 91,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 4
             },
             "red_dragon": {
                 "id": 182,
@@ -4209,11 +4209,11 @@
                 "f_def": 90,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1141,
                 "elevel": 92,
                 "ilevel": 92,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 4
             },
             "illusionist": {
                 "id": 183,
@@ -4232,11 +4232,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1148,
                 "elevel": 92,
                 "ilevel": 92,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "archangel": {
                 "id": 184,
@@ -4255,11 +4255,11 @@
                 "f_def": 50,
                 "i_def": 50,
                 "l_def": 50,
-                "exp": 10,
+                "exp": 1156,
                 "elevel": 93,
                 "ilevel": 93,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "monk": {
                 "id": 185,
@@ -4278,11 +4278,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1163,
                 "elevel": 93,
                 "ilevel": 93,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "war_tortoise": {
                 "id": 186,
@@ -4301,11 +4301,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1170,
                 "elevel": 94,
                 "ilevel": 94,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 4
             },
             "bowman": {
                 "id": 187,
@@ -4324,11 +4324,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1177,
                 "elevel": 94,
                 "ilevel": 94,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "faded_fungus": {
                 "id": 188,
@@ -4347,11 +4347,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1184,
                 "elevel": 95,
                 "ilevel": 95,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "hooded_one": {
                 "id": 189,
@@ -4370,11 +4370,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1191,
                 "elevel": 95,
                 "ilevel": 95,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "shade": {
                 "id": 190,
@@ -4393,11 +4393,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1199,
                 "elevel": 96,
                 "ilevel": 96,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "shrouded_one": {
                 "id": 191,
@@ -4416,11 +4416,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1206,
                 "elevel": 96,
                 "ilevel": 96,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "zealot": {
                 "id": 192,
@@ -4439,11 +4439,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1213,
                 "elevel": 97,
                 "ilevel": 97,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "lightning_elder_naga": {
                 "id": 193,
@@ -4462,11 +4462,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 95,
-                "exp": 10,
+                "exp": 1220,
                 "elevel": 97,
                 "ilevel": 97,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "ice_elder_naga": {
                 "id": 194,
@@ -4485,11 +4485,11 @@
                 "f_def": 0,
                 "i_def": 95,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1228,
                 "elevel": 98,
                 "ilevel": 98,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 4
             },
             "ancient_tree": {
                 "id": 195,
@@ -4508,11 +4508,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1235,
                 "elevel": 98,
                 "ilevel": 98,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "elder_dragon": {
                 "id": 196,
@@ -4531,11 +4531,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1242,
                 "elevel": 99,
                 "ilevel": 99,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 4
             },
             "vampire": {
                 "id": 197,
@@ -4554,11 +4554,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1249,
                 "elevel": 99,
                 "ilevel": 99,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "reaper": {
                 "id": 198,
@@ -4577,11 +4577,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1255,
                 "elevel": 100,
                 "ilevel": 100,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 2
             },
             "rhino": {
                 "id": 199,
@@ -4600,11 +4600,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 1262,
                 "elevel": 100,
                 "ilevel": 100,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 4
             },
             "groz_goblin_king": {
                 "id": 203,
@@ -4623,11 +4623,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 5000,
                 "elevel": 70,
                 "ilevel": 70,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 5
             },
             "lortrox_dragon_knight": {
                 "id": 204,
@@ -4650,7 +4650,7 @@
                 "elevel": 55,
                 "ilevel": 55,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 4
             },
             "silant_ice_giant": {
                 "id": 205,
@@ -4669,11 +4669,11 @@
                 "f_def": 80,
                 "i_def": 90,
                 "l_def": 80,
-                "exp": 10,
+                "exp": 7500,
                 "elevel": 80,
                 "ilevel": 80,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 5
             },
             "megalith_armored_beast": {
                 "id": 206,
@@ -4692,11 +4692,11 @@
                 "f_def": 85,
                 "i_def": 85,
                 "l_def": 85,
-                "exp": 10,
+                "exp": 10000,
                 "elevel": 100,
                 "ilevel": 100,
                 "rarity": 255,
-                "max_items": 5
+                "max_items": 6
             },
             "steenkey_elder_naga": {
                 "id": 201,
@@ -4715,11 +4715,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 750,
                 "elevel": 25,
                 "ilevel": 25,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             },
             "nameless_black_orc": {
                 "id": 202,
@@ -4738,11 +4738,11 @@
                 "f_def": 50,
                 "i_def": 50,
                 "l_def": 50,
-                "exp": 10,
+                "exp": 2500,
                 "elevel": 50,
                 "ilevel": 50,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 4
             },
             "prang_war_elephant": {
                 "id": 200,
@@ -4761,11 +4761,11 @@
                 "f_def": 0,
                 "i_def": 0,
                 "l_def": 0,
-                "exp": 10,
+                "exp": 400,
                 "elevel": 12,
                 "ilevel": 12,
                 "rarity": 255,
-                "max_items": 1
+                "max_items": 3
             }
         }
     }

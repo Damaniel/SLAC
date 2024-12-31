@@ -806,7 +806,6 @@ void pick_up_item_at(int x, int y) {
 		if (picked_up) {
 			g_state_flags.update_status_hp_exp = true;
 			g_state_flags.update_display = true;
-			g_player.apply_experience(2 * g_player.level);
 		}
     }
 }
@@ -2219,6 +2218,21 @@ void process_move(std::pair<int, int> proposed_location) {
 					if (to_attack->get_hp() <= 0) {
 						to_attack->mark_alive_status(false);
 						g_text_log.put_line("You defeated the " + to_attack->get_name() + "!");
+						int exp = to_attack->get_exp();
+						// Subtract 10% experience per elevel lower than the player level, to a minimum of 10%
+						if (g_player.level > to_attack->get_elevel()) {
+							float adj = 1.0 - ((g_player.level - to_attack->get_elevel()) * 0.1);
+							if (adj < 0.1)
+								adj = 0.1;
+							exp = (int)(ceil((float)exp * adj));
+						}
+						else if (g_player.level < to_attack->get_elevel()) {
+							float adj = 1.0 + ((to_attack->get_elevel() - g_player.level) * 0.1);
+							exp = (int)(ceil((float)exp * adj));
+						}
+						g_player.apply_experience(exp);
+						// TODO:
+						//  - Drop items
 					}
 				}
     			else if (g_dungeon.maze->is_carved(x, y)) {

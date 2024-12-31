@@ -342,8 +342,8 @@ Enemy* EnemyGenerator::generate(int elevel) {
     //std::cout << "elevel_low = " << elevel_low << ", elevel_high = " << elevel_high << std::endl;
 
     // Ensure the range of elevels falls between 0 and 100
-    if (elevel_low < 1 )
-        elevel_low = 1;
+    if (elevel_low < 0 )
+        elevel_low = 0;
     if (elevel_high >= 100) 
         elevel_high = 100;
 
