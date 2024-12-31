@@ -37,6 +37,9 @@ typedef struct {
 	float f_def;		// Fire defense
 	float i_def;		// Ice defense
 	float l_def;		// Lightning defense
+	float max_f_def;	// Maximum fire defense
+	float max_i_def;	// Maximum ice defense
+	float max_l_def;	// Maximum lightning defense
 	float f_atk;		// Fire attack damage
 	float i_atk;		// Ice attack damage
 	float l_atk;		// Lightning attack damage
@@ -46,7 +49,15 @@ typedef struct {
 	float a_dmg;		// All damage taken (pre-resist)
 	float apt;			// Attacks per turn
 	float block;		// Absolute chance to block
+	float gold_drop;    // relative multiplier of gold drop rate
 } Stats;
+
+typedef struct {
+	bool auto_identify;
+	bool permanent_discovery;
+	bool permanent_decurse;
+	bool bragging_rights;
+} ArtifactEffectFlags;
 
 typedef struct {
 	Item *weapon;
@@ -74,6 +85,9 @@ typedef struct {
 namespace PlayerConsts {
 	const int MAX_LEVEL = 100;
 
+	// The highest elemental resistance (in percent) the player can have
+	const int MAX_ELEM_DEF = 95;
+	
 	// For the following two tables, the 'n'th entry represents the experience the player
 	// should have and the stats the player should have at level (n+1)
 	//
@@ -243,18 +257,19 @@ namespace PlayerConsts {
 class Player {
 // For now, all members are public.
 public:
-	std::string name;		// The player's name
-	int generation;			// The current generation of the player
-	unsigned short hp;		// The player's current HP
-	unsigned short level;	// The player's current level 
-	int gold;				// Amount of currency the player has
-	int exp;				// The player's current number of experience points
-	Stats base;				// The player's base stats
-	Stats actual;			// The player's fully modified (by gear, items, etc) stats
-	EquipmentSet equipment;	// Equipment
-	bool is_poisoned;		// Is the player poisoned?
-	bool is_equip_poisoned; // Is cursed equipment poisoning the player
-	bool is_paralyzed;		// Is the player paralyzed?
+	std::string name;				// The player's name
+	int generation;					// The current generation of the player
+	unsigned short hp;				// The player's current HP
+	unsigned short level;			// The player's current level 
+	int gold;						// Amount of currency the player has
+	int exp;						// The player's current number of experience points
+	Stats base;						// The player's base stats
+	Stats actual;					// The player's fully modified (by gear, items, etc) stats
+	EquipmentSet equipment;			// Equipment
+	ArtifactEffectFlags effects;	// Artifact effects
+	bool is_poisoned;				// Is the player poisoned?
+	bool is_equip_poisoned; 		// Is cursed equipment poisoning the player
+	bool is_paralyzed;				// Is the player paralyzed?
 
 	// TODO - consider whether these values, and the *_last_room_entered functions
 	// should be moved elsewhere
@@ -273,6 +288,7 @@ public:
 	void set_position(int x, int y);
 	void assign_base_stats_to_actual();
 	void apply_stats_to_actual(Stats *fixed, Stats *multiplicative);
+	ArtifactEffectFlags *get_effect_flags() { return &effects; }
     void init_temp_stats(Stats *f, Stats *m);
 	int get_x_pos();
 	int get_y_pos();
@@ -290,6 +306,7 @@ public:
 	void apply_experience(int quantity);
 	void level_up(void);
 	float pct_exp_to_next_level(void);
+	void apply_artifact_mods(Stats *fixed, Stats *multiplicative);
 };
 
 #endif

@@ -69,6 +69,11 @@ void Player::init(int x, int y) {
 	// Move a copy of the base stats into the actual stats
 	assign_base_stats_to_actual();
 
+	effects.auto_identify = false;
+	effects.bragging_rights = false;
+	effects.permanent_decurse = false;
+	effects.permanent_discovery = false;
+
 	// Set the base HP
 	hp = (int)base.max_hp;
 
@@ -369,6 +374,10 @@ void Player::assign_base_stats_to_actual(void) {
 	actual.max_hp = base.max_hp;
 	actual.spd = base.spd;
 	actual.str = base.str;
+	actual.gold_drop = base.gold_drop;
+	actual.max_f_def = base.max_f_def;
+	actual.max_i_def = base.max_i_def;
+	actual.max_l_def = base.max_l_def;
 }
 
 //------------------------------------------------------------------------------
@@ -387,6 +396,10 @@ void Player::apply_stats_to_actual(Stats *fixed, Stats *multiplicative) {
 	actual.apt += fixed->apt;
 	actual.atk += fixed->atk;
 	actual.block += fixed->block;
+	actual.gold_drop += fixed->gold_drop;
+	actual.max_f_def += fixed->max_f_def;
+	actual.max_i_def += fixed->max_i_def;
+	actual.max_l_def += fixed->max_l_def;
 	actual.con += fixed->con;
 	actual.def += fixed->def;
 	actual.dex += fixed->dex;
@@ -406,8 +419,12 @@ void Player::apply_stats_to_actual(Stats *fixed, Stats *multiplicative) {
 
 	// // Then multiplicative
 	actual.apt = actual.apt * multiplicative->apt;
-	actual.atk =actual.atk * multiplicative->atk;
+	actual.atk = actual.atk * multiplicative->atk;
 	actual.block = actual.block * multiplicative->block;	
+	actual.gold_drop = actual.gold_drop * multiplicative->gold_drop;
+	actual.max_f_def = actual.max_f_def * multiplicative->max_f_def;
+	actual.max_i_def = actual.max_i_def * multiplicative->max_i_def;
+	actual.max_l_def = actual.max_l_def * multiplicative->max_l_def;
 	actual.con = actual.con * multiplicative->con;
 	actual.def = actual.def * multiplicative->def;
 	actual.dex = actual.dex * multiplicative->dex;
@@ -424,6 +441,20 @@ void Player::apply_stats_to_actual(Stats *fixed, Stats *multiplicative) {
 	actual.max_hp = actual.max_hp * multiplicative->max_hp;
 	actual.spd = actual.spd * multiplicative->spd;
 	actual.str = actual.str * multiplicative->str;
+
+	// Handle cap/overflow of elemental defense
+	if (actual.max_f_def >= PlayerConsts::MAX_ELEM_DEF)
+		actual.max_f_def = PlayerConsts::MAX_ELEM_DEF;
+	if (actual.max_i_def >= PlayerConsts::MAX_ELEM_DEF)
+		actual.max_i_def = PlayerConsts::MAX_ELEM_DEF;
+	if (actual.max_l_def >= PlayerConsts::MAX_ELEM_DEF)
+		actual.max_l_def = PlayerConsts::MAX_ELEM_DEF;
+	if (actual.f_def >= actual.max_f_def)
+		actual.f_def = actual.max_f_def;
+	if (actual.i_def >= actual.max_i_def)
+		actual.i_def = actual.max_i_def;
+	if (actual.l_def >= actual.max_l_def)
+		actual.l_def = actual.max_l_def;
 }
 
 //------------------------------------------------------------------------------
@@ -457,6 +488,10 @@ void Player::init_temp_stats(Stats *f, Stats *m) {
 	f->max_hp = 0;
 	f->spd = 0;
 	f->str = 0;
+	f->gold_drop = 1.0;
+	f->max_f_def = 0;
+	f->max_i_def = 0;
+	f->max_l_def = 0;
 
 	m->apt = 1.0;
 	m->atk = 1.0;
@@ -477,10 +512,14 @@ void Player::init_temp_stats(Stats *f, Stats *m) {
 	m->max_hp = 1.0;
 	m->spd = 1.0;
 	m->str = 1.0;
+	m->gold_drop = 1.0;
+	f->max_f_def = 1.0;
+	f->max_i_def = 1.0;
+	f->max_l_def = 1.0;
 }
 
 //------------------------------------------------------------------------------
-// Iterates through all equipped items and used items with active effects,
+// Iterates through all equipped items, artifacts and used items with active effects,
 // calculating what the player's modified (that is, actual) stats are.
 // 
 // Arguments:
@@ -488,7 +527,7 @@ void Player::init_temp_stats(Stats *f, Stats *m) {
 //
 // Returns:
 //   Nothing.
-//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------q
 void Player::recalculate_actual_stats(void) {
 	Stats fixed;
 	Stats multiplicative;
@@ -537,7 +576,10 @@ void Player::recalculate_actual_stats(void) {
 
 	// TODO - get item effects up and running
 
-	// Add all of the fixed increases to the actual stats
+	// Apply all of the artifact effects for each quantity of collected artifact
+	apply_artifact_mods(&fixed, &multiplicative);
+
+	// Add all of the fixed/mutiplicative increases to the actual stats
 	apply_stats_to_actual(&fixed, &multiplicative);
 
 	// Finally, apply all type 2 modifiers (take x% of something as something else)
@@ -646,15 +688,246 @@ void Player::init_base_stats() {
 	base.f_def = 0;
 	base.i_def = 0;
 	base.l_def = 0;
+	base.max_f_def = 80;
+	base.max_i_def = 80;
+	base.max_l_def = 80;
 	base.f_atk = 0;
 	base.i_atk = 0;
 	base.l_atk = 0;
-	base.f_dmg = 0;
-	base.i_dmg = 0;
-	base.l_dmg = 0;
-	base.a_dmg = 0;
+	base.f_dmg = 1.0;
+	base.i_dmg = 1.0;
+	base.l_dmg = 1.0;
+	base.a_dmg = 1.0;
 	base.apt = 1;
 	base.block = 0;
+}
+
+//----------------------------------------------------------------------------
+// Iterates through all active artifacts and applies their effects to the
+// player's stats
+//
+// Arguments:
+//   p - the player
+//   fixed - fixed stats
+//
+// Returns:
+//   Nothing
+//
+// Notes:  This code is ugly since it uses 70 magic numbers and assumes the
+// artifacts are in a particular order.  If this is a problem in the future,
+// then future me will deal with it then.
+//----------------------------------------------------------------------------
+void Player::apply_artifact_mods(Stats *fixed, Stats *multiplicative) {
+
+    //------------------------------------------
+    // Single piece
+    //------------------------------------------
+
+    fixed->str += g_active_artifacts[0];    // Sign of Strength
+    fixed->con += g_active_artifacts[1];    // Sign of Constitution
+    fixed->dex += g_active_artifacts[2];    // Sign of Dexterity
+    fixed->atk += g_active_artifacts[3];    // Sign of Attack
+    fixed->def += g_active_artifacts[4];    // Sign of Defense
+    // Sign of accuracy currently does nothing
+    fixed->spd += g_active_artifacts[6];    // Sign of Speed
+    
+    fixed->str += (g_active_artifacts[7] * 2);    // Medal of Strength
+    fixed->con += (g_active_artifacts[8] * 2);    // Medal of Constitution
+    fixed->dex += (g_active_artifacts[9] * 2);    // Medal of Dexterity
+    fixed->atk += (g_active_artifacts[10] * 2);   // Medal of Attack
+    fixed->def += (g_active_artifacts[11] * 2);   // Medal of Defense
+    // Medal of accuracty currently does nothing
+    fixed->spd += (g_active_artifacts[13] * 2);   // Medal of Speed
+
+    fixed->str += (g_active_artifacts[14] * 3);   // Trophy of Strength
+    fixed->con += (g_active_artifacts[15] * 3);   // Trophy of Constitution
+    fixed->dex += (g_active_artifacts[16] * 3);   // Trophy of Dexterity
+    fixed->atk += (g_active_artifacts[17] * 3);   // Trophy of Attack
+    fixed->def += (g_active_artifacts[18] * 3);   // Trophy of Defense
+    // Trophy of accuracy currently does nothing
+    fixed->spd += (g_active_artifacts[20] * 3);   // Trophy of Speed
+
+    fixed->f_def += g_active_artifacts[21];         // Ward of Fire
+    fixed->i_def += g_active_artifacts[22];         // Ward of Ice
+    fixed->l_def += g_active_artifacts[23];         // Ward of Lightning
+    fixed->f_def += (g_active_artifacts[24] * 2);   // Sigil of Fire
+    fixed->i_def += (g_active_artifacts[25] * 2);   // Sigil of Ice
+    fixed->l_def += (g_active_artifacts[26] * 2);   // Sigil of Lightning
+    fixed->f_def += (g_active_artifacts[27] * 3);   // Relic of Fire
+    fixed->i_def += (g_active_artifacts[28] * 3);   // Relic of Ice
+    fixed->l_def += (g_active_artifacts[29] * 3);   // Relic of Lightning'
+
+    fixed->gold_drop += (g_active_artifacts[30] * 0.01);    // Lucky Token
+    fixed->gold_drop += (g_active_artifacts[31] * 0.02);    // Lucky Coin
+    fixed->gold_drop += (g_active_artifacts[32] * 0.03);    // Lucky Pendant
+
+    //------------------------------------------
+    // Multi-piece
+    //------------------------------------------
+    int effect_quantity;
+
+    // Book of the Warrior
+    effect_quantity = g_active_artifacts[33] / g_artifact_ids[33].pieces;
+    fixed->str += effect_quantity;
+    fixed->con += effect_quantity;
+    // Book of the Thief
+    effect_quantity = g_active_artifacts[34] / g_artifact_ids[34].pieces;
+    fixed->spd += effect_quantity;
+    fixed->dex += effect_quantity;
+    // Book of the Combatant
+    effect_quantity = g_active_artifacts[35] / g_artifact_ids[35].pieces;
+    fixed->atk += effect_quantity;
+    fixed->def += effect_quantity;
+    // Tome of the Warrior
+    effect_quantity = g_active_artifacts[36] / g_artifact_ids[36].pieces;
+    fixed->str += effect_quantity * 2;
+    fixed->con += effect_quantity * 2;
+    // Tome of the Thief
+    effect_quantity = g_active_artifacts[37] / g_artifact_ids[37].pieces;
+    fixed->spd += effect_quantity * 2;
+    fixed->dex += effect_quantity * 2;
+    // Tome of the Combatant
+    effect_quantity = g_active_artifacts[38] / g_artifact_ids[38].pieces;
+    fixed->atk += effect_quantity * 2;
+    fixed->def += effect_quantity * 2;
+    // Bible of the Warrior
+    effect_quantity = g_active_artifacts[39] / g_artifact_ids[39].pieces;
+    fixed->str += effect_quantity * 3;
+    fixed->con += effect_quantity * 3;
+    // Bible of the Thief
+    effect_quantity = g_active_artifacts[40] / g_artifact_ids[40].pieces;
+    fixed->spd += effect_quantity * 3;
+    fixed->dex += effect_quantity * 3;
+    // Bible of the Combatant
+    effect_quantity = g_active_artifacts[41] / g_artifact_ids[41].pieces;
+    fixed->atk += effect_quantity * 3;
+    fixed->def += effect_quantity * 3;
+    // Ward of Elements
+    effect_quantity = g_active_artifacts[42] / g_artifact_ids[42].pieces;
+    fixed->f_def += effect_quantity;
+    fixed->i_def += effect_quantity;
+    fixed->l_def += effect_quantity;
+    // Sigil of Elements
+    effect_quantity = g_active_artifacts[43] / g_artifact_ids[43].pieces;
+    fixed->f_def += effect_quantity * 2;
+    fixed->i_def += effect_quantity * 2;
+    fixed->l_def += effect_quantity * 2;
+    // Relic of Elements
+    effect_quantity = g_active_artifacts[44] / g_artifact_ids[44].pieces;
+    fixed->f_def += effect_quantity * 3;
+    fixed->i_def += effect_quantity * 3;
+    fixed->l_def += effect_quantity * 3;
+    // Cup of wealth
+    effect_quantity = g_active_artifacts[45] / g_artifact_ids[45].pieces;
+    fixed->gold_drop += effect_quantity * 0.1;
+    // Puzzle Box of Frivolity
+    effect_quantity = g_active_artifacts[46] / g_artifact_ids[46].pieces;
+    if (effect_quantity > 0) 
+        effects.bragging_rights = true;
+    else
+        effects.bragging_rights = false;
+
+    //------------------------------------------
+    // Multi-generational
+    //------------------------------------------
+
+    // Book of the Polymath
+    effect_quantity = g_active_artifacts[47] / g_artifact_ids[47].pieces;
+    fixed->spd += effect_quantity;
+    fixed->atk += effect_quantity;
+    fixed->def += effect_quantity;
+    // Book of the Gladiator
+    effect_quantity = g_active_artifacts[48] / g_artifact_ids[48].pieces;
+    fixed->str += effect_quantity;
+    fixed->con += effect_quantity;
+    fixed->dex += effect_quantity;
+    // Tome of the Polymath
+    effect_quantity = g_active_artifacts[49] / g_artifact_ids[49].pieces;
+    fixed->spd += effect_quantity * 2;
+    fixed->atk += effect_quantity * 2;
+    fixed->def += effect_quantity * 2;
+    // Tome of the Gladiator
+    effect_quantity = g_active_artifacts[50] / g_artifact_ids[50].pieces;
+    fixed->str += effect_quantity * 2;
+    fixed->con += effect_quantity * 2;
+    fixed->dex += effect_quantity * 2;
+    // Bible of the Polymath
+    effect_quantity = g_active_artifacts[51] / g_artifact_ids[51].pieces;
+    fixed->spd += effect_quantity * 3;
+    fixed->atk += effect_quantity * 3;
+    fixed->def += effect_quantity * 3;
+    // Bible of the Gladiator
+    effect_quantity = g_active_artifacts[52] / g_artifact_ids[52].pieces;
+    fixed->str += effect_quantity * 3;
+    fixed->con += effect_quantity * 3;
+    fixed->dex += effect_quantity * 3;
+    // Trickster Trinket
+    effect_quantity = g_active_artifacts[53] / g_artifact_ids[53].pieces;
+    fixed->apt += effect_quantity;
+    // Prismatic Mirror
+    effect_quantity = g_active_artifacts[54] / g_artifact_ids[54].pieces;
+    fixed->f_def += effect_quantity * 10;
+    fixed->i_def += effect_quantity * 10;
+    fixed->l_def += effect_quantity * 10;
+    // Glasses of Foresight
+    effect_quantity = g_active_artifacts[55] / g_artifact_ids[55].pieces;
+    if (effect_quantity > 0) 
+        effects.permanent_discovery = true;
+    else
+        effects.permanent_discovery = false;
+    // Ethereal Barrier
+    effect_quantity = g_active_artifacts[56] / g_artifact_ids[56].pieces;
+    fixed->a_dmg -= effect_quantity * 0.01;
+    // Righteous Fire
+    effect_quantity = g_active_artifacts[57] / g_artifact_ids[57].pieces;
+    fixed->max_f_def += effect_quantity;
+    // Righteous Ice
+    effect_quantity = g_active_artifacts[58] / g_artifact_ids[58].pieces;
+    fixed->max_i_def += effect_quantity;
+    // Righteous Lightning
+    effect_quantity = g_active_artifacts[59] / g_artifact_ids[59].pieces;
+    fixed->max_l_def += effect_quantity;
+    // Ark of Enlightenment
+    effect_quantity = g_active_artifacts[60] / g_artifact_ids[60].pieces;
+    if (effect_quantity > 0)
+        effects.auto_identify = true;
+    else
+        effects.auto_identify = false;
+    // Chalice of Riches
+    effect_quantity = g_active_artifacts[61] / g_artifact_ids[61].pieces;
+    if (effect_quantity > 0)
+        multiplicative->gold_drop = 2.0;
+    else
+        multiplicative->gold_drop = 1.0;
+    // Amphora of Holy Water
+    effect_quantity = g_active_artifacts[62] / g_artifact_ids[62].pieces;
+    if (effect_quantity > 0)
+        effects.permanent_decurse = true;
+    else
+        effects.permanent_decurse = false;
+
+    //------------------------------------------
+    // HP artifacts added later
+    //------------------------------------------
+    fixed->max_hp += (g_active_artifacts[63] * 3);      // Sign of Health
+    fixed->max_hp += (g_active_artifacts[64] * 8);      // Medal of Health
+    fixed->max_hp += (g_active_artifacts[65] * 15);     // Trophy of Health
+    // Book of the Healthy
+    effect_quantity = g_active_artifacts[66] / g_artifact_ids[66].pieces;
+    fixed->max_hp += effect_quantity * 5;
+    fixed->con += effect_quantity;
+    // Tome of the Healthy
+    effect_quantity = g_active_artifacts[67] / g_artifact_ids[67].pieces;
+    fixed->max_hp += effect_quantity * 10;
+    fixed->con += effect_quantity;
+    // Bible of the Healthy
+    effect_quantity = g_active_artifacts[68] / g_artifact_ids[68].pieces;
+    fixed->max_hp += effect_quantity * 20;
+    fixed->con += effect_quantity;
+    // Fountain of Youth
+    effect_quantity = g_active_artifacts[69] / g_artifact_ids[69].pieces;
+    fixed->max_hp += effect_quantity * 100;
+
 }
 
 //------------------------------------------------------------------------------

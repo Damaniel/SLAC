@@ -30,10 +30,42 @@ std::vector<int> g_scrambled_scroll_icons;
 std::vector<bool> g_identified_potions;
 std::vector<bool> g_identified_scrolls;
 
+unsigned short g_collected_artifacts[NUM_ARTIFACTS];
+unsigned short g_active_artifacts[NUM_ARTIFACTS];
+
+//==================================================================
+// Non-inventory class item functions
+//==================================================================
+
+//----------------------------------------------------------------------------
+// Copies all artifacts the player has collected in this run to the 
+// running artifact total.  
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//
+// Notes:  artifacts 
+//----------------------------------------------------------------------------
+void move_new_artifacts_to_existing(void) {
+    for (int i=0; i < NUM_ARTIFACTS; i++) {
+        if (i >= MULTIGEN_ARTIFACT_OFFSET) {
+            if (g_collected_artifacts[i] > 0) {
+                g_active_artifacts[i] += 1;
+            }
+        }
+        else {
+            g_active_artifacts[i] += g_collected_artifacts[i];
+        }
+        g_collected_artifacts[i] = 0;
+    }
+}
+
 //==================================================================
 // Inventory
 //==================================================================
-
 
 //----------------------------------------------------------------------------
 // Inventory::Inventory

@@ -26,6 +26,13 @@
 
 #include "globals.h"
 
+// The number of artifacts in the artifact table.  Used in a couple arrays
+// that hold the quantity of artifacts collected
+const int NUM_ARTIFACTS = 70;
+// The offset to multigen artifacts in the table; they're handled differently
+// than the other kinds (limit one per character generation)
+const int MULTIGEN_ARTIFACT_OFFSET = 47;
+
 namespace InventoryConsts {
     const int INVENTORY_SIZE = 48;
     const int MAX_MODIFIERS  = 5;
@@ -492,6 +499,11 @@ public:
 
 extern Inventory *g_inventory;
 
+// The list of total active artifacts (which are applied to the player's stats)
+// and collected artifacts (which will also be applied to the next player's stats)
+extern unsigned short g_collected_artifacts[NUM_ARTIFACTS];
+extern unsigned short g_active_artifacts[NUM_ARTIFACTS];
+
 // The list of scrambled tile IDs for the potions and scrolls
 extern std::vector<int> g_scrambled_potion_icons;
 extern std::vector<int> g_scrambled_scroll_icons;
@@ -499,4 +511,8 @@ extern std::vector<int> g_scrambled_scroll_icons;
 // A set of bools - for each potion/scroll, true if identified, false if not
 extern std::vector<bool> g_identified_potions;
 extern std::vector<bool> g_identified_scrolls;
+
+// Function prototypes
+void move_new_artifacts_to_existing(void);
+
 #endif
