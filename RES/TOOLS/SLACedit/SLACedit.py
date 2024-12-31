@@ -21,9 +21,9 @@ class Hero:
         self.f_def = 0
         self.i_def = 0
         self.l_def = 0
-        self.f_dmg = 0
-        self.i_dmg = 0
-        self.l_dmg = 0
+        self.f_dmg = 1
+        self.i_dmg = 1
+        self.l_dmg = 1
         self.block = 0
         self.apt = 1
         self.level = 1
@@ -296,7 +296,8 @@ class Mob:
             print(f" - total player damage taken = {total_player_damage_taken}")
             output = f"Enemy attacks! Player takes {total_player_damage_taken} damage."
             target.hp -= total_player_damage_taken
-        return output
+        
+    return output
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -515,6 +516,17 @@ class MainWindow(QMainWindow):
         self.ui.PlayerAPTVal.setText(str(fields['apt']))
         self.ui.PlayerLevelVal.setText("1")
 
+    def process_float_field(self, field, key, stats):
+        try:
+            num = float(field.text())
+            if num != '':
+                stats[key] = num
+            else:
+                stats[key] = 0
+        except ValueError:
+            field.setText('')
+            stats[key] = 0
+
     def process_field(self, field, key, stats):
         try:
             num = int(field.text())
@@ -593,9 +605,9 @@ class MainWindow(QMainWindow):
         self.process_field(self.ui.PlayerFDEFVal, 'f_def', stats)
         self.process_field(self.ui.PlayerIDEFVal, 'i_def', stats)
         self.process_field(self.ui.PlayerLDEFVal, 'l_def', stats)
-        self.process_field(self.ui.PlayerFDMGVal, 'f_dmg', stats)
-        self.process_field(self.ui.PlayerIDMGVal, 'i_dmg', stats)
-        self.process_field(self.ui.PlayerLDMGVal, 'l_dmg', stats)
+        self.process_float_field(self.ui.PlayerFDMGVal, 'f_dmg', stats)
+        self.process_float_field(self.ui.PlayerIDMGVal, 'i_dmg', stats)
+        self.process_float_field(self.ui.PlayerLDMGVal, 'l_dmg', stats)
         self.process_field(self.ui.PlayerBlockVal, 'block', stats)
         self.process_field(self.ui.PlayerAPTVal, 'apt', stats)
         self.process_field(self.ui.PlayerLevelVal, 'level', stats)
