@@ -48,7 +48,7 @@ private:
     int distance;               // The distance to the player (used for sorting and determining 
                                 // which enemies to process on a turn)
     // stats
-    unsigned short hp;          // The current enemy HP
+    short hp;                   // The current enemy HP
 
     // behavior
     bool has_seen_player;       // Has the enemy seen the player before?
@@ -57,15 +57,17 @@ private:
     // Movement 
     int residual_action_points; // Any action points left over after their last executed turn
 
+    bool is_alive;              // Used to flag enemy for future deletion
     // The other stats live in the enemy table, for now.
     // If we add the ability for skills to adjust enemy stats,
     // we'll add 'actual' status as needed
 public:
     Enemy();
     Enemy(int eid);
-    ~Enemy() { /*std::cout << "Deleting enemy..." << std::endl;*/ }
+    ~Enemy() { std::cout << "Deleting enemy..." << std::endl; }
     void init(int eid);
     int get_hp() { return (int)hp; }
+    void set_hp(int val) { hp = val; }
     int get_id() { return id; }
     void set_pos(int x, int y) { x_pos = x; y_pos = y; }
     int get_x_pos() { return x_pos; }
@@ -75,6 +77,8 @@ public:
     int get_action_residual() { return residual_action_points; }
     void set_action_residual(int amount) { residual_action_points = amount; }
     bool has_seen_the_player() { return has_seen_player; }
+    bool is_it_alive() { return is_alive; }
+    void mark_alive_status(bool status) { is_alive = status; }
     void mark_has_seen_player(bool status) { has_seen_player = status; }
     // All of these fields are stored in a global array; these helper functions
     // get the appropriate fields at the relevant offset

@@ -39,6 +39,7 @@ void Enemy::init(int eid) {
     distance = 0;
     residual_action_points = 0;
     has_seen_player = false;
+    is_alive = true;
 }
 
 //----------------------------------------------------------------------------

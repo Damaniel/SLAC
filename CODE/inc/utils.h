@@ -153,8 +153,11 @@ void perform_enemy_action(Enemy *e);
 Enemy *get_enemy_at(int x, int y);
 void process_enemy_forgetting_player(std::list<Enemy *> &el);
 void process_enemy_vision(std::list<Enemy *> &el);
+void perform_enemy_combat(Enemy *e);
+void delete_dead_enemies(std::list<Enemy *> &el);
 
 // Action functions
 void process_move(std::pair<int, int> proposed_location);
+void perform_player_combat(Enemy *target);
 
 #endif

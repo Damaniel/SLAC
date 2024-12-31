@@ -1654,6 +1654,32 @@ Enemy* get_enemy_at(std::list<Enemy *> &el, int x, int y) {
 }
 
 //----------------------------------------------------------------------------
+// Goes through the enemy list and deletes any marked as dead
+//
+// Arguments:
+//  el - the enemy list
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void delete_dead_enemies(std::list<Enemy *> &el) {
+	std::list<Enemy *>::iterator enemy_it;
+
+	for (enemy_it = el.begin(); enemy_it != el.end(); ++enemy_it) {
+		if ((*enemy_it)->is_it_alive() == false) {
+			std::list<Enemy *>::iterator it = enemy_it;
+			std::cout << "delete_dead_enemies: deleting " << (*it)->get_name() << std::endl;
+			delete *enemy_it;
+			enemy_it = el.erase(it);
+		}
+	}
+
+	// Now that enemies are dead, we need to update the maze area to
+	// remove them from the screen
+	g_state_flags.update_maze_area = true;
+}
+
+//----------------------------------------------------------------------------
 // Checks if the specified location is a place an enemy can be
 //
 // Arguments:
@@ -1709,6 +1735,7 @@ void perform_enemy_action(Enemy *e) {
 	//std::cout << "perform_enemy_action: abs(px-x) = " << abs(px-x) << ", abs(py-y) = " << abs(py-y) << std::endl;
 	if (abs(px-x) <= 1 && abs(py-y) <= 1) {
 		g_text_log.put_line("The " + e->get_name() + " attacks you!");
+		perform_enemy_combat(e);
 		return;
 	}
 
@@ -1790,6 +1817,113 @@ void perform_enemy_action(Enemy *e) {
 		default:
 			//std::cout << "  Enemy doesn't move" << std::endl;
 			break;
+	}
+}
+
+//----------------------------------------------------------------------------
+// 'Attacks' the player, doing all required damage calculations and
+// adjusting player/enemy health
+//
+// Arguments:
+//   e - the enemy performing the attack
+//
+// Returns:
+//   Nothing.  The enemy and player health will be adjusted accordingly
+//----------------------------------------------------------------------------
+void perform_enemy_combat(Enemy *e) {
+
+}
+
+//----------------------------------------------------------------------------
+// 'Attacks' an enemy, doing all required damage calculations and
+// adjusting player/enemy health
+//
+// Arguments:
+//  target - the enemy to attack
+//
+// Returns:
+//   Nothing.  The enemy and player health will be adjusted accordingly
+//----------------------------------------------------------------------------
+void perform_player_combat(Enemy *target) {
+	for (int attack = 0; attack < g_player.actual.apt; ++attack) {
+
+		// Calculate physical base damage
+		int base_physical_damage = (int)((g_player.actual.atk + (0.2 * g_player.actual.str)) * ((rand() % 50) + 75) / 100);
+		std::cout << "perform_player_combat: player base phys = " << base_physical_damage << std::endl;
+
+		// Calculate elemental base damage
+		int base_fire_damage = 0;
+		int base_ice_damage = 0;
+		int base_lightning_damage = 0;
+		bool fire_attack_done = false;
+		bool ice_attack_done = false;
+		bool lightning_attack_done = false;
+		if (g_player.actual.f_atk > 0) {
+			base_fire_damage = (int)((g_player.actual.f_atk + (0.1 * g_player.actual.str)) * ((rand() % 50) + 75) / 100);
+			fire_attack_done = true;
+			std::cout << "peform_player_combat: player base fire = " << base_fire_damage << std::endl;
+		}
+		if (g_player.actual.i_atk > 0) {
+			base_ice_damage = (int)((g_player.actual.i_atk + (0.1 * g_player.actual.str)) * ((rand() % 50) + 75) / 100);
+			ice_attack_done = true;
+			std::cout << "peform_player_combat: player base ice = " << base_ice_damage << std::endl;
+		}
+		if (g_player.actual.l_atk > 0) {
+			base_lightning_damage = (int)((g_player.actual.l_atk + (0.1 * g_player.actual.str)) * ((rand() % 50) + 75) / 100);
+			lightning_attack_done = true;
+			std::cout << "peform_player_combat: player base lightning = " << base_lightning_damage << std::endl;
+		}
+
+		// Check for critical hit
+		bool attack_crits = false;
+		int chance_of_crit = 2 + (int)(g_player.actual.str / 10);
+		if (chance_of_crit > 90)
+			chance_of_crit = 90;
+		if (rand() % 100 < chance_of_crit) {
+			attack_crits = true;
+			std::cout << "perform_player_combat: attack crits!" << std::endl;
+		}
+
+		// Calculate actual base damage
+		int enemy_base_damage_taken = (int)((base_physical_damage - target->get_def()) * (rand() % 50 + 75) / 100);
+		std::cout << "perform_player_combat: enemy base damage taken = " << enemy_base_damage_taken << std::endl;
+		if (enemy_base_damage_taken < 1)
+			enemy_base_damage_taken = 1;
+		std::cout << "perform_player_combat: actual base damage taken = " << enemy_base_damage_taken << std::endl;
+
+		// Calculate actual elemental damage
+		float fire_resist = target->get_fdef() / 100;
+		float ice_resist = target->get_idef() / 100;
+		float lightning_resist = target->get_ldef() / 100;
+		int enemy_fire_damage_taken = (int)(base_fire_damage * (1.0 - fire_resist) * (rand() % 50 + 75) / 100);
+		int enemy_ice_damage_taken = (int)(base_ice_damage * (1.0 - ice_resist) * (rand() % 50 + 75) / 100);
+		int enemy_lightning_damage_taken = (int)(base_lightning_damage * (1.0 - lightning_resist) * (rand() % 50 + 75) / 100);
+		if (fire_attack_done && enemy_fire_damage_taken < 1)
+			enemy_fire_damage_taken = 1;
+		if (ice_attack_done && enemy_ice_damage_taken < 1)
+			enemy_ice_damage_taken = 1;
+		if (lightning_attack_done && enemy_lightning_damage_taken < 1)
+			enemy_lightning_damage_taken = 1;
+		std::cout << "perform_player_combat: fire damage taken = " << enemy_fire_damage_taken << std::endl;
+		std::cout << "perform_player_combat: ice damage taken = " << enemy_ice_damage_taken << std::endl;
+		std::cout << "perform_player_combat: lightning damage taken = " << enemy_lightning_damage_taken << std::endl;
+
+		// Sum up all damage
+		int total_damage_taken = enemy_base_damage_taken + enemy_fire_damage_taken + enemy_ice_damage_taken + enemy_lightning_damage_taken;		
+		if (attack_crits) {
+			g_text_log.put_line("** Critical hit! **");
+			total_damage_taken = total_damage_taken * 2;
+		}
+
+		// Subtract enemy HP
+		target->set_hp(target->get_hp() - total_damage_taken);
+
+		// Log the damage done to the game log
+		std::cout << "perform_player_combat: enemy takes " << total_damage_taken << " damage." << std::endl;
+		std::cout << "  perform_player_combat: enemy hp remaining = " << target->get_hp() << std::endl;
+		char text[80];
+		sprintf(text, "The %s takes %d damage!", target->get_name().c_str(), total_damage_taken);
+		g_text_log.put_line(text);
 	}
 }
 
@@ -1972,12 +2106,17 @@ void process_move(std::pair<int, int> proposed_location) {
 				int y = proposed_location.second;
 
 				if (g_player.get_x_pos() == x && g_player.get_y_pos() == y) {
-					std::cout << "Player is sitting still" << std::endl;
+					//std::cout << "Player is sitting still" << std::endl;
 				}
 				else if (is_enemy_here(g_dungeon.enemies, x, y)) {
 					Enemy *to_attack = get_enemy_at(g_dungeon.enemies, x, y);
 					// Do attack stuff
 					g_text_log.put_line("You attack the " + to_attack->get_name() + "!");
+					perform_player_combat(to_attack);
+					if (to_attack->get_hp() <= 0) {
+						to_attack->mark_alive_status(false);
+						g_text_log.put_line("You defeated the " + to_attack->get_name() + "!");
+					}
 				}
     			else if (g_dungeon.maze->is_carved(x, y)) {
 					// Move the player
@@ -1990,8 +2129,6 @@ void process_move(std::pair<int, int> proposed_location) {
 
 					// Show the items on the ground in the player log
 					add_items_at_player_to_log();
-
-					// Subtract the move points from the residual
 				}
 				// Subtract the action points from the player
 				g_player.set_action_residual(g_player.get_action_residual() - 100);
@@ -2011,6 +2148,9 @@ void process_move(std::pair<int, int> proposed_location) {
 		}
 
 	}
+
+	// For any enemies marked as dead this turn, delete them.
+	delete_dead_enemies(g_dungeon.enemies);
 
 	// Recalculate enemy distances
 	get_enemy_distances(g_dungeon.enemies, g_player.get_x_pos(), g_player.get_y_pos());

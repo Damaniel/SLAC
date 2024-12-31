@@ -259,7 +259,7 @@ class Player {
 public:
 	std::string name;				// The player's name
 	int generation;					// The current generation of the player
-	unsigned short hp;				// The player's current HP
+	short hp;						// The player's current HP
 	unsigned short level;			// The player's current level 
 	int gold;						// Amount of currency the player has
 	int exp;						// The player's current number of experience points
