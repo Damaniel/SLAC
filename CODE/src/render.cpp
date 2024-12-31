@@ -857,7 +857,7 @@ void Render::render_hp_exp_bar(BITMAP *destination) {
 	// HP bar
 	// clear the entire bar
 	rectfill(destination, UiConsts::HP_BAR_X + 3, UiConsts::HP_BAR_Y + 5,
-			 UiConsts::HP_BAR_X + UiConsts::HP_EXP_BAR_WIDTH - 1,
+			 UiConsts::HP_BAR_X + 3 + UiConsts::HP_EXP_BAR_WIDTH - 1,
 			 UiConsts::HP_BAR_Y + UiConsts::HP_EXP_BAR_HEIGHT - 1,
 			 16);
 	// fill in the HP bar

@@ -1,10 +1,10 @@
 import json, os, sys
 
-types_json_file = os.path.join("..", "JSON", "types.json")
-bases_json_file = os.path.join("..", "JSON", "bases.json")
-prefix_suffix_json_file = os.path.join('..', 'JSON', 'prefix_suffix.json')
-enum_json_file = os.path.join('..', 'JSON', 'enums.json')
-enemy_json_file = os.path.join('..', 'JSON', 'enemy.json')
+bases_json_file = os.path.join('..', '..', 'JSON', 'bases.json')
+types_json_file = os.path.join('..', '..', 'JSON', 'types.json')
+prefix_suffix_json_file = os.path.join('..', '..', 'JSON', 'prefix_suffix.json')
+enum_json_file = os.path.join('..', '..', 'JSON', 'enums.json')
+enemy_json_file = os.path.join('..', '..', 'JSON', 'enemy.json')
 output_file = "gen_data.cpp"
 header_file = "gen_data.h"
 header_guard = "__GEN_DATA_H__"

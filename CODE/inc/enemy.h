@@ -64,7 +64,7 @@ private:
 public:
     Enemy();
     Enemy(int eid);
-    ~Enemy() { std::cout << "Deleting enemy..." << std::endl; }
+    ~Enemy() { /*std::cout << "Deleting enemy..." << std::endl;*/ }
     void init(int eid);
     int get_hp() { return (int)hp; }
     void set_hp(int val) { hp = val; }

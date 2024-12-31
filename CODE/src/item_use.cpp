@@ -25,18 +25,16 @@
 #include "item_use.h"
 
 //----------------------------------------------------------------------------
-// Heals the player for a percentage (0-100) of their max HP
+// Heals the player for an amount of their HP
 //
 // Arguments:
-//  percentage - a value from 0 to 100, representing the percentage of max HP
-//               to heal
+//  amount - the amount to heal
 //
 // Returns:
 //   Nothing
 //----------------------------------------------------------------------------
-void heal_player(int percentage)
+void heal_player(int amount)
 {
-    int amount = (int)(((float)percentage / 100) * g_player.actual.max_hp);
     int actual_healed, old_hp;
 
     char text[40];
@@ -386,13 +384,13 @@ void use_potion_action(int id) {
 
     switch (id) {
         case ItemConsts::POT_OF_LIGHT_HEAL:     // Scroll of light healing
-            heal_player(10);
-            break;
-        case ItemConsts::POT_OF_MOD_HEAL:     // scroll of healing
             heal_player(50);
             break;
+        case ItemConsts::POT_OF_MOD_HEAL:     // scroll of healing
+            heal_player(250);
+            break;
         case ItemConsts::POT_OF_FULL_HEAL:     // scroll of full healing
-            heal_player(100);
+            heal_player(32000);
             break;
         case ItemConsts::POT_OF_CURE_POISON:
             if(g_player.is_poisoned) {

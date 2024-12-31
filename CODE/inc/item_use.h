@@ -3,7 +3,7 @@
 
 #include "globals.h"
 
-void heal_player(int percentage);
+void heal_player(int amount);
 bool identify_item(bool log);
 int identify_all();
 bool decurse_item(bool log);

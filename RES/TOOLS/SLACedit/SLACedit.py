@@ -297,7 +297,7 @@ class Mob:
             output = f"Enemy attacks! Player takes {total_player_damage_taken} damage."
             target.hp -= total_player_damage_taken
         
-    return output
+        return output
 
 class MainWindow(QMainWindow):
     def __init__(self):
