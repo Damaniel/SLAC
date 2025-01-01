@@ -856,7 +856,8 @@ void perform_inventory_menu_action(void) {
 			// If it can be equipped and currently is, have the player unequip it
 			if (i->can_be_equipped() && i->is_it_equipped()) {
 				//std::cout << "perform_inventory_menu_action: unequipping item" << std::endl;
-				g_player.unequip(i);
+				Item **equip_slot = g_player.get_item_slot_by_type(i->get_type_id());
+				g_player.unequip(equip_slot);
 			}
 			break;
 		case UiConsts::ITEM_OPTION_DROP:

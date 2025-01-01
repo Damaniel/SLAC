@@ -195,6 +195,16 @@ Item** Player::get_item_slot_by_type(int type) {
 	Item **item_slot;
 
 	switch (type) {
+			case ItemConsts::WEAPON_TYPE_AXE:
+			case ItemConsts::WEAPON_TYPE_BATTLEAXE:
+			case ItemConsts::WEAPON_TYPE_BROADSWORD:
+			case ItemConsts::WEAPON_TYPE_DAGGER:
+			case ItemConsts::WEAPON_TYPE_MACE:
+			case ItemConsts::WEAPON_TYPE_MAUL:
+			case ItemConsts::WEAPON_TYPE_SWORD:
+				//std::cout << "get_item_slot_by_type: Item is for weapon" << std::endl;
+				item_slot = &(equipment.weapon);
+				break;
 			case ItemConsts::ARMOR_TYPE_HAT:
 			case ItemConsts::ARMOR_TYPE_HELM:
 				//std::cout << "get_item_slot_by_type: Item is for head" << std::endl;
@@ -222,7 +232,7 @@ Item** Player::get_item_slot_by_type(int type) {
 				break;
 			case ItemConsts::ARMOR_TYPE_BUCKLER:
 			case ItemConsts::ARMOR_TYPE_SHIELD:
-				//std::cout << "get_item_slot_by_type: Item is for shield slot" << std::endl;
+				std::cout << "get_item_slot_by_type: Item is for shield slot" << std::endl;
 				item_slot = &(equipment.shield);
 				break;
 			case ItemConsts::ARMOR_TYPE_RING:
@@ -252,17 +262,20 @@ Item** Player::get_item_slot_by_type(int type) {
 //   Nothing.
 //------------------------------------------------------------------------------
 void Player::equip(Item *i) {
-	int item_type = i->get_item_class();
+	int item_class = i->get_item_class();
 	Item **item_slot;
+	Item **extra_slot;
 
 	// If not a weapon or armor, do nothing
-	if (item_type != ItemConsts::WEAPON_CLASS && item_type != ItemConsts::ARMOR_CLASS) {
+	if (item_class != ItemConsts::WEAPON_CLASS && item_class != ItemConsts::ARMOR_CLASS) {
 		return;
 	}
 
+	int item_type = i->get_type_id();
+
 	// If a weapon, get the weapon slot.  Otherwise, get the appropriate armor slot
 	// based on what the item is
-	if (item_type == ItemConsts::WEAPON_CLASS) {
+	if (item_class == ItemConsts::WEAPON_CLASS) {
 		item_slot = &(equipment.weapon);
 	}
 	else {
@@ -274,8 +287,45 @@ void Player::equip(Item *i) {
 		}
 	}
 	
+	// If the item to equip is a shield and a two handed weapon is equipped, then 
+	// unequip the weapon 
+	if (item_type == ItemConsts::ARMOR_TYPE_SHIELD || item_type == ItemConsts::ARMOR_TYPE_BUCKLER) {
+		std::cout << "type to equip is shield" << std::endl;
+		extra_slot = &(equipment.weapon);
+		if (*extra_slot != NULL) {
+			std::cout << "equipping shield, weapon is equipped" << std::endl;
+			int extra_type = (*extra_slot)->get_type_id();
+			if (extra_type == ItemConsts::WEAPON_TYPE_BATTLEAXE || 
+			    extra_type == ItemConsts::WEAPON_TYPE_BROADSWORD ||
+				extra_type == ItemConsts::WEAPON_TYPE_MAUL) {
+					std::cout << "weapon is two-handed, removing" << std::endl;
+					unequip(extra_slot);
+				}			
+		}
+		else {
+			std::cout << "Weapon slot is empty" << std::endl;
+		}
+	}	
+
+	// If the item to equip is a two-handed weapon and a shield is equipped, then
+	// unequip the shield
+	if (item_type == ItemConsts::WEAPON_TYPE_BATTLEAXE ||
+	    item_type == ItemConsts::WEAPON_TYPE_BROADSWORD ||
+		item_type == ItemConsts::WEAPON_TYPE_MAUL) {
+		std::cout << "type to equip is two-hander" << std::endl;
+		extra_slot = &(equipment.shield);
+		if (*extra_slot != NULL) {
+			std::cout << "weapon is two-handed, shield is equipped" << std::endl;
+			unequip(extra_slot);
+		}
+		else {
+			std::cout << "Shield slot is empty" << std::endl;
+		}
+	}
+
 	// Unequip any existing item if something is equipped (or no-op if nothing is there)
-	unequip(i);
+	if (*item_slot != NULL) 
+		unequip(item_slot);
 
 	// Attach the item to the slot and equip it
 	//std::cout << "equip: Attaching item to item slot" << std::endl;
@@ -295,54 +345,27 @@ void Player::equip(Item *i) {
 // to the player) from the appropriate player equipment slot
 // 
 // Arguments:
-//   i - the item (presumably equipment) type
+//   slot - the item slot
 //
 // Returns:
 //   Nothing.
 //------------------------------------------------------------------------------
-void Player::unequip(Item *i) {
-	int item_type = i->get_item_class();
-	Item **item_slot;
-
-	// Do nothing if not a weapon or armor
-	if (item_type != ItemConsts::WEAPON_CLASS && item_type != ItemConsts::ARMOR_CLASS) {
-		return;
-	}
-
-	// If a weapon, select the weapon slot, otherwise figure out what kind of armor
-	// it is and select that slot
-	if (item_type == ItemConsts::WEAPON_CLASS) {
-		item_slot = &(equipment.weapon);
-		//std::cout << "unequip: Item is a weapon" << std::endl;
-	}
-	else {
-		//std::cout << "unequip: Item is an armor" << std::endl;
-		item_slot = get_item_slot_by_type(i->get_type_id());
-		// If the item slot isn't empty, unequip it
-		if (item_slot == NULL) {
-			//std::cout << "unequip: Invalid item slot!" << std::endl;
-			return;
-		}
-	} 
-	
-	//std::cout << "unequip:  The item slot requested appears to be valid" << std::endl;
-
+void Player::unequip(Item **slot) {
 	// Free the item slot if it has an item and it isn't cursed.  
 	// Note that the item still exists in the inventory so it's not actually deleted here.
-	if (*item_slot != NULL) {
-		// If the item is cursed, it can't be removed.
-		if ((*item_slot)->is_it_cursed()) {
-			g_text_log.put_line("Unfortunately you can't remove that.");
-			g_text_log.put_line("The " + (*item_slot)->get_full_name() + " is cursed.");
-			return;
-		}
-		//std::cout << "process_unequip: calling remove on item" << std::endl;
-		g_text_log.put_line("Removed the " + (*item_slot)->get_full_name() + ".");
-		(*item_slot)->mark_removed();
-		//std::cout << "process_unequip:  Remove called" << std::endl;
-		*item_slot = NULL;
-		recalculate_actual_stats();
+	// If the item is cursed, it can't be removed.
+	std::cout << "in unequip" << std::endl;
+	if ((*slot)->is_it_cursed()) {
+		g_text_log.put_line("Unfortunately you can't remove that.");
+		g_text_log.put_line("The " + (*slot)->get_full_name() + " is cursed.");
+		return;
 	}
+	//std::cout << "process_unequip: calling remove on item" << std::endl;
+	g_text_log.put_line("Removed the " + (*slot)->get_full_name() + ".");
+	(*slot)->mark_removed();
+	//std::cout << "process_unequip:  Remove called" << std::endl;
+	*slot = NULL;
+	recalculate_actual_stats();
 }
 
 //------------------------------------------------------------------------------

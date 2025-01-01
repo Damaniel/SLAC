@@ -25,7 +25,8 @@ namespace ItemConsts {
     //   artifact 2% 
     // 
     // Note: key items will be handled separately.
-    const int g_item_class_pool[]= {10, 48, 63, 78, 98, 100};
+    //const int g_item_class_pool[]= {10, 48, 63, 78, 98, 100};
+    const int g_item_class_pool[]= {40, 100, 100, 100, 100, 100};
     const int g_item_class_pool_count = 6;
     const int g_item_class_pool_entries = 100;
 
@@ -53,6 +54,13 @@ namespace ItemConsts {
     };
 
     enum {
+        WEAPON_TYPE_DAGGER,
+        WEAPON_TYPE_SWORD,
+        WEAPON_TYPE_BROADSWORD,
+        WEAPON_TYPE_AXE,
+        WEAPON_TYPE_BATTLEAXE,
+        WEAPON_TYPE_MACE,
+        WEAPON_TYPE_MAUL, 
         ARMOR_TYPE_HAT,
         ARMOR_TYPE_HELM,
         ARMOR_TYPE_GLOVES,
@@ -68,16 +76,6 @@ namespace ItemConsts {
         ARMOR_TYPE_RING,
         ARMOR_TYPE_AMULET,
         NUM_ARMOR_TYPES
-    };
-
-    enum {
-        WEAPON_TYPE_DAGGER,
-        WEAPON_TYPE_SWORD,
-        WEAPON_TYPE_BROADSWORD,
-        WEAPON_TYPE_AXE,
-        WEAPON_TYPE_BATTLEAXE,
-        WEAPON_TYPE_MACE,
-        WEAPON_TYPE_MAUL
     };
 
     enum { 

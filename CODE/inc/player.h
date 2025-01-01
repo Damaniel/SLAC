@@ -301,7 +301,7 @@ public:
 	Item **get_item_slot_by_type(int type);
 	void recalculate_actual_stats();
 	void equip(Item *i);
-	void unequip(Item *i);
+	void unequip(Item **i);
 	void dump_stats(Stats *s);
 	void apply_experience(int quantity);
 	void level_up(void);

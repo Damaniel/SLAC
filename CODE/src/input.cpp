@@ -111,7 +111,7 @@ void process_inventory_menu_substate(int key) {
                 perform_inventory_menu_action();
                 // If the menu action didn't trigger another substate, return to the
                 // main inventory screen
-                if (g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY_MENU) {
+                if (g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY_MENU) {
                     g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY;
                     g_state_flags.update_inventory_dialog = true;
                     g_state_flags.update_inventory_cursor = true;
