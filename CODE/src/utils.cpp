@@ -2071,8 +2071,6 @@ void process_move(std::pair<int, int> proposed_location) {
 
 void check_and_process_npc_here(int x, int y) {
 	for (int i = 0; i < UtilConsts::NUM_NPC_TEXTS; ++i) {
-		std::cout << "x = " << x << ", y = " << y << std::endl;
-		std::cout << "npc_x = " << g_npc_info[i].x << ", npc_y = " << g_npc_info[i].y << std::endl;
 		if (g_npc_info[i].x == x && g_npc_info[i].y == y) {
 			g_text_log.put_line(g_npc_info[i].text);
 			g_state_flags.update_text_dialog = true;
