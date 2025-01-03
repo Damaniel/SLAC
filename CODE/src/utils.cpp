@@ -651,10 +651,20 @@ void initialize_main_game_state(void) {
 	}
 
 	// Create a new dungeon floor (first floor, coming down from surface)
-	generate_new_dungeon_floor(g_dungeon, 1, MazeConsts::STAIRS_DOWN);
+	//generate_new_dungeon_floor(g_dungeon, 1, MazeConsts::STAIRS_DOWN);
 
 	// create a new inventory (TODO - move to an earlier state)
 	g_inventory = new Inventory();
+
+	// Set initial flags to render stuff like the UI
+	g_state_flags.update_text_dialog = true;
+	g_state_flags.update_status_dialog = true;
+	g_state_flags.update_status_hp_exp = true;
+	g_state_flags.update_maze_area = true;
+	g_state_flags.update_display = true;
+
+	// Force an initial display update
+	update_display();
 }
 
 //------------------------------------------------------------------------------
@@ -673,7 +683,7 @@ void change_state(int new_state) {
 
     switch (g_state_flags.cur_state) {
         case STATE_MAIN_GAME:
-			g_state_flags.in_dungeon = true;
+			g_state_flags.in_dungeon = false;
 			initialize_main_game_state();
 			break;
     }
@@ -2048,17 +2058,29 @@ void perform_player_combat(Enemy *target) {
 	}
 }
 
+
+void process_move(std::pair<int, int> proposed_location) {
+	if (g_state_flags.in_dungeon)
+		process_dungeon_move(proposed_location);
+	else
+		process_town_move(proposed_location);
+}
+
+void process_town_move(std::pair<int, int> proposed_location) {
+	// Do town movement stuff
+}
+
 //----------------------------------------------------------------------------
 // Processes the proposed movement of the player and any enemies within
-// range of the player
+// range of the player while in the dungeon
 //
 // Arguments:
 //  proposed_location - the place the player wants to move to
 //
 // Returns:
-//   Nothing.  This function directly moves the enemy.
+//   Nothing.  This function directly moves the player/enemies.
 //----------------------------------------------------------------------------
-void process_move(std::pair<int, int> proposed_location) {
+void process_dungeon_move(std::pair<int, int> proposed_location) {
 	// Eventually:
 	//  - Put together a queue of enemy and player actions based
 	//    on relative speed

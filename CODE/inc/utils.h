@@ -167,6 +167,9 @@ void delete_dead_enemies(std::list<Enemy *> &el);
 
 // Action functions
 void process_move(std::pair<int, int> proposed_location);
+void process_town_move(std::pair<int, int> proposed_location);
+void process_dungeon_move(std::pair<int, int> proposed_location);
+
 void perform_player_combat(Enemy *target);
 
 #endif
