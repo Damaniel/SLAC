@@ -87,4 +87,9 @@ extern DungeonFloor g_dungeon;
 // Holds dynamic UI global information (like cursor positions and such)
 extern UiGlobals g_ui_globals;
 
+const int TOWN_SIZE = 48;
+// Static tile data (town, shops, etc)
+extern unsigned short town_tile_data[TOWN_SIZE * TOWN_SIZE];
+extern unsigned char town_movability[TOWN_SIZE * TOWN_SIZE];
+
 #endif

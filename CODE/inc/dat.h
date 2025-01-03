@@ -1,6 +1,6 @@
 /* Allegro datafile object indexes, produced by grabber v3.12 */
 /* Datafile: c:\projects\slac\code\game.dat */
-/* Date: Mon Dec 16 06:51:51 2024 */
+/* Date: Thu Jan  2 15:01:00 2025 */
 /* Do not hand edit! */
 
 #define DAMRL_DB16                       0        /* PAL  */
@@ -14,5 +14,6 @@
 #define DAMRL_PROP_FONT                  8        /* BMP  */
 #define DAMRL_PROP_FONT_NARROW           9        /* BMP  */
 #define DAMRL_STATUS_BAR                 10       /* BMP  */
-#define DAMRL_COUNT                      11
+#define DAMRL_TOWN_TILES                 11       /* BMP  */
+#define DAMRL_COUNT                      12
 

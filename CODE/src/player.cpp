@@ -232,7 +232,7 @@ Item** Player::get_item_slot_by_type(int type) {
 				break;
 			case ItemConsts::ARMOR_TYPE_BUCKLER:
 			case ItemConsts::ARMOR_TYPE_SHIELD:
-				std::cout << "get_item_slot_by_type: Item is for shield slot" << std::endl;
+				//std::cout << "get_item_slot_by_type: Item is for shield slot" << std::endl;
 				item_slot = &(equipment.shield);
 				break;
 			case ItemConsts::ARMOR_TYPE_RING:
@@ -290,20 +290,14 @@ void Player::equip(Item *i) {
 	// If the item to equip is a shield and a two handed weapon is equipped, then 
 	// unequip the weapon 
 	if (item_type == ItemConsts::ARMOR_TYPE_SHIELD || item_type == ItemConsts::ARMOR_TYPE_BUCKLER) {
-		std::cout << "type to equip is shield" << std::endl;
 		extra_slot = &(equipment.weapon);
 		if (*extra_slot != NULL) {
-			std::cout << "equipping shield, weapon is equipped" << std::endl;
 			int extra_type = (*extra_slot)->get_type_id();
 			if (extra_type == ItemConsts::WEAPON_TYPE_BATTLEAXE || 
 			    extra_type == ItemConsts::WEAPON_TYPE_BROADSWORD ||
 				extra_type == ItemConsts::WEAPON_TYPE_MAUL) {
-					std::cout << "weapon is two-handed, removing" << std::endl;
 					unequip(extra_slot);
 				}			
-		}
-		else {
-			std::cout << "Weapon slot is empty" << std::endl;
 		}
 	}	
 
@@ -312,14 +306,9 @@ void Player::equip(Item *i) {
 	if (item_type == ItemConsts::WEAPON_TYPE_BATTLEAXE ||
 	    item_type == ItemConsts::WEAPON_TYPE_BROADSWORD ||
 		item_type == ItemConsts::WEAPON_TYPE_MAUL) {
-		std::cout << "type to equip is two-hander" << std::endl;
 		extra_slot = &(equipment.shield);
 		if (*extra_slot != NULL) {
-			std::cout << "weapon is two-handed, shield is equipped" << std::endl;
 			unequip(extra_slot);
-		}
-		else {
-			std::cout << "Shield slot is empty" << std::endl;
 		}
 	}
 
@@ -354,7 +343,6 @@ void Player::unequip(Item **slot) {
 	// Free the item slot if it has an item and it isn't cursed.  
 	// Note that the item still exists in the inventory so it's not actually deleted here.
 	// If the item is cursed, it can't be removed.
-	std::cout << "in unequip" << std::endl;
 	if ((*slot)->is_it_cursed()) {
 		g_text_log.put_line("Unfortunately you can't remove that.");
 		g_text_log.put_line("The " + (*slot)->get_full_name() + " is cursed.");
