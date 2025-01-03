@@ -90,6 +90,15 @@ struct StateFlags {
     // - game flags
     bool text_log_extended;  // Should we show the extended or standard text log
 
+    // - location flags
+
+    // Note that many of the aspects of the game (input, inventory, etc) work
+    // in a similar way both in and out of the dungeon, but there are differences:
+    //  - Player can't attack things in town
+    //  - Player can't drop things on the ground in town
+    //  - (probably others I'll find along the way)
+    bool in_dungeon;            // Is the player currently in the dungeon?
+
     // - control flags
     bool exit_game;           // Did the player choose to exit the game?
 };

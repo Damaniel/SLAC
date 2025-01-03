@@ -257,13 +257,16 @@ void process_game_state(int key) {
             process_stats_substate(key);
             break;
         case GAME_SUBSTATE_DEFAULT:
-            // Handle lighting status for the current room.
-            // TODO: Maybe figure out if this is really the best place for this.
-		    g_player.set_last_room_entered(g_dungeon.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos()));
-		    // Darken the current space around the player if not in a room
-		    if (g_player.get_last_room_entered() == -1) {
-    		    g_dungeon.maze->change_lit_status_around(g_player.get_x_pos(), g_player.get_y_pos(), false);
-		    }            
+            // Only process lighting if the player is in the dungeon
+            if (g_state_flags.in_dungeon) {
+                // Handle lighting status for the current room.
+                // TODO: Maybe figure out if this is really the best place for this.
+		        g_player.set_last_room_entered(g_dungeon.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos()));
+    		    // Darken the current space around the player if not in a room
+	    	    if (g_player.get_last_room_entered() == -1) {
+    	    	    g_dungeon.maze->change_lit_status_around(g_player.get_x_pos(), g_player.get_y_pos(), false);
+		        }
+            }            
             switch (key) {
                 case KEY_ESC:
             	    g_state_flags.exit_game = true;
@@ -301,9 +304,11 @@ void process_game_state(int key) {
                     g_state_flags.update_display = true;
                     break;
 	            case KEY_M:
-                    g_state_flags.cur_substate = GAME_SUBSTATE_MAP;
-                    g_state_flags.update_map_dialog = true;
-	    	        g_state_flags.update_display = true;
+                    if (g_state_flags.in_dungeon) {
+                        g_state_flags.cur_substate = GAME_SUBSTATE_MAP;
+                        g_state_flags.update_map_dialog = true;
+	        	        g_state_flags.update_display = true;
+                    }
                     break;
                 case KEY_I:
                     // Reset the cursor position to the top left
@@ -321,7 +326,9 @@ void process_game_state(int key) {
                     g_state_flags.update_display = true;
                     break;
                 case KEY_G:
-                    pick_up_item_at(g_player.get_x_pos(), g_player.get_y_pos());    
+                    if (g_state_flags.in_dungeon) {
+                        pick_up_item_at(g_player.get_x_pos(), g_player.get_y_pos());    
+                    }
                     break;
                 case KEY_COMMA:
                 case KEY_STOP:
@@ -340,7 +347,9 @@ void process_game_state(int key) {
 
                     // Pick up an item.  This will only do something if there's
                     // an item to actually pick up.
-                    pick_up_item_at(g_player.get_x_pos(), g_player.get_y_pos());    
+                    if (g_state_flags.in_dungeon) {
+                        pick_up_item_at(g_player.get_x_pos(), g_player.get_y_pos());
+                    }
                     break;
 	            case KEY_TILDE:
             		if (g_state_flags.text_log_extended) {

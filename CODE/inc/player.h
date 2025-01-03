@@ -277,6 +277,10 @@ public:
 	int y_pos;
 	int last_room_entered;
 
+	int recall_x_pos;		// The place in the dungeon where a recall scroll activated
+	int recall_y_pos;		// (and where the player will return when moving back to
+							// the recall point)
+
 	int residual_action_points;		// Any action points left after their last turn
 
 	Player();

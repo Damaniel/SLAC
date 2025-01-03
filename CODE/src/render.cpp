@@ -541,13 +541,18 @@ void Render::render_item_submenu(BITMAP *destination) {
 				FontConsts::TEXT_LEFT_JUSTIFIED);	
 
 	// The drop / destroy options
-	if (i->can_be_dropped() && !i->is_it_equipped())
+	if (g_state_flags.in_dungeon && i->can_be_dropped() && !i->is_it_equipped())
 		text_color = FontConsts::FONT_YELLOW;
 	else
 		text_color = FontConsts::FONT_GRAY;
 	render_text(destination, "Drop", inv_menu_x + 4, UiConsts::INVENTORY_MENU_Y + 3 + 28, 
 	            text_color, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_LEFT_JUSTIFIED);
+	// The drop / destroy options
+	if (i->can_be_dropped() && !i->is_it_equipped())
+		text_color = FontConsts::FONT_YELLOW;
+	else
+		text_color = FontConsts::FONT_GRAY;
 	render_text(destination, "Destroy", inv_menu_x + 4, UiConsts::INVENTORY_MENU_Y + 3 + 37, 
 	            text_color, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_LEFT_JUSTIFIED);	

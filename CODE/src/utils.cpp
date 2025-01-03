@@ -255,35 +255,40 @@ void DungeonFloor::remove_item_from_end_at(int x, int y) {
 void update_main_game_display(void) {
 	// Update the maze area if requested
 	if (g_state_flags.update_maze_area == true) {
-		// Add the areas around the player to the map bitmap
-		//std::cout << "update_display: adding area to map bitmap" << std::endl;
-		g_render.add_area_to_map_bitmap(&g_dungeon, g_player.get_x_pos(), g_player.get_y_pos());
-		//std::cout << "update_display: Added area to map bitmap" << std::endl;
-		// Light the space around the player
-		g_dungeon.maze->change_lit_status_around(g_player.get_x_pos(), g_player.get_y_pos(), true);
-		//std::cout << "update_display: Changed lit status" << std::endl;
-		// Check what room the player is in, if any
-		int room_to_light = g_dungeon.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos());
-		int last_player_room = g_player.get_last_room_entered();
-		//std::cout << "update_display: Got last room player was in" << std::endl;
-		// If the player was in a room but no longer is, then darken the room
-		if(last_player_room != -1 && room_to_light == -1) {
-			g_dungeon.maze->change_room_lit_status(last_player_room, false);
-		}
-		// If the player wasn't in a room but now is, then light up the room
-		if(last_player_room == -1 && room_to_light != -1) {
-			g_dungeon.maze->change_room_lit_status(room_to_light, true);
-			// TODO: restructure this!
-			// Mark the room itself as visited so rendering the map will
-			// show the room even at the start of the game
-			g_dungeon.maze->set_room_entered_state(room_to_light, true);
-		}
-		//std::cout << "update_display: Finished processing lighting" << std::endl;
+		if (g_state_flags.in_dungeon) {
+			// Add the areas around the player to the map bitmap
+			//std::cout << "update_display: adding area to map bitmap" << std::endl;
+			g_render.add_area_to_map_bitmap(&g_dungeon, g_player.get_x_pos(), g_player.get_y_pos());
+			//std::cout << "update_display: Added area to map bitmap" << std::endl;
+			// Light the space around the player
+			g_dungeon.maze->change_lit_status_around(g_player.get_x_pos(), g_player.get_y_pos(), true);
+			//std::cout << "update_display: Changed lit status" << std::endl;
+			// Check what room the player is in, if any
+			int room_to_light = g_dungeon.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos());
+			int last_player_room = g_player.get_last_room_entered();
+			//std::cout << "update_display: Got last room player was in" << std::endl;
+			// If the player was in a room but no longer is, then darken the room
+			if(last_player_room != -1 && room_to_light == -1) {
+				g_dungeon.maze->change_room_lit_status(last_player_room, false);
+			}
+			// If the player wasn't in a room but now is, then light up the room
+			if(last_player_room == -1 && room_to_light != -1) {
+				g_dungeon.maze->change_room_lit_status(room_to_light, true);
+				// TODO: restructure this!
+				// Mark the room itself as visited so rendering the map will
+				// show the room even at the start of the game
+				g_dungeon.maze->set_room_entered_state(room_to_light, true);
+			}
+			//std::cout << "update_display: Finished processing lighting" << std::endl;
 
-		// Draw the world display area
-		g_render.render_world_at_player(g_back_buffer, &g_dungeon, g_player.get_x_pos(), g_player.get_y_pos());
-		//std::cout << "update_display: rendered world" << std::endl;
-		g_state_flags.update_maze_area = false;
+			// Draw the world display area
+			g_render.render_world_at_player(g_back_buffer, &g_dungeon, g_player.get_x_pos(), g_player.get_y_pos());
+			//std::cout << "update_display: rendered world" << std::endl;
+			g_state_flags.update_maze_area = false;
+		}
+		else {
+			// Draw the appropriate part of the town
+		}
 	}
 
 	// Update the status area if requested
@@ -668,6 +673,7 @@ void change_state(int new_state) {
 
     switch (g_state_flags.cur_state) {
         case STATE_MAIN_GAME:
+			g_state_flags.in_dungeon = true;
 			initialize_main_game_state();
 			break;
     }
@@ -862,7 +868,7 @@ void perform_inventory_menu_action(void) {
 			break;
 		case UiConsts::ITEM_OPTION_DROP:
 			// If the item can be dropped, and currently isn't equipped, drop it on the ground
-			if (i->can_be_dropped() && !i->is_it_equipped()) {
+			if (g_state_flags.in_dungeon && i->can_be_dropped() && !i->is_it_equipped()) {
 				//std::cout << "perform_inventory_menu_action: dropping item" << std::endl;
 				drop_item_at(i, g_player.get_x_pos(), g_player.get_y_pos());
 				g_inventory->remove_item_in_slot(slot);
@@ -894,34 +900,46 @@ void perform_inventory_menu_action(void) {
 //   Does nothing if there are no stairs in the provided location
 //----------------------------------------------------------------------------
 void use_stairs(int x, int y) {
-    int stairs = g_dungeon.maze->stairs_here(x, y);
+    int stairs; 
     int depth;
 
-    // If there aren't actually any stairs, then do nothing
-    if (stairs == MazeConsts::NO_STAIRS)
-        return;
+	if (g_state_flags.in_dungeon) {
+		g_dungeon.maze->stairs_here(x, y);
 
-    // If the stairs are down stairs, the new floor should be
-    // one greater than the current one (with a limit of the 
-    // maximum floor value for the current dungeon)
-    if (stairs == MazeConsts::STAIRS_DOWN) {
-        depth = g_dungeon.depth + 1;
-        if (depth > g_dungeon.max_depth)
-            depth = g_dungeon.max_depth;
-    }
+	    // If there aren't actually any stairs, then do nothing
+	    if (stairs == MazeConsts::NO_STAIRS)
+        	return;
 
-    // If the stairs are up stairs, the new floor should be
-    // one less than the current one (with a limit of 1).
-    // Eventually, if the floor is 0, it will transition to
-    // town instead of generating floor 1 again.
-    if (stairs == MazeConsts::STAIRS_UP) {
-        depth = g_dungeon.depth - 1;
-        if (depth < 1) 
-            depth = 1;
-    }
+	    // If the stairs are down stairs, the new floor should be
+	    // one greater than the current one (with a limit of the 
+	    // maximum floor value for the current dungeon)
+	    if (stairs == MazeConsts::STAIRS_DOWN) {
+			if (g_state_flags.in_dungeon)
+				depth = g_dungeon.depth + 1;
+			else
+		        depth = 1;
+        	if (depth > g_dungeon.max_depth)
+	            depth = g_dungeon.max_depth;
+	    }
 
-    // Generate a new dungeon with the new floor value
-    generate_new_dungeon_floor(g_dungeon, depth, stairs); 
+	    // If the stairs are up stairs, the new floor should be
+    	// one less than the current one (with a limit of 1).
+    	// Eventually, if the floor is 0, it will transition to
+    	// town instead of generating floor 1 again.
+	    if (stairs == MazeConsts::STAIRS_UP) {
+    	    depth = g_dungeon.depth - 1;
+	        if (depth < 1) 
+            	g_state_flags.in_dungeon = false;
+    	}
+
+    	// Generate a new dungeon with the new floor value
+    	generate_new_dungeon_floor(g_dungeon, depth, stairs); 
+	}
+	else {
+		// Check to see if we're sitting on one of the dungeon
+		// entrances, and enter the correct dungeon from the
+		// first floor
+	}
 }
 
 //----------------------------------------------------------------------------
