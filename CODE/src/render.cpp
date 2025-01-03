@@ -44,6 +44,25 @@ Render::Render() {
 }
 
 //------------------------------------------------------------------------------
+// Renders the player on the screen.  They're always in a fixed location. 
+//
+// Arguments:
+//   destination - the bitmap to render to
+//  
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Render::render_player(BITMAP *destination) {
+	BITMAP *bpc = (BITMAP *)g_game_data[DAMRL_PLAYER_SPRITES].dat;
+
+	// Draw the player.  He's always centered in the play area.
+	masked_blit(bpc, destination, UiConsts::PLAYER_TILE_OFFSET * UiConsts::TILE_PIXEL_WIDTH, 0, 
+	            UiConsts::PLAYER_PLAY_AREA_X * UiConsts::TILE_PIXEL_WIDTH, 
+				UiConsts::PLAYER_PLAY_AREA_Y * UiConsts::TILE_PIXEL_HEIGHT,
+		        UiConsts::TILE_PIXEL_WIDTH, UiConsts::TILE_PIXEL_HEIGHT);
+}
+
+//------------------------------------------------------------------------------
 // Renders all non-static dungeon elements.  This includes the player and all
 // visible enemies.  
 //
@@ -59,13 +78,9 @@ Render::Render() {
 //   cornerof the play area
 //------------------------------------------------------------------------------
 void Render::render_actors(BITMAP *destination, int maze_x, int maze_y) {
-	BITMAP *bpc = (BITMAP *)g_game_data[DAMRL_PLAYER_SPRITES].dat;
 
-	// Draw the player.  He's always centered in the play area.
-	masked_blit(bpc, destination, UiConsts::PLAYER_TILE_OFFSET * UiConsts::TILE_PIXEL_WIDTH, 0, 
-	            UiConsts::PLAYER_PLAY_AREA_X * UiConsts::TILE_PIXEL_WIDTH, 
-				UiConsts::PLAYER_PLAY_AREA_Y * UiConsts::TILE_PIXEL_HEIGHT,
-		        UiConsts::TILE_PIXEL_WIDTH, UiConsts::TILE_PIXEL_HEIGHT);
+	// Draw the player
+	render_player(destination);
 
 	// Iterate through the (sorted) monster list, and calculate/render each monster until
 	// the distance of the next monster is further than the render limit
@@ -1348,6 +1363,71 @@ void Render::render_world_at(BITMAP *destination, DungeonFloor *f, int maze_x, i
 void Render::render_world_at_player(BITMAP *destination, DungeonFloor *f, int maze_x, int maze_y) {
 	// Render the world with the tile at the player's position (7,6) equal to (maze_x, maze_y)
 	render_world_at(destination, f, maze_x - UiConsts::PLAYER_PLAY_AREA_X, maze_y - UiConsts::PLAYER_PLAY_AREA_Y);
+}
+
+//----------------------------------------------------------------------------------
+// Render the town with the tile at screen position (0, 0) position equal to 
+// (x, y).  
+//
+// Arguments:
+//   destination - the bitmap to draw to
+//   x, y - the town position corresponding to the upper left part of the screen
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------------
+void Render::render_town_at(BITMAP *destination, int x, int y) {
+	int num_y_tiles;
+
+	if (g_state_flags.text_log_extended) {
+		num_y_tiles = UiConsts::PLAY_AREA_TILE_HEIGHT - UiConsts::TEXT_AREA_EXT_MAZE_ROWS_OBSCURED;
+	}
+	else {
+		num_y_tiles = UiConsts::PLAY_AREA_TILE_HEIGHT;
+	}
+
+	for (int screen_x = 0; screen_x < UiConsts::PLAY_AREA_TILE_WIDTH; screen_x++) {
+		for (int screen_y = 0; screen_y < num_y_tiles; screen_y++) {
+			int tile_to_render_x = x + screen_x;
+			int tile_to_render_y = y + screen_y;
+			if (tile_to_render_x >=0 && tile_to_render_y >=0 && tile_to_render_x < TOWN_SIZE && tile_to_render_y < TOWN_SIZE) {
+				int tile_index_to_render = g_town_tile_data[tile_to_render_y * TOWN_SIZE + tile_to_render_x];
+				int tile_offset_x = tile_index_to_render % UiConsts::TOWN_TILE_ENTRY_WIDTH; 
+				int tile_offset_y = tile_index_to_render / UiConsts::TOWN_TILE_ENTRY_WIDTH;
+
+				blit((BITMAP *)g_game_data[DAMRL_TOWN_TILES].dat, 	
+		     		 destination,
+	    	 		 tile_offset_x * UiConsts::TILE_PIXEL_WIDTH, 
+		 			 tile_offset_y * UiConsts::TILE_PIXEL_HEIGHT, 
+		 			 screen_x * UiConsts::TILE_PIXEL_WIDTH,
+ 		 		 	 screen_y * UiConsts::TILE_PIXEL_HEIGHT,
+			 		 UiConsts::TILE_PIXEL_WIDTH,
+			 		 UiConsts::TILE_PIXEL_HEIGHT);				
+			}
+			else {
+				// Draw darkness
+				render_base_tile(destination, UiConsts::TILE_DARK, screen_x, screen_y);				
+			}
+		}
+	}
+
+	// Draw the player
+	render_player(destination);
+}
+
+//----------------------------------------------------------------------------------
+// Equivalent to render_town_at, but renders using the player's location at the
+// center of the play area (rather than (0, 0)) as the top left of the play area.
+//
+// Arguments:
+//   destination - the bitmap to draw to
+//   x, y - the position of town at the player's current location
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------------
+void Render::render_town_at_player(BITMAP *destination, int x, int y) {
+	render_town_at(destination, x - UiConsts::PLAYER_PLAY_AREA_X, y - UiConsts::PLAYER_PLAY_AREA_Y);
 }
 
 //------------------------------------------------------------------------------

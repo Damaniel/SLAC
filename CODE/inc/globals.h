@@ -89,7 +89,7 @@ extern UiGlobals g_ui_globals;
 
 const int TOWN_SIZE = 48;
 // Static tile data (town, shops, etc)
-extern unsigned short town_tile_data[TOWN_SIZE * TOWN_SIZE];
-extern unsigned char town_movability[TOWN_SIZE * TOWN_SIZE];
+extern unsigned short g_town_tile_data[TOWN_SIZE * TOWN_SIZE];
+extern unsigned char g_town_movability[TOWN_SIZE * TOWN_SIZE];
 
 #endif

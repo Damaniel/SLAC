@@ -46,8 +46,9 @@ enum {
     GAME_SUBSTATE_MAP,
     GAME_SUBSTATE_INVENTORY,
     GAME_SUBSTATE_INVENTORY_MENU,       // The item context menu
-    GAME_SUBSTATE_USE_ON_ITEM,           // Used when selecting an item to use another item on 
-    GAME_SUBSTATE_STATS
+    GAME_SUBSTATE_USE_ON_ITEM,          // Used when selecting an item to use another item on 
+    GAME_SUBSTATE_STATS,
+    GAME_SUBSTATE_STORE                 // In a shop in town           
 };
 
 enum {

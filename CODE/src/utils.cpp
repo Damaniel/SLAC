@@ -284,11 +284,12 @@ void update_main_game_display(void) {
 			// Draw the world display area
 			g_render.render_world_at_player(g_back_buffer, &g_dungeon, g_player.get_x_pos(), g_player.get_y_pos());
 			//std::cout << "update_display: rendered world" << std::endl;
-			g_state_flags.update_maze_area = false;
 		}
 		else {
 			// Draw the appropriate part of the town
+			g_render.render_town_at_player(g_back_buffer, g_player.get_x_pos(), g_player.get_y_pos());
 		}
+		g_state_flags.update_maze_area = false;
 	}
 
 	// Update the status area if requested
@@ -662,6 +663,9 @@ void initialize_main_game_state(void) {
 	g_state_flags.update_status_hp_exp = true;
 	g_state_flags.update_maze_area = true;
 	g_state_flags.update_display = true;
+
+	// Put the player in the place they start a new game
+	g_player.place_in_town_start();
 
 	// Force an initial display update
 	update_display();
@@ -2068,6 +2072,24 @@ void process_move(std::pair<int, int> proposed_location) {
 
 void process_town_move(std::pair<int, int> proposed_location) {
 	// Do town movement stuff
+	int x = proposed_location.first;
+	int y = proposed_location.second;
+	int passable = g_town_movability[y * TOWN_SIZE + x];
+	if (passable == 1) {
+		g_player.set_x_pos(x);
+		g_player.set_y_pos(y);
+		g_state_flags.update_maze_area = true;
+		g_state_flags.update_text_dialog = true;
+		g_state_flags.update_display = true;
+	}
+	else {
+		// Check to see if the obstruction is a NPC.  If so,
+		// get their text and put it in the log
+	}
+
+	// Check to see if the new position corresponds to a shop,
+	// dungeon entrance, or a recall point that's active,
+	// and do the correct thing
 }
 
 //----------------------------------------------------------------------------

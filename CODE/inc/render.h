@@ -90,7 +90,10 @@ namespace UiConsts {
 
 	// The number of tiles in a row of the enemy spritesheet
 	const int ENEMY_TILE_ENTRY_WIDTH = 32;
-	
+
+	// The number of tiles in a row of the town spritesheet
+	const int TOWN_TILE_ENTRY_WIDTH = 16;
+
 	// The size of the visible play area (in tiles)
 	// PLAY_AREA_TILE_HEIGHT_EXT measures the height in tiles when the extended message
 	// log is displayed.
@@ -505,7 +508,8 @@ typedef struct {
 // Render class definition
 //----------------------------------------------------------------------------
 class Render {
-	private:	
+	private:
+		void render_player(BITMAP *destination);
 		void render_actors(BITMAP *destination, int maze_x, int maze_y);
 		void render_base_tile(BITMAP *destination, int tile_id, int x, int y);
 		void render_item(BITMAP *destination, int gid, int x, int y);
@@ -532,6 +536,8 @@ class Render {
 		void render_text_log(BITMAP *destination, bool extended);
 		void render_world_at(BITMAP *destination, DungeonFloor *f, int maze_x, int maze_y);
 		void render_world_at_player(BITMAP *destination, DungeonFloor *f, int maze_x, int maze_y);
+		void render_town_at(BITMAP *destination, int x, int y);
+		void render_town_at_player(BITMAP *destination, int x, int y);
 		void render_stats_screen(BITMAP *destination);
 		void render_hp_exp_bar(BITMAP *destination);
 };

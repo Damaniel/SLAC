@@ -88,6 +88,9 @@ namespace PlayerConsts {
 	// The highest elemental resistance (in percent) the player can have
 	const int MAX_ELEM_DEF = 95;
 	
+	const int TOWN_START_X = 4;
+	const int TOWN_START_Y = 32;
+
 	// For the following two tables, the 'n'th entry represents the experience the player
 	// should have and the stats the player should have at level (n+1)
 	//
@@ -311,6 +314,7 @@ public:
 	void level_up(void);
 	float pct_exp_to_next_level(void);
 	void apply_artifact_mods(Stats *fixed, Stats *multiplicative);
+	void place_in_town_start() { x_pos = PlayerConsts::TOWN_START_X; y_pos = PlayerConsts::TOWN_START_Y; }
 };
 
 #endif
