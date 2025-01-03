@@ -28,7 +28,7 @@ prod: $(TARGET)
 	strip $(TARGET)
 	upx $(TARGET)
 
-obj/utils.o: src/utils.cpp 
+obj/utils.o: src/utils.cpp inc/globals.h
 	$(CC) -c $(CFLAGS) -o obj/utils.o src/utils.cpp
 
 obj/input.o: src/input.cpp inc/input.h 

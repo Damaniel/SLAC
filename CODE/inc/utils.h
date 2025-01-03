@@ -29,6 +29,12 @@ struct DungeonFloor {
 	int get_num_items_at(int x, int y);
 };
 
+typedef struct {
+    int x;
+    int y;
+    std::string text;
+} NPCInfoType;
+
 namespace UtilConsts {
     // An enum to specify actors in the action queue
     const int ACTION_PLAYER = 0;
@@ -46,6 +52,9 @@ namespace UtilConsts {
 
     // Enemies further away than this will no longer pursue the player
     const int MAXIMUM_ENEMY_REMEMBER_DISTANCE = 16;
+
+    // How many NPCs and signs that say something exist in town
+    const int NUM_NPC_TEXTS = 28;
 }
 
 // A collection of flags relevant to the game loop.  The game loop will want
@@ -164,6 +173,9 @@ void process_enemy_forgetting_player(std::list<Enemy *> &el);
 void process_enemy_vision(std::list<Enemy *> &el);
 void perform_enemy_combat(Enemy *e);
 void delete_dead_enemies(std::list<Enemy *> &el);
+
+// Town functions
+void check_and_process_npc_here(int x, int y);
 
 // Action functions
 void process_move(std::pair<int, int> proposed_location);

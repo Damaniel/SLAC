@@ -1938,7 +1938,7 @@ void perform_enemy_combat(Enemy *e) {
 		// Sum up all damage
 		int total_damage_taken = player_base_damage_taken + player_fire_damage_taken + player_ice_damage_taken + player_lightning_damage_taken;		
 		if (attack_crits) {
-			g_text_log.put_line("** Critical hit! **");
+			g_text_log.put_line("Critical hit!");
 			int prevent_chance = (int)(g_player.actual.con / 2);
 			if (prevent_chance > 90)
 				prevent_chance = 90;
@@ -2046,7 +2046,7 @@ void perform_player_combat(Enemy *target) {
 		// Sum up all damage
 		int total_damage_taken = enemy_base_damage_taken + enemy_fire_damage_taken + enemy_ice_damage_taken + enemy_lightning_damage_taken;		
 		if (attack_crits) {
-			g_text_log.put_line("** Critical hit! **");
+			g_text_log.put_line("Critical hit!");
 			total_damage_taken = total_damage_taken * 2;
 		}
 
@@ -2062,12 +2062,23 @@ void perform_player_combat(Enemy *target) {
 	}
 }
 
-
 void process_move(std::pair<int, int> proposed_location) {
 	if (g_state_flags.in_dungeon)
 		process_dungeon_move(proposed_location);
 	else
 		process_town_move(proposed_location);
+}
+
+void check_and_process_npc_here(int x, int y) {
+	for (int i = 0; i < UtilConsts::NUM_NPC_TEXTS; ++i) {
+		std::cout << "x = " << x << ", y = " << y << std::endl;
+		std::cout << "npc_x = " << g_npc_info[i].x << ", npc_y = " << g_npc_info[i].y << std::endl;
+		if (g_npc_info[i].x == x && g_npc_info[i].y == y) {
+			g_text_log.put_line(g_npc_info[i].text);
+			g_state_flags.update_text_dialog = true;
+			g_state_flags.update_display = true;
+		}
+	} 
 }
 
 void process_town_move(std::pair<int, int> proposed_location) {
@@ -2085,6 +2096,7 @@ void process_town_move(std::pair<int, int> proposed_location) {
 	else {
 		// Check to see if the obstruction is a NPC.  If so,
 		// get their text and put it in the log
+		check_and_process_npc_here(x, y);
 	}
 
 	// Check to see if the new position corresponds to a shop,

@@ -53,10 +53,10 @@
 #include "enemy.h"
 #include "itemgen.h"
 #include "item_use.h"
-#include "gen_data.h"
 #include "maze.h"
-#include "render.h"
 #include "utils.h"
+#include "gen_data.h"
+#include "render.h"
 #include "main.h"
 
 // The datafile - contains all sprite, font and sound data.  

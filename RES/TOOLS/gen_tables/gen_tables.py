@@ -5,6 +5,7 @@ types_json_file = os.path.join('..', '..', 'JSON', 'types.json')
 prefix_suffix_json_file = os.path.join('..', '..', 'JSON', 'prefix_suffix.json')
 enum_json_file = os.path.join('..', '..', 'JSON', 'enums.json')
 enemy_json_file = os.path.join('..', '..', 'JSON', 'enemy.json')
+npc_file = os.path.join('..', '..', 'JSON', 'npcs_signs.json')
 output_file = "gen_data.cpp"
 header_file = "gen_data.h"
 header_guard = "__GEN_DATA_H__"
@@ -197,6 +198,7 @@ def generate_source_file(outfile=None):
     process_item_file(bases_json_file, out)
     process_item_file(prefix_suffix_json_file, out)
     process_item_file(enemy_json_file, out)
+    generate_npc_data(npc_file, out)
 
 def generate_prototypes(filename, outfile):
     f = open(filename)
@@ -227,7 +229,7 @@ def generate_enums(filename, outfile):
     outfile.write(' {\n\n')
 
     items = loaded_json['items']
-    for i in items:
+    for i in items: 
         enum_entries = loaded_json['items'][i]
         outfile.write('\tenum {\n')
         for (idx, val) in enumerate(enum_entries):
@@ -237,6 +239,32 @@ def generate_enums(filename, outfile):
                 outfile.write(f'\t\t{enum_entries[val]['name']},\n')
         outfile.write('\t};\n\n')
     outfile.write('}\n\n')
+
+def generate_npc_data(filename, outfile):
+    print("Processing NPC data...")
+    f = open(filename)
+    loaded_json = json.load(f)
+
+    outfile.write(f'{loaded_json['npcs']['metadata']['struct_type']} {loaded_json['npcs']['metadata']['struct_name']}[] = ')
+    outfile.write('{\n')
+    items = loaded_json['npcs']['items']
+    for (idx, item) in enumerate(items):
+        entry = items[item]
+        outfile.write('\t{')
+        outfile.write(f"{entry['x']}, {entry['y']}, \"{entry['text']}\"")
+        if idx == len(items) - 1:
+            outfile.write('}\n')
+        else:
+            outfile.write('},\n')
+    
+    outfile.write('};\n\n')
+
+def generate_npc_headers(filename, outfile):
+    print("Processing NPC header file...")
+    f = open(filename)
+    loaded_json = json.load(f)
+    outfile.write(f'extern {loaded_json['npcs']['metadata']['struct_type']} {loaded_json['npcs']['metadata']['struct_name']}[];\n\n')
+
 # Create the header file from all of the JSON files
 def generate_header_file(outfile=None):
     if outfile != None:
@@ -254,6 +282,7 @@ def generate_header_file(outfile=None):
     generate_prototypes(bases_json_file, out)
     generate_prototypes(prefix_suffix_json_file, out)
     generate_prototypes(enemy_json_file, out)
+    generate_npc_headers(npc_file, out)
     generate_enums(enum_json_file, out)
     out.write('\n#endif')
 

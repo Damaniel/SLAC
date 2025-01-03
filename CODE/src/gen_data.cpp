@@ -758,3 +758,34 @@ EnemyType g_enemy_ids[] = {
    {200, "Prang, war elephant", 0, 200, 150, 35, 70, 32, 20, 2, 0, 0, 0, 0, 0, 0, 400, 12, 12, 255, 3}
 };
 
+NPCInfoType g_npc_info[] = {
+	{13, 7, "These animals may be cute, but nasty ones live below."},
+	{29, 8, "Training is key to survival."},
+	{19, 14, "Artifacts make you stronger over time."},
+	{26, 16, "A Scroll of Recall can save your life."},
+	{25, 20, "Always identify your gear, lest you be cursed."},
+	{22, 21, "Meow? Meow. Ekekekek!"},
+	{18, 21, "Uniquely strong monsters await you deep below."},
+	{16, 26, "If you don't equip your stuff, it won't help you."},
+	{18, 31, "Don't be afraid to flee from battle."},
+	{26, 31, "Stock up on healing potions when you can."},
+	{27, 38, "There are three dungeons to explore."},
+	{9, 33, "You may die, but your heirs will live on."},
+	{9, 40, "Cursed gear can be saved with the right scroll."},
+	{43, 31, "No, you can't fish here. Sorry."},
+	{42, 27, "You can't even fish in this place. Lame!"},
+	{43, 24, "Use a recall circle to return where you were."},
+	{30, 7, "- Level 1 training dummy -"},
+	{32, 7, "- Level 10 training dummy -"},
+	{34, 7, "- Level 25 training dummy -"},
+	{36, 7, "- Level 50 training dummy -"},
+	{38, 7, "- Level 100 training dummy -"},
+	{40, 7, "- Training dummies - check your strength here! -"},
+	{45, 17, "- Portal to the Dusty Caverns -"},
+	{3, 9, "- Portal to the Marble Halls -"},
+	{39, 37, "- Portal to the Crystal Depths -"},
+	{21, 12, "- Museum and Artifact Collection -"},
+	{31, 16, "- Weapon and Armor Shop -"},
+	{11, 16, "- Potion and Scroll Shop -"}
+};
+

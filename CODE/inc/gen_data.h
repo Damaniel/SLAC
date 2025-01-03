@@ -94,6 +94,8 @@ extern int g_cursed_item_suffix_pool[];
 
 extern EnemyType g_enemy_ids[];
 
+extern NPCInfoType g_npc_info[];
+
 
 namespace ItemConsts {
 

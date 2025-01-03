@@ -1,0 +1,152 @@
+{
+    "npcs": {
+        "metadata": {
+            "struct_name": "g_npc_info",
+            "struct_type": "NPCInfoType",
+            "description": "NPC and sign info (location, text)",
+            "fields": ["x", "y", "text"]
+        },
+        "items": {
+            "0": {
+                "x": 13,
+                "y": 7,
+                "text": "These animals may be cute, but nasty ones live below."
+            },
+            "1": {
+                "x": 29,
+                "y": 8,
+                "text": "Training is key to survival."
+            },
+            "2": {
+                "x": 19,
+                "y": 14,
+                "text": "Artifacts make you stronger over time."
+            },
+            "3": {
+                "x": 26,
+                "y": 16,
+                "text": "A Scroll of Recall can save your life."
+            },
+            "4": {
+                "x": 25,
+                "y": 20,
+                "text": "Always identify your gear, lest you be cursed."
+            },
+            "5": {
+                "x": 22,
+                "y": 21,
+                "text": "Meow? Meow. Ekekekek!"
+            },
+            "6": {
+                "x": 18,
+                "y": 21,
+                "text": "Uniquely strong monsters await you deep below."
+            },
+            "7": {
+                "x": 16,
+                "y": 26,
+                "text": "If you don't equip your stuff, it won't help you."
+            },
+            "8": {
+                "x": 18,
+                "y": 31,
+                "text": "Don't be afraid to flee from battle."
+            },
+            "9": {
+                "x": 26,
+                "y": 31,
+                "text": "Stock up on healing potions when you can."
+            },
+            "10": {
+                "x": 27,
+                "y": 38,
+                "text": "There are three dungeons to explore."
+            },
+            "11": {
+                "x": 9,
+                "y": 33,
+                "text": "You may die, but your heirs will live on."
+            },
+            "12": {
+                "x": 9,
+                "y": 40,
+                "text": "Cursed gear can be saved with the right scroll."
+            },
+            "13": {
+                "x": 43,
+                "y": 31,
+                "text": "No, you can't fish here. Sorry."
+            },
+            "14": {
+                "x": 42,
+                "y": 27,
+                "text": "You can't even fish in this place. Lame!"
+            },
+            "15": {
+                "x": 43,
+                "y": 24,
+                "text": "Use a recall circle to return where you were."
+            },
+            "16": {
+                "x": 30,
+                "y": 7,
+                "text": "- Level 1 training dummy -"
+            },
+            "17": {
+                "x": 32,
+                "y": 7,
+                "text": "- Level 10 training dummy -"
+            },
+            "18": {
+                "x": 34,
+                "y": 7,
+                "text": "- Level 25 training dummy -"
+            },
+            "19": {
+                "x": 36,
+                "y": 7,
+                "text": "- Level 50 training dummy -"
+            },
+            "20": {
+                "x": 38,
+                "y": 7,
+                "text": "- Level 100 training dummy -"
+            },
+            "21": {
+                "x": 40,
+                "y": 7,
+                "text": "- Training dummies - check your strength here! -"
+            },
+            "22": {
+                "x": 45,
+                "y": 17,
+                "text": "- Portal to the Dusty Caverns -"
+            },
+            "23": {
+                "x": 3,
+                "y": 9,
+                "text": "- Portal to the Marble Halls -"
+            },
+            "24": {
+                "x": 39,
+                "y": 37,
+                "text": "- Portal to the Crystal Depths -"
+            },
+            "25": {
+                "x": 21,
+                "y": 12,
+                "text": "- Museum and Artifact Collection -"
+            },
+            "26": {
+                "x": 31,
+                "y": 16,
+                "text": "- Weapon and Armor Shop -"
+            },
+            "27": {
+                "x": 11,
+                "y": 16,
+                "text": "- Potion and Scroll Shop -"
+            }
+        }
+    }
+}

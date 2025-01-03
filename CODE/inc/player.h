@@ -81,7 +81,6 @@ typedef struct {
 	unsigned short spd;
 } BaseStatSet;
 
-
 namespace PlayerConsts {
 	const int MAX_LEVEL = 100;
 
