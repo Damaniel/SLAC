@@ -341,34 +341,6 @@ void Render::copy_data_to_offscreen_vram(void) {
 }
 
 //------------------------------------------------------------------------------
-// Writes a string to the screen in the specified location using the specified 
-// color (0-4) using a fixed width font.
-//
-// Arguments:
-//   destination - the bitmap to draw to
-//   text - the text to render
-//   x_pos, y_pos - the location to render the text
-//   font_idx - the 'color (0-4) to use for the text
-//
-// Returns:
-//   Nothing
-//------------------------------------------------------------------------------
-void Render::render_fixed_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx) {
-	int x = x_pos;
-	int y = y_pos;
-	int offset;
-	char *cur = text;
-	
-	// This isn't a library, so we'll assume strings are terminated.  That should end well...
-	while(*cur != 0) {
-		offset = (*cur++) - 32;
-		masked_blit((BITMAP *)g_game_data[DAMRL_FIXED_FONT].dat, destination, offset * FontConsts::fixed_font_width, 
-		     font_idx * FontConsts::fixed_font_height, x, y, FontConsts::fixed_font_width, FontConsts::fixed_font_height);
-		x += 8;
-	}
-}
-
-//------------------------------------------------------------------------------
 // Draws a line of text in the a proportional font to the screen
 //
 // Arguments:
@@ -400,6 +372,40 @@ void Render::render_prop_text(BITMAP *destination, char *text, int x_pos, int y_
 		    	 font_idx * FontConsts::prop_font_height, x, y, (int)FontConsts::prop_font_width[offset], FontConsts::prop_font_height);
 			x += (int)FontConsts::prop_font_width[offset] + 1;			
 		}
+	}
+}
+
+//------------------------------------------------------------------------------
+// Draws a line of text in the tiny font to the screen
+//
+// Arguments:
+//   destination - the place to render the text to
+//   text - the text to write
+//   x_pos, y_pos - the upper left corner of the location to place the text
+//   font_idx     - which color offet (0-4) to use 
+//
+// Returns:
+//   Nothing
+//
+// Notes:
+//   The following characters can't be drawn in this font:
+//     $, &, @
+//------------------------------------------------------------------------------
+void Render::render_tiny_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx) {
+	int x = x_pos;
+	int y = y_pos;
+	int offset;
+	char *cur = text;
+
+	if (font_idx > 0)
+		font_idx = 0;
+
+	while (*cur != 0) {
+		offset = (*cur++) - 32;
+			masked_blit((BITMAP *)g_game_data[DAMRL_TINY_FONT].dat, destination, 
+			            (int)FontConsts::tiny_font_offset[offset], font_idx * FontConsts::tiny_font_height, 
+						x, y, (int)FontConsts::tiny_font_width[offset], FontConsts::tiny_font_height);
+			x += (int)FontConsts::tiny_font_width[offset] + 1;		
 	}
 }
 
@@ -1245,7 +1251,7 @@ void Render::render_text_log(BITMAP *destination, bool extended) {
 	else {
 		size = UiConsts::TEXT_AREA_NORMAL_NUM_LINES;
 		x_off = UiConsts::TEXT_AREA_STD_X1 + UiConsts::TEXT_AREA_LINE_X_OFFSET;
-		y_off = UiConsts::TEXT_AREA_STD_Y1 + (2 * UiConsts::TEXT_AREA_LINE_Y_OFFSET);
+		y_off = UiConsts::TEXT_AREA_STD_Y1 + UiConsts::TEXT_AREA_LINE_Y_OFFSET;
 		if (lines_to_draw > size) {
 			log_start = lines_to_draw - size;
 		} 
@@ -1256,8 +1262,8 @@ void Render::render_text_log(BITMAP *destination, bool extended) {
 
 	for(int idx = log_start; idx < lines_to_draw; ++idx) {
 		render_text(destination, (char *)g_text_log.get_line(idx).c_str(),
-					x_off, y_off + ((FontConsts::prop_font_height + 1) * (idx-log_start)),
-					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);
+					x_off, y_off + ((FontConsts::tiny_font_height + 1) * (idx-log_start)),
+					FontConsts::FONT_YELLOW, FontConsts::FONT_TINY, FontConsts::TEXT_LEFT_JUSTIFIED);
 	}
 }
 
@@ -1467,11 +1473,9 @@ void Render::render_text(BITMAP *dest, char *text, int x_pos, int y_pos, int fon
 
 	// Get the text width
 	switch (style) {
-		case FontConsts::FONT_FIXED:
-			width = strlen(text) * FontConsts::fixed_font_width;
-			break;
 		case FontConsts::FONT_NARROW_PROPORTIONAL:
 		case FontConsts::FONT_PROPORTIONAL:
+		case FontConsts::FONT_TINY:
 			width = get_prop_text_width(text, style);
 			break;
 	}
@@ -1491,12 +1495,12 @@ void Render::render_text(BITMAP *dest, char *text, int x_pos, int y_pos, int fon
 
 	// Render the text itself
 	switch (style) {
-		case FontConsts::FONT_FIXED:
-			render_fixed_text(dest, text, x_offset, y_pos, font_idx);
-			break;
 		case FontConsts::FONT_NARROW_PROPORTIONAL:
 		case FontConsts::FONT_PROPORTIONAL:
 			render_prop_text(dest, text, x_offset, y_pos, font_idx, style);
+			break;
+		case FontConsts::FONT_TINY:
+			render_tiny_text(dest, text, x_offset, y_pos, font_idx);
 			break;
 	}
 }
@@ -1522,8 +1526,10 @@ int Render::get_prop_text_width(char *text, int style) {
 		offset = (*cur) - 32;
 		if (style == FontConsts::FONT_NARROW_PROPORTIONAL)
 			width += (int)FontConsts::prop_narrow_font_width[offset] + 1;
-		else
+		else if (style == FontConsts::FONT_PROPORTIONAL)
 			width += (int)FontConsts::prop_font_width[offset] + 1;
+		else
+			width += (int)FontConsts::tiny_font_width[offset] + 1;
     	cur++;
 	}
 

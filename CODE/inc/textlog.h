@@ -29,7 +29,7 @@
 class TextLog {
 private:
     std::list<std::string> log;
-    static const unsigned char max_len = 8;
+    static const unsigned char max_len = 12;
 public:
     void put_line(std::string s);
     std::string get_line(int line);

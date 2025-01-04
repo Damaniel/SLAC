@@ -127,8 +127,8 @@ namespace UiConsts {
 	const int TEXT_AREA_LINE_Y_OFFSET = 4;
 
 	// The number of lines shown in the text log
-	const int TEXT_AREA_NORMAL_NUM_LINES = 2;
-	const int TEXT_AREA_EXT_NUM_LINES = 8;
+	const int TEXT_AREA_NORMAL_NUM_LINES = 4;
+	const int TEXT_AREA_EXT_NUM_LINES = 12;
 
 	// When the extended text dialog is up, this is how many rows of the maze area we
 	// can skip drawing due to them being obscured.
@@ -422,9 +422,9 @@ namespace FontConsts {
 
 	// Font types (fixed width, proportional width, narrow proportional width)
 	enum {
-		FONT_FIXED,
 		FONT_PROPORTIONAL,
-		FONT_NARROW_PROPORTIONAL
+		FONT_NARROW_PROPORTIONAL,
+		FONT_TINY
 	};
 
 	// Text alignment types (left justified, right justified, centered)
@@ -477,9 +477,25 @@ namespace FontConsts {
   	  334, 339, 344, 348, 353, 357, 362, 367, 372, 377, 382, 387, 390, 391, 394, 399
 	};
 
-	// Width and height of all characters in the standard fixed font
-	const int fixed_font_width = 8;
-	const int fixed_font_height = 8;
+	const unsigned short tiny_font_width[UiConsts::FONT_ENTRIES] = {
+		2, 1, 3, 5, 0, 3, 0, 1, 2, 2, 3, 3, 2, 2, 1, 3,
+		3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 2, 3, 3, 3, 3,
+		0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5, 4, 3,
+		3, 4, 3, 3, 3, 3, 3, 5, 3, 3, 3, 2, 3, 2, 3, 2,
+		2, 3, 3, 3, 3, 3, 3, 3, 3, 1, 2, 3, 2, 5, 3, 3,
+		3, 3, 3, 3, 3, 3, 3, 5, 3, 3, 3, 2, 1, 2, 4, 0
+	};
+
+	const unsigned short tiny_font_offset[UiConsts::FONT_ENTRIES] = {
+		  0,    2,    3,   6,  11,  11,  14,  14,  15,  17,  19,  22,  25,  27,  29,  30, 
+		  33,   36,  39,  42,  45,  48,  51,  54,  57,  60,  63,  64,  66,  69,  72,  75,  
+		  78,   78,  81,  84,  87,  90,  93,  96,  99, 102, 105, 108, 111, 114, 119, 123, 
+		  126, 129, 133, 136, 139, 142, 145, 148, 153, 156, 159, 162, 164, 167, 169, 172, 
+		  174, 176, 179, 182, 185, 188, 191, 194, 197, 200, 201, 203, 206, 208, 213, 216, 
+		  219, 222, 225, 228, 231, 234, 237, 240, 245, 248, 251, 254, 256, 257, 259, 263
+	};
+
+	const int tiny_font_height = 5;
 }
 
 // A structure to hold UI related globals (like cursor and menu positions)
@@ -525,8 +541,8 @@ class Render {
 		void add_area_to_map_bitmap(DungeonFloor *f, int x, int y);
 		void fill_in_entire_map(DungeonFloor *f);
 		void copy_data_to_offscreen_vram(void);		
-		void render_fixed_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx);		
 		void render_prop_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx, int style);
+		void render_tiny_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx);
 		void render_map(BITMAP *destination);
 		void render_inventory(BITMAP *destination);
 		void render_status_ui(BITMAP *destination);
