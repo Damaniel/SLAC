@@ -600,15 +600,6 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 	// Process initial vision for the enemies
 	process_enemy_vision(d.enemies);
 
-	// Does the display need to be refreshed?
-	g_state_flags.update_display = true;
-	
-	// Tell the renderer to draw these first thing.
-	g_state_flags.update_maze_area = true;
-	g_state_flags.update_status_dialog = true;
-	g_state_flags.update_status_hp_exp = true;
-	g_state_flags.update_text_dialog = true;
-
 	// Use the short text log by default
 	g_state_flags.text_log_extended = false;
 
@@ -616,7 +607,7 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 	g_render.initialize_map_bitmap(&g_dungeon);
 
 	// Force an explicit display update so the user can see the world right away
-	update_display();
+	force_update_screen();
 }
 
 //------------------------------------------------------------------------------
@@ -645,30 +636,17 @@ void initialize_main_game_state(void) {
 		g_identified_scrolls.push_back(false);
 	}
 
-	// If a maze already exists for some reason, delete it
-	if (g_dungeon.maze != NULL) {
-		delete g_dungeon.maze;
-		g_dungeon.maze = NULL;
-	}
-
-	// Create a new dungeon floor (first floor, coming down from surface)
-	//generate_new_dungeon_floor(g_dungeon, 1, MazeConsts::STAIRS_DOWN);
+	// The 'default' dungeon is Dusty Tunnels
+	g_dungeon.maze_id = DUSTY_TUNNELS;
 
 	// create a new inventory (TODO - move to an earlier state)
 	g_inventory = new Inventory();
 
-	// Set initial flags to render stuff like the UI
-	g_state_flags.update_text_dialog = true;
-	g_state_flags.update_status_dialog = true;
-	g_state_flags.update_status_hp_exp = true;
-	g_state_flags.update_maze_area = true;
-	g_state_flags.update_display = true;
-
 	// Put the player in the place they start a new game
 	g_player.place_in_town_start();
 
-	// Force an initial display update
-	update_display();
+	// Set initial flags to render stuff like the UI
+	force_update_screen();
 }
 
 //------------------------------------------------------------------------------
@@ -918,7 +896,7 @@ void use_stairs(int x, int y) {
     int depth;
 
 	if (g_state_flags.in_dungeon) {
-		g_dungeon.maze->stairs_here(x, y);
+		stairs = g_dungeon.maze->stairs_here(x, y);
 
 	    // If there aren't actually any stairs, then do nothing
 	    if (stairs == MazeConsts::NO_STAIRS)
@@ -936,14 +914,14 @@ void use_stairs(int x, int y) {
 	            depth = g_dungeon.max_depth;
 	    }
 
-	    // If the stairs are up stairs, the new floor should be
-    	// one less than the current one (with a limit of 1).
-    	// Eventually, if the floor is 0, it will transition to
-    	// town instead of generating floor 1 again.
+		// If the stairs are up stairs, move up.  If on the first
+		// floor, transition to town.
 	    if (stairs == MazeConsts::STAIRS_UP) {
     	    depth = g_dungeon.depth - 1;
-	        if (depth < 1) 
-            	g_state_flags.in_dungeon = false;
+	        if (depth < 1) {
+				exit_dungeon(false);
+				return;
+			}
     	}
 
     	// Generate a new dungeon with the new floor value
@@ -953,7 +931,56 @@ void use_stairs(int x, int y) {
 		// Check to see if we're sitting on one of the dungeon
 		// entrances, and enter the correct dungeon from the
 		// first floor
+		check_and_process_town_entrances(x, y);
 	}
+}
+
+//----------------------------------------------------------------------------
+// Processes the transition from the dungeon to town
+//
+// Arguments:
+//   used_recall - was a scroll of recall used to exit?
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void exit_dungeon(bool used_recall) {
+    g_state_flags.in_dungeon = false;
+	// Place the player in the correct spot for the dungeon
+	// they're leaving
+	switch(g_dungeon.maze_id) {
+		case DUSTY_TUNNELS:
+			if(used_recall) {
+				g_player.x_pos = TownConsts::DT_RECALL_X;
+				g_player.y_pos = TownConsts::DT_RECALL_Y;
+			}
+			else {
+				g_player.x_pos = TownConsts::DUSTY_TUNNELS_X;
+				g_player.y_pos = TownConsts::DUSTY_TUNNELS_Y;
+			}
+			break;
+		case MARBLE_HALLS:
+			if (used_recall) {
+				g_player.x_pos = TownConsts::MH_RECALL_X;
+				g_player.y_pos = TownConsts::MH_RECALL_Y;
+			}
+			else {
+				g_player.x_pos = TownConsts::MARBLE_HALLS_X;
+				g_player.y_pos = TownConsts::MARBLE_HALLS_Y;
+			}
+			break;
+		case CRYSTAL_DEPTHS:
+			if (used_recall) {
+				g_player.x_pos = TownConsts::CD_RECALL_X;
+				g_player.y_pos = TownConsts::CD_RECALL_Y;
+			}	
+			else {
+				g_player.x_pos = TownConsts::CRYSTAL_DEPTHS_X;
+				g_player.y_pos = TownConsts::CRYSTAL_DEPTHS_Y;
+			}
+			break;
+	}
+	force_update_screen();
 }
 
 //----------------------------------------------------------------------------
@@ -2062,6 +2089,96 @@ void perform_player_combat(Enemy *target) {
 	}
 }
 
+//----------------------------------------------------------------------------
+// Does the things required to enter the dungeon
+//
+// Arguments:
+//  floor - the floor to enter at
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void enter_dungeon(int floor) {
+	// Change the player to in the dungeon
+	g_state_flags.in_dungeon = true;
+
+	// Turn off any active scroll of recall
+	g_player.recall_active = false;
+
+	// Make a new dungeon floor
+	generate_new_dungeon_floor(g_dungeon, floor, MazeConsts::STAIRS_DOWN);
+	force_update_screen();
+}
+
+//----------------------------------------------------------------------------
+// Checks to see if the player is on a dungeon entrance, and enters it if so.
+//
+// Arguments:
+//  x, y - the position to check
+//
+// Returns:
+//   Nothing
+//
+// Notes:
+//   This function is called from an input function that already checked to
+//   see if the player used the stairs.
+//----------------------------------------------------------------------------
+void check_and_process_town_entrances(int x, int y) {
+	bool enter = false;
+	if (x == TownConsts::DUSTY_TUNNELS_X && y == TownConsts::DUSTY_TUNNELS_Y)
+	{
+		g_dungeon.maze_id = DUSTY_TUNNELS;
+		enter = true;
+	}
+	if (x == TownConsts::MARBLE_HALLS_X && y == TownConsts::MARBLE_HALLS_Y)
+	{
+		g_dungeon.maze_id = MARBLE_HALLS;
+		enter = true;
+	}
+	if (x == TownConsts::CRYSTAL_DEPTHS_X && y == TownConsts::CRYSTAL_DEPTHS_Y)
+	{
+		g_dungeon.maze_id = CRYSTAL_DEPTHS;
+		enter = true;
+	}
+
+	// If entering a dungeon, generate a new floor and turn off any active
+	// scroll of recall
+	if (enter) {
+		enter_dungeon(1);
+	}
+}
+
+//----------------------------------------------------------------------------
+// Checks the location for a NPC or sign, and if so, display their message.
+//
+// Arguments:
+//  x, y - the location to check
+//
+// Returns:
+//   Nothing.
+//----------------------------------------------------------------------------
+void check_and_process_npc_here(int x, int y) {
+	for (int i = 0; i < TownConsts::NUM_NPC_TEXTS; ++i) {
+		if (g_npc_info[i].x == x && g_npc_info[i].y == y) {
+			g_text_log.put_line(g_npc_info[i].text);
+			g_state_flags.update_text_dialog = true;
+			g_state_flags.update_display = true;
+			return;
+		}
+	} 
+}
+
+//----------------------------------------------------------------------------
+// Processes the proposed movement of the player (and any enemies, depending
+// on where the player is)
+//
+// Arguments:
+//  proposed_location - the place the player wants to move to
+//
+// Returns:
+//   Nothing.  This function directly moves the player (and enemies, if 
+//   present)
+//----------------------------------------------------------------------------
 void process_move(std::pair<int, int> proposed_location) {
 	if (g_state_flags.in_dungeon)
 		process_dungeon_move(proposed_location);
@@ -2069,16 +2186,48 @@ void process_move(std::pair<int, int> proposed_location) {
 		process_town_move(proposed_location);
 }
 
-void check_and_process_npc_here(int x, int y) {
-	for (int i = 0; i < UtilConsts::NUM_NPC_TEXTS; ++i) {
-		if (g_npc_info[i].x == x && g_npc_info[i].y == y) {
-			g_text_log.put_line(g_npc_info[i].text);
-			g_state_flags.update_text_dialog = true;
-			g_state_flags.update_display = true;
+//----------------------------------------------------------------------------
+// Looks to see if the current location is an 'active' square (the entrance
+// to a shop or an active recall circle) and do the thing
+//
+// Arguments:
+//  x, y - the place to check
+//
+// Returns:
+//   Nothing.
+//----------------------------------------------------------------------------
+void check_for_active_area(int x, int y) {
+	bool enter = false;
+	// Return the player to the dungeon if they step on the appropriate circle with a scroll active
+	if (g_player.recall_active) {
+		if (x == TownConsts::DT_RECALL_X && y == TownConsts::DT_RECALL_Y && g_dungeon.maze_id == DUSTY_TUNNELS)
+			enter = true;
+		if (x == TownConsts::MH_RECALL_X && y == TownConsts::MH_RECALL_Y && g_dungeon.maze_id == MARBLE_HALLS)
+			enter = true;
+		if (x == TownConsts::CD_RECALL_X && y == TownConsts::CD_RECALL_Y && g_dungeon.maze_id == CRYSTAL_DEPTHS)
+			enter = true;
+		if (enter) {
+			g_text_log.put_line("You re-enter the dungeon as the magic fades away...");
+			enter_dungeon(g_player.recall_floor);
 		}
-	} 
+	}
+	// Check to see if the player is on the weapon shop
+
+	// Check to see if the player is on the item shop
+
+	// Check to see if the player is on the museum
 }
 
+//----------------------------------------------------------------------------
+// Processes the proposed movement of the player and any enemies within
+// range of the player while in town
+//
+// Arguments:
+//  proposed_location - the place the player wants to move to
+//
+// Returns:
+//   Nothing.  This function directly moves the player
+//----------------------------------------------------------------------------
 void process_town_move(std::pair<int, int> proposed_location) {
 	// Do town movement stuff
 	int x = proposed_location.first;
@@ -2100,6 +2249,7 @@ void process_town_move(std::pair<int, int> proposed_location) {
 	// Check to see if the new position corresponds to a shop,
 	// dungeon entrance, or a recall point that's active,
 	// and do the correct thing
+	check_for_active_area(x, y);
 }
 
 //----------------------------------------------------------------------------
@@ -2354,6 +2504,15 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 	// Update whether enemies remember the player or not
 	process_enemy_forgetting_player(g_dungeon.enemies);
 
+	// If the player has a scroll of recall active, subtract the count and if the count
+	// becomes zero, send the player to town
+	if (g_player.recall_active && g_state_flags.in_dungeon) {
+		--g_player.recall_count;
+		if (g_player.recall_count <= 0) {
+			g_text_log.put_line("The magical energy whisks you away!");
+			exit_dungeon(true);
+		}
+	}
     // Redraw the maze area
 	g_state_flags.update_maze_area = true;
 	g_state_flags.update_text_dialog = true;

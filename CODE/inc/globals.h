@@ -46,6 +46,7 @@
 #include "dat.h"
 
 // Other includes
+#include "town.h"
 #include "input.h"
 #include "textlog.h"
 #include "invntory.h"

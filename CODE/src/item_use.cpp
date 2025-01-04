@@ -368,6 +368,37 @@ void hide_map() {
 }
 
 //----------------------------------------------------------------------------
+// Performs the action of a recall scroll (starts a counter that will return
+// the player to the surface when it reaches 0)
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void activate_recall(void) {
+    if (g_player.recall_active) {
+        g_player.recall_active = false;
+        g_player.recall_count = 0;
+        g_text_log.put_line("The energy pulling you to the surface subsides.");
+        return;
+    } 
+    else {
+        if (g_state_flags.in_dungeon) {
+            g_player.recall_active = true;
+            g_player.recall_floor = g_dungeon.depth;
+            g_player.recall_count = (rand() % (ItemConsts::RECALL_SCROLL_MAX_TURNS - ItemConsts::RECALL_SCROLL_MIN_TURNS)) + 
+                                    ItemConsts::RECALL_SCROLL_MIN_TURNS;
+            g_text_log.put_line("Magical energy starts to tug you toward the surface...");
+        }
+        else {
+            g_text_log.put_line("This scroll does nothing here.");
+        }
+    }
+}
+
+//----------------------------------------------------------------------------
 // Performs the specific action for a particular type of potion based on its
 // ID
 //
@@ -473,8 +504,10 @@ void use_scroll_action(int id) {
         case ItemConsts::SCROLL_OF_FORGET_AREA:
             hide_map();
             break;
-        case ItemConsts::SCROLL_OF_DISCOVERY:
         case ItemConsts::SCROLL_OF_RECALL:
+            activate_recall();
+            break;
+        case ItemConsts::SCROLL_OF_DISCOVERY:
         case ItemConsts::SCROLL_OF_SUMMON_ITEM:
         case ItemConsts::SCROLL_OF_CURSE:
             g_text_log.put_line("This scroll does nothing (yet).");

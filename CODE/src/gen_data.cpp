@@ -781,7 +781,7 @@ NPCInfoType g_npc_info[] = {
 	{36, 7, "- Level 50 training dummy -"},
 	{38, 7, "- Level 100 training dummy -"},
 	{40, 7, "- Training dummies - check your strength here! -"},
-	{45, 17, "- Portal to the Dusty Caverns -"},
+	{45, 17, "- Portal to the Dusty Tunnels -"},
 	{3, 9, "- Portal to the Marble Halls -"},
 	{39, 37, "- Portal to the Crystal Depths -"},
 	{21, 12, "- Museum and Artifact Collection -"},

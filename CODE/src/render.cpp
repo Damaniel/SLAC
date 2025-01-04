@@ -937,14 +937,26 @@ void Render::render_status_ui(BITMAP *destination) {
 
 	// Area text
 	render_text(destination, "Area:", UiConsts::DUNGEON_TEXT_X, UiConsts::DUNGEON_TEXT_Y,
-				FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);
-	render_text(destination, (char *)get_dungeon_name(g_dungeon.maze_id, true).c_str(), UiConsts::DUNGEON_NAME_X,
-	  			UiConsts::DUNGEON_NAME_Y, FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL,
-				FontConsts::TEXT_CENTERED);
+				FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);\
+	if (g_state_flags.in_dungeon) {
+		render_text(destination, (char *)get_dungeon_name(g_dungeon.maze_id, true).c_str(), UiConsts::DUNGEON_NAME_X,
+		  			UiConsts::DUNGEON_NAME_Y, FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL,
+					FontConsts::TEXT_CENTERED);
+	}
+	else {
+		render_text(destination, "Town", UiConsts::DUNGEON_NAME_X,
+		  			UiConsts::DUNGEON_NAME_Y, FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL,
+					FontConsts::TEXT_CENTERED);		
+	}
 
 	render_text(destination, "Floor:", UiConsts::FLOOR_TEXT_X, UiConsts::FLOOR_TEXT_Y,
 				FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);
-	sprintf(text, "%d of %d", g_dungeon.depth, g_dungeon.max_depth);
+	if (g_state_flags.in_dungeon) {
+		sprintf(text, "%d of %d", g_dungeon.depth, g_dungeon.max_depth);
+	}
+	else {
+		sprintf(text, "- Surface -");
+	}
 	render_text(destination, text, UiConsts::FLOOR_VALUE_X, UiConsts::FLOOR_VALUE_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_RIGHT_JUSTIFIED);
@@ -956,8 +968,6 @@ void Render::render_status_ui(BITMAP *destination) {
 	render_text(destination, text, UiConsts::GOLD_VALUE_X, UiConsts::GOLD_VALUE_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_RIGHT_JUSTIFIED);
-
-	// Status icons (TBD)
 }
 
 //------------------------------------------------------------------------------
@@ -1518,4 +1528,22 @@ int Render::get_prop_text_width(char *text, int style) {
 	}
 
 	return width;
+}
+
+//------------------------------------------------------------------------------
+// Forces an on-screen update of everything
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void force_update_screen(void) {
+	g_state_flags.update_maze_area = true;
+	g_state_flags.update_text_dialog = true;
+	g_state_flags.update_status_dialog = true;
+	g_state_flags.update_status_hp_exp = true;
+	g_state_flags.update_display = true;
+	update_display();	
 }

@@ -90,9 +90,6 @@ int main(void) {
 		// Handle all input
 		process_input();
 
-		// Process all non-input actions
-		// process_non_player_actions();
-
 		// update the display
 		if (g_state_flags.update_display == true) {
 			update_display();					

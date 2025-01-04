@@ -15,6 +15,10 @@ namespace ItemConsts {
     // The maximum number of attempts to reroll an item aspect to meet the ilevel requirements
     const int MAX_GENERATOR_REROLLS = 10;
 
+    // The time range which a scroll of recall is set between when used
+    const int RECALL_SCROLL_MIN_TURNS = 8;
+    const int RECALL_SCROLL_MAX_TURNS = 15;
+
     // odds tables for generating main item classes.  Currently:
     //
     //   weapon: 10% 

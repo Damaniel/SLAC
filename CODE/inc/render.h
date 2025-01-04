@@ -542,6 +542,8 @@ class Render {
 		void render_hp_exp_bar(BITMAP *destination);
 };
 
+void force_update_screen(void);
+
 #endif	
 	
 	
