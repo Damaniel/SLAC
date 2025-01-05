@@ -112,5 +112,16 @@ public:
     static Enemy* generate_arbitrary(int id);
 };
 
+bool enemy_distance_sort(Enemy *first, Enemy *second);
+void sort_enemy_list(std::list<Enemy *> &el);
+void get_enemy_distances(std::list<Enemy *> &el, int x, int y);
+bool is_valid_enemy_position(int x, int y);
+bool is_enemy_here(std::list<Enemy *> &el, int x, int y);
+void perform_enemy_action(Enemy *e);
+Enemy* get_enemy_at(std::list<Enemy *> &el, int x, int y);
+void process_enemy_forgetting_player(std::list<Enemy *> &el);
+void process_enemy_vision(std::list<Enemy *> &el);
+void perform_enemy_combat(Enemy *e);
+void delete_dead_enemies(std::list<Enemy *> &el);
 
 #endif

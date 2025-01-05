@@ -153,25 +153,6 @@ int get_diagonal_distance_between(int x1, int y1, int x2, int y2);
 int get_manhattan_distance_between(int x1, int y1, int x2, int y2);
 int get_distance_between(int x1, int y1, int x2, int y2);
 
-// Enemy functions
-bool enemy_distance_sort(Enemy *first, Enemy *second);
-void sort_enemy_list(std::list<Enemy *> &el);
-void get_enemy_distances(std::list<Enemy *> &el, int x, int y);
-bool is_valid_enemy_position(int x, int y);
-bool is_enemy_here(std::list<Enemy *> &el, int x, int y);
-void perform_enemy_action(Enemy *e);
-Enemy *get_enemy_at(int x, int y);
-void process_enemy_forgetting_player(std::list<Enemy *> &el);
-void process_enemy_vision(std::list<Enemy *> &el);
-void perform_enemy_combat(Enemy *e);
-void delete_dead_enemies(std::list<Enemy *> &el);
-
-// Town functions
-void check_and_process_npc_here(int x, int y);
-void check_and_process_town_entrances(int x, int y);
-void check_for_active_area(int x, int y);
-void enter_dungeon(int floor);
-
 // Action functions
 void process_move(std::pair<int, int> proposed_location);
 void process_town_move(std::pair<int, int> proposed_location);

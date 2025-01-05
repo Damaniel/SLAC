@@ -423,3 +423,436 @@ bool Enemy::check_if_can_see(int x, int y) {
         }
     }
 }
+
+//----------------------------------------------------------------------------
+// A utility function used to assist with sorting the enemy list - this
+// function assists with sorting by distance
+//
+// Arguments:
+//	first, second - the enemies to compare
+//
+// Returns:
+//  true if the first is lower, false otherwise
+//----------------------------------------------------------------------------
+bool enemy_distance_sort(Enemy *first, Enemy *second) {
+	return (first->get_distance() < second->get_distance());
+}
+
+//----------------------------------------------------------------------------
+// Sorts a list of enemies by distance, from closest to furthest
+//
+// Arguments:
+//	el - the list to sort
+//
+// Returns:
+//	Nothing
+//----------------------------------------------------------------------------
+void sort_enemy_list(std::list<Enemy *> &el) {
+	el.sort(enemy_distance_sort);
+}
+
+//----------------------------------------------------------------------------
+// Calculates the distance from an arbitrary point to each enemy and
+// sorts the resulting list by distance
+//
+// Arguments:
+//	el - the enemy list
+//  x, y - the point
+//
+// Returns:
+//	Nothing
+//----------------------------------------------------------------------------
+void get_enemy_distances(std::list<Enemy *> &el, int x, int y) {
+	std::list<Enemy *>::iterator enemy_it;
+
+	for(enemy_it = el.begin(); enemy_it != el.end(); ++enemy_it) {
+		int distance = get_diagonal_distance_between((*enemy_it)->get_x_pos(), (*enemy_it)->get_y_pos(), x, y);
+		(*enemy_it)->set_distance(distance);
+	}
+
+	sort_enemy_list(el);
+}
+
+//----------------------------------------------------------------------------
+// For any sufficiently close enemies, check to see if they can see the 
+// player.
+//
+// Arguments:
+//	el - the enemy list
+//
+// Returns:
+//	Nothing
+//----------------------------------------------------------------------------
+void process_enemy_vision(std::list<Enemy *> &el) {
+	std::list<Enemy *>::iterator enemy_it;
+
+	for(enemy_it = el.begin(); enemy_it != el.end(); ++enemy_it) {
+		if ((*enemy_it)->has_seen_the_player()) {
+			//std::cout << "process_enemy_vision: the " << (*enemy_it)->get_name() << " has already seen player" << std::endl;
+		} 
+		else {
+			//std::cout << "process_enemy_vision: processing the " << (*enemy_it)->get_name() << std::endl;
+			int distance = get_diagonal_distance_between((*enemy_it)->get_x_pos(), (*enemy_it)->get_y_pos(), g_player.get_x_pos(), g_player.get_y_pos());
+			if (distance <= UtilConsts::MAXIMUM_ENEMY_AI_DISTANCE_FAR && (*enemy_it)->has_seen_the_player() == false) {
+				bool seen = (*enemy_it)->check_if_can_see(g_player.get_x_pos(), g_player.get_y_pos());
+				if (seen) {
+					(*enemy_it)->mark_has_seen_player(true);
+				}	
+			}
+			else {
+				//std::cout << "  - enemy is too far away to care" << std::endl;
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+// Marks every enemy too far from the player as having forgotten that the 
+// player exists. 
+//
+// Arguments:
+//	el - the enemy list
+//
+// Returns:
+//	Nothing
+//----------------------------------------------------------------------------
+void process_enemy_forgetting_player(std::list<Enemy *> &el) {
+	int px = g_player.get_x_pos();
+	int py = g_player.get_y_pos();
+	std::list<Enemy *>::iterator enemy_it;
+
+	for(enemy_it = el.begin(); enemy_it != el.end(); ++enemy_it) {
+		if ((*enemy_it)->has_seen_the_player()) {
+			int distance = get_diagonal_distance_between((*enemy_it)->get_x_pos(), (*enemy_it)->get_y_pos(), px, py);
+			if (distance >= UtilConsts::MAXIMUM_ENEMY_REMEMBER_DISTANCE) {
+				(*enemy_it)->mark_has_seen_player(false);
+				//std::cout << "process_enemy_forgetting_player: the " << (*enemy_it)->get_name() << " has forgotten the player" << std::endl;
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+// Checks if an enemy is located in the specified position
+//
+// Arguments:
+//	el - the enemy list
+//  x, y - the point
+//
+// Returns:
+//	True if an enemy is located there, false otherwise
+//----------------------------------------------------------------------------
+bool is_enemy_here(std::list<Enemy *> &el, int x, int y) {
+	std::list<Enemy *>::iterator enemy_it;
+
+	for(enemy_it = el.begin(); enemy_it != el.end(); ++enemy_it) {
+		if ((*enemy_it)->get_x_pos() == x && (*enemy_it)->get_y_pos() == y)
+			return true;
+	}
+
+	return false;
+}
+
+//----------------------------------------------------------------------------
+// Returns the Enemy at the specified position, if there is one
+//
+// Arguments:
+//  x, y - the position
+//
+// Returns:
+//	A pointer to the Enemy if present, NULL otherwise.
+//----------------------------------------------------------------------------
+Enemy* get_enemy_at(std::list<Enemy *> &el, int x, int y) {
+	std::list<Enemy *>::iterator enemy_it;
+
+	for(enemy_it = el.begin(); enemy_it != el.end(); ++enemy_it) {
+		if ((*enemy_it)->get_x_pos() == x && (*enemy_it)->get_y_pos() == y)
+			return (*enemy_it);
+	}
+
+	return NULL;
+}
+
+//----------------------------------------------------------------------------
+// Goes through the enemy list and deletes any marked as dead
+//
+// Arguments:
+//  el - the enemy list
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void delete_dead_enemies(std::list<Enemy *> &el) {
+	std::list<Enemy *>::iterator enemy_it;
+
+	for (enemy_it = el.begin(); enemy_it != el.end(); ++enemy_it) {
+		if ((*enemy_it)->is_it_alive() == false) {
+			std::list<Enemy *>::iterator it = enemy_it;
+			//std::cout << "delete_dead_enemies: deleting " << (*it)->get_name() << std::endl;
+			delete *enemy_it;
+			enemy_it = el.erase(it);
+		}
+	}
+
+	// Now that enemies are dead, we need to update the maze area to
+	// remove them from the screen
+	g_state_flags.update_maze_area = true;
+}
+
+//----------------------------------------------------------------------------
+// Checks if the specified location is a place an enemy can be
+//
+// Arguments:
+//  x, y - the point
+//
+// Returns:
+//	True if an enemy can be there, false otherwise
+//----------------------------------------------------------------------------
+bool is_valid_enemy_position(int x, int y) {
+	// Is the square a floor?
+	if (!g_dungeon.maze->is_carved(x,y))
+		return false;
+	// Does the square already contain an enemy?
+	if (is_enemy_here(g_dungeon.enemies, x, y))
+		return false;
+
+	// If neither are true, the enemy can be here.
+	return true;
+}
+
+//----------------------------------------------------------------------------
+// Determines the direction an enemy should move on its turn
+//
+// Arguments:
+//  e - the enemy
+//
+// Returns:
+//   Nothing.  This function directly moves the enemy.
+//----------------------------------------------------------------------------
+void perform_enemy_action(Enemy *e) {
+	// Does the following :
+	//   - Check to see if the player is adjacent.  
+	//      - If so, attack the player
+	//   - Otherwise, for each of the 8 directions
+	//      - If the position can be moved to (no wall, no enemy, no player)
+	//          - calculate the distance from the player
+	//          - push a pair <direction, distance> to a vector
+	//	 - With the resulting vector:
+	//   - Make a pass, find the lowest distance and add each one
+	//   - Pick a random element from the second vector
+	//   - Use the direction component of the selected element to move the enemy
+
+	// Being greedy, this will lead to non-optimal behavior (enemies getting stuck
+	// behind walls, and such), but non-optimal behavior is much better than the
+	// cost and complexity of A*, and behavior in more open spaces will be just fine.
+	int x = e->get_x_pos();
+	int y = e->get_y_pos();
+	int px = g_player.get_x_pos();
+	int py = g_player.get_y_pos();
+
+	// If the enemy is 0 or 1 away from the player in both the x and y direction, they're 'adjacent',
+	// and should attack the player
+	//std::cout << "perform_enemy_action: abs(px-x) = " << abs(px-x) << ", abs(py-y) = " << abs(py-y) << std::endl;
+	if (abs(px-x) <= 1 && abs(py-y) <= 1) {
+		g_text_log.put_line("The " + e->get_name() + " attacks you!");
+		perform_enemy_combat(e);
+		if (g_player.hp <= 0) {
+			g_text_log.put_line("You are defeated!");
+		}
+		// TODO: Deal with player death
+		return;
+	}
+
+	std::vector<std::pair<int, int> > directions;
+	std::vector<int> lowest;
+
+	if (is_valid_enemy_position(x - 1, y - 1))
+		directions.push_back(std::make_pair(MazeConsts::DIRECTION_NORTHWEST, get_diagonal_distance_between(x - 1, y - 1, px, py)));
+	if (is_valid_enemy_position(x, y - 1))
+		directions.push_back(std::make_pair(MazeConsts::DIRECTION_NORTH, get_diagonal_distance_between(x, y - 1, px, py)));
+	if (is_valid_enemy_position(x + 1, y - 1))
+		directions.push_back(std::make_pair(MazeConsts::DIRECTION_NORTHEAST, get_diagonal_distance_between(x + 1, y - 1, px, py)));
+	if (is_valid_enemy_position(x - 1, y))
+		directions.push_back(std::make_pair(MazeConsts::DIRECTION_WEST, get_diagonal_distance_between(x - 1, y, px, py)));
+	if (is_valid_enemy_position(x + 1, y))
+		directions.push_back(std::make_pair(MazeConsts::DIRECTION_EAST, get_diagonal_distance_between(x + 1, y, px, py)));
+	if (is_valid_enemy_position(x - 1, y + 1))
+		directions.push_back(std::make_pair(MazeConsts::DIRECTION_SOUTHWEST, get_diagonal_distance_between(x - 1, y + 1, px, py)));
+	if (is_valid_enemy_position(x, y + 1))
+		directions.push_back(std::make_pair(MazeConsts::DIRECTION_SOUTH, get_diagonal_distance_between(x, y + 1, px, py)));
+	if (is_valid_enemy_position(x + 1, y + 1))
+		directions.push_back(std::make_pair(MazeConsts::DIRECTION_SOUTHEAST, get_diagonal_distance_between(x + 1, y + 1, px, py)));
+
+	// The enemy can't move in any direction; return
+	if (directions.size() == 0) {
+		//std::cout << "  Enemy can't move" << std::endl;
+		return;
+	}
+
+	int lowest_distance = 1000;
+	// Loop through, find the lowest distance
+	for (std::vector<std::pair<int, int> >::iterator it = directions.begin(); it != directions.end(); ++it) {
+		if ((*it).second <= lowest_distance)
+			lowest_distance = (*it).second;
+	}
+
+	// Loop through again, pull out all that have the lowest distance
+	for (std::vector<std::pair<int, int> >::iterator it = directions.begin(); it != directions.end(); ++it) {
+		if ((*it).second == lowest_distance)
+			lowest.push_back((*it).first);
+	}
+
+	//std::cout << "Number of lowest values = " << lowest.size() << std::endl;
+
+	int dir = rand() % lowest.size();
+	switch (lowest[dir]) {
+		case MazeConsts::DIRECTION_NORTHWEST:
+			//std::cout << "  Enemy moves northwest" << std::endl;
+			e->set_pos(x - 1, y - 1);
+			break;
+		case MazeConsts::DIRECTION_NORTH:
+			//std::cout << "  Enemy moves north" << std::endl;
+			e->set_pos(x, y - 1);
+			break;
+		case MazeConsts::DIRECTION_NORTHEAST:
+			//std::cout << "  Enemy moves northeast" << std::endl;
+			e->set_pos(x + 1, y - 1);
+			break;
+		case MazeConsts::DIRECTION_WEST:
+			//std::cout << "  Enemy moves west" << std::endl;
+			e->set_pos(x - 1, y);
+			break;
+		case MazeConsts::DIRECTION_EAST:
+			//std::cout << "  Enemy moves east" << std::endl;
+			e->set_pos(x + 1, y);
+			break;
+		case MazeConsts::DIRECTION_SOUTHWEST:
+			//std::cout << "  Enemy moves southwest" << std::endl;
+			e->set_pos(x - 1, y + 1);
+			break;
+		case MazeConsts::DIRECTION_SOUTH:
+			//std::cout << "  Enemy moves south" << std::endl;
+			e->set_pos(x, y + 1);
+			break;
+		case MazeConsts::DIRECTION_SOUTHEAST:
+			//std::cout << "  Enemy moves southeast" << std::endl;
+			e->set_pos(x + 1, y + 1);
+			break;
+		default:
+			//std::cout << "  Enemy doesn't move" << std::endl;
+			break;
+	}
+}
+
+//----------------------------------------------------------------------------
+// 'Attacks' the player, doing all required damage calculations and
+// adjusting player/enemy health
+//
+// Arguments:
+//   e - the enemy performing the attack
+//
+// Returns:
+//   Nothing.  The enemy and player health will be adjusted accordingly
+//----------------------------------------------------------------------------
+void perform_enemy_combat(Enemy *e) {
+	for (int attack = 0; attack < e->get_apt(); ++attack) {
+		// Calculate physical base damage
+		int base_physical_damage = (int)((e->get_atk() + (0.2 * e->get_str())) * ((rand() % 50) + 75) / 100);
+		//std::cout << "perform_enemy_combat: enemy base phys = " << base_physical_damage << std::endl;
+
+		// Calculate elemental base damage
+		int base_fire_damage = 0;
+		int base_ice_damage = 0;
+		int base_lightning_damage = 0;
+		bool fire_attack_done = false;
+		bool ice_attack_done = false;
+		bool lightning_attack_done = false;
+		if (e->get_fatk() > 0) {
+			base_fire_damage = (int)((e->get_fatk() + (0.1 * e->get_str())) * ((rand() % 50) + 75) / 100);
+			fire_attack_done = true;
+			//std::cout << "peform_enemy_combat: enemy base fire = " << base_fire_damage << std::endl;
+		}
+		if (e->get_iatk() > 0) {
+			base_ice_damage = (int)((e->get_iatk() + (0.1 * e->get_str())) * ((rand() % 50) + 75) / 100);
+			ice_attack_done = true;
+			//std::cout << "peform_enemy_combat: enemy base fire = " << base_ice_damage << std::endl;
+		}
+		if (e->get_latk() > 0) {
+			base_lightning_damage = (int)((e->get_latk() + (0.1 * e->get_str())) * ((rand() % 50) + 75) / 100);
+			lightning_attack_done = true;
+			//std::cout << "peform_enemy_combat: enemy base lightning = " << base_lightning_damage << std::endl;
+		}		
+
+		// Check for critical hit
+		bool attack_crits = false;
+		int chance_of_crit = 2 + (int)(e->get_str() / 10);
+		if (chance_of_crit > 90)
+			chance_of_crit = 90;
+		if (rand() % 100 < chance_of_crit) {
+			attack_crits = true;
+			//std::cout << "perform_enemy_combat: attack crits!" << std::endl;
+		}	
+
+		int player_base_damage_taken;
+		// Calculate actual base damage
+		if (rand() % 100 < (2 + g_player.actual.block)) {
+			player_base_damage_taken = 0;
+		}
+		else {
+			player_base_damage_taken = (int)((base_physical_damage - (g_player.actual.def + 0.2 * g_player.actual.con) * (rand() % 50 + 75) / 100));
+		}
+		//std::cout << "perform_enemy_combat: player base damage taken = " << player_base_damage_taken << std::endl;
+		if (player_base_damage_taken < 1)
+			player_base_damage_taken = 1;
+		//std::cout << "perform_enemy_combat: actual base damage taken = " << player_base_damage_taken << std::endl;
+
+		// Calculate actual elemental damage
+		float fire_resist = g_player.actual.f_def / 100;
+		float ice_resist = g_player.actual.i_def / 100;
+		float lightning_resist = g_player.actual.l_def / 100;
+		int player_fire_damage_taken = (int)(base_fire_damage * g_player.actual.f_def * (1.0 - fire_resist) * (rand() % 50 + 75) / 100);
+		int player_ice_damage_taken = (int)(base_ice_damage * g_player.actual.i_def * (1.0 - ice_resist) * (rand() % 50 + 75) / 100);
+		int player_lightning_damage_taken = (int)(base_lightning_damage * g_player.actual.l_def * (1.0 - lightning_resist) * (rand() % 50 + 75) / 100);
+		if (fire_attack_done && player_fire_damage_taken < 1)
+			player_fire_damage_taken = 1;
+		if (ice_attack_done && player_ice_damage_taken < 1)
+			player_ice_damage_taken = 1;
+		if (lightning_attack_done && player_lightning_damage_taken < 1)
+			player_lightning_damage_taken = 1;
+		//std::cout << "perform_enemy_combat: fire damage taken = " << player_fire_damage_taken << std::endl;
+		//std::cout << "perform_enemy_combat: ice damage taken = " << player_ice_damage_taken << std::endl;
+		//std::cout << "perform_enemy_combat: lightning damage taken = " << player_lightning_damage_taken << std::endl;
+
+		// Sum up all damage
+		int total_damage_taken = player_base_damage_taken + player_fire_damage_taken + player_ice_damage_taken + player_lightning_damage_taken;		
+		if (attack_crits) {
+			g_text_log.put_line("Critical hit!");
+			int prevent_chance = (int)(g_player.actual.con / 2);
+			if (prevent_chance > 90)
+				prevent_chance = 90;
+			if (rand() % 100 < prevent_chance) {
+				if (rand() % 100 < 50) {
+					//std::cout << "perform_enemy_combat: crit missed, no damage taken" << std::endl;
+					total_damage_taken = 0;
+				}
+				//else {
+					//std::cout << "perform_enemy_combat: crit missed, standard damage taken" << std::endl;
+				//}
+			}
+			else {
+				total_damage_taken = total_damage_taken * 2;
+				//std::cout << "perform_enemy combat: crit landed, player takes 2x damage" << std::endl;
+			}
+		}
+
+		// Subtract player HP
+		g_player.hp = g_player.hp - total_damage_taken;
+
+		// Log the damage done to the game log
+		//std::cout << "perform_enemy_combat: player takes " << total_damage_taken << " damage." << std::endl;
+		//std::cout << "  perform_enemy_combat: player hp remaining = " << g_player.hp << std::endl;
+		char text[80];
+		sprintf(text, "You take %d damage!", total_damage_taken);
+		g_text_log.put_line(text);
+	}
+}

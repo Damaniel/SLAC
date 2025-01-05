@@ -37,4 +37,10 @@ namespace TownConsts {
     const int CD_RECALL_X = 43;
     const int CD_RECALL_Y = 41;
 }
+
+void check_and_process_npc_here(int x, int y);
+void check_and_process_town_entrances(int x, int y);
+void check_for_active_area(int x, int y);
+void enter_dungeon(int floor);
+
 #endif
