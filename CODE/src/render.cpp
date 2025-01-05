@@ -1,7 +1,7 @@
 //==========================================================================================
 //   Secret Legacy of the Ancient Caves (SLAC)
 //
-//   Copyright (c) 2020-2024 Shaun Brandt / Holy Meatgoat Software
+//   Copyright (c) 2020-2025 Shaun Brandt / Holy Meatgoat Software
 //
 //   Permission is hereby granted, free of charge, to any person obtaining a copy
 //   of this software and associated documentation files (the "Software"), to deal
@@ -1382,8 +1382,8 @@ void Render::render_world_at_player(BITMAP *destination, DungeonFloor *f, int ma
 }
 
 //----------------------------------------------------------------------------------
-// Render the town with the tile at screen position (0, 0) position equal to 
-// (x, y).  
+// Render the town (or a shop in it) with the tile at screen position (0, 0) 
+// position equal to (x, y).  
 //
 // Arguments:
 //   destination - the bitmap to draw to
@@ -1402,23 +1402,47 @@ void Render::render_town_at(BITMAP *destination, int x, int y) {
 		num_y_tiles = UiConsts::PLAY_AREA_TILE_HEIGHT;
 	}
 
+	int x_limit, y_limit, tile_block;
+	unsigned short *tile_index_data;
+
+	// Determine which data to use to draw, depending on where the player is
+	if (g_state_flags.in_weapon_shop || g_state_flags.in_item_shop) {
+		x_limit = TownConsts::SHOPS_WIDTH;
+		y_limit = TownConsts::SHOPS_HEIGHT;
+		tile_block = DAMRL_SHOP_TILES;
+		tile_index_data = g_shops_tile_data;
+	}
+	else if (g_state_flags.in_museum) {
+		x_limit = TownConsts::MUSEUM_WIDTH;
+		y_limit = TownConsts::MUSEUM_HEIGHT;
+		tile_block = DAMRL_SHOP_TILES;
+		tile_index_data = g_museum_tile_data;
+	}
+	else {
+		x_limit = TownConsts::TOWN_SIZE;
+		y_limit = TownConsts::TOWN_SIZE;
+		tile_block = DAMRL_TOWN_TILES;
+		tile_index_data = g_town_tile_data;
+	}
+
 	for (int screen_x = 0; screen_x < UiConsts::PLAY_AREA_TILE_WIDTH; screen_x++) {
 		for (int screen_y = 0; screen_y < num_y_tiles; screen_y++) {
 			int tile_to_render_x = x + screen_x;
 			int tile_to_render_y = y + screen_y;
-			if (tile_to_render_x >=0 && tile_to_render_y >=0 && tile_to_render_x < TOWN_SIZE && tile_to_render_y < TOWN_SIZE) {
-				int tile_index_to_render = g_town_tile_data[tile_to_render_y * TOWN_SIZE + tile_to_render_x];
+
+			if (tile_to_render_x >=0 && tile_to_render_y >=0 && tile_to_render_x < x_limit && tile_to_render_y < y_limit) {
+				int tile_index_to_render = tile_index_data[tile_to_render_y * x_limit + tile_to_render_x];
 				int tile_offset_x = tile_index_to_render % UiConsts::TOWN_TILE_ENTRY_WIDTH; 
 				int tile_offset_y = tile_index_to_render / UiConsts::TOWN_TILE_ENTRY_WIDTH;
 
-				blit((BITMAP *)g_game_data[DAMRL_TOWN_TILES].dat, 	
-		     		 destination,
-	    	 		 tile_offset_x * UiConsts::TILE_PIXEL_WIDTH, 
-		 			 tile_offset_y * UiConsts::TILE_PIXEL_HEIGHT, 
-		 			 screen_x * UiConsts::TILE_PIXEL_WIDTH,
- 		 		 	 screen_y * UiConsts::TILE_PIXEL_HEIGHT,
-			 		 UiConsts::TILE_PIXEL_WIDTH,
-			 		 UiConsts::TILE_PIXEL_HEIGHT);				
+				blit((BITMAP *)g_game_data[tile_block].dat, 	
+		     		destination,
+	    	 		tile_offset_x * UiConsts::TILE_PIXEL_WIDTH, 
+		 			tile_offset_y * UiConsts::TILE_PIXEL_HEIGHT, 
+		 			screen_x * UiConsts::TILE_PIXEL_WIDTH,
+ 		 		 	screen_y * UiConsts::TILE_PIXEL_HEIGHT,
+			 		UiConsts::TILE_PIXEL_WIDTH,
+			 		UiConsts::TILE_PIXEL_HEIGHT);				
 			}
 			else {
 				// Draw darkness

@@ -1,7 +1,7 @@
 //==========================================================================================
 //   Secret Legacy of the Ancient Caves (SLAC)
 //
-//   Copyright (c) 2020-2024 Shaun Brandt / Holy Meatgoat Software
+//   Copyright (c) 2020-2025 Shaun Brandt / Holy Meatgoat Software
 //
 //   Permission is hereby granted, free of charge, to any person obtaining a copy
 //   of this software and associated documentation files (the "Software"), to deal
@@ -56,6 +56,8 @@ DungeonFloor   g_dungeon;
 //----------------------------------------------------------------------------------
 int main(void) {
 	srand(time(NULL));
+
+	std::cout << "Loading game..." << std::endl;
 
 	allegro_init();
 	install_timer();

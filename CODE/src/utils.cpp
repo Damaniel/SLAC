@@ -1,7 +1,7 @@
 //==========================================================================================
 //   Secret Legacy of the Ancient Caves (SLAC)
 //
-//   Copyright (c) 2020-2024 Shaun Brandt / Holy Meatgoat Software
+//   Copyright (c) 2020-2025 Shaun Brandt / Holy Meatgoat Software
 //
 //   Permission is hereby granted, free of charge, to any person obtaining a copy
 //   of this software and associated documentation files (the "Software"), to deal
@@ -666,6 +666,9 @@ void change_state(int new_state) {
     switch (g_state_flags.cur_state) {
         case STATE_MAIN_GAME:
 			g_state_flags.in_dungeon = false;
+			g_state_flags.in_weapon_shop = false;
+			g_state_flags.in_item_shop = false;
+			g_state_flags.in_museum = false;
 			initialize_main_game_state();
 			break;
     }
@@ -1478,8 +1481,12 @@ int get_distance_between(int x1, int y1, int x2, int y2) {
 void process_move(std::pair<int, int> proposed_location) {
 	if (g_state_flags.in_dungeon)
 		process_dungeon_move(proposed_location);
-	else
-		process_town_move(proposed_location);
+	else {
+		if (g_state_flags.in_weapon_shop || g_state_flags.in_item_shop || g_state_flags.in_museum) 
+			process_shop_move(proposed_location);
+		else
+			process_town_move(proposed_location);
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -1507,11 +1514,90 @@ void check_for_active_area(int x, int y) {
 			enter_dungeon(g_player.recall_floor);
 		}
 	}
+
 	// Check to see if the player is on the weapon shop
+	if (x == TownConsts::WEAPON_SHOP_X && y == TownConsts::WEAPON_SHOP_Y) {
+		if (!g_state_flags.in_weapon_shop && !g_state_flags.in_item_shop && !g_state_flags.in_museum) {
+			g_state_flags.in_weapon_shop = true;
+			g_player.set_x_pos(TownConsts::WEAPON_SHOP_EXIT_X);
+			g_player.set_y_pos(TownConsts::WEAPON_SHOP_EXIT_Y);
+			force_update_screen();
+		}
+	}
 
 	// Check to see if the player is on the item shop
+	if (x == TownConsts::ITEM_SHOP_X && y == TownConsts::ITEM_SHOP_Y) {
+		if (!g_state_flags.in_weapon_shop && !g_state_flags.in_item_shop && !g_state_flags.in_museum) {
+			g_state_flags.in_item_shop = true;
+			g_player.set_x_pos(TownConsts::ITEM_SHOP_EXIT_X);
+			g_player.set_y_pos(TownConsts::ITEM_SHOP_EXIT_Y);
+			force_update_screen();
+		}
+	}
 
 	// Check to see if the player is on the museum
+	if (x == TownConsts::MUSEUM_X && y == TownConsts::MUSEUM_Y) {
+		if (!g_state_flags.in_weapon_shop && !g_state_flags.in_item_shop && !g_state_flags.in_museum) {
+			g_state_flags.in_museum = true;
+			g_player.set_x_pos(TownConsts::MUSEUM_EXIT_X);
+			g_player.set_y_pos(TownConsts::MUSEUM_EXIT_Y);
+			force_update_screen();
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+// Processes the proposed movement of the player while inside a shop or the
+// museum
+//
+// Arguments:
+//  proposed_location - the place the player wants to move to
+//
+// Returns:
+//   Nothing.  This function directly moves the player
+//----------------------------------------------------------------------------
+void process_shop_move(std::pair<int, int> proposed_location) {
+	int x = proposed_location.first;
+	int y = proposed_location.second;
+	int passable;
+
+
+	// Check to see if the player can move here
+	if (g_state_flags.in_weapon_shop || g_state_flags.in_item_shop) {
+		passable = g_shops_movability[y * TownConsts::SHOPS_WIDTH + x];
+	}
+	else if (g_state_flags.in_museum) {
+		passable = g_museum_movability[y * TownConsts::MUSEUM_WIDTH + x];
+	}
+
+	if (passable == 1) {
+		g_player.set_x_pos(x);
+		g_player.set_y_pos(y);
+		// If we've stepped on an exit tile for a shop or the museum, exit
+		if (g_state_flags.in_weapon_shop && x == TownConsts::WEAPON_SHOP_EXIT_X && y == TownConsts::WEAPON_SHOP_EXIT_Y) {
+			g_state_flags.in_weapon_shop = false;
+			g_player.set_x_pos(TownConsts::WEAPON_SHOP_X);
+			g_player.set_y_pos(TownConsts::WEAPON_SHOP_Y);
+		}
+		if (g_state_flags.in_item_shop && x == TownConsts::ITEM_SHOP_EXIT_X && y == TownConsts::ITEM_SHOP_EXIT_Y) {
+			g_state_flags.in_item_shop = false;
+			g_player.set_x_pos(TownConsts::ITEM_SHOP_X);
+			g_player.set_y_pos(TownConsts::ITEM_SHOP_Y);
+		}
+		if (g_state_flags.in_museum && x == TownConsts::MUSEUM_EXIT_X && y == TownConsts::MUSEUM_EXIT_Y) {
+			g_state_flags.in_museum = false;
+			g_player.set_x_pos(TownConsts::MUSEUM_X);
+			g_player.set_y_pos(TownConsts::MUSEUM_Y);
+		}
+		g_state_flags.update_maze_area = true;
+		g_state_flags.update_text_dialog = true;
+		g_state_flags.update_display = true;		
+	}
+	else {
+		// TODO - Check to see if the player is trying to talk to the shopkeeper
+		// in one of the shops.  If so, start the process of dealing with 
+		// shopping
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -1528,7 +1614,7 @@ void process_town_move(std::pair<int, int> proposed_location) {
 	// Do town movement stuff
 	int x = proposed_location.first;
 	int y = proposed_location.second;
-	int passable = g_town_movability[y * TOWN_SIZE + x];
+	int passable = g_town_movability[y * TownConsts::TOWN_SIZE + x];
 	if (passable == 1) {
 		g_player.set_x_pos(x);
 		g_player.set_y_pos(y);

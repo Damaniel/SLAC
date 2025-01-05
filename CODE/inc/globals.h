@@ -1,7 +1,7 @@
 //==========================================================================================
 //   Secret Legacy of the Ancient Caves (SLAC)
 //
-//   Copyright (c) 2020-2021 Shaun Brandt / Holy Meatgoat Software
+//   Copyright (c) 2020-2025 Shaun Brandt / Holy Meatgoat Software
 //
 //   Permission is hereby granted, free of charge, to any person obtaining a copy
 //   of this software and associated documentation files (the "Software"), to deal
@@ -88,9 +88,12 @@ extern DungeonFloor g_dungeon;
 // Holds dynamic UI global information (like cursor positions and such)
 extern UiGlobals g_ui_globals;
 
-const int TOWN_SIZE = 48;
 // Static tile data (town, shops, etc)
-extern unsigned short g_town_tile_data[TOWN_SIZE * TOWN_SIZE];
-extern unsigned char g_town_movability[TOWN_SIZE * TOWN_SIZE];
+extern unsigned short g_town_tile_data[TownConsts::TOWN_SIZE * TownConsts::TOWN_SIZE];
+extern unsigned char g_town_movability[TownConsts::TOWN_SIZE * TownConsts::TOWN_SIZE];
+extern unsigned short g_museum_tile_data[TownConsts::MUSEUM_WIDTH * TownConsts::MUSEUM_HEIGHT];
+extern unsigned char g_museum_movability[TownConsts::MUSEUM_WIDTH * TownConsts::MUSEUM_HEIGHT];
+extern unsigned short g_shops_tile_data[TownConsts::SHOPS_WIDTH * TownConsts::SHOPS_HEIGHT];
+extern unsigned char g_shops_movability[TownConsts::SHOPS_WIDTH * TownConsts::SHOPS_HEIGHT];
 
 #endif

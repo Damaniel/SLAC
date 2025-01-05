@@ -1,6 +1,7 @@
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
+#include "town.h"
 #include "globals.h"
 
 // Forward declaration for Render class
@@ -99,6 +100,15 @@ struct StateFlags {
     //  - (probably others I'll find along the way)
     bool in_dungeon;            // Is the player currently in the dungeon?
 
+    // If the player is in town, they may be in one of the shops.  If so, 
+    // these flags will allow the game to render the shop areas instead of
+    // the main town.  (Note that the shop behavior themselves will be managed
+    // by a dedicated substate since the controls/actions are different;
+    // this is mainly for rendering behavior)
+    bool in_weapon_shop;
+    bool in_item_shop;
+    bool in_museum;
+
     // - control flags
     bool exit_game;           // Did the player choose to exit the game?
 };
@@ -151,6 +161,7 @@ int get_distance_between(int x1, int y1, int x2, int y2);
 // Action functions
 void process_move(std::pair<int, int> proposed_location);
 void process_town_move(std::pair<int, int> proposed_location);
+void process_shop_move(std::pair<int, int> proposed_location);
 void process_dungeon_move(std::pair<int, int> proposed_location);
 
 #endif
