@@ -697,32 +697,6 @@ void add_items_at_player_to_log(void) {
 }
 
 //----------------------------------------------------------------------------
-// Drops an item (throwing it on the ground)
-//
-// Arguments:
-//   i - the item to drop
-//   x, y - the location on the ground to drop it
-// Returns:
-//   Nothing
-//----------------------------------------------------------------------------
-void drop_item_at(Item *i, int x, int y) {
-	bool dropped = false;
-
-	if(g_dungeon.maze->stairs_here(x, y) != MazeConsts::NO_STAIRS) {
-		g_text_log.put_line("Unable to drop an item onto stairs.");
-	}
-	else {
-		if (i != NULL) {
-			g_text_log.put_line("Dropped the " + i->get_full_name() + ".");
-			g_dungeon.add_item(x, y, i);
-			g_state_flags.update_inventory_items = true;
-			g_state_flags.update_inventory_items = true;
-			g_state_flags.update_inventory_description = true;
-		}
-	}
-}
-
-//----------------------------------------------------------------------------
 // 'Picks up' an item (adding it to the inventory or gold total, removing it
 // from the ground)
 //
@@ -1397,54 +1371,6 @@ void scramble_scroll_icons(void) {
 }
 
 //----------------------------------------------------------------------------
-// Gets the tile ID of the item to be rendered.  For most items, this is just
-// the GID.  For scrolls and potions, the offset is stored in a list of
-// scrambled tile IDs.
-//
-// Arguments:
-//   i - the item to get the tile ID of
-//
-// Returns:
-//   the tile ID
-//----------------------------------------------------------------------------
-int get_tile_to_render(Item *i) {
-
-	int i_class = i->get_item_class();
-	int i_id = i->get_id();
-
-	if (i_class == ItemConsts::POTION_CLASS) {
-		return g_scrambled_potion_icons[i_id];
-	}
-	else if (i_class == ItemConsts::SCROLL_CLASS) {
-		return g_scrambled_scroll_icons[i_id];	
-	}
-	else {
-		return i->get_gid();
-	}
-}
-
-//----------------------------------------------------------------------------
-// For any items sitting at the player's feet, identify them if they're a
-// potion or scroll that has previously been identified
-//
-// Arguments:
-//   None
-//
-// Returns:
-//   Nothing
-//----------------------------------------------------------------------------
-void identify_previously_known_items_at_player() {
-	int item_count = g_dungeon.get_num_items_at(g_player.get_x_pos(), g_player.get_y_pos());
-
-	if (item_count > 0) {
-		std::list<Item *> items = g_dungeon.get_items_at(g_player.get_x_pos(), g_player.get_y_pos());
-		for (std::list<Item *>::iterator it = items.begin(); it != items.end(); ++ it) {
-			identify_if_previously_known((*it));
-		}
-	}
-}
-
-//----------------------------------------------------------------------------
 // If the specified item type (potion or scroll) has been previously 
 // identified, identify it automatically
 //
@@ -1466,31 +1392,6 @@ void identify_if_previously_known(Item *i) {
         if (g_identified_scrolls[i->get_id()] == true) {
             i->identify();
         }
-    }
-}
-
-//----------------------------------------------------------------------------
-// Do all tasks related to identification.  This includes marking the 
-// item as identified, marking all potions and scrolls of the identified type
-// as identified, and optionally displaying a message to the log
-//
-// Arguments:
-//   i - the item to identify
-//   log - log to game log if true, don't log otherwise
-//
-// Returns:
-//   Nothing
-//----------------------------------------------------------------------------
-void perform_identification_action(Item *i, bool log) {
-	std::string old_name = i->get_full_name();
-                
-	i->identify();
-	if (i->get_item_class() == ItemConsts::POTION_CLASS)
-		g_identified_potions[i->get_id()] = true;
-	if (i->get_item_class() == ItemConsts::SCROLL_CLASS)
-		g_identified_scrolls[i->get_id()] = true;
-    if (log) {
-        g_text_log.put_line(old_name + " is " + i->get_full_name() + ".");
     }
 }
 
@@ -1561,99 +1462,6 @@ int get_distance_between(int x1, int y1, int x2, int y2) {
 	int a = abs(x2 - x1);
 	int b = abs(y2 - y1);
 	return (int)sqrt((a * a) + (b *b));
-}
-
-//----------------------------------------------------------------------------
-// 'Attacks' an enemy, doing all required damage calculations and
-// adjusting player/enemy health
-//
-// Arguments:
-//  target - the enemy to attack
-//
-// Returns:
-//   Nothing.  The enemy and player health will be adjusted accordingly
-//----------------------------------------------------------------------------
-void perform_player_combat(Enemy *target) {
-	for (int attack = 0; attack < g_player.actual.apt; ++attack) {
-
-		// Calculate physical base damage
-		int base_physical_damage = (int)((g_player.actual.atk + (0.2 * g_player.actual.str)) * ((rand() % 50) + 75) / 100);
-		//std::cout << "perform_player_combat: player base phys = " << base_physical_damage << std::endl;
-
-		// Calculate elemental base damage
-		int base_fire_damage = 0;
-		int base_ice_damage = 0;
-		int base_lightning_damage = 0;
-		bool fire_attack_done = false;
-		bool ice_attack_done = false;
-		bool lightning_attack_done = false;
-		if (g_player.actual.f_atk > 0) {
-			base_fire_damage = (int)((g_player.actual.f_atk + (0.1 * g_player.actual.str)) * ((rand() % 50) + 75) / 100);
-			fire_attack_done = true;
-			//std::cout << "peform_player_combat: player base fire = " << base_fire_damage << std::endl;
-		}
-		if (g_player.actual.i_atk > 0) {
-			base_ice_damage = (int)((g_player.actual.i_atk + (0.1 * g_player.actual.str)) * ((rand() % 50) + 75) / 100);
-			ice_attack_done = true;
-			//std::cout << "peform_player_combat: player base ice = " << base_ice_damage << std::endl;
-		}
-		if (g_player.actual.l_atk > 0) {
-			base_lightning_damage = (int)((g_player.actual.l_atk + (0.1 * g_player.actual.str)) * ((rand() % 50) + 75) / 100);
-			lightning_attack_done = true;
-			//std::cout << "peform_player_combat: player base lightning = " << base_lightning_damage << std::endl;
-		}
-
-		// Check for critical hit
-		bool attack_crits = false;
-		int chance_of_crit = 2 + (int)(g_player.actual.str / 10);
-		if (chance_of_crit > 90)
-			chance_of_crit = 90;
-		if (rand() % 100 < chance_of_crit) {
-			attack_crits = true;
-			//std::cout << "perform_player_combat: attack crits!" << std::endl;
-		}
-
-		// Calculate actual base damage
-		int enemy_base_damage_taken = (int)((base_physical_damage - target->get_def()) * (rand() % 50 + 75) / 100);
-		//std::cout << "perform_player_combat: enemy base damage taken = " << enemy_base_damage_taken << std::endl;
-		if (enemy_base_damage_taken < 1)
-			enemy_base_damage_taken = 1;
-		//std::cout << "perform_player_combat: actual base damage taken = " << enemy_base_damage_taken << std::endl;
-
-		// Calculate actual elemental damage
-		float fire_resist = target->get_fdef() / 100;
-		float ice_resist = target->get_idef() / 100;
-		float lightning_resist = target->get_ldef() / 100;
-		int enemy_fire_damage_taken = (int)(base_fire_damage * (1.0 - fire_resist) * (rand() % 50 + 75) / 100);
-		int enemy_ice_damage_taken = (int)(base_ice_damage * (1.0 - ice_resist) * (rand() % 50 + 75) / 100);
-		int enemy_lightning_damage_taken = (int)(base_lightning_damage * (1.0 - lightning_resist) * (rand() % 50 + 75) / 100);
-		if (fire_attack_done && enemy_fire_damage_taken < 1)
-			enemy_fire_damage_taken = 1;
-		if (ice_attack_done && enemy_ice_damage_taken < 1)
-			enemy_ice_damage_taken = 1;
-		if (lightning_attack_done && enemy_lightning_damage_taken < 1)
-			enemy_lightning_damage_taken = 1;
-		//std::cout << "perform_player_combat: fire damage taken = " << enemy_fire_damage_taken << std::endl;
-		//std::cout << "perform_player_combat: ice damage taken = " << enemy_ice_damage_taken << std::endl;
-		//std::cout << "perform_player_combat: lightning damage taken = " << enemy_lightning_damage_taken << std::endl;
-
-		// Sum up all damage
-		int total_damage_taken = enemy_base_damage_taken + enemy_fire_damage_taken + enemy_ice_damage_taken + enemy_lightning_damage_taken;		
-		if (attack_crits) {
-			g_text_log.put_line("Critical hit!");
-			total_damage_taken = total_damage_taken * 2;
-		}
-
-		// Subtract enemy HP
-		target->set_hp(target->get_hp() - total_damage_taken);
-
-		// Log the damage done to the game log
-		//std::cout << "perform_player_combat: enemy takes " << total_damage_taken << " damage." << std::endl;
-		//std::cout << "  perform_player_combat: enemy hp remaining = " << target->get_hp() << std::endl;
-		char text[80];
-		sprintf(text, "The %s takes %d damage!", target->get_name().c_str(), total_damage_taken);
-		g_text_log.put_line(text);
-	}
 }
 
 //----------------------------------------------------------------------------

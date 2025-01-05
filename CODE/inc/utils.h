@@ -130,22 +130,17 @@ void change_state(int new_state);
 
 // Item functions
 void pick_up_item_at(int x, int y);
-void process_equip(Item *i);
-void process_unequip(Item *i);
+void scramble_potion_icons(void);
+void scramble_scroll_icons(void);
+int roll_from_pool(const int *pool, int pool_size, int max_val);
+
+// Player stat calculation functions
 void apply_modifier_value(ModifierMagType m, float *fixed, float *multiplicative, std::vector<ModifierMagType> &mods);
 void apply_single_modifier(ModifierMagType m, Stats *fixed, Stats *multiplicative, std::vector<ModifierMagType> &mods);
 void apply_item_values_to_stats(Item *i, Stats *fixed, Stats *multiplicative, std::vector<ModifierMagType> &mods);
 void apply_mode_2_modifier_value(ModifierMagType m);
-void drop_item_at(Item *i, int x, int y);
-void scramble_potion_icons(void);
-void scramble_scroll_icons(void);
-int get_tile_to_render(Item *i);
-void identify_previously_known_items_at_player();
-void identify_if_previously_known(Item *i);
-void perform_identification_action(Item *i, bool log);
-int roll_from_pool(const int *pool, int pool_size, int max_val);
 
-// Inventory functions
+// Menu functions
 void perform_inventory_menu_action(void);
 
 // Game math functions
@@ -157,7 +152,5 @@ int get_distance_between(int x1, int y1, int x2, int y2);
 void process_move(std::pair<int, int> proposed_location);
 void process_town_move(std::pair<int, int> proposed_location);
 void process_dungeon_move(std::pair<int, int> proposed_location);
-
-void perform_player_combat(Enemy *target);
 
 #endif

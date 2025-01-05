@@ -514,5 +514,10 @@ extern std::vector<bool> g_identified_scrolls;
 
 // Function prototypes
 void move_new_artifacts_to_existing(void);
+void perform_identification_action(Item *i, bool log);
+void identify_previously_known_items_at_player();
+void identify_if_previously_known(Item *i);
+void drop_item_at(Item *i, int x, int y);
+int get_tile_to_render(Item *i);
 
 #endif

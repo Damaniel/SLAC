@@ -24,6 +24,7 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
+#include "enemy.h"
 #include "globals.h"
 
 typedef struct {
@@ -318,5 +319,7 @@ public:
 	void apply_artifact_mods(Stats *fixed, Stats *multiplicative);
 	void place_in_town_start() { x_pos = PlayerConsts::TOWN_START_X; y_pos = PlayerConsts::TOWN_START_Y; }
 };
+
+void perform_player_combat(Enemy *target);
 
 #endif

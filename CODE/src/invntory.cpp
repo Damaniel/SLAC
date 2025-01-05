@@ -1350,3 +1350,106 @@ std::string Artifact::get_full_name() {
 std::string Artifact::get_type_name() {
     return name;
 }
+
+//----------------------------------------------------------------------------
+// Non-class functions
+//----------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------
+// Do all tasks related to identification.  This includes marking the 
+// item as identified, marking all potions and scrolls of the identified type
+// as identified, and optionally displaying a message to the log
+//
+// Arguments:
+//   i - the item to identify
+//   log - log to game log if true, don't log otherwise
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void perform_identification_action(Item *i, bool log) {
+	std::string old_name = i->get_full_name();
+                
+	i->identify();
+	if (i->get_item_class() == ItemConsts::POTION_CLASS)
+		g_identified_potions[i->get_id()] = true;
+	if (i->get_item_class() == ItemConsts::SCROLL_CLASS)
+		g_identified_scrolls[i->get_id()] = true;
+    if (log) {
+        g_text_log.put_line(old_name + " is " + i->get_full_name() + ".");
+    }
+}
+
+//----------------------------------------------------------------------------
+// Gets the tile ID of the item to be rendered.  For most items, this is just
+// the GID.  For scrolls and potions, the offset is stored in a list of
+// scrambled tile IDs.
+//
+// Arguments:
+//   i - the item to get the tile ID of
+//
+// Returns:
+//   the tile ID
+//----------------------------------------------------------------------------
+int get_tile_to_render(Item *i) {
+
+	int i_class = i->get_item_class();
+	int i_id = i->get_id();
+
+	if (i_class == ItemConsts::POTION_CLASS) {
+		return g_scrambled_potion_icons[i_id];
+	}
+	else if (i_class == ItemConsts::SCROLL_CLASS) {
+		return g_scrambled_scroll_icons[i_id];	
+	}
+	else {
+		return i->get_gid();
+	}
+}
+
+//----------------------------------------------------------------------------
+// For any items sitting at the player's feet, identify them if they're a
+// potion or scroll that has previously been identified
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void identify_previously_known_items_at_player() {
+	int item_count = g_dungeon.get_num_items_at(g_player.get_x_pos(), g_player.get_y_pos());
+
+	if (item_count > 0) {
+		std::list<Item *> items = g_dungeon.get_items_at(g_player.get_x_pos(), g_player.get_y_pos());
+		for (std::list<Item *>::iterator it = items.begin(); it != items.end(); ++ it) {
+			identify_if_previously_known((*it));
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+// Drops an item (throwing it on the ground)
+//
+// Arguments:
+//   i - the item to drop
+//   x, y - the location on the ground to drop it
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void drop_item_at(Item *i, int x, int y) {
+	bool dropped = false;
+
+	if(g_dungeon.maze->stairs_here(x, y) != MazeConsts::NO_STAIRS) {
+		g_text_log.put_line("Unable to drop an item onto stairs.");
+	}
+	else {
+		if (i != NULL) {
+			g_text_log.put_line("Dropped the " + i->get_full_name() + ".");
+			g_dungeon.add_item(x, y, i);
+			g_state_flags.update_inventory_items = true;
+			g_state_flags.update_inventory_items = true;
+			g_state_flags.update_inventory_description = true;
+		}
+	}
+}
