@@ -388,7 +388,7 @@ namespace UiConsts {
 		MAP_DOT_DOWN_STAIRS,
 		MAP_DOT_7,
 		MAP_DOT_8,
-		MAP_DOT_9,
+		MAP_DOT_ITEM,
 		MAP_DOT_PLAYER,
 		MAP_DOT_11,
 		MAP_DOT_12,
@@ -541,6 +541,7 @@ class Render {
 		void initialize_map_bitmap(DungeonFloor *f);
 		void add_area_to_map_bitmap(DungeonFloor *f, int x, int y);
 		void fill_in_entire_map(DungeonFloor *f);
+		void mark_item_or_stair(DungeonFloor *f, int x, int y);
 		void copy_data_to_offscreen_vram(void);		
 		void render_prop_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx, int style);
 		void render_tiny_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx);

@@ -772,6 +772,7 @@ void pick_up_item_at(int x, int y) {
         }
         
         // If an item was picked up, tell the player.
+		// Also, update the map to remove the item from it
         if (picked_up) {
             g_dungeon.remove_item_from_end_at(x, y);
             g_text_log.put_line("Picked up " + item_name + ".");
@@ -779,12 +780,6 @@ void pick_up_item_at(int x, int y) {
             g_state_flags.update_display = true;
         }
 
-		// TODO - remove this once enemies have been added
-		// Add some experience when the player picks a thing up
-		if (picked_up) {
-			g_state_flags.update_status_hp_exp = true;
-			g_state_flags.update_display = true;
-		}
     }
 }
 

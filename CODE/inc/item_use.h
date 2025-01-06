@@ -12,6 +12,8 @@ void teleport_player();
 void expose_map();
 void hide_map();
 void item_use_update_screen_flags();
+void discover_map();
+bool curse_item();
 
 void use_potion_action(int id);
 void use_scroll_action(int id);

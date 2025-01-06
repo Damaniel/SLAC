@@ -399,6 +399,62 @@ void activate_recall(void) {
 }
 
 //----------------------------------------------------------------------------
+// Performs the action of a summon item scroll (generating an item at the
+// player's feet)
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void summon_item(int additional) {
+    int ilevel = g_dungeon.ilevel + additional;
+    if (ilevel > 100)
+        ilevel = 100;
+
+    Item *i = ItemGenerator::generate(ilevel);
+    g_dungeon.add_item(g_player.get_x_pos(), g_player.get_y_pos(), i);
+
+    // Show the new item in the log
+    add_items_at_player_to_log();
+
+    // Update the screen
+	g_state_flags.update_maze_area = true;
+    g_state_flags.update_text_dialog = true;
+	g_state_flags.update_display = true;
+}
+
+//----------------------------------------------------------------------------
+// Performs the action of a curse scroll (cursing the first uncursed item
+// in the inventory that can be cursed)
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+bool curse_item(void) {
+    Item *i;
+    int count = 0;
+
+    while (count < InventoryConsts::INVENTORY_SIZE) {
+        i = g_inventory->get_item_in_slot(count);
+        if (i != NULL) {
+            if (i->can_have_curse() && !i->is_it_cursed()) {
+                i->set_curse_state(true);
+                g_text_log.put_line("Your " + i->get_full_name() + " has been cursed!");
+                return true;
+            }
+        }
+        ++count;
+    }
+
+    return false;
+}
+
+//----------------------------------------------------------------------------
 // Performs the specific action for a particular type of potion based on its
 // ID
 //
@@ -507,12 +563,18 @@ void use_scroll_action(int id) {
         case ItemConsts::SCROLL_OF_RECALL:
             activate_recall();
             break;
-        case ItemConsts::SCROLL_OF_DISCOVERY:
         case ItemConsts::SCROLL_OF_SUMMON_ITEM:
-        case ItemConsts::SCROLL_OF_CURSE:
-            g_text_log.put_line("This scroll does nothing (yet).");
+            summon_item(15);
             break;
-
+        case ItemConsts::SCROLL_OF_CURSE:
+            result = curse_item();
+            if (result == false) {
+                g_text_log.put_line("You have no items that can be cursed.");
+            }
+            break;
+        case ItemConsts::SCROLL_OF_DISCOVERY:
+            g_text_log.put_line("This item doesn't exist (yet)");
+            break;
         default:
             g_text_log.put_line("This scroll shouldn't exist!");
             break;
