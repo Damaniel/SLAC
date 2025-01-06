@@ -18,6 +18,7 @@ struct DungeonFloor {
     int ilevel;                                                 // The ilevel of the current floor
     int width;                                                  // The width of the dungeon floor
     int height;                                                 // The height of the dungeon floor
+    int move_counter;                                           // Number of steps player has taken on this floor
 
     // Functions to add features to the maze
     void clear_lists();
@@ -47,6 +48,24 @@ namespace UtilConsts {
 
     // Enemies further away than this will no longer pursue the player
     const int MAXIMUM_ENEMY_REMEMBER_DISTANCE = 16;
+
+    // The odds that a single item will drop from an enemy
+    // (this check is done once per potential item drop for an enemy that
+    //  can drop multiple)
+    const int CHANCE_OF_ENEMY_ITEM_DROP = 33;
+
+    // A new enemy will be created (or at least attempted to be) once
+    // this many player turns
+    const int DUNGEON_ENEMY_GENERATE_TURNS = 100;
+
+    // The number of attempts made to randomly add a new enemy to the
+    // current dungeon floor
+    const int DUNGEON_ENEMY_GENERATE_ATTEMPTS = 20;
+
+    // The maximum number of enemies the new enemy generator will 
+    // allow in the enemy list before choosing not to generate another
+    const int DUNGEON_MAX_ENEMIES = 70;
+
 }
 
 // A collection of flags relevant to the game loop.  The game loop will want
@@ -130,6 +149,7 @@ void unload_resources(void);
 void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from);
 void use_stairs(int x, int y);
 void exit_dungeon(bool used_recall);
+void add_new_enemy_to_area();
 
 // Text log functions
 void add_items_at_player_to_log(void);
@@ -143,6 +163,7 @@ void pick_up_item_at(int x, int y);
 void scramble_potion_icons(void);
 void scramble_scroll_icons(void);
 int roll_from_pool(const int *pool, int pool_size, int max_val);
+void process_enemy_item_drop(Enemy *e);
 
 // Player stat calculation functions
 void apply_modifier_value(ModifierMagType m, float *fixed, float *multiplicative, std::vector<ModifierMagType> &mods);

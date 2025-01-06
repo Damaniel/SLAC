@@ -538,6 +538,9 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 	d.width = g_dungeon_sizes[d.maze_id];
 	d.height = g_dungeon_sizes[d.maze_id];
 
+	// reset the move counter
+	d.move_counter = 0;
+
 	// Set the current ilevel based on the dungeon the player is in and the
 	// floor they're on
 	switch (d.maze_id) {
@@ -1468,6 +1471,112 @@ int get_distance_between(int x1, int y1, int x2, int y2) {
 }
 
 //----------------------------------------------------------------------------
+// Attempts to generate a new enemy in the dungeon at least a minimum distance
+//  away from the player
+//
+// Arguments:
+//	 None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void add_new_enemy_to_area() {
+	bool generate = false;
+	int count = 0;
+	int ex, ey;
+
+	do {
+		++count;
+		ex = rand() % g_dungeon.width;
+		ey = rand() % g_dungeon.height;
+		int distance = get_diagonal_distance_between(ex, ey, g_player.get_x_pos(), g_player.get_y_pos());
+		if (distance >= UtilConsts::MAXIMUM_ENEMY_REMEMBER_DISTANCE && g_dungeon.maze->is_carved(ex, ey)) {
+			generate = true;
+			//std::cout << "add_new_enemy_to_area: adding new enemy" << std::endl;
+		}
+	} while (!generate && count < UtilConsts::DUNGEON_ENEMY_GENERATE_ATTEMPTS);
+
+	if (generate) {
+		if (g_dungeon.enemies.size() < UtilConsts::DUNGEON_MAX_ENEMIES) {
+			Enemy *e = EnemyGenerator::generate(g_dungeon.ilevel);
+			g_dungeon.add_enemy(ex, ey, e);
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+// Process the dropping of item(s) from a defeated enemy
+//
+// Arguments:
+//	 e - the enemy that was defeated
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void process_enemy_item_drop(Enemy *e) {
+	// Determine the maximum number of items the enemy can drop
+	// For each potential item:
+	//   - At 25% chance, decide if an item will be dropped or not
+	//   - If it will, pick a random spot either on, or no more than 1 square
+	//   - away from the enemy in a cardinal direction
+	//   - If the selected spot is invalid (i.e on a wall or the player),
+	//       don't generate the item
+	//   - Otherwise, generate an item of appropriate item level and drop it
+	//     on the ground
+	int items_to_drop = e->get_max_items();
+
+	for (int i = 0; i < items_to_drop; ++i) {
+		if (rand() % 100 < UtilConsts::CHANCE_OF_ENEMY_ITEM_DROP) {
+			//std::cout << "process_enemy_item_drop: drop chance succeeded" << std::endl;
+			int e_x = e->get_x_pos();
+			int e_y = e->get_y_pos();
+			int i_x, i_y;
+			// First item drop always goes where enemy was
+			if (i == 0) {
+				i_x = e_x;
+				i_y = e_y;
+				//std::cout << "process_enemy_item_drop: generating item where enemy was" << std::endl;
+			}
+			// Otherwise, pick a random direction (or the spot where the enemy was)
+			else {
+				int direction = rand() % 5;
+				switch (direction) {
+					case 0:				// Above enemy
+						i_x = e_x;
+						i_y = e_y - 1;
+						break;
+					case 1:				// Below enemy
+						i_x = e_x;
+						i_y = e_y + 1;
+						break;
+					case 2:				// Left of enemy
+						i_x = e_x - 1;
+						i_y = e_y;
+						break;
+					case 3:				// Right of enemy
+						i_x = e_x + 1;
+						i_y = e_y;
+						break;
+					case 4:				// On enemy
+						i_x = e_x;
+						i_y = e_y;
+						break;
+				}
+				//std::cout << "process_enemy_item_drop: direction is " << direction << std::endl;
+			}
+			if (g_dungeon.maze->is_carved(i_x, i_y) && !(i_x == g_player.x_pos && i_y == g_player.y_pos)) {
+				//std::cout << "process_enemy_item_drop: generating item" << std::endl;
+				Item *i = ItemGenerator::generate(e->get_ilevel());
+				//std::cout << "  - item generated was " << i->get_full_name() << std::endl;
+				g_dungeon.add_item(i_x, i_y, i);
+				g_state_flags.update_maze_area = true;
+				g_state_flags.update_display = true;
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
 // Processes the proposed movement of the player (and any enemies, depending
 // on where the player is)
 //
@@ -1573,21 +1682,24 @@ void process_shop_move(std::pair<int, int> proposed_location) {
 	if (passable == 1) {
 		g_player.set_x_pos(x);
 		g_player.set_y_pos(y);
-		// If we've stepped on an exit tile for a shop or the museum, exit
-		if (g_state_flags.in_weapon_shop && x == TownConsts::WEAPON_SHOP_EXIT_X && y == TownConsts::WEAPON_SHOP_EXIT_Y) {
+		// If we've stepped on an exit tile (or the tile below) for a shop or the museum, exit
+		if (g_state_flags.in_weapon_shop && x == TownConsts::WEAPON_SHOP_EXIT_X && 
+		    (y == TownConsts::WEAPON_SHOP_EXIT_Y || y == TownConsts::WEAPON_SHOP_EXIT_Y +1)) {
 			g_state_flags.in_weapon_shop = false;
 			g_player.set_x_pos(TownConsts::WEAPON_SHOP_X);
-			g_player.set_y_pos(TownConsts::WEAPON_SHOP_Y);
+			g_player.set_y_pos(TownConsts::WEAPON_SHOP_Y + 1);
 		}
-		if (g_state_flags.in_item_shop && x == TownConsts::ITEM_SHOP_EXIT_X && y == TownConsts::ITEM_SHOP_EXIT_Y) {
+		if (g_state_flags.in_item_shop && x == TownConsts::ITEM_SHOP_EXIT_X && 
+		    (y == TownConsts::ITEM_SHOP_EXIT_Y || y == TownConsts::ITEM_SHOP_EXIT_Y + 1)) {
 			g_state_flags.in_item_shop = false;
 			g_player.set_x_pos(TownConsts::ITEM_SHOP_X);
-			g_player.set_y_pos(TownConsts::ITEM_SHOP_Y);
+			g_player.set_y_pos(TownConsts::ITEM_SHOP_Y + 1);
 		}
-		if (g_state_flags.in_museum && x == TownConsts::MUSEUM_EXIT_X && y == TownConsts::MUSEUM_EXIT_Y) {
+		if (g_state_flags.in_museum && x == TownConsts::MUSEUM_EXIT_X && 
+		    (y == TownConsts::MUSEUM_EXIT_Y || y == TownConsts::MUSEUM_EXIT_Y + 1)) {
 			g_state_flags.in_museum = false;
 			g_player.set_x_pos(TownConsts::MUSEUM_X);
-			g_player.set_y_pos(TownConsts::MUSEUM_Y);
+			g_player.set_y_pos(TownConsts::MUSEUM_Y + 1);
 		}
 		g_state_flags.update_maze_area = true;
 		g_state_flags.update_text_dialog = true;
@@ -1836,8 +1948,7 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 							exp = (int)(ceil((float)exp * adj));
 						}
 						g_player.apply_experience(exp);
-						// TODO:
-						//  - Drop items
+						process_enemy_item_drop(to_attack);
 					}
 				}
     			else if (g_dungeon.maze->is_carved(x, y)) {
@@ -1851,6 +1962,13 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 
 					// Show the items on the ground in the player log
 					add_items_at_player_to_log();
+
+					// Every 100 turns, generate a new enemy somewhere on the floor
+					++g_dungeon.move_counter;
+					if (g_dungeon.move_counter >= UtilConsts::DUNGEON_ENEMY_GENERATE_TURNS) {
+						g_dungeon.move_counter = 0;
+						add_new_enemy_to_area();
+					}
 				}
 				// Subtract the action points from the player
 				g_player.set_action_residual(g_player.get_action_residual() - 100);

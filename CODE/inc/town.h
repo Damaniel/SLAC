@@ -54,11 +54,12 @@ namespace TownConsts {
     
     // The length and width of the museum
     const int MUSEUM_WIDTH = 21; 
-    const int MUSEUM_HEIGHT = 23;
+    const int MUSEUM_HEIGHT = 24;
 
     // The length and width of the item and weapon shops
     const int SHOPS_WIDTH = 9;
-    const int SHOPS_HEIGHT = 19;
+    const int SHOPS_HEIGHT = 20;
+
     // The y offset into the map for the upper left corner of each shop
     const int WEAPON_SHOP_Y_OFF = 0;
     const int ITEM_SHOP_Y_OFF = 14;
