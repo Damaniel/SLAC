@@ -240,54 +240,7 @@ void Render::fill_in_map_square(DungeonFloor *f, int x, int y) {
 				UiConsts::MAP_DOT_HEIGHT);			
 		}
 	}
-}
-
-//------------------------------------------------------------------------------
-// Marks the selected square on the map if it is an item or stair
-//
-// Arguments:
-//   f - the dungeon to use to determine what squares to draw
-//   x, y - the position in the maze to draw
-//
-// Returns:
-//   Nothing
-//------------------------------------------------------------------------------
-void Render::mark_item_or_stair(DungeonFloor *f, int x, int y) {
-	int stairs = f->maze->stairs_here(x, y);
-	int item_count = f->get_num_items_at(x, y);
-	int dot;
-	bool draw = false;
-
-	if(stairs == MazeConsts::STAIRS_UP) {
-		std::cout << "Drawing up stair dot at " << x << ", " << y << std::endl;
-		dot = UiConsts::MAP_DOT_UP_STAIRS;
-		draw = true;
-	}
-	else if(stairs == MazeConsts::STAIRS_DOWN) {
-		std::cout << "Drawing down stair dot at " << x << ", " << y << std::endl;
-		dot = UiConsts::MAP_DOT_DOWN_STAIRS;
-		draw = true;
-	}
-	else if (item_count > 0) {
-		std::cout << "Drawing item at " << x << ", " << y << std::endl;
-		dot = UiConsts::MAP_DOT_ITEM;
-		draw = true;
-	}
-
-	if(draw) {
-		std::cout << "Drawing at " << g_ui_globals.map_maze_xoffset + (x * UiConsts::MAP_DOT_WIDTH) << 
-		          ", " << g_ui_globals.map_maze_yoffset + (y * UiConsts::MAP_DOT_HEIGHT) << std::endl;
-		
-		blit((BITMAP *)g_game_data[DAMRL_MAP_DOTS].dat,
-			screen,
-			dot * UiConsts::MAP_DOT_WIDTH,
-			0,
-			g_ui_globals.map_maze_xoffset + (x * UiConsts::MAP_DOT_WIDTH),
-			g_ui_globals.map_maze_yoffset + (y * UiConsts::MAP_DOT_HEIGHT),
-			UiConsts::MAP_DOT_WIDTH,
-			UiConsts::MAP_DOT_HEIGHT);				
-	}
-}
+} 
 
 //------------------------------------------------------------------------------
 // Exposes the entire map into the map bitmap
