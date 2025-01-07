@@ -276,6 +276,7 @@ public:
 	Stats actual;					// The player's fully modified (by gear, items, etc) stats
 	EquipmentSet equipment;			// Equipment
 	ArtifactEffectFlags effects;	// Artifact effects
+	bool is_alive;					// Is the player still alive
 	bool is_poisoned;				// Is the player poisoned?
 	bool is_equip_poisoned; 		// Is cursed equipment poisoning the player
 	PotionEffect potion_effects[ItemConsts::NUM_TURN_POTION_EFFECTS];	// Are these potions active, and for how long?

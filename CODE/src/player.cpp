@@ -71,15 +71,15 @@ void Player::init(int x, int y) {
 		potion_effects[i].turns_remaining = 0;
 	}
 
-	init_base_stats();
-	// Move a copy of the base stats into the actual stats
-	assign_base_stats_to_actual();
+	// Call recalculate_actual_stats to reset all stats and 
+	// apply artifact effects
 
 	effects.auto_identify = false;
 	effects.bragging_rights = false;
 	effects.permanent_decurse = false;
 	effects.permanent_discovery = false;
 
+	is_alive = true;
 	is_poisoned = false;
 	is_equip_poisoned = false;
 
@@ -970,8 +970,9 @@ void Player::set_hp(int new_hp) {
 		hp = (unsigned short)actual.max_hp;
 
 	if (hp < 0) {
-		g_text_log.put_line("Alas!  You have died.");
-		// TODO: Deal with death here
+		is_alive = false;
+		g_state_flags.cur_substate = GAME_SUBSTATE_PLAYER_JUST_DIED;
+		g_text_log.put_line("Alas!  You have died. Press ENTER to continue.");
 	}
 }
 

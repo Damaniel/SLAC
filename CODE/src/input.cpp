@@ -256,6 +256,15 @@ void process_game_state(int key) {
         case GAME_SUBSTATE_STATS:
             process_stats_substate(key);
             break;
+        case GAME_SUBSTATE_PLAYER_JUST_DIED:
+            switch (key) {
+                case KEY_ENTER:
+                    g_state_flags.cur_substate = GAME_SUBSTATE_DEFAULT;
+                    g_state_flags.exit_game = true;
+                    //change_state(STATE_DEAD);
+                    break;
+            }
+            break;
         case GAME_SUBSTATE_DEFAULT:
             // Only process lighting if the player is in the dungeon
             if (g_state_flags.in_dungeon) {
