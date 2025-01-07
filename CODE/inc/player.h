@@ -291,6 +291,9 @@ public:
 	int recall_count;		// The number of turns until a recall scroll activates
 	bool recall_active;		// Is a scroll of recall active?
 
+	bool can_enter_marble_halls;
+	bool can_enter_crystal_depths;
+
 	int residual_action_points;		// Any action points left after their last turn
 
 	Player();

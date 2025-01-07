@@ -310,6 +310,11 @@ void process_game_state(int key) {
 	        	        g_state_flags.update_display = true;
                     }
                     break;
+                case KEY_H:
+                    g_player.can_enter_crystal_depths = true;
+                    g_player.can_enter_marble_halls = true;
+                    unlock_dungeons();
+                    break;
                 case KEY_I:
                     // Reset the cursor position to the top left
                     g_ui_globals.inv_cursor_x = 0;

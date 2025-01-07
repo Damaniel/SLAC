@@ -144,11 +144,11 @@ void Render::render_actors(BITMAP *destination, int maze_x, int maze_y) {
 // Returns:
 //   Nothing
 //------------------------------------------------------------------------------
-void Render::render_base_tile(BITMAP *destination, int tile_id, int x, int y) {
+void Render::render_base_tile(BITMAP *destination, int tile_id, int dungeon_id, int x, int y) {
 	blit((BITMAP *)g_game_data[DAMRL_MAZE_BASE_TILES_1].dat, 
 	     destination,
 	     tile_id * UiConsts::TILE_PIXEL_WIDTH, 
-		 0, 
+		 dungeon_id * UiConsts::TILE_PIXEL_HEIGHT, 
 		 x * UiConsts::TILE_PIXEL_WIDTH,
 		 y * UiConsts::TILE_PIXEL_HEIGHT,
 		 UiConsts::TILE_PIXEL_WIDTH,
@@ -1312,18 +1312,18 @@ void Render::render_world_at(BITMAP *destination, DungeonFloor *f, int maze_x, i
 				if (f->maze->is_square_lit(tile_to_render_x, tile_to_render_y) == false) { 
 					// If the square has previously been seen and isn't carved, draw a darker wall
 					if (f->maze->is_carved(tile_to_render_x, tile_to_render_y) == false && f->maze->was_seen(tile_to_render_x, tile_to_render_y) == true) {
-						render_base_tile(destination, UiConsts::TILE_DARKER_WALL, screen_x, screen_y);
+						render_base_tile(destination, UiConsts::TILE_DARKER_WALL, g_dungeon.maze_id, screen_x, screen_y);
 					} else {
 						// Otherwise, draw darkness
-						render_base_tile(destination, UiConsts::TILE_DARK, screen_x, screen_y);
+						render_base_tile(destination, UiConsts::TILE_DARK, g_dungeon.maze_id, screen_x, screen_y);
 					}
 				}
 				// Render stairs if present
 				else if (stairs == MazeConsts::STAIRS_UP) {
-					render_base_tile(destination, UiConsts::TILE_UP_STAIRS, screen_x, screen_y);
+					render_base_tile(destination, UiConsts::TILE_UP_STAIRS, g_dungeon.maze_id, screen_x, screen_y);
 				}
 				else if (stairs == MazeConsts::STAIRS_DOWN) {
-					render_base_tile(destination, UiConsts::TILE_DOWN_STAIRS, screen_x, screen_y);
+					render_base_tile(destination, UiConsts::TILE_DOWN_STAIRS, g_dungeon.maze_id, screen_x, screen_y);
 				}
 				// Render floor if present.  There are 4 different floor tiles - one with no
 				// highlighting and 3 with different types of highlighting
@@ -1341,7 +1341,7 @@ void Render::render_world_at(BITMAP *destination, DungeonFloor *f, int maze_x, i
 					else {
 						tile_to_use = UiConsts::TILE_FLOOR;
 					}
-					render_base_tile(destination, tile_to_use, screen_x, screen_y);
+					render_base_tile(destination, tile_to_use, g_dungeon.maze_id, screen_x, screen_y);
 					// Get any items at the location and draw the first on the list
 					int num_items_here = f->get_num_items_at(tile_to_render_x, tile_to_render_y);
 					if (num_items_here > 0) {
@@ -1351,11 +1351,11 @@ void Render::render_world_at(BITMAP *destination, DungeonFloor *f, int maze_x, i
 						render_item(destination, gid, screen_x, screen_y);
 					}
 				} else {
-					render_base_tile(destination, UiConsts::TILE_WALL, screen_x, screen_y);
+					render_base_tile(destination, UiConsts::TILE_WALL, g_dungeon.maze_id, screen_x, screen_y);
 				}		
 			} else {
 				// Draw an empty space since it's outside of the map
-				render_base_tile(destination, UiConsts::TILE_DARK, screen_x, screen_y);
+				render_base_tile(destination, UiConsts::TILE_DARK, g_dungeon.maze_id, screen_x, screen_y);
 			}						 
 		}
 	}
@@ -1446,7 +1446,7 @@ void Render::render_town_at(BITMAP *destination, int x, int y) {
 			}
 			else {
 				// Draw darkness
-				render_base_tile(destination, UiConsts::TILE_DARK, screen_x, screen_y);				
+				render_base_tile(destination, UiConsts::TILE_DARK, g_dungeon.maze_id, screen_x, screen_y);				
 			}
 		}
 	}

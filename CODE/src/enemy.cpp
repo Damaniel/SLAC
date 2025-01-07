@@ -841,14 +841,15 @@ void perform_enemy_combat(Enemy *e) {
 			}
 		}
 
-		// Subtract player HP
-		g_player.set_hp(g_player.hp - total_damage_taken);
-
 		// Log the damage done to the game log
 		//std::cout << "perform_enemy_combat: player takes " << total_damage_taken << " damage." << std::endl;
 		//std::cout << "  perform_enemy_combat: player hp remaining = " << g_player.hp << std::endl;
 		char text[80];
 		sprintf(text, "You take %d damage!", total_damage_taken);
 		g_text_log.put_line(text);
+
+		// Subtract player HP (and do the stuff related to that)
+		g_player.set_hp(g_player.hp - total_damage_taken);
+
 	}
 }

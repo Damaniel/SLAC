@@ -25,6 +25,14 @@ namespace TownConsts {
     const int CRYSTAL_DEPTHS_X = 44;
     const int CRYSTAL_DEPTHS_Y = 43;
 
+    // The Marble Halls (locked) gate
+    const int MARBLE_HALLS_GATE_X = 4;
+    const int MARBLE_HALLS_GATE_Y = 5;
+
+    // The Crystal Depths (locked) gate
+    const int CRYSTAL_DEPTHS_GATE_X = 40;
+    const int CRYSTAL_DEPTHS_GATE_Y = 38;
+
     // The Dusty Tunnels recall circle
     const int DT_RECALL_X = 45;
     const int DT_RECALL_Y = 19;
@@ -76,11 +84,14 @@ namespace TownConsts {
     const int MUSEUM_EXIT_X = 10;
     const int MUSEUM_EXIT_Y = 22;
 
+    // The tile id to draw when a gate is open
+    const int UNLOCKED_GATE_TILE = 40;
 }
 
 void check_and_process_npc_here(int x, int y);
 void check_and_process_town_entrances(int x, int y);
 void check_for_active_area(int x, int y);
 void enter_dungeon(int floor);
+void unlock_dungeons(void);
 
 #endif
