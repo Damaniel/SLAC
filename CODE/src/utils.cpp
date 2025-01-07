@@ -797,6 +797,13 @@ void pick_up_item_at(int x, int y) {
             picked_up = true;
         }
         else {
+			// If the item is an artifact, add it to the relevant collected artifact
+			// entry
+			if (i->get_item_class() == ItemConsts::ARTIFACT_CLASS) {
+				int artifact_index = i->get_id();
+				g_collected_artifacts[artifact_index] += 1;
+			}
+
             // If it's a stackable item, get any item slot existing
             // items are in
             int stackable_slot = g_inventory->get_stackable_item_slot(i);

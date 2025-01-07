@@ -93,13 +93,13 @@ void Player::init(int x, int y) {
 
 	// Set the level 1 base stats
 	init_base_stats();
-	
+
 	// Call recalculate_actual_stats to reset all stats and 
 	// apply artifact effects
 	recalculate_actual_stats();
 
-	// Set the base HP
-	hp = (int)base.max_hp;
+	// Set the HP
+	hp = (int)actual.max_hp;
 
 }
 
@@ -644,7 +644,8 @@ void Player::get_next_gen_stats() {
 	Stats fixed;
 	Stats multiplicative;
 
-	// Assign the base stat values to the actual stats
+	// Reset the actual stats to the base stats
+	init_base_stats();
 	assign_base_stats_to_actual();
 
 	// reset the two temporary stat tables
@@ -777,7 +778,7 @@ void Player::init_base_stats() {
 // then future me will deal with it then.
 //----------------------------------------------------------------------------
 void Player::apply_artifact_mods(Stats *fixed, Stats *multiplicative) {
-
+	
     //------------------------------------------
     // Single piece
     //------------------------------------------

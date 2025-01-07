@@ -28,7 +28,7 @@ namespace ItemConsts {
         EFFECT_EXTRA_ATTACKS,
         EFFECT_POISON
     };
-    
+
     // odds tables for generating main item classes.  Currently:
     //
     //   weapon: 10% 
@@ -40,6 +40,7 @@ namespace ItemConsts {
     // 
     // Note: key items will be handled separately.
     const int g_item_class_pool[]= {10, 48, 63, 78, 98, 100};
+    //const int g_item_class_pool[]= {10, 48, 63, 78, 79, 100};
     const int g_item_class_pool_count = 6;
     const int g_item_class_pool_entries = 100;
 
