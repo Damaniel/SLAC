@@ -44,6 +44,7 @@ DATAFILE  	  *g_game_data;
 BITMAP    	  *g_back_buffer;
 Player 	   	   g_player;
 StateFlags 	   g_state_flags;
+GameFlags      g_game_flags;
 Render         g_render;
 DungeonFloor   g_dungeon;
 
@@ -77,7 +78,8 @@ int main(void) {
 		return 1;
 	}
 	init_resources(g_render);
-
+	reset_game_flags();
+	
 	// Null out the inventory
 	g_inventory = NULL;
 

@@ -847,7 +847,7 @@ void perform_enemy_combat(Enemy *e) {
 		char text[80];
 		sprintf(text, "You take %d damage!", total_damage_taken);
 		g_text_log.put_line(text);
-
+		
 		// Subtract player HP (and do the stuff related to that)
 		g_player.set_hp(g_player.hp - total_damage_taken);
 

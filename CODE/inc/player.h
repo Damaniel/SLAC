@@ -267,7 +267,6 @@ class Player {
 // For now, all members are public.
 public:
 	std::string name;				// The player's name
-	int generation;					// The current generation of the player
 	short hp;						// The player's current HP
 	unsigned short level;			// The player's current level 
 	int gold;						// Amount of currency the player has
@@ -291,10 +290,7 @@ public:
 	int recall_floor;       // The floor the recall scroll was used from
 	int recall_count;		// The number of turns until a recall scroll activates
 	bool recall_active;		// Is a scroll of recall active?
-
-	bool can_enter_marble_halls;
-	bool can_enter_crystal_depths;
-
+	
 	int residual_action_points;		// Any action points left after their last turn
 
 	Player();

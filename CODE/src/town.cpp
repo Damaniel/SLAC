@@ -103,14 +103,27 @@ void enter_dungeon(int floor) {
 	force_update_screen();
 }
 
+//----------------------------------------------------------------------------
+// Removes the locks in town for any unlocked dungeons
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
 void unlock_dungeons() {
-	if (g_player.can_enter_marble_halls) {
+	if (g_game_flags.can_enter_marble_halls) {
 		g_town_tile_data[TownConsts::MARBLE_HALLS_GATE_Y * TownConsts::TOWN_SIZE + TownConsts::MARBLE_HALLS_GATE_X] = TownConsts::UNLOCKED_GATE_TILE;
 		g_town_movability[TownConsts::MARBLE_HALLS_GATE_Y * TownConsts::TOWN_SIZE + TownConsts::MARBLE_HALLS_GATE_X] = 1;
 	}
 
-	if (g_player.can_enter_crystal_depths) {
+	if (g_game_flags.can_enter_crystal_depths) {
 		g_town_tile_data[TownConsts::CRYSTAL_DEPTHS_GATE_Y * TownConsts::TOWN_SIZE + TownConsts::CRYSTAL_DEPTHS_GATE_X] = TownConsts::UNLOCKED_GATE_TILE;
 		g_town_movability[TownConsts::CRYSTAL_DEPTHS_GATE_Y * TownConsts::TOWN_SIZE + TownConsts::CRYSTAL_DEPTHS_GATE_X] = 1;
 	}
+
+	// Redraw the maze area in case the locked door is on the screen
+	g_state_flags.update_maze_area = true;
+	g_state_flags.update_display = true;
 }

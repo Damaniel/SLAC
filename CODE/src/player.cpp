@@ -60,7 +60,6 @@ void Player::init(int x, int y) {
 	y_pos = y;
 	gold = 0;
 	name = "Damaniel";
-	generation = 1;
 	level = 1;
 	exp = 0;
 	residual_action_points = 0;

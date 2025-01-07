@@ -288,7 +288,6 @@ void process_game_state(int key) {
             // Only process lighting if the player is in the dungeon
             if (g_state_flags.in_dungeon) {
                 // Handle lighting status for the current room.
-                // TODO: Maybe figure out if this is really the best place for this.
 		        g_player.set_last_room_entered(g_dungeon.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos()));
     		    // Darken the current space around the player if not in a room
 	    	    if (g_player.get_last_room_entered() == -1) {
@@ -339,8 +338,8 @@ void process_game_state(int key) {
                     }
                     break;
                 case KEY_H:
-                    g_player.can_enter_crystal_depths = true;
-                    g_player.can_enter_marble_halls = true;
+                    g_game_flags.can_enter_crystal_depths = true;
+                    g_game_flags.can_enter_marble_halls = true;
                     unlock_dungeons();
                     break;
                 case KEY_I:

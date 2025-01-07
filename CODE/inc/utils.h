@@ -66,6 +66,8 @@ namespace UtilConsts {
     // allow in the enemy list before choosing not to generate another
     const int DUNGEON_MAX_ENEMIES = 70;
 
+    // The number of bosses in the game; used for game flags
+    const int NUM_BOSSES = 7;
 }
 
 // A collection of flags relevant to the game loop.  The game loop will want
@@ -132,6 +134,14 @@ struct StateFlags {
     bool exit_game;           // Did the player choose to exit the game?
 };
 
+struct GameFlags {
+	bool can_enter_marble_halls;
+	bool can_enter_crystal_depths;
+    bool has_defeated_bosses[UtilConsts::NUM_BOSSES];
+    bool finished_game;
+    int generation;           // The current generation of player
+};
+
 // Update functions
 void update_main_game_display(void);
 void update_display(void);
@@ -144,6 +154,7 @@ std::string get_generation_string(int generation);
 int load_resources(void);
 void init_resources(Render &r);
 void unload_resources(void);
+void reset_game_flags(void);
 
 // Dungeon functions
 void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from);

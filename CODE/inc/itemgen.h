@@ -10,7 +10,7 @@ namespace ItemConsts {
     const int BASE_CHANCE_OF_AFFIX  = 10;
 
     // %chance that an item will be cursed.  This is consistent across all types of equipment
-    const int CHANCE_OF_CURSE  = 10;
+    const int BASE_CHANCE_OF_CURSE  = 10;
 
     // The maximum number of attempts to reroll an item aspect to meet the ilevel requirements
     const int MAX_GENERATOR_REROLLS = 10;
@@ -131,7 +131,7 @@ namespace ItemConsts {
 class ItemGenerator {
 private:
     static void apply_affix(Item *i, int affix_type, int ilevel);
-    static void apply_curse(Item *i);
+    static void apply_curse(Item *i, int ilevel);
 public:
     static Item *generate();
     static Item *generate(int ilevel);

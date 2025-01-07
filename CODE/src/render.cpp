@@ -918,7 +918,7 @@ void Render::render_status_ui(BITMAP *destination) {
 			    FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
 
 	// Generation
-	sprintf(text, "(%s)", get_generation_string(g_player.generation).c_str());
+	sprintf(text, "(%s)", get_generation_string(g_game_flags.generation).c_str());
 	render_text(destination, text, UiConsts::GENERATION_TEXT_X, UiConsts::GENERATION_TEXT_Y,
 			    FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
 

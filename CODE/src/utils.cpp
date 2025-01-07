@@ -274,7 +274,6 @@ void update_main_game_display(void) {
 			// If the player wasn't in a room but now is, then light up the room
 			if(last_player_room == -1 && room_to_light != -1) {
 				g_dungeon.maze->change_room_lit_status(room_to_light, true);
-				// TODO: restructure this!
 				// Mark the room itself as visited so rendering the map will
 				// show the room even at the start of the game
 				g_dungeon.maze->set_room_entered_state(room_to_light, true);
@@ -463,7 +462,7 @@ std::string get_generation_string(int generation) {
 		case 71:
 		case 81:
 		case 91:
-			sprintf(gen_string, "%dst", generation);
+			sprintf(gen_string, "the %dst", generation);
 			break;
 		case 22:
 		case 32:
@@ -473,7 +472,7 @@ std::string get_generation_string(int generation) {
 		case 72:
 		case 82:
 		case 92:
-			sprintf(gen_string, "%dnd", generation);
+			sprintf(gen_string, "the %dnd", generation);
 			break;
 		case 3:
 		case 23:
@@ -484,10 +483,10 @@ std::string get_generation_string(int generation) {
 		case 73:
 		case 83:
 		case 93:
-			sprintf(gen_string, "%drd", generation);
+			sprintf(gen_string, "the %drd", generation);
 			break;
 		default:
-			sprintf(gen_string, "%dth", generation);
+			sprintf(gen_string, "the %dth", generation);
             break;
 	}
 
@@ -683,6 +682,9 @@ void initialize_main_game_state(void) {
 		delete g_inventory;
 	}
 
+	// Increment the current player generation
+	g_game_flags.generation += 1;
+
 	g_inventory = new Inventory();
 
 	// Clear the player's stats
@@ -723,6 +725,7 @@ void change_state(int new_state) {
 		case STATE_DEAD:
 			// Move the new artifacts to the existing artifact list
 		    move_new_artifacts_to_existing();
+			// Increment the player generation
 			g_state_flags.update_display = true;
 			break;
     }
@@ -1765,7 +1768,7 @@ void process_shop_move(std::pair<int, int> proposed_location) {
 		g_state_flags.update_display = true;		
 	}
 	else {
-		// TODO - Check to see if the player is trying to talk to the shopkeeper
+		//  - Check to see if the player is trying to talk to the shopkeeper
 		// in one of the shops.  If so, start the process of dealing with 
 		// shopping
 	}
@@ -2087,3 +2090,21 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
     // Tell the game to do the redraw
 	g_state_flags.update_display = true;
 } 
+
+//----------------------------------------------------------------------------
+// Resets the game flags structure
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void reset_game_flags() {
+	g_game_flags.generation = 0;
+	g_game_flags.can_enter_marble_halls = false;
+	g_game_flags.can_enter_crystal_depths = false;
+	g_game_flags.finished_game = false;
+	for (int i = 0; i < UtilConsts::NUM_BOSSES; ++i)
+		g_game_flags.has_defeated_bosses[i] = false;
+}

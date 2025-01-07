@@ -180,11 +180,8 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
         
     // Attempt to apply a curse to items that can be.  This will dictate what kinds of affixes can roll.
     if (i->can_have_curse()) {
-        ItemGenerator::apply_curse(i);
+        ItemGenerator::apply_curse(i, ilevel);
     }
-
-    // TODO: curses need to ensure that if prefixes and suffixes are generated, that they
-    // only apply 'cursed' ones.
 
     // Attempt to add a prefix or suffix to items that can have them
     if (i->can_have_a_prefix()) {
@@ -315,13 +312,16 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
 //
 // Arguments:
 //   i - the item to curse
+//   i
 //
 // Returns:
 //   Nothing.
 //----------------------------------------------------------------------------
-void ItemGenerator::apply_curse(Item *i) {
+void ItemGenerator::apply_curse(Item *i, int ilevel) {
     int roll = rand() % 100;
-    if (roll < ItemConsts::CHANCE_OF_CURSE) {
+    // The chance of a curse is the base chance plus 1% per 10 ilevels
+    // (so an item with ilevel 100 has a 20% chance of being cursed)
+    if (roll < (ItemConsts::BASE_CHANCE_OF_CURSE + (ilevel / 10))) {
         i->set_curse_state(true);
         //std::cout << "generator: Item was cursed" << std::endl;
     }

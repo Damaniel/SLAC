@@ -68,7 +68,6 @@ extern DATAFILE *g_game_data;
 // -- Defined in main.cpp
 extern BITMAP   *g_back_buffer;
 
-// The player.  TODO: Eventually should be a component of an Actors object of some kind
 // -- Defined in main.cpp
 extern Player 	  g_player;
 
@@ -78,6 +77,10 @@ extern Player 	  g_player;
 // loop, what menus or screens should be displayed, whether keyboard input should
 // be disabled by a dialog, and so on.
 extern StateFlags   g_state_flags;
+
+// Flags that hold the state of the game itself - whether the player has unlocked
+// certain dungeons or beaten bosses, for example
+extern GameFlags g_game_flags;
 
 // Holds flags and functionality related to drawing the screen
 extern Render g_render;
