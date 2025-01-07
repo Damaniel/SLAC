@@ -678,11 +678,21 @@ void initialize_main_game_state(void) {
 	// The 'default' dungeon is Dusty Tunnels
 	g_dungeon.maze_id = DUSTY_TUNNELS;
 
-	// create a new inventory (TODO - move to an earlier state)
+	// Delete any existing inventory and create a new one
+	if (g_inventory != NULL) {
+		delete g_inventory;
+	}
+
 	g_inventory = new Inventory();
+
+	// Clear the player's stats
+	g_player.init(0, 0);
 
 	// Put the player in the place they start a new game
 	g_player.place_in_town_start();
+
+	// clear the text log
+	g_text_log.clear();
 
 	// Set initial flags to render stuff like the UI
 	force_update_screen();
@@ -711,8 +721,9 @@ void change_state(int new_state) {
 			initialize_main_game_state();
 			break;
 		case STATE_DEAD:
+			// Move the new artifacts to the existing artifact list
+		    move_new_artifacts_to_existing();
 			g_state_flags.update_display = true;
-			// TODO - figure out what needs to be done for this state
 			break;
     }
 }

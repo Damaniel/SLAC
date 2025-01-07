@@ -71,25 +71,6 @@ void Player::init(int x, int y) {
 		potion_effects[i].turns_remaining = 0;
 	}
 
-	init_base_stats();
-	assign_base_stats_to_actual();
-	
-	// Call recalculate_actual_stats to reset all stats and 
-	// apply artifact effects
-	
-
-	effects.auto_identify = false;
-	effects.bragging_rights = false;
-	effects.permanent_decurse = false;
-	effects.permanent_discovery = false;
-
-	is_alive = true;
-	is_poisoned = false;
-	is_equip_poisoned = false;
-
-	// Set the base HP
-	hp = (int)base.max_hp;
-
 	// Null out the item slots
 	equipment.amulet = NULL;
 	equipment.chest = NULL;
@@ -100,6 +81,26 @@ void Player::init(int x, int y) {
 	equipment.ring = NULL;
 	equipment.shield = NULL;
 	equipment.weapon = NULL;
+
+	effects.auto_identify = false;
+	effects.bragging_rights = false;
+	effects.permanent_decurse = false;
+	effects.permanent_discovery = false;
+
+	is_alive = true;
+	is_poisoned = false;
+	is_equip_poisoned = false;
+
+	// Set the level 1 base stats
+	init_base_stats();
+	
+	// Call recalculate_actual_stats to reset all stats and 
+	// apply artifact effects
+	recalculate_actual_stats();
+
+	// Set the base HP
+	hp = (int)base.max_hp;
+
 }
 
 //------------------------------------------------------------------------------

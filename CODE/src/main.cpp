@@ -78,6 +78,10 @@ int main(void) {
 	}
 	init_resources(g_render);
 
+	// Null out the inventory
+	g_inventory = NULL;
+
+	// Create the player	
 	g_player = Player();
 
 	// Loop until done.  Right now, 'done' = pressing Esc

@@ -36,6 +36,7 @@ public:
     std::string get_last_line();
     int get_num_lines();
     void dump_lines();
+    void clear();
 };
 
 extern TextLog g_text_log;

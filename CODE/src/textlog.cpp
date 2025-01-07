@@ -104,6 +104,19 @@ int TextLog::get_num_lines() {
 }
 
 //----------------------------------------------------------------------------
+// Empties the text log
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void TextLog::clear() {
+    log.clear();
+}
+
+//----------------------------------------------------------------------------
 // Debug function that prints the log
 //
 // Arguments:
@@ -120,3 +133,4 @@ void TextLog::dump_lines() {
         std::cout << "Line " << line <<  ": " << *it << std::endl;
     }
 }
+

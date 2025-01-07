@@ -248,8 +248,7 @@ void process_dead_state(int key) {
     // and restart in town
     switch (key) {
         case KEY_ENTER:
-            g_state_flags.exit_game = true;
-            // do stuff here then change state back to in game
+            change_state(STATE_MAIN_GAME);
             break;
     } 
 }

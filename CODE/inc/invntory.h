@@ -275,7 +275,7 @@ public:
     unsigned short get_gid() { return gid; }
     unsigned short get_id() { return id; }
     unsigned short get_type_id() { return type_id; }
-    virtual ~Item() { /*std::cout << "~Item: Deleting item" << std::endl;*/ }
+    virtual ~Item() { /*std::cout << "~Item: Deleting item" << std::endl; */ }
 };
 
 // A piece of equipment.  This represents any item that can be equipped
