@@ -65,6 +65,12 @@ void Player::init(int x, int y) {
 	exp = 0;
 	residual_action_points = 0;
 
+	// Reset all potion effects
+	for (int i = 0; i < ItemConsts::NUM_TURN_POTION_EFFECTS; ++i) {
+		potion_effects[i].enabled = false;
+		potion_effects[i].turns_remaining = 0;
+	}
+
 	init_base_stats();
 	// Move a copy of the base stats into the actual stats
 	assign_base_stats_to_actual();
@@ -73,6 +79,9 @@ void Player::init(int x, int y) {
 	effects.bragging_rights = false;
 	effects.permanent_decurse = false;
 	effects.permanent_discovery = false;
+
+	is_poisoned = false;
+	is_equip_poisoned = false;
 
 	// Set the base HP
 	hp = (int)base.max_hp;
@@ -585,19 +594,21 @@ void Player::recalculate_actual_stats(void) {
 		apply_item_values_to_stats(equipment.weapon, &fixed, &multiplicative, type_2_mods);
 	}
 
-	// TODO - get item effects up and running
-
 	// Apply all of the artifact effects for each quantity of collected artifact
 	apply_artifact_mods(&fixed, &multiplicative);
 
 	// Add all of the fixed/mutiplicative increases to the actual stats
 	apply_stats_to_actual(&fixed, &multiplicative);
 
-	// Finally, apply all type 2 modifiers (take x% of something as something else)
+	// Apply all type 2 modifiers (take x% of something as something else)
 	// for any items that have them.
 	for (std::vector<ModifierMagType>::iterator it = type_2_mods.begin(); it != type_2_mods.end(); ++it) {
 		apply_mode_2_modifier_value(*it);
 	}
+
+	// Finally, apply potion effects.  These are multiplicative and so are applied after
+	// all other effects
+	add_potion_effects_to_stats();
 
 	// Our HP vs max HP may have changed; update the display.
 	g_state_flags.update_status_hp_exp = true;
@@ -939,6 +950,94 @@ void Player::apply_artifact_mods(Stats *fixed, Stats *multiplicative) {
     effect_quantity = g_active_artifacts[69] / g_artifact_ids[69].pieces;
     fixed->max_hp += effect_quantity * 100;
 
+}
+
+void Player::activate_potion_effect(int effect, int duration) {
+	if (effect < 0 || effect >= ItemConsts::NUM_TURN_POTION_EFFECTS)
+		return;
+
+	// Only activate the potion if one currently isn't active
+	// (to prevent potion stacking)
+	if (potion_effects[effect].enabled == false) {
+	 	potion_effects[effect].enabled = true;
+		potion_effects[effect].turns_remaining = duration;
+
+		// Recalculate stats now that a potion was enabled
+		recalculate_actual_stats();
+	}
+}
+
+void Player::deactivate_potion_effect(int effect) {
+	if (effect < 0 || effect >= ItemConsts::NUM_TURN_POTION_EFFECTS)
+		return;
+
+	potion_effects[effect].enabled = false;
+
+	switch (effect) {		
+		case ItemConsts::EFFECT_BERSERK_STRENGTH:
+			g_text_log.put_line("Your strength returns to normal.");
+			break;
+		case ItemConsts::EFFECT_SPEED:
+			g_text_log.put_line("Your speed returns to normal.");
+			break;
+		case ItemConsts::EFFECT_HARDINESS:
+			g_text_log.put_line("Your health returns to normal.");
+			break;
+		case ItemConsts::EFFECT_EXTRA_ATTACKS:
+			g_text_log.put_line("Your weapon proficiency returns to normal.");
+			break;
+		case ItemConsts::EFFECT_POISON:
+			is_poisoned = false;
+			g_text_log.put_line("The poison has cleared from your body.");
+			break; 
+	}
+
+	// Recalculate stats now that a potion was disabled
+	recalculate_actual_stats();
+}
+
+bool Player::is_potion_active(int effect) {
+	if (effect < 0 || effect >= ItemConsts::NUM_TURN_POTION_EFFECTS)
+		return false;
+
+	return potion_effects[effect].enabled;
+}
+
+int Player::num_effect_turns_remaining(int effect) {
+	if (effect < 0 || effect >= ItemConsts::NUM_TURN_POTION_EFFECTS)
+		return -1;
+
+	return potion_effects[effect].turns_remaining;
+}
+
+void Player::decrement_potion_turn_count() {
+	for (int i = 0; i < ItemConsts::NUM_TURN_POTION_EFFECTS; ++i) {
+		if (is_potion_active(i)) {
+			--(potion_effects[i].turns_remaining);
+			if (num_effect_turns_remaining(i) <= 0) {
+				deactivate_potion_effect(i);
+			}
+		}
+	}
+}
+
+void Player::add_potion_effects_to_stats() {
+	if (is_potion_active(ItemConsts::EFFECT_BERSERK_STRENGTH)) {
+		actual.str *= 2;
+	}
+	if (is_potion_active(ItemConsts::EFFECT_SPEED)) {
+		actual.spd *= 2;
+	}
+	if (is_potion_active(ItemConsts::EFFECT_HARDINESS)) {
+		actual.max_hp *= 2;
+		hp = (unsigned short)actual.max_hp;
+	}
+	if (is_potion_active(ItemConsts::EFFECT_EXTRA_ATTACKS)) {
+		actual.apt += 1;
+	}
+	if (is_potion_active(ItemConsts::EFFECT_POISON)) {
+		is_poisoned = true;
+	}
 }
 
 //------------------------------------------------------------------------------

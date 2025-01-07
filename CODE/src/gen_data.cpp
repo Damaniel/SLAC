@@ -7,10 +7,10 @@ const int g_armor_base_pool_entries = 12028;
 const int g_armor_base_pool_count = 84;
 const int g_currency_pool_entries = 580;
 const int g_currency_pool_count = 4;
-const int g_potion_pool_entries = 1225;
-const int g_potion_pool_count = 12;
-const int g_scroll_pool_entries = 1553;
-const int g_scroll_pool_count = 12;
+const int g_potion_pool_entries = 925;
+const int g_potion_pool_count = 10;
+const int g_scroll_pool_entries = 1393;
+const int g_scroll_pool_count = 11;
 const int g_artifact_pool_entries = 6925;
 const int g_artifact_pool_count = 70;
 const int g_item_prefix_pool_entries = 2810;
@@ -32,8 +32,8 @@ int g_armor_base_pool [] = { 255, 475, 655, 805, 905, 955, 1210, 1420, 1590, 172
       9940, 10195, 10405, 10575, 10705, 10785, 10818, 11018, 11178, 11298, 11378, 11418, 11423, 11623, 11783, 11903, 
       11983, 12023, 12028 };
 int g_currency_pool [] = { 255, 455, 555, 580 };
-int g_potion_pool [] = { 255, 405, 425, 625, 825, 875, 925, 975, 995, 1115, 1215, 1225 };
-int g_scroll_pool [] = { 255, 280, 480, 640, 790, 795, 975, 1200, 1328, 1478, 1528, 1553 };
+int g_potion_pool [] = { 255, 405, 425, 625, 675, 725, 775, 795, 915, 925 };
+int g_scroll_pool [] = { 255, 280, 480, 630, 635, 815, 1040, 1168, 1318, 1368, 1393 };
 int g_artifact_pool [] = { 255, 510, 765, 1020, 1275, 1530, 1770, 1920, 2070, 2220, 2370, 2520, 2670, 2798, 2862, 2926, 2990, 
       3054, 3118, 3182, 3214, 3406, 3598, 3790, 3886, 3982, 4078, 4110, 4142, 4174, 4238, 4254, 4258, 
       4482, 4706, 4930, 5042, 5154, 5266, 5298, 5330, 5362, 5458, 5506, 5522, 5538, 5570, 5698, 5826, 
@@ -277,14 +277,12 @@ PotionType g_potion_ids[] = {
    {1, "Potion of Moderate Healing", "Recovers 250 HP", 131, 0, 1, 150, 15, 100, false, false, false, true, false, true, true},
    {2, "Potion of Full Healing", "Recovers 100% of HP", 132, 0, 2, 20, 70, 1000, false, false, false, true, false, true, true},
    {3, "Potion of Cure Poison", "Removes poison", 133, 0, 3, 200, 2, 50, false, false, false, true, false, true, true},
-   {4, "Potion of Cure Paralysis", "Removes paralysis", 134, 0, 4, 200, 10, 50, false, false, false, true, false, true, true},
-   {5, "Potion of Berserk Strength", "+100% STR for 20 turns", 135, 0, 5, 50, 50, 600, false, false, false, true, false, true, true},
-   {6, "Potion of Speed", "+100% SPD for 20 turns", 136, 0, 6, 50, 50, 600, false, false, false, true, false, true, true},
-   {7, "Potion of Hardiness", "+100% HP for 20 turns", 137, 0, 7, 50, 50, 600, false, false, false, true, false, true, true},
-   {8, "Potion of Extra Attacks", "+1 APT for 20 turns", 138, 0, 8, 20, 60, 1000, false, false, false, true, false, true, true},
-   {9, "Potion of Poison", "Applies poison", 139, 0, 9, 120, 25, 20, false, false, false, true, false, true, true},
-   {10, "Potion of Paralysis", "Applies paralysis", 140, 0, 10, 100, 60, 20, false, false, false, true, false, true, true},
-   {11, "Potion of Death", "Reduces HP to 0", 141, 0, 11, 10, 75, 20, false, false, false, true, false, true, true}
+   {4, "Potion of Berserk Strength", "+100% STR for 20 turns", 134, 0, 5, 50, 50, 600, false, false, false, true, false, true, true},
+   {5, "Potion of Speed", "+100% SPD for 20 turns", 135, 0, 6, 50, 50, 600, false, false, false, true, false, true, true},
+   {6, "Potion of Hardiness", "+100% HP for 20 turns", 136, 0, 7, 50, 50, 600, false, false, false, true, false, true, true},
+   {7, "Potion of Extra Attacks", "+1 APT for 20 turns", 137, 0, 8, 20, 60, 1000, false, false, false, true, false, true, true},
+   {8, "Potion of Poison", "Applies poison", 138, 0, 9, 120, 25, 20, false, false, false, true, false, true, true},
+   {9, "Potion of Death", "Reduces HP to 0", 139, 0, 11, 10, 75, 20, false, false, false, true, false, true, true}
 };
 
 // ScrollType g_scroll_ids
@@ -295,18 +293,17 @@ PotionType g_potion_ids[] = {
 //   {id, name, gid, type id, effect id, rarity, ilevel, value, cursed?, prefix?, suffix?, stack?, equip?, drop?, use?}
 //
 ScrollType g_scroll_ids[] = {
-   {0, "Scroll of Identify", "Identifies an item", 142, 0, 12, 255, 1, 5, false, false, false, true, false, true, true},
-   {1, "Scroll of Identify All", "Identifies all items", 143, 0, 13, 25, 60, 500, false, false, false, true, false, true, true},
-   {2, "Scroll of Magic Map", "Marks map as discovered", 144, 0, 14, 200, 5, 25, false, false, false, true, false, true, true},
-   {3, "Scroll of Discovery", "Shows items and stairs on map", 145, 0, 15, 160, 20, 100, false, false, false, true, false, true, true},
-   {4, "Scroll of Decurse", "Removes curse from an item", 146, 0, 16, 150, 10, 200, false, false, false, true, false, true, true},
-   {5, "Scroll of Decurse All", "Removes curse from all items", 147, 0, 17, 5, 80, 1500, false, false, false, true, false, true, true},
-   {6, "Scroll of Teleport", "Moves player to a random location", 148, 0, 18, 180, 10, 30, false, false, false, true, false, true, true},
-   {7, "Scroll of Recall", "Returns player to surface", 149, 0, 19, 225, 3, 15, false, false, false, true, false, true, true},
-   {8, "Scroll of Summon Item", "Creates a good item", 150, 0, 20, 128, 25, 250, false, false, false, true, false, true, true},
-   {9, "Scroll of Darkness", "Darkens all lit areas", 151, 0, 21, 150, 15, 15, false, false, false, true, false, true, true},
-   {10, "Scroll of Forget Area", "Forgets the explored map", 152, 0, 22, 50, 30, 5, false, false, false, true, false, true, true},
-   {11, "Scroll of Curse", "Curses a random unequipped item", 153, 0, 23, 25, 50, 10, false, false, false, true, false, true, true}
+   {0, "Scroll of Identify", "Identifies an item", 140, 0, 12, 255, 1, 5, false, false, false, true, false, true, true},
+   {1, "Scroll of Identify All", "Identifies all items", 141, 0, 13, 25, 60, 500, false, false, false, true, false, true, true},
+   {2, "Scroll of Magic Map", "Marks map as discovered", 142, 0, 14, 200, 5, 25, false, false, false, true, false, true, true},
+   {3, "Scroll of Decurse", "Removes curse from an item", 143, 0, 16, 150, 10, 200, false, false, false, true, false, true, true},
+   {4, "Scroll of Decurse All", "Removes curse from all items", 144, 0, 17, 5, 80, 1500, false, false, false, true, false, true, true},
+   {5, "Scroll of Teleport", "Moves player to a random location", 145, 0, 18, 180, 10, 30, false, false, false, true, false, true, true},
+   {6, "Scroll of Recall", "Returns player to surface", 146, 0, 19, 225, 3, 15, false, false, false, true, false, true, true},
+   {7, "Scroll of Summon Item", "Creates a good item", 147, 0, 20, 128, 25, 250, false, false, false, true, false, true, true},
+   {8, "Scroll of Darkness", "Darkens all lit areas", 148, 0, 21, 150, 15, 15, false, false, false, true, false, true, true},
+   {9, "Scroll of Forget Area", "Forgets the explored map", 149, 0, 22, 50, 30, 5, false, false, false, true, false, true, true},
+   {10, "Scroll of Curse", "Curses a random unequipped item", 150, 0, 23, 25, 50, 10, false, false, false, true, false, true, true}
 };
 
 // ArtifactType g_artifact_ids
@@ -317,76 +314,76 @@ ScrollType g_scroll_ids[] = {
 //   {id, name, gid, description, artifact type, pieces, effect id, rarity, ilevel, cursed?, prefix?, suffix?, stack?, equip?, drop?, use?}
 //
 ArtifactType g_artifact_ids[] = {
-   {0, "Sign of Strength", "+1 STR", 154, 0, 1, 24, 255, 5, false, false, false, true, false, false, false},
-   {1, "Sign of Constitution", "+1 CON", 155, 0, 1, 25, 255, 5, false, false, false, true, false, false, false},
-   {2, "Sign of Dexterity", "+1 DEX", 156, 0, 1, 26, 255, 5, false, false, false, true, false, false, false},
-   {3, "Sign of Attack", "+1 ATK", 157, 0, 1, 27, 255, 5, false, false, false, true, false, false, false},
-   {4, "Sign of Defense", "+1 DEF", 158, 0, 1, 28, 255, 5, false, false, false, true, false, false, false},
-   {5, "Sign of Accuracy", "+1 ACC", 159, 0, 1, 29, 255, 10, false, false, false, true, false, false, false},
-   {6, "Sign of Speed", "+1 SPD", 160, 0, 1, 30, 240, 10, false, false, false, true, false, false, false},
-   {7, "Medal of Strength", "+2 STR", 161, 0, 1, 31, 150, 30, false, false, false, true, false, false, false},
-   {8, "Medal of Constitution", "+2 CON", 162, 0, 1, 32, 150, 30, false, false, false, true, false, false, false},
-   {9, "Medal of Dexterity", "+2 DEX", 163, 0, 1, 33, 150, 30, false, false, false, true, false, false, false},
-   {10, "Medal of Attack", "+2 ATK", 164, 0, 1, 34, 150, 30, false, false, false, true, false, false, false},
-   {11, "Medal of Defense", "+2 DEF", 165, 0, 1, 35, 150, 30, false, false, false, true, false, false, false},
-   {12, "Medal of Accuracy", "+2 ACC", 166, 0, 1, 36, 150, 35, false, false, false, true, false, false, false},
-   {13, "Medal of Speed", "+2 SPD", 167, 0, 1, 37, 128, 35, false, false, false, true, false, false, false},
-   {14, "Trophy of Strength", "+3 STR", 168, 0, 1, 38, 64, 60, false, false, false, true, false, false, false},
-   {15, "Trophy of Constitution", "+3 CON", 169, 0, 1, 39, 64, 60, false, false, false, true, false, false, false},
-   {16, "Trophy of Dexterity", "+3 DEX", 170, 0, 1, 40, 64, 60, false, false, false, true, false, false, false},
-   {17, "Trophy of Attack", "+3 ATK", 171, 0, 1, 41, 64, 60, false, false, false, true, false, false, false},
-   {18, "Trophy of Defense", "+3 DEF", 172, 0, 1, 42, 64, 60, false, false, false, true, false, false, false},
-   {19, "Trophy of Accuracy", "+3 ACC", 173, 0, 1, 43, 64, 65, false, false, false, true, false, false, false},
-   {20, "Trophy of Speed", "+3 SPD", 174, 0, 1, 44, 32, 65, false, false, false, true, false, false, false},
-   {21, "Ward of Fire", "+1 Fire Resist", 175, 0, 1, 45, 192, 8, false, false, false, true, false, false, false},
-   {22, "Ward of Ice", "+1 Ice Resist", 176, 0, 1, 46, 192, 8, false, false, false, true, false, false, false},
-   {23, "Ward of Lightning", "+1 Lightning Resist", 177, 0, 1, 47, 192, 8, false, false, false, true, false, false, false},
-   {24, "Sigil of Fire", "+2 Fire Resist", 178, 0, 1, 48, 96, 35, false, false, false, true, false, false, false},
-   {25, "Sigil of Ice", "+2 Ice Resist", 179, 0, 1, 49, 96, 35, false, false, false, true, false, false, false},
-   {26, "Sigil of Lightning", "+2 Lightning Resist", 180, 0, 1, 50, 96, 35, false, false, false, true, false, false, false},
-   {27, "Relic of Fire", "+3 Fire Resist", 181, 0, 1, 51, 32, 60, false, false, false, true, false, false, false},
-   {28, "Relic of Ice", "+3 Ice Resist", 182, 0, 1, 52, 32, 60, false, false, false, true, false, false, false},
-   {29, "Relic of Lightning", "+3 Lightning Resist", 183, 0, 1, 53, 32, 60, false, false, false, true, false, false, false},
-   {30, "Lucky Token", "+1% currency drop value", 184, 0, 1, 54, 64, 10, false, false, false, true, false, false, false},
-   {31, "Lucky Coin", "+2% currency drop value", 185, 0, 1, 55, 16, 30, false, false, false, true, false, false, false},
-   {32, "Lucky Pendant", "+3% currency drop value", 186, 0, 1, 56, 4, 50, false, false, false, true, false, false, false},
-   {33, "Book of the Warrior", "+1 STR, +1 CON", 187, 1, 2, 57, 224, 15, false, false, false, true, false, false, false},
-   {34, "Book of the Thief", "+1 SPD, +1 DEX", 188, 1, 2, 58, 224, 15, false, false, false, true, false, false, false},
-   {35, "Book of the Combatant", "+1 ATK, +1 DEF", 189, 1, 2, 59, 224, 15, false, false, false, true, false, false, false},
-   {36, "Tome of the Warrior", "+2 STR, +2 CON", 190, 1, 3, 60, 112, 40, false, false, false, true, false, false, false},
-   {37, "Tome of the Thief", "+2 SPD, +2 DEX", 191, 1, 3, 61, 112, 40, false, false, false, true, false, false, false},
-   {38, "Tome of the Combatant", "+2 ATK, +2 DEF", 192, 1, 3, 62, 112, 40, false, false, false, true, false, false, false},
-   {39, "Bible of the Warrior", "+3 STR, +3 CON", 193, 1, 5, 63, 32, 70, false, false, false, true, false, false, false},
-   {40, "Bible of the Thief", "+3 SPD, +3 DEX", 194, 1, 5, 64, 32, 70, false, false, false, true, false, false, false},
-   {41, "Bible of the Combatant", "+3 ATK, +3 DEF", 195, 1, 5, 65, 32, 70, false, false, false, true, false, false, false},
-   {42, "Ward of the Elements", "+1 to all resists", 196, 1, 2, 66, 96, 20, false, false, false, true, false, false, false},
-   {43, "Sigil of the Elements", "+2 to all resists", 197, 1, 4, 67, 48, 40, false, false, false, true, false, false, false},
-   {44, "Relic of the Elements", "+3 to all resists", 198, 1, 6, 68, 16, 65, false, false, false, true, false, false, false},
-   {45, "Cup of Wealth", "+10% currency drop value", 199, 1, 8, 69, 16, 25, false, false, false, true, false, false, false},
-   {46, "Puzzle Box of Frivolousness", "For bragging rights only!", 200, 1, 255, 70, 32, 1, false, false, false, true, false, false, false},
-   {47, "Book of the Polymath", "+1 SPD, +1 ATK, +1 DEF", 201, 2, 3, 71, 128, 20, false, false, false, true, false, false, false},
-   {48, "Book of the Gladiator", "+1 STR, +1 CON, +1 DEX", 202, 2, 3, 72, 128, 20, false, false, false, true, false, false, false},
-   {49, "Tome of the Polymath", "+2 SPD, +2 ATK, +2 DEF", 203, 2, 5, 73, 32, 50, false, false, false, true, false, false, false},
-   {50, "Tome of the Gladiator", "+2 STR, +2 CON, +2 DEX", 204, 2, 5, 74, 32, 50, false, false, false, true, false, false, false},
-   {51, "Bible of the Polymath", "+3 SPD, +3 ATK, +3 DEF", 205, 2, 8, 75, 4, 90, false, false, false, true, false, false, false},
-   {52, "Bible of the Gladiator", "+3 STR, +3 CON, +3 DEX", 206, 2, 8, 76, 4, 90, false, false, false, true, false, false, false},
-   {53, "Trickster Trinket", "+1 APT", 207, 2, 4, 77, 8, 80, false, false, false, true, false, false, false},
-   {54, "Prismatic Mirror", "+10 to all elemental resists", 208, 2, 4, 78, 8, 75, false, false, false, true, false, false, false},
-   {55, "Glasses of Foresight", "Permanent 'discovery' effect", 209, 2, 6, 79, 32, 45, false, false, false, true, false, false, false},
-   {56, "Ethereal Barrier", "Reduce all damage by 1%", 210, 2, 4, 80, 16, 70, false, false, false, true, false, false, false},
-   {57, "Righteous Fire", "+1 to maximum fire resist", 211, 2, 6, 81, 4, 80, false, false, false, true, false, false, false},
-   {58, "Righteous Ice", "+1 to maximum ice resist", 212, 2, 6, 82, 4, 80, false, false, false, true, false, false, false},
-   {59, "Righteous Lightning", "+1 to maximum lightning resist", 213, 2, 6, 83, 4, 80, false, false, false, true, false, false, false},
-   {60, "Ark of Enlightenment", "Auto-identify of all items", 214, 2, 3, 84, 2, 85, false, false, false, true, false, false, false},
-   {61, "Chalice of Riches", "+100% currency drop value", 215, 2, 16, 85, 64, 60, false, false, false, true, false, false, false},
-   {62, "Amphora of Holy Water", "All items are auto-decursed", 216, 2, 8, 86, 16, 40, false, false, false, true, false, false, false},
-   {63, "Sign of Health", "+3 HP", 217, 0, 1, 87, 255, 5, false, false, false, true, false, false, false},
-   {64, "Medal of Health", "+8 HP", 218, 0, 1, 88, 150, 30, false, false, false, true, false, false, false},
-   {65, "Trophy of Health", "+15 HP", 219, 0, 1, 89, 64, 60, false, false, false, true, false, false, false},
-   {66, "Book of the Healthy", "+1 CON, +5 HP", 220, 1, 2, 90, 224, 15, false, false, false, true, false, false, false},
-   {67, "Tome of the Healthy", "+1 CON, +10 HP", 221, 1, 3, 91, 112, 40, false, false, false, true, false, false, false},
-   {68, "Bible of the Healthy", "+1 CON, +20 HP", 222, 1, 5, 92, 32, 70, false, false, false, true, false, false, false},
-   {69, "Fountain of Youth", "+100 HP", 223, 2, 6, 93, 32, 60, false, false, false, true, false, false, false}
+   {0, "Sign of Strength", "+1 STR", 151, 0, 1, 24, 255, 5, false, false, false, true, false, false, false},
+   {1, "Sign of Constitution", "+1 CON", 152, 0, 1, 25, 255, 5, false, false, false, true, false, false, false},
+   {2, "Sign of Dexterity", "+1 DEX", 153, 0, 1, 26, 255, 5, false, false, false, true, false, false, false},
+   {3, "Sign of Attack", "+1 ATK", 154, 0, 1, 27, 255, 5, false, false, false, true, false, false, false},
+   {4, "Sign of Defense", "+1 DEF", 155, 0, 1, 28, 255, 5, false, false, false, true, false, false, false},
+   {5, "Sign of Accuracy", "+1 ACC", 156, 0, 1, 29, 255, 10, false, false, false, true, false, false, false},
+   {6, "Sign of Speed", "+1 SPD", 157, 0, 1, 30, 240, 10, false, false, false, true, false, false, false},
+   {7, "Medal of Strength", "+2 STR", 158, 0, 1, 31, 150, 30, false, false, false, true, false, false, false},
+   {8, "Medal of Constitution", "+2 CON", 159, 0, 1, 32, 150, 30, false, false, false, true, false, false, false},
+   {9, "Medal of Dexterity", "+2 DEX", 160, 0, 1, 33, 150, 30, false, false, false, true, false, false, false},
+   {10, "Medal of Attack", "+2 ATK", 161, 0, 1, 34, 150, 30, false, false, false, true, false, false, false},
+   {11, "Medal of Defense", "+2 DEF", 162, 0, 1, 35, 150, 30, false, false, false, true, false, false, false},
+   {12, "Medal of Accuracy", "+2 ACC", 163, 0, 1, 36, 150, 35, false, false, false, true, false, false, false},
+   {13, "Medal of Speed", "+2 SPD", 164, 0, 1, 37, 128, 35, false, false, false, true, false, false, false},
+   {14, "Trophy of Strength", "+3 STR", 165, 0, 1, 38, 64, 60, false, false, false, true, false, false, false},
+   {15, "Trophy of Constitution", "+3 CON", 166, 0, 1, 39, 64, 60, false, false, false, true, false, false, false},
+   {16, "Trophy of Dexterity", "+3 DEX", 167, 0, 1, 40, 64, 60, false, false, false, true, false, false, false},
+   {17, "Trophy of Attack", "+3 ATK", 168, 0, 1, 41, 64, 60, false, false, false, true, false, false, false},
+   {18, "Trophy of Defense", "+3 DEF", 169, 0, 1, 42, 64, 60, false, false, false, true, false, false, false},
+   {19, "Trophy of Accuracy", "+3 ACC", 170, 0, 1, 43, 64, 65, false, false, false, true, false, false, false},
+   {20, "Trophy of Speed", "+3 SPD", 171, 0, 1, 44, 32, 65, false, false, false, true, false, false, false},
+   {21, "Ward of Fire", "+1 Fire Resist", 172, 0, 1, 45, 192, 8, false, false, false, true, false, false, false},
+   {22, "Ward of Ice", "+1 Ice Resist", 173, 0, 1, 46, 192, 8, false, false, false, true, false, false, false},
+   {23, "Ward of Lightning", "+1 Lightning Resist", 174, 0, 1, 47, 192, 8, false, false, false, true, false, false, false},
+   {24, "Sigil of Fire", "+2 Fire Resist", 175, 0, 1, 48, 96, 35, false, false, false, true, false, false, false},
+   {25, "Sigil of Ice", "+2 Ice Resist", 176, 0, 1, 49, 96, 35, false, false, false, true, false, false, false},
+   {26, "Sigil of Lightning", "+2 Lightning Resist", 177, 0, 1, 50, 96, 35, false, false, false, true, false, false, false},
+   {27, "Relic of Fire", "+3 Fire Resist", 178, 0, 1, 51, 32, 60, false, false, false, true, false, false, false},
+   {28, "Relic of Ice", "+3 Ice Resist", 179, 0, 1, 52, 32, 60, false, false, false, true, false, false, false},
+   {29, "Relic of Lightning", "+3 Lightning Resist", 180, 0, 1, 53, 32, 60, false, false, false, true, false, false, false},
+   {30, "Lucky Token", "+1% currency drop value", 181, 0, 1, 54, 64, 10, false, false, false, true, false, false, false},
+   {31, "Lucky Coin", "+2% currency drop value", 182, 0, 1, 55, 16, 30, false, false, false, true, false, false, false},
+   {32, "Lucky Pendant", "+3% currency drop value", 183, 0, 1, 56, 4, 50, false, false, false, true, false, false, false},
+   {33, "Book of the Warrior", "+1 STR, +1 CON", 184, 1, 2, 57, 224, 15, false, false, false, true, false, false, false},
+   {34, "Book of the Thief", "+1 SPD, +1 DEX", 185, 1, 2, 58, 224, 15, false, false, false, true, false, false, false},
+   {35, "Book of the Combatant", "+1 ATK, +1 DEF", 186, 1, 2, 59, 224, 15, false, false, false, true, false, false, false},
+   {36, "Tome of the Warrior", "+2 STR, +2 CON", 187, 1, 3, 60, 112, 40, false, false, false, true, false, false, false},
+   {37, "Tome of the Thief", "+2 SPD, +2 DEX", 188, 1, 3, 61, 112, 40, false, false, false, true, false, false, false},
+   {38, "Tome of the Combatant", "+2 ATK, +2 DEF", 189, 1, 3, 62, 112, 40, false, false, false, true, false, false, false},
+   {39, "Bible of the Warrior", "+3 STR, +3 CON", 190, 1, 5, 63, 32, 70, false, false, false, true, false, false, false},
+   {40, "Bible of the Thief", "+3 SPD, +3 DEX", 191, 1, 5, 64, 32, 70, false, false, false, true, false, false, false},
+   {41, "Bible of the Combatant", "+3 ATK, +3 DEF", 192, 1, 5, 65, 32, 70, false, false, false, true, false, false, false},
+   {42, "Ward of the Elements", "+1 to all resists", 193, 1, 2, 66, 96, 20, false, false, false, true, false, false, false},
+   {43, "Sigil of the Elements", "+2 to all resists", 194, 1, 4, 67, 48, 40, false, false, false, true, false, false, false},
+   {44, "Relic of the Elements", "+3 to all resists", 195, 1, 6, 68, 16, 65, false, false, false, true, false, false, false},
+   {45, "Cup of Wealth", "+10% currency drop value", 196, 1, 8, 69, 16, 25, false, false, false, true, false, false, false},
+   {46, "Puzzle Box of Frivolousness", "For bragging rights only!", 197, 1, 255, 70, 32, 1, false, false, false, true, false, false, false},
+   {47, "Book of the Polymath", "+1 SPD, +1 ATK, +1 DEF", 198, 2, 3, 71, 128, 20, false, false, false, true, false, false, false},
+   {48, "Book of the Gladiator", "+1 STR, +1 CON, +1 DEX", 199, 2, 3, 72, 128, 20, false, false, false, true, false, false, false},
+   {49, "Tome of the Polymath", "+2 SPD, +2 ATK, +2 DEF", 200, 2, 5, 73, 32, 50, false, false, false, true, false, false, false},
+   {50, "Tome of the Gladiator", "+2 STR, +2 CON, +2 DEX", 201, 2, 5, 74, 32, 50, false, false, false, true, false, false, false},
+   {51, "Bible of the Polymath", "+3 SPD, +3 ATK, +3 DEF", 202, 2, 8, 75, 4, 90, false, false, false, true, false, false, false},
+   {52, "Bible of the Gladiator", "+3 STR, +3 CON, +3 DEX", 203, 2, 8, 76, 4, 90, false, false, false, true, false, false, false},
+   {53, "Trickster Trinket", "+1 APT", 204, 2, 4, 77, 8, 80, false, false, false, true, false, false, false},
+   {54, "Prismatic Mirror", "+10 to all elemental resists", 205, 2, 4, 78, 8, 75, false, false, false, true, false, false, false},
+   {55, "Glasses of Foresight", "Permanent 'discovery' effect", 206, 2, 6, 79, 32, 45, false, false, false, true, false, false, false},
+   {56, "Ethereal Barrier", "Reduce all damage by 1%", 207, 2, 4, 80, 16, 70, false, false, false, true, false, false, false},
+   {57, "Righteous Fire", "+1 to maximum fire resist", 208, 2, 6, 81, 4, 80, false, false, false, true, false, false, false},
+   {58, "Righteous Ice", "+1 to maximum ice resist", 209, 2, 6, 82, 4, 80, false, false, false, true, false, false, false},
+   {59, "Righteous Lightning", "+1 to maximum lightning resist", 210, 2, 6, 83, 4, 80, false, false, false, true, false, false, false},
+   {60, "Ark of Enlightenment", "Auto-identify of all items", 211, 2, 3, 84, 2, 85, false, false, false, true, false, false, false},
+   {61, "Chalice of Riches", "+100% currency drop value", 212, 2, 16, 85, 64, 60, false, false, false, true, false, false, false},
+   {62, "Amphora of Holy Water", "All items are auto-decursed", 213, 2, 8, 86, 16, 40, false, false, false, true, false, false, false},
+   {63, "Sign of Health", "+3 HP", 214, 0, 1, 87, 255, 5, false, false, false, true, false, false, false},
+   {64, "Medal of Health", "+8 HP", 215, 0, 1, 88, 150, 30, false, false, false, true, false, false, false},
+   {65, "Trophy of Health", "+15 HP", 216, 0, 1, 89, 64, 60, false, false, false, true, false, false, false},
+   {66, "Book of the Healthy", "+1 CON, +5 HP", 217, 1, 2, 90, 224, 15, false, false, false, true, false, false, false},
+   {67, "Tome of the Healthy", "+1 CON, +10 HP", 218, 1, 3, 91, 112, 40, false, false, false, true, false, false, false},
+   {68, "Bible of the Healthy", "+1 CON, +20 HP", 219, 1, 5, 92, 32, 70, false, false, false, true, false, false, false},
+   {69, "Fountain of Youth", "+100 HP", 220, 2, 6, 93, 32, 60, false, false, false, true, false, false, false}
 };
 
 // ModifierType g_modifier_ids

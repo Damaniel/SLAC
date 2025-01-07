@@ -491,14 +491,25 @@ void use_potion_action(int id) {
                 g_text_log.put_line("Nothing happens.");
             }
             break;
-        case ItemConsts::POT_OF_CURE_PARALYSIS:
         case ItemConsts::POT_OF_BERSERK_STR:
+            g_player.activate_potion_effect(ItemConsts::EFFECT_BERSERK_STRENGTH, 20);
+            g_text_log.put_line("You feel as strong as a giant!");
+            break;
         case ItemConsts::POT_OF_SPEED:
+            g_player.activate_potion_effect(ItemConsts::EFFECT_SPEED, 20);
+            g_text_log.put_line("You feel as fast as a cheetah!");
+            break;
         case ItemConsts::POT_OF_HARDINESS:
+            g_player.activate_potion_effect(ItemConsts::EFFECT_HARDINESS, 20);
+            g_text_log.put_line("You feel unnaturally healthy!");
+            break;
         case ItemConsts::POT_OF_EXTRA_ATTACKS:
+            g_player.activate_potion_effect(ItemConsts::EFFECT_EXTRA_ATTACKS, 20);
+            g_text_log.put_line("You feel extra proficient with your weapon!");
+            break;
         case ItemConsts::POT_OF_POISON:
-        case ItemConsts::POT_OF_PARALYSIS:
-            g_text_log.put_line("The potion has no effect (yet).");
+            g_player.activate_potion_effect(ItemConsts::EFFECT_POISON, 20);
+            g_text_log.put_line("You suddenly feel very ill.");
             break;
         case ItemConsts::POT_OF_DEATH:
             g_player.hp = 0;
@@ -571,9 +582,6 @@ void use_scroll_action(int id) {
             if (result == false) {
                 g_text_log.put_line("You have no items that can be cursed.");
             }
-            break;
-        case ItemConsts::SCROLL_OF_DISCOVERY:
-            g_text_log.put_line("This item doesn't exist (yet)");
             break;
         default:
             g_text_log.put_line("This scroll shouldn't exist!");

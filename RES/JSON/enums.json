@@ -20,36 +20,28 @@
                 "id": 3,
                 "name": "POT_OF_CURE_POISON"
             },
-            "cure_paralysis": {
-                "id": 4,
-                "name": "POT_OF_CURE_PARALYSIS"
-            },
             "berserk_strength": {
-                "id": 5,
+                "id": 4,
                 "name": "POT_OF_BERSERK_STR"
             },
             "speed": {
-                "id": 6,
+                "id": 5,
                 "name": "POT_OF_SPEED"
             },
             "hardiness": {
-                "id": 7,
+                "id": 6,
                 "name": "POT_OF_HARDINESS"
             },
             "extra_attacks": {
-                "id": 8,
+                "id": 7,
                 "name": "POT_OF_EXTRA_ATTACKS"
             },
             "poison": {
-                "id": 9,
+                "id": 8,
                 "name": "POT_OF_POISON"
             },
-            "paralysis": {
-                "id": 10,
-                "name": "POT_OF_PARALYSIS"
-            },
             "death": {
-                "id": 11,
+                "id": 9,
                 "name": "POT_OF_DEATH"
             }
         },
@@ -66,40 +58,36 @@
                 "id": 2,
                 "name": "SCROLL_OF_MAGIC_MAP"
             },
-            "discovery": {
-                "id": 3,
-                "name": "SCROLL_OF_DISCOVERY"
-            },
             "decurse": {
-                "id": 4,
+                "id": 3,
                 "name": "SCROLL_OF_DECURSE"
             },
             "decurse_all": {
-                "id": 5,
+                "id": 4,
                 "name": "SCROLL_OF_DECURSE_ALL"
             },
             "teleport": {
-                "id": 6,
+                "id": 5,
                 "name": "SCROLL_OF_TELEPORT"
             },
             "recall": {
-                "id": 7,
+                "id": 6,
                 "name": "SCROLL_OF_RECALL"
             },
             "summon_item": {
-                "id": 8,
+                "id": 7,
                 "name": "SCROLL_OF_SUMMON_ITEM"
             },
             "darkness": {
-                "id": 9,
+                "id": 8,
                 "name": "SCROLL_OF_DARKNESS"
             },
             "forget_area": {
-                "id": 10,
+                "id": 9,
                 "name": "SCROLL_OF_FORGET_AREA"
             },
             "curse": {
-                "id": 11,
+                "id": 10,
                 "name": "SCROLL_OF_CURSE"
             }
         }

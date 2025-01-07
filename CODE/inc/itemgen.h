@@ -19,6 +19,16 @@ namespace ItemConsts {
     const int RECALL_SCROLL_MIN_TURNS = 8;
     const int RECALL_SCROLL_MAX_TURNS = 15;
 
+    const int NUM_TURN_POTION_EFFECTS = 5;
+
+    enum {
+        EFFECT_BERSERK_STRENGTH,
+        EFFECT_SPEED,
+        EFFECT_HARDINESS,
+        EFFECT_EXTRA_ATTACKS,
+        EFFECT_POISON
+    };
+    
     // odds tables for generating main item classes.  Currently:
     //
     //   weapon: 10% 
@@ -106,11 +116,11 @@ namespace ItemConsts {
     };
     
     const int FIRST_POTION_GID =  130;
-    const int LAST_POTION_GID =   141;
+    const int LAST_POTION_GID =   139;
     const int NUM_POTIONS = (LAST_POTION_GID - FIRST_POTION_GID) + 1;
 
-    const int FIRST_SCROLL_GID = 142;
-    const int LAST_SCROLL_GID = 153;
+    const int FIRST_SCROLL_GID = 140;
+    const int LAST_SCROLL_GID = 150;
     const int NUM_SCROLLS = (LAST_SCROLL_GID - FIRST_SCROLL_GID) + 1;
 }
 

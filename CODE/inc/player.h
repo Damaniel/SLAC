@@ -25,6 +25,7 @@
 #define __PLAYER_H__
 
 #include "enemy.h"
+#include "itemgen.h"
 #include "globals.h"
 
 typedef struct {
@@ -81,6 +82,11 @@ typedef struct {
 	unsigned short def;
 	unsigned short spd;
 } BaseStatSet;
+
+typedef struct {
+	bool enabled;
+	unsigned char turns_remaining;
+} PotionEffect;
 
 namespace PlayerConsts {
 	const int MAX_LEVEL = 100;
@@ -272,10 +278,8 @@ public:
 	ArtifactEffectFlags effects;	// Artifact effects
 	bool is_poisoned;				// Is the player poisoned?
 	bool is_equip_poisoned; 		// Is cursed equipment poisoning the player
-	bool is_paralyzed;				// Is the player paralyzed?
+	PotionEffect potion_effects[ItemConsts::NUM_TURN_POTION_EFFECTS];	// Are these potions active, and for how long?
 
-	// TODO - consider whether these values, and the *_last_room_entered functions
-	// should be moved elsewhere
 	int x_pos;				// The position of the player in the current area
 	int y_pos;
 	int last_room_entered;
@@ -297,6 +301,12 @@ public:
 	void set_last_room_entered(int room) { last_room_entered = room; }
 	void set_position(int x, int y);
 	void assign_base_stats_to_actual();
+	void activate_potion_effect(int effect, int duration);
+	void deactivate_potion_effect(int effect);
+	void decrement_potion_turn_count();
+	int num_effect_turns_remaining(int effect);
+	bool is_potion_active(int effect);
+	void add_potion_effects_to_stats();
 	void apply_stats_to_actual(Stats *fixed, Stats *multiplicative);
 	ArtifactEffectFlags *get_effect_flags() { return &effects; }
     void init_temp_stats(Stats *f, Stats *m);

@@ -805,9 +805,11 @@ void perform_inventory_menu_action(void) {
 				// If the item was a potion or scroll, using it identifies all items of that kind until
 				// the current gen of player dies.  The 'identify' function works for the current 
 				// stack in the inventory; g_identified_<XYZ> ensures future items are auto-identified
-				if (i->get_item_class() == ItemConsts::POTION_CLASS || i->get_item_class() == ItemConsts::SCROLL_CLASS) {
+				if (g_identified_potions[i->get_id()] == false && i->get_item_class() == ItemConsts::POTION_CLASS) 
 					perform_identification_action(i, true);
-				} 
+				if (g_identified_scrolls[i->get_id()] == false && i->get_item_class() == ItemConsts::SCROLL_CLASS)
+					perform_identification_action(i, true);
+					
 				// Use the item.  Take one from the stack, or delete the item if there was only 1
 				i->use();
 				i->adjust_quantity(-1);
@@ -1591,6 +1593,9 @@ void process_move(std::pair<int, int> proposed_location) {
 		else
 			process_town_move(proposed_location);
 	}
+
+	// subtract a turn from any active potions
+	g_player.decrement_potion_turn_count();
 }
 
 //----------------------------------------------------------------------------
