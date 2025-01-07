@@ -2104,7 +2104,7 @@ void reset_game_flags() {
 	g_game_flags.generation = 0;
 	g_game_flags.can_enter_marble_halls = false;
 	g_game_flags.can_enter_crystal_depths = false;
-	g_game_flags.finished_game = false;
+	g_game_flags.has_finished_game = false;
 	for (int i = 0; i < UtilConsts::NUM_BOSSES; ++i)
 		g_game_flags.has_defeated_bosses[i] = false;
 }

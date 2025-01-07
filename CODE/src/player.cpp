@@ -795,7 +795,7 @@ void Player::apply_artifact_mods(Stats *fixed, Stats *multiplicative) {
     fixed->dex += (g_active_artifacts[9] * 2);    // Medal of Dexterity
     fixed->atk += (g_active_artifacts[10] * 2);   // Medal of Attack
     fixed->def += (g_active_artifacts[11] * 2);   // Medal of Defense
-    // Medal of accuracty currently does nothing
+    // Medal of accuracy currently does nothing
     fixed->spd += (g_active_artifacts[13] * 2);   // Medal of Speed
 
     fixed->str += (g_active_artifacts[14] * 3);   // Trophy of Strength

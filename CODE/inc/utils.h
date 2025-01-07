@@ -112,8 +112,6 @@ struct StateFlags {
     // - game flags
     bool text_log_extended;  // Should we show the extended or standard text log
 
-    // - location flags
-
     // Note that many of the aspects of the game (input, inventory, etc) work
     // in a similar way both in and out of the dungeon, but there are differences:
     //  - Player can't attack things in town
@@ -134,11 +132,13 @@ struct StateFlags {
     bool exit_game;           // Did the player choose to exit the game?
 };
 
+// A collection of flags related to game progression
 struct GameFlags {
 	bool can_enter_marble_halls;
 	bool can_enter_crystal_depths;
     bool has_defeated_bosses[UtilConsts::NUM_BOSSES];
-    bool finished_game;
+    bool has_finished_game;
+    unsigned int elapsed_time;
     int generation;           // The current generation of player
 };
 
