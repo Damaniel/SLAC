@@ -952,6 +952,39 @@ void Player::apply_artifact_mods(Stats *fixed, Stats *multiplicative) {
 
 }
 
+//------------------------------------------------------------------------------
+// Sets the player's HP value.  If the value is less than zero, the player will
+// die.
+// 
+// Arguments:
+//   new_hp - the value to set the player's HP to
+//
+// Returns:
+//   Nothing.
+//------------------------------------------------------------------------------
+void Player::set_hp(int new_hp) {
+	hp = new_hp;
+
+	// Make sure HP can't go over max HP
+	if (hp > actual.max_hp)
+		hp = (unsigned short)actual.max_hp;
+
+	if (hp < 0) {
+		g_text_log.put_line("Alas!  You have died.");
+		// TODO: Deal with death here
+	}
+}
+
+//------------------------------------------------------------------------------
+// Activates the potion with the specified effect for a given duration
+// 
+// Arguments:
+//   effect - the potion effect to activate
+//   duration - how many turns it should be active for
+//
+// Returns:
+//   Nothing.
+//------------------------------------------------------------------------------
 void Player::activate_potion_effect(int effect, int duration) {
 	if (effect < 0 || effect >= ItemConsts::NUM_TURN_POTION_EFFECTS)
 		return;
@@ -967,6 +1000,15 @@ void Player::activate_potion_effect(int effect, int duration) {
 	}
 }
 
+//------------------------------------------------------------------------------
+// Deactivates the potion with the specified effect
+// 
+// Arguments:
+//   effect - the potion effect to deactivate
+//
+// Returns:
+//   Nothing.
+//------------------------------------------------------------------------------
 void Player::deactivate_potion_effect(int effect) {
 	if (effect < 0 || effect >= ItemConsts::NUM_TURN_POTION_EFFECTS)
 		return;
@@ -996,6 +1038,15 @@ void Player::deactivate_potion_effect(int effect) {
 	recalculate_actual_stats();
 }
 
+//------------------------------------------------------------------------------
+// Determines if the specified potion effect is active
+// 
+// Arguments:
+//   effect - the potion effect to check
+//
+// Returns:
+//   true if effect is active, false otherwise
+//------------------------------------------------------------------------------
 bool Player::is_potion_active(int effect) {
 	if (effect < 0 || effect >= ItemConsts::NUM_TURN_POTION_EFFECTS)
 		return false;
@@ -1003,6 +1054,16 @@ bool Player::is_potion_active(int effect) {
 	return potion_effects[effect].enabled;
 }
 
+//------------------------------------------------------------------------------
+// Returns the number of turns that the specified potion effect will remain
+//  active
+// 
+// Arguments:
+//   effect - the potion effect to check
+//
+// Returns:
+//   the number of turns left for the effect to be active
+//------------------------------------------------------------------------------
 int Player::num_effect_turns_remaining(int effect) {
 	if (effect < 0 || effect >= ItemConsts::NUM_TURN_POTION_EFFECTS)
 		return -1;
@@ -1010,10 +1071,31 @@ int Player::num_effect_turns_remaining(int effect) {
 	return potion_effects[effect].turns_remaining;
 }
 
+//------------------------------------------------------------------------------
+// Manages per-turn potion effect management.  Decrements effect time counter
+//  and applies poison (if required)
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
 void Player::decrement_potion_turn_count() {
 	for (int i = 0; i < ItemConsts::NUM_TURN_POTION_EFFECTS; ++i) {
 		if (is_potion_active(i)) {
 			--(potion_effects[i].turns_remaining);
+			// Process poison for this turn
+			if (i == ItemConsts::EFFECT_POISON) {
+				// Drain is set to 1% of the player's max hp (minimum 1)
+				int drain = (int)(actual.max_hp / 100);
+				if (drain < 1)
+					drain = 1;
+				// Set the new HP value
+				g_player.set_hp(g_player.hp - drain);
+				g_state_flags.update_status_hp_exp = true;
+				g_state_flags.update_display = true;
+			}
 			if (num_effect_turns_remaining(i) <= 0) {
 				deactivate_potion_effect(i);
 			}
@@ -1021,6 +1103,15 @@ void Player::decrement_potion_turn_count() {
 	}
 }
 
+//------------------------------------------------------------------------------
+// Applies the active potion effects to the player's active stats
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
 void Player::add_potion_effects_to_stats() {
 	if (is_potion_active(ItemConsts::EFFECT_BERSERK_STRENGTH)) {
 		actual.str *= 2;

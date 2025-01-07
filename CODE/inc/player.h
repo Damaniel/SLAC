@@ -318,6 +318,7 @@ public:
 	void set_y_pos(int pos);
 	void add_gold(int amount);
 	int get_gold();
+	void set_hp(int new_hp);
 	Item **get_item_slot_by_type(int type);
 	void recalculate_actual_stats();
 	void equip(Item *i);

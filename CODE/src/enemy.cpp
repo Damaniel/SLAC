@@ -656,10 +656,6 @@ void perform_enemy_action(Enemy *e) {
 	if (abs(px-x) <= 1 && abs(py-y) <= 1) {
 		g_text_log.put_line("The " + e->get_name() + " attacks you!");
 		perform_enemy_combat(e);
-		if (g_player.hp <= 0) {
-			g_text_log.put_line("You are defeated!");
-		}
-		// TODO: Deal with player death
 		return;
 	}
 
@@ -846,7 +842,7 @@ void perform_enemy_combat(Enemy *e) {
 		}
 
 		// Subtract player HP
-		g_player.hp = g_player.hp - total_damage_taken;
+		g_player.set_hp(g_player.hp - total_damage_taken);
 
 		// Log the damage done to the game log
 		//std::cout << "perform_enemy_combat: player takes " << total_damage_taken << " damage." << std::endl;
