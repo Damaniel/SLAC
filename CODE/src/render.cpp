@@ -1470,6 +1470,45 @@ void Render::render_town_at_player(BITMAP *destination, int x, int y) {
 	render_town_at(destination, x - UiConsts::PLAYER_PLAY_AREA_X, y - UiConsts::PLAYER_PLAY_AREA_Y);
 }
 
+//----------------------------------------------------------------------------------
+// Draws the dialog showing the base stats for the next generation of player
+//
+// Arguments:
+//   destination - the bitmap to draw to
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------------
+void Render::render_death_dialog(BITMAP *destination) {
+	// The main window
+	render_ui_box(destination, UiConsts::DEATH_SCREEN_X1, UiConsts::DEATH_SCREEN_Y1,
+				   UiConsts::DEATH_SCREEN_X2, UiConsts::DEATH_SCREEN_Y2);
+
+	// Initial paragraphs
+	render_text(destination, "While *you* may be dead...", UiConsts::DEATH_TEXT_X, UiConsts::DEATH_TEXT_P1_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_CENTERED);
+	render_text(destination, "...your adventure continues!", UiConsts::DEATH_TEXT_X, UiConsts::DEATH_TEXT_P1_Y + 9, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_CENTERED);
+	render_text(destination, "Thanks to your artifacts,", UiConsts::DEATH_TEXT_X, UiConsts::DEATH_TEXT_P2_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_CENTERED);
+	render_text(destination, "your heir will start with the", UiConsts::DEATH_TEXT_X, UiConsts::DEATH_TEXT_P2_Y + 9, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_CENTERED);
+	render_text(destination, "following base stats:", UiConsts::DEATH_TEXT_X, UiConsts::DEATH_TEXT_P2_Y + 18, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_CENTERED);
+
+	// Stats
+
+	// End text
+	render_text(destination, "Press ENTER to be reborn!", UiConsts::DEATH_TEXT_X, UiConsts::DEATH_TEXT_P3_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+				FontConsts::TEXT_CENTERED);
+}
+
 //------------------------------------------------------------------------------
 // Writes a string in the specified location on the screen, with specified
 // font, width, color and justification.

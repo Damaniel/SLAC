@@ -354,6 +354,114 @@ namespace UiConsts {
 	const int STATS_NEXT_X = 117;
 	const int STATS_NEXT_Y = 75;
 
+	// The death screen
+	const int DEATH_SCREEN_X1 = 41;
+	const int DEATH_SCREEN_Y1 = 16;
+	const int DEATH_SCREEN_X2 = 200;
+	const int DEATH_SCREEN_Y2 = 192;
+
+	// The death screen text
+	const int DEATH_TEXT_X = 117;
+	const int DEATH_TEXT_P1_Y = 22;
+	const int DEATH_TEXT_P2_Y = 44;
+	const int DEATH_TEXT_P3_Y = 179;
+
+	// The death screen stat text
+	const int NEXT_GEN_STR_TEXT_X = 53;
+	const int NEXT_GEN_STR_TEXT_Y = 78;
+	const int NEXT_GEN_STR_VAL_X = 113;
+	const int NEXT_GEN_STR_VAL_Y =  78;
+
+	const int NEXT_GEN_CON_TEXT_X = 53;
+	const int NEXT_GEN_CON_TEXT_Y = 87;
+	const int NEXT_GEN_CON_VAL_X = 113;
+	const int NEXT_GEN_CON_VAL_Y =  87;
+
+	const int NEXT_GEN_DEX_TEXT_X = 53;
+	const int NEXT_GEN_DEX_TEXT_Y = 96;
+	const int NEXT_GEN_DEX_VAL_X = 113;
+	const int NEXT_GEN_DEX_VAL_Y =  96;
+
+	const int NEXT_GEN_ATK_TEXT_X = 53;
+	const int NEXT_GEN_ATK_TEXT_Y = 105;
+	const int NEXT_GEN_ATK_VAL_X = 113;
+	const int NEXT_GEN_ATK_VAL_Y = 105;
+
+	const int NEXT_GEN_DEF_TEXT_X = 53;
+	const int NEXT_GEN_DEF_TEXT_Y = 114;
+	const int NEXT_GEN_DEF_VAL_X =  113;
+	const int NEXT_GEN_DEF_VAL_Y =  114;
+
+	const int NEXT_GEN_SPD_TEXT_X = 53;
+	const int NEXT_GEN_SPD_TEXT_Y = 123;
+	const int NEXT_GEN_SPD_VAL_X = 113;
+	const int NEXT_GEN_SPD_VAL_Y = 123;
+
+	const int NEXT_GEN_FRES_TEXT_X = 53;
+	const int NEXT_GEN_FRES_TEXT_Y = 132;
+	const int NEXT_GEN_FRES_VAL_X = 113;
+	const int NEXT_GEN_FRES_VAL_Y = 132;
+
+	const int NEXT_GEN_IRES_TEXT_X = 53;
+	const int NEXT_GEN_IRES_TEXT_Y = 141;
+	const int NEXT_GEN_IRES_VAL_X = 113;
+	const int NEXT_GEN_IRES_VAL_Y = 141;
+
+	const int NEXT_GEN_LRES_TEXT_X = 53;
+	const int NEXT_GEN_LRES_TEXT_Y = 150;
+	const int NEXT_GEN_LRES_VAL_X = 113;
+	const int NEXT_GEN_LRES_VAL_Y = 150;
+
+	const int NEXT_GEN_FATK_TEXT_X = 124;
+	const int NEXT_GEN_FATK_TEXT_Y = 78;
+	const int NEXT_GEN_FATK_VAL_X =  184;
+	const int NEXT_GEN_FATK_VAL_Y =  78;
+
+	const int NEXT_GEN_IATK_TEXT_X = 124;
+	const int NEXT_GEN_IATK_TEXT_Y = 87;
+	const int NEXT_GEN_IATK_VAL_X =  184;
+	const int NEXT_GEN_IATK_VAL_Y =  87;
+
+	const int NEXT_GEN_LATK_TEXT_X = 124;
+	const int NEXT_GEN_LATK_TEXT_Y = 96;
+	const int NEXT_GEN_LATK_VAL_X =  184;
+	const int NEXT_GEN_LATK_VAL_Y =  96;
+
+	const int NEXT_GEN_FDMG_TEXT_X = 124;
+	const int NEXT_GEN_FDMG_TEXT_Y = 105;
+	const int NEXT_GEN_FDMG_VAL_X =  184;
+	const int NEXT_GEN_FDMG_VAL_Y =  105;
+
+	const int NEXT_GEN_IDMG_TEXT_X = 124;
+	const int NEXT_GEN_IDMG_TEXT_Y = 114;
+	const int NEXT_GEN_IDMG_VAL_X =  184;
+	const int NEXT_GEN_IDMG_VAL_Y =  114;
+
+	const int NEXT_GEN_LDMG_TEXT_X = 124;
+	const int NEXT_GEN_LDMG_TEXT_Y = 123;
+	const int NEXT_GEN_LDMG_VAL_X =  184;
+	const int NEXT_GEN_LDMG_VAL_Y =  123;
+	
+	const int NEXT_GEN_ADMG_TEXT_X = 124;
+	const int NEXT_GEN_ADMG_TEXT_Y = 132;
+	const int NEXT_GEN_ADMG_VAL_X =  184;
+	const int NEXT_GEN_ADMG_VAL_Y =  132;
+
+	const int NEXT_GEN_APT_TEXT_X = 124;
+	const int NEXT_GEN_APT_TEXT_Y = 141;
+	const int NEXT_GEN_APT_VAL_X =  184; 
+	const int NEXT_GEN_APT_VAL_Y =  141;
+
+	const int NEXT_GEN_BLOCK_TEXT_X = 124;
+	const int NEXT_GEN_BLOCK_TEXT_Y = 150;
+	const int NEXT_GEN_BLOCK_VAL_X =  184;
+	const int NEXT_GEN_BLOCK_VAL_Y =  150;
+
+	const int NEXT_GEN_MAX_HP_TEXT_X = 87;
+	const int NEXT_GEN_MAX_HP_TEXT_Y = 161;
+	const int NEXT_GEN_MAX_HP_VAL_X = 149;
+	const int NEXT_GEN_MAX_HP_VAL_Y = 161;
+
 	// Only consider enemies closer than this when rendering on the screen
 	// This distance includes the maximum manhattan distance for an enemy
 	// from the player to the edge of the screen, plus a little bit more
@@ -558,6 +666,7 @@ class Render {
 		void render_town_at_player(BITMAP *destination, int x, int y);
 		void render_stats_screen(BITMAP *destination);
 		void render_hp_exp_bar(BITMAP *destination);
+		void render_death_dialog(BITMAP *destination);
 };
 
 void force_update_screen(void);

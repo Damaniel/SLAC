@@ -5,6 +5,7 @@ void process_inventory_common_tasks(void) ;
 void process_inventory_substate(int key);
 void process_map_substate(int key);
 void process_game_state(int key);
+void process_dead_state(int key);
 
 void process_input(void);
 

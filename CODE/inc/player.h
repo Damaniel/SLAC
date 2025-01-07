@@ -325,6 +325,7 @@ public:
 	void set_hp(int new_hp);
 	Item **get_item_slot_by_type(int type);
 	void recalculate_actual_stats();
+	void get_next_gen_stats();
 	void equip(Item *i);
 	void unequip(Item **i);
 	void dump_stats(Stats *s);

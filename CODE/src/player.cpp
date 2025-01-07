@@ -71,8 +71,12 @@ void Player::init(int x, int y) {
 		potion_effects[i].turns_remaining = 0;
 	}
 
+	init_base_stats();
+	assign_base_stats_to_actual();
+	
 	// Call recalculate_actual_stats to reset all stats and 
 	// apply artifact effects
+	
 
 	effects.auto_identify = false;
 	effects.bragging_rights = false;
@@ -547,7 +551,7 @@ void Player::init_temp_stats(Stats *f, Stats *m) {
 //
 // Returns:
 //   Nothing.
-//------------------------------------------------------------------------------q
+//------------------------------------------------------------------------------
 void Player::recalculate_actual_stats(void) {
 	Stats fixed;
 	Stats multiplicative;
@@ -618,6 +622,38 @@ void Player::recalculate_actual_stats(void) {
 	//dump_stats(&actual);
 
 	//std::cout << "Finished" << std::endl;
+}
+
+//------------------------------------------------------------------------------
+// A subset of recalculate_stats - this one ignores all equipment and potions,
+// and only adds up the total stats provided by artifacts.  This is used
+// to show on the death screen
+// 
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing.
+//
+// Notes:
+//   This overwrites the current player's actual stats, but since the player is
+//   dead and will be reinitialized anyway, that's fine.
+//------------------------------------------------------------------------------
+void Player::get_next_gen_stats() {
+	Stats fixed;
+	Stats multiplicative;
+
+	// Assign the base stat values to the actual stats
+	assign_base_stats_to_actual();
+
+	// reset the two temporary stat tables
+	init_temp_stats(&fixed, &multiplicative);
+
+	// Apply all of the artifact effects for each quantity of collected artifact
+	apply_artifact_mods(&fixed, &multiplicative);
+
+	// Add all of the fixed/mutiplicative increases to the actual stats
+	apply_stats_to_actual(&fixed, &multiplicative);
 }
 
 //------------------------------------------------------------------------------

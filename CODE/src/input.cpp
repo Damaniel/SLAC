@@ -234,6 +234,27 @@ void process_stats_substate(int key) {
 }
 
 //----------------------------------------------------------------------------
+// Handles all input for the dead state
+//
+// Arguments:
+//   key - the key that was pressed
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void process_dead_state(int key) {
+    // The only key that does anything is Enter.   When pressed,
+    // create a new player with the appropriate base stats, reset everything,
+    // and restart in town
+    switch (key) {
+        case KEY_ENTER:
+            g_state_flags.exit_game = true;
+            // do stuff here then change state back to in game
+            break;
+    } 
+}
+
+//----------------------------------------------------------------------------
 // Handles all input for the main game state, plus any current substate
 //
 // Arguments:
@@ -260,8 +281,7 @@ void process_game_state(int key) {
             switch (key) {
                 case KEY_ENTER:
                     g_state_flags.cur_substate = GAME_SUBSTATE_DEFAULT;
-                    g_state_flags.exit_game = true;
-                    //change_state(STATE_DEAD);
+                    change_state(STATE_DEAD);
                     break;
             }
             break;
@@ -398,6 +418,9 @@ void process_input(void) {
     switch(g_state_flags.cur_state) {
         case STATE_MAIN_GAME:
             process_game_state(key);
+            break;
+        case STATE_DEAD:
+            process_dead_state(key);
             break;
     }
 }

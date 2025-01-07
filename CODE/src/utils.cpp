@@ -330,6 +330,39 @@ void update_main_game_display(void) {
 }
 
 //------------------------------------------------------------------------------
+// Updates the main display for the dead state
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void update_dead_display(void) {
+	// The screen is static, so we only set the one flag to update the
+	// screen, once, before the player presses Enter to restart
+	if (g_state_flags.update_display == true) {
+		// Redraw all the UI elements, text log, maze, etc
+		// (by setting the appropriate flags and calling update_main_display())
+		g_state_flags.update_maze_area = true;
+		g_state_flags.update_status_dialog = true;
+		g_state_flags.update_status_hp_exp = true;
+		g_state_flags.update_text_dialog = true;
+		update_main_game_display();
+
+		// Set the stats to be displayed in the dialog
+		// (Note: this overwrites the current player's stats, but they're dead,
+		// so that's fine.)
+		g_player.get_next_gen_stats();
+
+		// Draw the death dialog
+		g_render.render_death_dialog(g_back_buffer);
+
+		g_state_flags.update_display = false;
+	}
+}
+
+//------------------------------------------------------------------------------
 // Updates the main display for the current state
 //
 // Arguments:
@@ -342,6 +375,9 @@ void update_display(void) {
 	switch (g_state_flags.cur_state) {
 		case STATE_MAIN_GAME:
 			update_main_game_display();
+			break;
+		case STATE_DEAD:
+			update_dead_display();
 			break;
 	}
 
@@ -674,6 +710,10 @@ void change_state(int new_state) {
 			g_state_flags.in_museum = false;
 			initialize_main_game_state();
 			break;
+		case STATE_DEAD:
+			g_state_flags.update_display = true;
+			// TODO - figure out what needs to be done for this state
+			break;
     }
 }
 
@@ -809,7 +849,7 @@ void perform_inventory_menu_action(void) {
 					perform_identification_action(i, true);
 				if (g_identified_scrolls[i->get_id()] == false && i->get_item_class() == ItemConsts::SCROLL_CLASS)
 					perform_identification_action(i, true);
-					
+
 				// Use the item.  Take one from the stack, or delete the item if there was only 1
 				i->use();
 				i->adjust_quantity(-1);
@@ -1585,8 +1625,9 @@ void process_enemy_item_drop(Enemy *e) {
 //   present)
 //----------------------------------------------------------------------------
 void process_move(std::pair<int, int> proposed_location) {
-	if (g_state_flags.in_dungeon)
+	if (g_state_flags.in_dungeon) {
 		process_dungeon_move(proposed_location);
+	}
 	else {
 		if (g_state_flags.in_weapon_shop || g_state_flags.in_item_shop || g_state_flags.in_museum) 
 			process_shop_move(proposed_location);
