@@ -1958,6 +1958,11 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 		//std::cout << "process_move: performing action " << (i+1) << "..." << std::endl;
 		int act = actions[i].first;
 		int target = actions[i].second;
+
+		// Break out of the actions queue if the player is dead
+		if (!g_player.is_alive)
+			break;
+
 		// If non-deferred, add speed
 		if (act == UtilConsts::ACTION_PLAYER) {
 			g_player.set_action_residual(g_player.get_action_residual() + (int)g_player.actual.spd);
@@ -2060,7 +2065,7 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 	// becomes zero, send the player to town
 	if (g_player.recall_active && g_state_flags.in_dungeon) {
 		--g_player.recall_count;
-		if (g_player.recall_count <= 0) {
+		if (g_player.recall_count <= 0 && g_player.is_alive) {
 			g_text_log.put_line("The magical energy whisks you away!");
 			exit_dungeon(true);
 		}
