@@ -127,24 +127,25 @@ std::pair<int, int> DungeonFloor::get_random_position_for_enemy() {
 //	 None
 //
 // Returns:
-//   the index of the boss on the floor if it's alive, -1 otherwise
+//   the enemy id of the boss on the floor if it's alive, -1 otherwise
 //------------------------------------------------------------------------------
 int DungeonFloor::is_boss_alive_here() {
 	if (maze_id == DUSTY_TUNNELS && depth == 25 && !g_game_flags.has_defeated_bosses[EnemyConsts::PRANG_WAR_ELEPHANT])
-		return EnemyConsts::PRANG_WAR_ELEPHANT;
+		return EnemyConsts::ID_PRANG_WAR_ELEPHANT;
 	else if (maze_id == DUSTY_TUNNELS && depth == 50 && !g_game_flags.has_defeated_bosses[EnemyConsts::STEENKEY_ELDER_NAGA])
-		return EnemyConsts::STEENKEY_ELDER_NAGA;
+		return EnemyConsts::ID_STEENKEY_ELDER_NAGA;
 	else if (maze_id == MARBLE_HALLS && depth == 50 && !g_game_flags.has_defeated_bosses[EnemyConsts::NAMELESS_BLACK_ORC])
-		return EnemyConsts::NAMELESS_BLACK_ORC;		
+		return EnemyConsts::ID_NAMELESS_BLACK_ORC;		
 	else if (maze_id == MARBLE_HALLS && depth == 100 && !g_game_flags.has_defeated_bosses[EnemyConsts::GROZ_GOBLIN_KING])
-		return EnemyConsts::GROZ_GOBLIN_KING;
+		return EnemyConsts::ID_GROZ_GOBLIN_KING;
 	else if (maze_id == CRYSTAL_DEPTHS && depth == 50 && !g_game_flags.has_defeated_bosses[EnemyConsts::LORTROX_DRAGON_KNIGHT])
-		return EnemyConsts::LORTROX_DRAGON_KNIGHT;
+		return EnemyConsts::ID_LORTROX_DRAGON_KNIGHT;
 	else if (maze_id == CRYSTAL_DEPTHS && depth == 100 && !g_game_flags.has_defeated_bosses[EnemyConsts::SILANT_ICE_GIANT])
-		return EnemyConsts::SILANT_ICE_GIANT;
+		return EnemyConsts::ID_SILANT_ICE_GIANT;
 	else if (maze_id == CRYSTAL_DEPTHS && depth == 150 && !g_game_flags.has_defeated_bosses[EnemyConsts::MEGALITH_ARMORED_BEAST])
-		return EnemyConsts::MEGALITH_ARMORED_BEAST;
+		return EnemyConsts::ID_MEGALITH_ARMORED_BEAST;
 
+	// None of these are true, return -1
 	return -1;
 
 }
@@ -160,53 +161,11 @@ int DungeonFloor::is_boss_alive_here() {
 //------------------------------------------------------------------------------
 void DungeonFloor::spawn_boss_if_valid() {
 	Enemy *e;
-	bool generated = false;
 	int boss_id = is_boss_alive_here();
 
-	// Check to see if we need to add a boss
-	if (boss_id == EnemyConsts::PRANG_WAR_ELEPHANT) {
-		e = EnemyGenerator::generate_arbitrary(EnemyConsts::ID_PRANG_WAR_ELEPHANT);
-		generated = true;
-	}
-
-	// Steenkey, Elder Naga
-	else if (boss_id == EnemyConsts::STEENKEY_ELDER_NAGA) {
-		e = EnemyGenerator::generate_arbitrary(EnemyConsts::ID_STEENKEY_ELDER_NAGA);
-		generated = true;
-	}
-
-	// Nameless, Black Orc
-	else if (boss_id == EnemyConsts::NAMELESS_BLACK_ORC) {
-		e = EnemyGenerator::generate_arbitrary(EnemyConsts::ID_NAMELESS_BLACK_ORC);
-		generated = true;
-	}
-
-	// Groz, Goblin King
-	else if (boss_id == EnemyConsts::GROZ_GOBLIN_KING) {
-		e = EnemyGenerator::generate_arbitrary(EnemyConsts::ID_GROZ_GOBLIN_KING);
-		generated = true;
-	}
-
-	// Lortrox, Dragon Knight
-	else if (boss_id == EnemyConsts::LORTROX_DRAGON_KNIGHT) {
-		e = EnemyGenerator::generate_arbitrary(EnemyConsts::ID_LORTROX_DRAGON_KNIGHT);
-		generated = true;
-	}
-
-	// Silant, Ice Giant
-	else if (boss_id == EnemyConsts::SILANT_ICE_GIANT) {
-		e = EnemyGenerator::generate_arbitrary(EnemyConsts::ID_SILANT_ICE_GIANT);
-		generated = true;
-	}
-
-	// Megalith, Armored Beast
-	else if (boss_id == EnemyConsts::MEGALITH_ARMORED_BEAST) {
-		e = EnemyGenerator::generate_arbitrary(EnemyConsts::ID_MEGALITH_ARMORED_BEAST);
-		generated = true;
-	}
-
-	// If we're adding a boss, do it.
-	if (generated) {
+	// If a boss is here (and alive), generate it
+	if (boss_id != -1) {
+		e = EnemyGenerator::generate_arbitrary(boss_id);
 		std::pair<int, int> pos = get_random_position_for_enemy();
 		add_enemy(pos.first, pos.second, e);
 	}
@@ -1049,14 +1008,18 @@ void use_stairs(int x, int y) {
 	    if (stairs == MazeConsts::STAIRS_DOWN) {
 			// If the player is on a boss floor and the boss hasn't been
 			// defeated, don't let the player go downstairs
-
-
-			if (g_state_flags.in_dungeon)
+			if(g_dungeon.is_boss_alive_here() != -1) {
+				g_text_log.put_line("The stairs are blocked. A powerful foe must be defeated first.");
+				g_state_flags.update_text_dialog = true;
+				g_state_flags.update_display = true;
+				return;
+			}
+			else {
 				depth = g_dungeon.depth + 1;
-			else
-		        depth = 1;
-        	if (depth > g_dungeon.max_depth)
+			}
+        	if (depth > g_dungeon.max_depth) {
 	            depth = g_dungeon.max_depth;
+			}
 	    }
 
 		// If the stairs are up stairs, move up.  If on the first
@@ -2122,6 +2085,7 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 						}
 						g_player.apply_experience(exp);
 						process_enemy_item_drop(to_attack);
+						mark_boss_as_defeated(to_attack->get_id());
 					}
 				}
     			else if (g_dungeon.maze->is_carved(x, y)) {
@@ -2196,6 +2160,23 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
     // Tell the game to do the redraw
 	g_state_flags.update_display = true;
 } 
+
+//----------------------------------------------------------------------------
+// If the enemy ID corresponds to a boss, mark that boss as defeated
+//
+// Arguments:
+//   id - the enemy ID to check
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void mark_boss_as_defeated(int id) {
+	if (id >= EnemyConsts::BOSS_INDEX_OFFSET) {
+		// A boss was defeated
+		int boss_defeated = id - EnemyConsts::BOSS_INDEX_OFFSET;
+		g_game_flags.has_defeated_bosses[boss_defeated] = true;
+	}
+}
 
 //----------------------------------------------------------------------------
 // Resets the game flags structure

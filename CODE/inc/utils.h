@@ -179,6 +179,9 @@ void scramble_scroll_icons(void);
 int roll_from_pool(const int *pool, int pool_size, int max_val);
 void process_enemy_item_drop(Enemy *e);
 
+// Miscellaneous enemy functions
+void mark_boss_as_defeated(int id);
+
 // Player stat calculation functions
 void apply_modifier_value(ModifierMagType m, float *fixed, float *multiplicative, std::vector<ModifierMagType> &mods);
 void apply_single_modifier(ModifierMagType m, Stats *fixed, Stats *multiplicative, std::vector<ModifierMagType> &mods);
