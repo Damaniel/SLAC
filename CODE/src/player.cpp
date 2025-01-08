@@ -379,6 +379,7 @@ void Player::unequip(Item **slot) {
 //   Nothing.
 //------------------------------------------------------------------------------
 void Player::assign_base_stats_to_actual(void) {
+	actual.acc = base.acc;
 	actual.apt = base.apt;
 	actual.atk = base.atk;
 	actual.block = base.block;
@@ -417,6 +418,7 @@ void Player::assign_base_stats_to_actual(void) {
 //------------------------------------------------------------------------------
 void Player::apply_stats_to_actual(Stats *fixed, Stats *multiplicative) {
 	// Additive first
+	actual.acc += fixed->acc;
 	actual.apt += fixed->apt;
 	actual.atk += fixed->atk;
 	actual.block += fixed->block;
@@ -442,6 +444,7 @@ void Player::apply_stats_to_actual(Stats *fixed, Stats *multiplicative) {
 	actual.str += fixed->str;
 
 	// // Then multiplicative
+	actual.acc = actual.acc * multiplicative->acc;
 	actual.apt = actual.apt * multiplicative->apt;
 	actual.atk = actual.atk * multiplicative->atk;
 	actual.block = actual.block * multiplicative->block;	
@@ -493,6 +496,7 @@ void Player::apply_stats_to_actual(Stats *fixed, Stats *multiplicative) {
 //------------------------------------------------------------------------------
 void Player::init_temp_stats(Stats *f, Stats *m) {
 
+	f->acc = 0;
 	f->apt = 0;
 	f->atk = 0;
 	f->block = 0;
@@ -517,6 +521,7 @@ void Player::init_temp_stats(Stats *f, Stats *m) {
 	f->max_i_def = 0;
 	f->max_l_def = 0;
 
+	m->acc = 1.0;
 	m->apt = 1.0;
 	m->atk = 1.0;
 	m->block = 1.0;
@@ -696,6 +701,7 @@ void Player::level_up() {
 	base.atk = PlayerConsts::g_player_base_stats[level - 1].atk;
 	base.def = PlayerConsts::g_player_base_stats[level - 1].def;
 	base.spd = PlayerConsts::g_player_base_stats[level - 1].spd;
+	base.acc = PlayerConsts::g_player_base_stats[level - 1].acc;
 
 	recalculate_actual_stats();
 	
@@ -744,6 +750,7 @@ void Player::init_base_stats() {
 	base.atk = PlayerConsts::g_player_base_stats[0].atk;
 	base.def = PlayerConsts::g_player_base_stats[0].def;
 	base.spd = PlayerConsts::g_player_base_stats[0].spd;
+	base.acc = PlayerConsts::g_player_base_stats[0].acc;
 	base.f_def = 0;
 	base.i_def = 0;
 	base.l_def = 0;
@@ -787,7 +794,7 @@ void Player::apply_artifact_mods(Stats *fixed, Stats *multiplicative) {
     fixed->dex += g_active_artifacts[2];    // Sign of Dexterity
     fixed->atk += g_active_artifacts[3];    // Sign of Attack
     fixed->def += g_active_artifacts[4];    // Sign of Defense
-    // Sign of accuracy currently does nothing
+    fixed->acc += g_active_artifacts[5];	// Sign of Accuracy
     fixed->spd += g_active_artifacts[6];    // Sign of Speed
     
     fixed->str += (g_active_artifacts[7] * 2);    // Medal of Strength
@@ -795,7 +802,7 @@ void Player::apply_artifact_mods(Stats *fixed, Stats *multiplicative) {
     fixed->dex += (g_active_artifacts[9] * 2);    // Medal of Dexterity
     fixed->atk += (g_active_artifacts[10] * 2);   // Medal of Attack
     fixed->def += (g_active_artifacts[11] * 2);   // Medal of Defense
-    // Medal of accuracy currently does nothing
+	fixed->acc += (g_active_artifacts[12] * 2);   // Medal of Accuracy
     fixed->spd += (g_active_artifacts[13] * 2);   // Medal of Speed
 
     fixed->str += (g_active_artifacts[14] * 3);   // Trophy of Strength
@@ -803,7 +810,7 @@ void Player::apply_artifact_mods(Stats *fixed, Stats *multiplicative) {
     fixed->dex += (g_active_artifacts[16] * 3);   // Trophy of Dexterity
     fixed->atk += (g_active_artifacts[17] * 3);   // Trophy of Attack
     fixed->def += (g_active_artifacts[18] * 3);   // Trophy of Defense
-    // Trophy of accuracy currently does nothing
+	fixed->acc += (g_active_artifacts[19] * 3);   // Trophy of Accuracy
     fixed->spd += (g_active_artifacts[20] * 3);   // Trophy of Speed
 
     fixed->f_def += g_active_artifacts[21];         // Ward of Fire
@@ -1186,6 +1193,7 @@ void Player::dump_stats(Stats *s) {
 	std::cout << "DEX    : " << s->dex << std::endl;
 	std::cout << "ATK    : " << s->atk << std::endl;
 	std::cout << "DEF    : " << s->def << std::endl;
+	std::cout << "ACC    : " << s->acc << std::endl;
 	std::cout << "SPD    : " << s->spd << std::endl;
 	std::cout << "FDef   : " << s->f_def << std::endl;
 	std::cout << "IDef   : " << s->i_def << std::endl;
