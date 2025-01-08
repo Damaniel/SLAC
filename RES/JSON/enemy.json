@@ -306,7 +306,7 @@
                 "max_items": 1
             },
             "putrid_pup": {
-                "id": 0,
+                "id": 12,
                 "name": "putrid pup",
                 "bid": 0,
                 "gid": 12,
@@ -3779,7 +3779,7 @@
                 "max_items": 1
             },
             "mossy_crab": {
-                "id": 162,
+                "id": 163,
                 "name": "mossy crab",
                 "bid": 0,
                 "gid": 162,
@@ -4099,6 +4099,29 @@
                 "ilevel": 89,
                 "rarity": 255,
                 "max_items": 3
+            },
+            "gelatinous_cube": {
+                "id": 177,
+                "name": "gelatinous cube",
+                "bid": 0,
+                "gid": 177,
+                "hp": 1100,
+                "str": 250,
+                "spd": 70,
+                "atk": 250,
+                "def": 220,
+                "apt": 1,
+                "f_atk": 0,
+                "i_atk": 0,
+                "l_atk": 0,
+                "f_def": 0,
+                "i_def": 0,
+                "l_def": 0,
+                "exp": 1110,
+                "elevel": 89,
+                "ilevel": 89,
+                "rarity": 255,
+                "max_items": 1
             },
             "cyclops_warrior": {
                 "id": 178,

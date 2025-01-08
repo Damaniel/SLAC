@@ -677,7 +677,11 @@ void Player::apply_experience(int quantity) {
 	//std::cout << "exp = " << exp << ", next level = " << PlayerConsts::g_player_exp_table[level] << std::endl;
 	// Check the total experience to the table and level up if ready
 	if (exp >= PlayerConsts::g_player_exp_table[level]) {
-		level_up();
+		// while unlikely, it's possible that the player killed something that
+		// would give them more than one level.  If so, burn through until
+		// we've reached the appropriate level
+		while (exp >= PlayerConsts::g_player_exp_table[level]) 
+			level_up();
 	}
 }
 
@@ -1226,8 +1230,11 @@ void Player::dump_stats(Stats *s) {
 //   Nothing.  The enemy and player health will be adjusted accordingly
 //----------------------------------------------------------------------------
 void perform_player_combat(Enemy *target) {
-	for (int attack = 0; attack < g_player.actual.apt; ++attack) {
+	int total_damage_from_all_attacks = 0;
+	char text[80];
 
+	for (int attack = 0; attack < g_player.actual.apt; ++attack) {
+		g_text_log.put_line("You attack the " + target->get_name() + "!");
 		// Calculate physical base damage
 		int base_physical_damage = (int)((g_player.actual.atk + (0.2 * g_player.actual.str)) * ((rand() % 50) + 75) / 100);
 		//std::cout << "perform_player_combat: player base phys = " << base_physical_damage << std::endl;
@@ -1296,14 +1303,11 @@ void perform_player_combat(Enemy *target) {
 			total_damage_taken = total_damage_taken * 2;
 		}
 
-		// Subtract enemy HP
-		target->set_hp(target->get_hp() - total_damage_taken);
-
-		// Log the damage done to the game log
-		//std::cout << "perform_player_combat: enemy takes " << total_damage_taken << " damage." << std::endl;
-		//std::cout << "  perform_player_combat: enemy hp remaining = " << target->get_hp() << std::endl;
-		char text[80];
 		sprintf(text, "The %s takes %d damage!", target->get_name().c_str(), total_damage_taken);
 		g_text_log.put_line(text);
+		total_damage_from_all_attacks += total_damage_taken;
 	}
+	
+	// Subtract enemy HP
+	target->set_hp(target->get_hp() - total_damage_from_all_attacks);
 }

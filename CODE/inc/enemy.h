@@ -26,6 +26,13 @@ namespace EnemyConsts {
     // Every index >= this is considered a boss, and is spawned uniquely
     const int BOSS_INDEX_OFFSET = 200;
 
+    const int ID_PRANG_WAR_ELEPHANT = 200;
+    const int ID_STEENKEY_ELDER_NAGA = 201;
+    const int ID_NAMELESS_BLACK_ORC = 202;
+    const int ID_GROZ_GOBLIN_KING = 203;
+    const int ID_LORTROX_DRAGON_KNIGHT = 204;
+    const int ID_SILANT_ICE_GIANT = 205;
+    const int ID_MEGALITH_ARMORED_BEAST = 206;
 }
 
 typedef struct {

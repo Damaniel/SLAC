@@ -97,6 +97,15 @@ void DungeonFloor::generate_enemies(int min_enemies, int max_enemies) {
 	spawn_boss_if_valid();
 }
 
+//------------------------------------------------------------------------------
+// Returns a random location suitable for the placement of an enemy
+//
+// Arguments:
+//	 None
+//
+// Returns:
+//   A pair of ints containing the x,y location to place the enemy
+//------------------------------------------------------------------------------
 std::pair<int, int> DungeonFloor::get_random_position_for_enemy() {
 	do {
 		int x = rand() % maze->get_width();
@@ -111,12 +120,68 @@ std::pair<int, int> DungeonFloor::get_random_position_for_enemy() {
 	} while (true);
 }
 
+//------------------------------------------------------------------------------
+// Spawns a boss on the current floor if conditions are met
+//
+// Arguments:
+//	 None
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
 void DungeonFloor::spawn_boss_if_valid() {
-	// For each of the 7 bosses, spawn it if
-	//   - we're in the correct dungeon
-	//   - we're on the correct floor
-	//   - the boss hasn't already been defeated
+	Enemy *e;
+	bool generated = false;
 
+	// Check to see if we need to add a boss
+
+	// Prang, War Elephant
+	if (maze_id == DUSTY_TUNNELS && depth == 1 && !g_game_flags.has_defeated_bosses[EnemyConsts::PRANG_WAR_ELEPHANT]) {
+		e = EnemyGenerator::generate_arbitrary(EnemyConsts::ID_PRANG_WAR_ELEPHANT);
+		generated = true;
+	}
+
+	// Steenkey, Elder Naga
+	else if (maze_id == DUSTY_TUNNELS && depth == 50 && !g_game_flags.has_defeated_bosses[EnemyConsts::STEENKEY_ELDER_NAGA]) {
+		e = EnemyGenerator::generate_arbitrary(EnemyConsts::ID_STEENKEY_ELDER_NAGA);
+		generated = true;
+	}
+
+	// Nameless, Black Orc
+	else if (maze_id == MARBLE_HALLS && depth == 50 && !g_game_flags.has_defeated_bosses[EnemyConsts::NAMELESS_BLACK_ORC]) {
+		e = EnemyGenerator::generate_arbitrary(EnemyConsts::ID_NAMELESS_BLACK_ORC);
+		generated = true;
+	}
+
+	// Groz, Goblin King
+	else if (maze_id == MARBLE_HALLS && depth == 100 && !g_game_flags.has_defeated_bosses[EnemyConsts::GROZ_GOBLIN_KING]) {
+		e = EnemyGenerator::generate_arbitrary(EnemyConsts::ID_GROZ_GOBLIN_KING);
+		generated = true;
+	}
+
+	// Lortrox, Dragon Knight
+	else if (maze_id == CRYSTAL_DEPTHS && depth == 50 && !g_game_flags.has_defeated_bosses[EnemyConsts::LORTROX_DRAGON_KNIGHT]) {
+		e = EnemyGenerator::generate_arbitrary(EnemyConsts::ID_LORTROX_DRAGON_KNIGHT);
+		generated = true;
+	}
+
+	// Silant, Ice Giant
+	else if (maze_id == CRYSTAL_DEPTHS && depth == 100 && !g_game_flags.has_defeated_bosses[EnemyConsts::SILANT_ICE_GIANT]) {
+		e = EnemyGenerator::generate_arbitrary(EnemyConsts::ID_SILANT_ICE_GIANT);
+		generated = true;
+	}
+
+	// Megalith, Armored Beast
+	else if (maze_id == CRYSTAL_DEPTHS && depth == 150 && !g_game_flags.has_defeated_bosses[EnemyConsts::MEGALITH_ARMORED_BEAST]) {
+		e = EnemyGenerator::generate_arbitrary(EnemyConsts::ID_MEGALITH_ARMORED_BEAST);
+		generated = true;
+	}
+
+	// If we're adding a boss, do it.
+	if (generated) {
+		std::pair<int, int> pos = get_random_position_for_enemy();
+		add_enemy(pos.first, pos.second, e);
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -2007,7 +2072,6 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 				else if (is_enemy_here(g_dungeon.enemies, x, y)) {
 					Enemy *to_attack = get_enemy_at(g_dungeon.enemies, x, y);
 					// Do attack stuff
-					g_text_log.put_line("You attack the " + to_attack->get_name() + "!");
 					perform_player_combat(to_attack);
 					if (to_attack->get_hp() <= 0) {
 						to_attack->mark_alive_status(false);

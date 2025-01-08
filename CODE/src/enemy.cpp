@@ -357,7 +357,7 @@ Enemy* EnemyGenerator::generate(int elevel) {
 	do {
 	    id = (rand() % (pool_max - pool_min)) + pool_min;
 	} while (id >= EnemyConsts::BOSS_INDEX_OFFSET);
-	
+
     // Initialize the enemy with the appropriate stats (mainly HP) for the selected enemy
     e->init(id);
 
@@ -658,7 +658,6 @@ void perform_enemy_action(Enemy *e) {
 	// and should attack the player
 	//std::cout << "perform_enemy_action: abs(px-x) = " << abs(px-x) << ", abs(py-y) = " << abs(py-y) << std::endl;
 	if (abs(px-x) <= 1 && abs(py-y) <= 1) {
-		g_text_log.put_line("The " + e->get_name() + " attacks you!");
 		perform_enemy_combat(e);
 		return;
 	}
@@ -755,7 +754,10 @@ void perform_enemy_action(Enemy *e) {
 //   Nothing.  The enemy and player health will be adjusted accordingly
 //----------------------------------------------------------------------------
 void perform_enemy_combat(Enemy *e) {
+	int total_damage_for_all_attacks = 0;
+
 	for (int attack = 0; attack < e->get_apt(); ++attack) {
+		g_text_log.put_line("The " + e->get_name() + " attacks you!");
 		// Calculate physical base damage
 		int base_physical_damage = (int)((e->get_atk() + (0.2 * e->get_str())) * ((rand() % 50) + 75) / 100);
 		//std::cout << "perform_enemy_combat: enemy base phys = " << base_physical_damage << std::endl;
@@ -852,8 +854,10 @@ void perform_enemy_combat(Enemy *e) {
 		sprintf(text, "You take %d damage!", total_damage_taken);
 		g_text_log.put_line(text);
 		
-		// Subtract player HP (and do the stuff related to that)
-		g_player.set_hp(g_player.hp - total_damage_taken);
-
+		total_damage_for_all_attacks += total_damage_taken;
 	}
+
+	// Subtract player HP (and do the stuff related to that)
+	g_player.set_hp(g_player.hp - total_damage_for_all_attacks);
+
 }
