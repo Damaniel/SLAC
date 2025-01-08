@@ -88,24 +88,34 @@ void DungeonFloor::generate_enemies(int min_enemies, int max_enemies) {
 	//        - Mark done with iteration
 	
 	int num_enemies = (rand() % (max_enemies - min_enemies)) + min_enemies;
-	bool is_placed;
 	for (int i = 0; i < num_enemies; ++i) {
-		is_placed = false;
-		do {
-			int x = rand() % maze->get_width();
-			int y = rand() % maze->get_height();
-			// Only place an enemy on a carved square with no stairs
-			if (maze->is_carved(x, y) && maze->stairs_here(x, y) == MazeConsts::NO_STAIRS) {
-				// Check to see if this space is already taken by an enemy
-				if (true) {
-					// If not, create one and put it here
-					Enemy *e = EnemyGenerator::generate(ilevel);
-					add_enemy(x, y, e);
-					is_placed = true;
-				}
-			}
-		} while (!is_placed);
+		std::pair<int, int> pos = get_random_position_for_enemy();
+		Enemy *e = EnemyGenerator::generate(ilevel);
+		add_enemy(pos.first, pos.second, e);
 	}
+
+	spawn_boss_if_valid();
+}
+
+std::pair<int, int> DungeonFloor::get_random_position_for_enemy() {
+	do {
+		int x = rand() % maze->get_width();
+		int y = rand() % maze->get_height();
+		// Only place an enemy on a carved square with no stairs
+		if (maze->is_carved(x, y) && maze->stairs_here(x, y) == MazeConsts::NO_STAIRS) {
+			// Check to see if this space is already taken by an enemy
+			if (!is_enemy_here(enemies, x, y)) {
+				return std::make_pair(x, y);
+			}
+		}
+	} while (true);
+}
+
+void DungeonFloor::spawn_boss_if_valid() {
+	// For each of the 7 bosses, spawn it if
+	//   - we're in the correct dungeon
+	//   - we're on the correct floor
+	//   - the boss hasn't already been defeated
 
 }
 

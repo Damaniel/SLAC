@@ -10,6 +10,22 @@ namespace EnemyConsts {
     // capped at 0 and 100 at each end.
     const float MIN_ELEVEL_RANGE = 0.5;
     const float MAX_ELEVEL_RANGE = 1.2;
+
+    // The 'bosses'.  They're specifically generated on key floors if they haven't
+    // already been defeated
+    enum {
+        PRANG_WAR_ELEPHANT,         // Floor 25, Dusty Tunnels
+        STEENKEY_ELDER_NAGA,        // Floor 50, Dusty Tunnels
+        NAMELESS_BLACK_ORC,         // Floor 50, Marble Halls
+        GROZ_GOBLIN_KING,           // Floor 100, Marble Halls
+        LORTROX_DRAGON_KNIGHT,      // Floor 50, Crystal Depths
+        SILANT_ICE_GIANT,           // Floor 100, Crystal Depths
+        MEGALITH_ARMORED_BEAST      // Floor 150, Crystal Depths
+    };
+
+    // Every index >= this is considered a boss, and is spawned uniquely
+    const int BOSS_INDEX_OFFSET = 200;
+
 }
 
 typedef struct {

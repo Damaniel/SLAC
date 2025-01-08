@@ -24,11 +24,13 @@ struct DungeonFloor {
     void clear_lists();
     void add_enemy(int x, int y, Enemy *e);
 	void generate_enemies(int min_enemies, int max_enemies);
+    void spawn_boss_if_valid();
 	void add_item(int x, int y, Item *i);
 	void generate_items(int min_items, int max_items);
 	std::list<Item *> get_items_at(int x, int y);
 	void remove_item_from_end_at(int x, int y);
 	int get_num_items_at(int x, int y);
+    std::pair<int, int> get_random_position_for_enemy();
 };
 
 namespace UtilConsts {

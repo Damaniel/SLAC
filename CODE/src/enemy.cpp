@@ -352,8 +352,12 @@ Enemy* EnemyGenerator::generate(int elevel) {
     // corresponding to valid enemies
     int pool_min = elevel_low * 2;
     int pool_max = elevel_high * 2;
-    id = (rand() % (pool_max - pool_min)) + pool_min;
 
+	// The bosses are unique, so if we roll one from the pool, repeat until we get one that isn't
+	do {
+	    id = (rand() % (pool_max - pool_min)) + pool_min;
+	} while (id >= EnemyConsts::BOSS_INDEX_OFFSET);
+	
     // Initialize the enemy with the appropriate stats (mainly HP) for the selected enemy
     e->init(id);
 

@@ -48,75 +48,104 @@ GameFlags      g_game_flags;
 Render         g_render;
 DungeonFloor   g_dungeon;
 
-//----------------------------------------------------------------------------------
-// MAIN
+//----------------------------------------------------------------------------
+// Does required startup tasks (init/load graphics, set graphics mode,
+// set game flags)
 //
-// Notes:
-//   Most of the code in here is just testing stuff.  There's no official game
-//   loop of any kind yet, and stuff in here is subject to change and/or removal.
-//----------------------------------------------------------------------------------
-int main(void) {
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void init_game() {
+	// Set up the RNG
 	srand(time(NULL));
 
-	std::cout << "Loading game..." << std::endl;
-
+	// Initialize graphics and input subsystem
 	allegro_init();
 	install_timer();
 	install_keyboard();
 
+	// Set graphics mode
 	int mode_result = set_gfx_mode(GFX_MODEX, 320, 240, 320, 640);
 	if (mode_result != 0) {
 		set_gfx_mode(GFX_TEXT, 80, 25, 0, 0);
 		printf("Unable to set graphics mode!\n");
+		shut_down_game();
+		exit(1);
 	}
-
 	clear(screen);
 	
+	// Load the graphics datafile
 	int res_result = load_resources();
 	if(res_result != 0) {
-		printf("Failure while loading resources!\n");
-		return 1;
+		printf("Failure while loading graphics data!\n");
+		shut_down_game();
+		exit(1);
 	}
+
+	// Initializes some extra graphics stuff (the map bitmap, the palette,
+	// etc)
 	init_resources(g_render);
-	reset_game_flags();
 	
+	// Reset the global game flags
+	reset_game_flags();
+
 	// Null out the inventory
 	g_inventory = NULL;
 
 	// Create the player	
 	g_player = Player();
 
-	// Loop until done.  Right now, 'done' = pressing Esc
+	// Make the game loop until 'done' (right now, mainly by pressing ESC)
 	g_state_flags.exit_game = false;
+}
 
+//----------------------------------------------------------------------------
+// Does cleanup on game exit (deallocates resources, resets video mode, etc)
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void shut_down_game() {
+	// Delete the inventory and all items in it
+	if (g_inventory != NULL)
+		delete g_inventory;
+
+	// Delete the maze
+	if (g_dungeon.maze != NULL)
+		delete g_dungeon.maze;
+	
+	// Delete all items/enemies that were associated with the maze
+	g_dungeon.clear_lists();
+	
+	// Unload graphics and reset the video mode
+	unload_resources();
+	set_gfx_mode(GFX_TEXT, 80, 25, 0, 0);
+}
+
+//----------------------------------------------------------------------------------
+// MAIN
+//----------------------------------------------------------------------------------
+int main(void) {
+
+	std::cout << "Loading game..." << std::endl;
+
+	init_game();
 	change_state(STATE_MAIN_GAME);
-
-	//std::cout << "State initialized" << std::endl;
 
 	// Main game loop
 	do {
-		// Handle all input
 		process_input();
-
-		// update the display
 		if (g_state_flags.update_display == true) {
 			update_display();					
 		}
 	} while (g_state_flags.exit_game == false);
 
-	//std::cout << "main: deleting inventory" << std::endl;
-	delete g_inventory;
-
-	//std::cout << "main: deleting maze" << std::endl;
-	if (g_dungeon.maze != NULL) {
-		delete g_dungeon.maze;
-	}
-	
-	//std::cout << "main: clearing remaining items/enemies" << std::endl;
-	g_dungeon.clear_lists();
-	
-	unload_resources();
-	set_gfx_mode(GFX_TEXT, 80, 25, 0, 0);
-
+	shut_down_game();
 	return 0;
 }

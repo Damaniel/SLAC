@@ -63,4 +63,7 @@ enum {
 const int g_max_dungeon_depths[3] = {50, 100, 150};
 const int g_dungeon_sizes[3] = {48, 48, 64};
 
+void init_game();
+void shut_down_game();
+
 #endif
