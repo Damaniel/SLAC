@@ -31,6 +31,7 @@ struct DungeonFloor {
 	void remove_item_from_end_at(int x, int y);
 	int get_num_items_at(int x, int y);
     std::pair<int, int> get_random_position_for_enemy();
+    int is_boss_alive_here();
 };
 
 namespace UtilConsts {
