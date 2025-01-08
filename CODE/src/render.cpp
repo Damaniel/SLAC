@@ -1140,7 +1140,7 @@ void Render::render_stats_screen(BITMAP *destination) {
 	render_text(destination, "FDmg:", UiConsts::STATS_FDMG_TEXT_X, UiConsts::STATS_FDMG_TEXT_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_LEFT_JUSTIFIED);
-	sprintf(text, "%.0f%%", (g_player.actual.f_dmg * 100));
+	sprintf(text, "%d%%", (int)(g_player.actual.f_dmg * 100));
 	render_text(destination, text, UiConsts::STATS_FDMG_VAL_X, UiConsts::STATS_FDMG_VAL_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_RIGHT_JUSTIFIED);
@@ -1149,7 +1149,7 @@ void Render::render_stats_screen(BITMAP *destination) {
 	render_text(destination, "IDmg:", UiConsts::STATS_IDMG_TEXT_X, UiConsts::STATS_IDMG_TEXT_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_LEFT_JUSTIFIED);
-	sprintf(text, "%.0f%%", (g_player.actual.i_dmg * 100));
+	sprintf(text, "%d%%", (int)(g_player.actual.i_dmg * 100));
 	render_text(destination, text, UiConsts::STATS_IDMG_VAL_X, UiConsts::STATS_IDMG_VAL_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_RIGHT_JUSTIFIED);
@@ -1158,7 +1158,7 @@ void Render::render_stats_screen(BITMAP *destination) {
 	render_text(destination, "LDmg:", UiConsts::STATS_LDMG_TEXT_X, UiConsts::STATS_LDMG_TEXT_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_LEFT_JUSTIFIED);
-	sprintf(text, "%.0f%%", (g_player.actual.l_dmg * 100));
+	sprintf(text, "%d%%", (int)(g_player.actual.l_dmg * 100));
 	render_text(destination, text, UiConsts::STATS_LDMG_VAL_X, UiConsts::STATS_LDMG_VAL_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_RIGHT_JUSTIFIED);
@@ -1167,7 +1167,7 @@ void Render::render_stats_screen(BITMAP *destination) {
 	render_text(destination, "ADmg:", UiConsts::STATS_ADMG_TEXT_X, UiConsts::STATS_ADMG_TEXT_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_LEFT_JUSTIFIED);
-	sprintf(text, "%.0f%%", (g_player.actual.a_dmg * 100));
+	sprintf(text, "%d%%", (int)(g_player.actual.a_dmg * 100));
 	render_text(destination, text, UiConsts::STATS_ADMG_VAL_X, UiConsts::STATS_ADMG_VAL_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_RIGHT_JUSTIFIED);
@@ -1616,7 +1616,7 @@ void Render::render_death_dialog(BITMAP *destination) {
 	render_text(destination, "FDmg:", UiConsts::NEXT_GEN_FDMG_TEXT_X, UiConsts::NEXT_GEN_FDMG_TEXT_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_LEFT_JUSTIFIED);
-	sprintf(text, "%d%%", (int)g_player.actual.f_dmg);
+	sprintf(text, "%d%%", (int)(g_player.actual.f_dmg * 100));
 	render_text(destination, text, UiConsts::NEXT_GEN_FDMG_VAL_X, UiConsts::NEXT_GEN_FDMG_VAL_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_RIGHT_JUSTIFIED);
@@ -1625,7 +1625,7 @@ void Render::render_death_dialog(BITMAP *destination) {
 	render_text(destination, "IDmg:", UiConsts::NEXT_GEN_IDMG_TEXT_X, UiConsts::NEXT_GEN_IDMG_TEXT_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_LEFT_JUSTIFIED);
-	sprintf(text, "%d%%", (int)g_player.actual.i_dmg);
+	sprintf(text, "%d%%", (int)(g_player.actual.i_dmg * 100));
 	render_text(destination, text, UiConsts::NEXT_GEN_IDMG_VAL_X, UiConsts::NEXT_GEN_IDMG_VAL_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_RIGHT_JUSTIFIED);
@@ -1634,7 +1634,7 @@ void Render::render_death_dialog(BITMAP *destination) {
 	render_text(destination, "LDmg:", UiConsts::NEXT_GEN_LDMG_TEXT_X, UiConsts::NEXT_GEN_LDMG_TEXT_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_LEFT_JUSTIFIED);
-	sprintf(text, "%d%%", (int)g_player.actual.l_dmg);
+	sprintf(text, "%d%%", (int)(g_player.actual.l_dmg * 100));
 	render_text(destination, text, UiConsts::NEXT_GEN_LDMG_VAL_X, UiConsts::NEXT_GEN_LDMG_VAL_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_RIGHT_JUSTIFIED);
@@ -1643,7 +1643,7 @@ void Render::render_death_dialog(BITMAP *destination) {
 	render_text(destination, "ADmg:", UiConsts::NEXT_GEN_ADMG_TEXT_X, UiConsts::NEXT_GEN_ADMG_TEXT_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_LEFT_JUSTIFIED);
-	sprintf(text, "%d%%", (int)g_player.actual.a_dmg);
+	sprintf(text, "%d%%", (int)(g_player.actual.a_dmg * 100));
 	render_text(destination, text, UiConsts::NEXT_GEN_ADMG_VAL_X, UiConsts::NEXT_GEN_ADMG_VAL_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_RIGHT_JUSTIFIED);
