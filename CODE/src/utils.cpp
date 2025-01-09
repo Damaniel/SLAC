@@ -1751,25 +1751,25 @@ void process_orb_logic(void) {
 	bool log;
 	// Warn when 50% of the allowed moves are gone
 	if (g_game_flags.orb_countdown_timer == UtilFlags::ORB_COUNTDOWN_TIME / 2) {
-		g_text_log.put_line("The soul orb starts to vibrate in your hands.");
+		g_text_log.put_line("The Soul Orb starts to vibrate in your hands.");
 		log = true;
 	}
 
 	// Warn again if 75% of the allowed moves are gone
 	if (g_game_flags.orb_countdown_timer == UtilFlags::ORB_COUNTDOWN_TIME / 4) {
-		g_text_log.put_line("The soul orb starts to vibrate more intensely.");
+		g_text_log.put_line("The Soul Orb starts to vibrate more intensely.");
 		log = true;
 	}
 
 	// Warn one last time when 90% of the allowed moves are gone
 	if (g_game_flags.orb_countdown_timer == UtilFlags::ORB_COUNTDOWN_TIME / 10 ) {
-		g_text_log.put_line("The soul orb begins to shake violently!");
+		g_text_log.put_line("The Soul Orb begins to shake violently!");
 		log = true;
 	}
 
 	// If the timer gets to zero, respawn the boss
 	if (g_game_flags.orb_countdown_timer == 0) {
-		g_text_log.put_line("The soul orb shatters in your hand!");
+		g_text_log.put_line("The Soul Orb shatters in your hand!");
 		g_text_log.put_line("The screams of the newly revived Megalith reverberate deep below.");
 		g_game_flags.has_received_orb = false;
 		g_game_flags.has_defeated_bosses[EnemyConsts::MEGALITH_ARMORED_BEAST] = false;
