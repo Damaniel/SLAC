@@ -1785,6 +1785,7 @@ void check_for_active_area(int x, int y) {
 			force_update_screen();
 		}
 	}
+
 }
 
 //----------------------------------------------------------------------------
@@ -1845,6 +1846,53 @@ void process_shop_move(std::pair<int, int> proposed_location) {
 }
 
 //----------------------------------------------------------------------------
+// Processes gate logic (unlocking if necessary, displaying a message)
+//
+// Arguments:
+//	 x, y - the position to check
+//
+// Returns:
+//   Nothing.
+//----------------------------------------------------------------------------
+void check_and_process_gates(int x, int y) {
+	bool log = false;
+
+	// Marble Halls
+	if (x == TownConsts::MARBLE_HALLS_GATE_X && y == TownConsts::MARBLE_HALLS_GATE_Y) {
+		if (g_game_flags.can_enter_marble_halls) {
+			if (!g_game_flags.has_unlocked_marble_halls) {
+				g_text_log.put_line("You place the marble key in the lock.  The gate disappears.");
+				unlock_dungeon(MARBLE_HALLS);
+				log = true;
+			}
+		}
+		else {
+			g_text_log.put_line("The gate is firmly locked.  You must need some kind of key.");
+		}
+	}
+
+	// Crystal Depths
+	if (x == TownConsts::CRYSTAL_DEPTHS_GATE_X && y == TownConsts::CRYSTAL_DEPTHS_GATE_Y) {
+		if (g_game_flags.can_enter_crystal_depths) {
+			if (!g_game_flags.has_unlocked_crystal_depths) {
+				g_text_log.put_line("You place the crystal key in the lock.  The gate disappears.");
+				unlock_dungeon(CRYSTAL_DEPTHS);
+				log = true;
+			}
+		}
+		else {
+			g_text_log.put_line("The gate is firmly locked.  You must need some kind of key.");
+		}
+	}
+
+	if (log) {
+		g_state_flags.update_text_dialog = true;
+		g_state_flags.update_display = true;
+	}
+
+}
+
+//----------------------------------------------------------------------------
 // Processes the proposed movement of the player and any enemies within
 // range of the player while in town
 //
@@ -1870,6 +1918,8 @@ void process_town_move(std::pair<int, int> proposed_location) {
 		// Check to see if the obstruction is a NPC.  If so,
 		// get their text and put it in the log
 		check_and_process_npc_here(x, y);
+		// If not a NPC, check to see if it's a locked gate
+		check_and_process_gates(x, y);
 	}
 
 	// Check to see if the new position corresponds to a shop,
@@ -2175,6 +2225,34 @@ void mark_boss_as_defeated(int id) {
 		// A boss was defeated
 		int boss_defeated = id - EnemyConsts::BOSS_INDEX_OFFSET;
 		g_game_flags.has_defeated_bosses[boss_defeated] = true;
+
+		// If Steenkey was defeated, allow the opening of Marble Halls
+		if (boss_defeated == EnemyConsts::STEENKEY_ELDER_NAGA) {
+			g_game_flags.can_enter_marble_halls = true;
+			g_text_log.put_line("As Steenkey falls, you see a marble key near its body.");
+			g_text_log.put_line("You pick the key up and put it in your pocket.");
+			g_state_flags.update_text_dialog = true;
+			g_state_flags.update_display = true;
+		}
+
+		// If Groz was defeated, allow the opening of Crystal Depths
+		if (boss_defeated == EnemyConsts::GROZ_GOBLIN_KING) {
+			g_game_flags.can_enter_crystal_depths = true;
+			g_text_log.put_line("As Groz falls, you see a crystal key near his body.");
+			g_text_log.put_line("You pick the key up and put it in your pocket.");
+			g_state_flags.update_text_dialog = true;
+			g_state_flags.update_display = true;			
+		}
+
+		// If Megalith was defeated, mark the game as completed
+		if (boss_defeated == EnemyConsts::MEGALITH_ARMORED_BEAST) {
+			g_game_flags.has_finished_game = true;
+			g_text_log.put_line("As Megalith collapses to the ground, you see a glowing orb near his body.");
+			g_text_log.put_line("You hold it aloft, staring at the mysterious glow.");
+			g_text_log.put_line("Perhaps you should return this to town...");
+			g_state_flags.update_text_dialog = true;
+			g_state_flags.update_display = true;			
+		}
 	}
 }
 
@@ -2191,6 +2269,8 @@ void reset_game_flags() {
 	g_game_flags.generation = 0;
 	g_game_flags.can_enter_marble_halls = false;
 	g_game_flags.can_enter_crystal_depths = false;
+	g_game_flags.has_unlocked_marble_halls = false;
+	g_game_flags.has_unlocked_crystal_depths = false;
 	g_game_flags.has_finished_game = false;
 	for (int i = 0; i < UtilConsts::NUM_BOSSES; ++i)
 		g_game_flags.has_defeated_bosses[i] = false;

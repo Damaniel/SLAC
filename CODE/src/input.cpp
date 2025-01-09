@@ -338,12 +338,11 @@ void process_game_state(int key) {
                     }
                     break;
                 case KEY_H:
-                    g_game_flags.can_enter_crystal_depths = true;
-                    g_game_flags.can_enter_marble_halls = true;
-                    // g_player.actual.max_hp = 10000;
-                    // g_player.hp = 10000;
-                    // g_player.actual.atk = 255;
-                    unlock_dungeons();
+                    // Give myself stupidly high stats
+                    g_player.hp = 10000;
+                    g_player.actual.max_hp = 10000;
+                    g_player.actual.atk = 255;
+                    g_player.actual.str = 255;
                     break;
                 case KEY_I:
                     // Reset the cursor position to the top left

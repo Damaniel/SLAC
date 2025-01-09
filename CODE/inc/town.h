@@ -92,6 +92,6 @@ void check_and_process_npc_here(int x, int y);
 void check_and_process_town_entrances(int x, int y);
 void check_for_active_area(int x, int y);
 void enter_dungeon(int floor);
-void unlock_dungeons(void);
+void unlock_dungeon(int dungeon);
 
 #endif

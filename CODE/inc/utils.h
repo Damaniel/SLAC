@@ -139,6 +139,8 @@ struct StateFlags {
 struct GameFlags {
 	bool can_enter_marble_halls;
 	bool can_enter_crystal_depths;
+    bool has_unlocked_marble_halls;
+    bool has_unlocked_crystal_depths;
     bool has_defeated_bosses[UtilConsts::NUM_BOSSES];
     bool has_finished_game;
     unsigned int elapsed_time;
@@ -201,5 +203,7 @@ void process_move(std::pair<int, int> proposed_location);
 void process_town_move(std::pair<int, int> proposed_location);
 void process_shop_move(std::pair<int, int> proposed_location);
 void process_dungeon_move(std::pair<int, int> proposed_location);
+void check_and_process_gates(int x, int y);
+void check_for_active_area(int x, int y);
 
 #endif
