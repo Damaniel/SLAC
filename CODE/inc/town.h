@@ -84,6 +84,11 @@ namespace TownConsts {
     const int MUSEUM_EXIT_X = 10;
     const int MUSEUM_EXIT_Y = 22;
 
+    // The square corresponding to the location where the soul
+    // orb must be taken
+    const int END_GAME_LOC_X = 2;
+    const int END_GAME_LOC_Y = 40;
+    
     // The tile id to draw when a gate is open
     const int UNLOCKED_GATE_TILE = 40;
 }

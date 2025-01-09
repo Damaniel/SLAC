@@ -1728,6 +1728,58 @@ void process_move(std::pair<int, int> proposed_location) {
 
 	// subtract a turn from any active potions
 	g_player.decrement_potion_turn_count();
+
+	// If the player has the soul orb, decrement the counter.  If it reaches zero,
+	// inform the player and reset the boss
+	if (g_game_flags.has_received_orb)
+		process_orb_logic();
+}
+
+//----------------------------------------------------------------------------
+// Handles the behavior of the soul orb when the player has it and makes a 
+// move
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void process_orb_logic(void) {
+	g_game_flags.orb_countdown_timer -= 1;
+
+	bool log;
+	// Warn when 50% of the allowed moves are gone
+	if (g_game_flags.orb_countdown_timer == UtilFlags::ORB_COUNTDOWN_TIME / 2) {
+		g_text_log.put_line("The soul orb starts to vibrate in your hands.");
+		log = true;
+	}
+
+	// Warn again if 75% of the allowed moves are gone
+	if (g_game_flags.orb_countdown_timer == UtilFlags::ORB_COUNTDOWN_TIME / 4) {
+		g_text_log.put_line("The soul orb starts to vibrate more intensely.");
+		log = true;
+	}
+
+	// Warn one last time when 90% of the allowed moves are gone
+	if (g_game_flags.orb_countdown_timer == UtilFlags::ORB_COUNTDOWN_TIME / 10 ) {
+		g_text_log.put_line("The soul orb begins to shake violently!");
+		log = true;
+	}
+
+	// If the timer gets to zero, respawn the boss
+	if (g_game_flags.orb_countdown_timer == 0) {
+		g_text_log.put_line("The soul orb shatters in your hand!");
+		g_text_log.put_line("The screams of the newly revived Megalith reverberate deep below.");
+		g_game_flags.has_received_orb = false;
+		g_game_flags.has_defeated_bosses[EnemyConsts::MEGALITH_ARMORED_BEAST] = false;
+		log = true;
+	}
+
+	if (log) {
+		g_state_flags.update_text_dialog = true;
+		g_state_flags.update_display = true;
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -1893,6 +1945,25 @@ void check_and_process_gates(int x, int y) {
 }
 
 //----------------------------------------------------------------------------
+// Processes endgame logic (checking to see if the orb is in the right place)
+// Arguments:
+//	 x, y - the position to check
+//
+// Returns:
+//   Nothing.
+//----------------------------------------------------------------------------
+void check_and_process_endgame(int x, int y) {
+	if (x == TownConsts::END_GAME_LOC_X && y == TownConsts::END_GAME_LOC_Y) {
+		g_text_log.put_line("As you reach the tomb, you pull the lid back, throw the orb in, and close it quickly.");
+		g_text_log.put_line("A beam of light shoots to the heavens and then all falls silent.  The soul of");
+		g_text_log.put_line("Megalith has been sealed away -- hopefully forever!");
+		g_text_log.put_line("        --  You have finished the game!  Press ENTER to continue.  -- "); 
+		g_game_flags.has_finished_game = true;
+		// change_state(SOME_STATE_OR_OTHER)
+	}
+}
+
+//----------------------------------------------------------------------------
 // Processes the proposed movement of the player and any enemies within
 // range of the player while in town
 //
@@ -1920,6 +1991,8 @@ void process_town_move(std::pair<int, int> proposed_location) {
 		check_and_process_npc_here(x, y);
 		// If not a NPC, check to see if it's a locked gate
 		check_and_process_gates(x, y);
+		if (g_game_flags.has_received_orb)
+			check_and_process_endgame(x, y);
 	}
 
 	// Check to see if the new position corresponds to a shop,
@@ -2246,10 +2319,11 @@ void mark_boss_as_defeated(int id) {
 
 		// If Megalith was defeated, mark the game as completed
 		if (boss_defeated == EnemyConsts::MEGALITH_ARMORED_BEAST) {
-			g_game_flags.has_finished_game = true;
+			g_game_flags.has_received_orb = true;
+			g_game_flags.orb_countdown_timer = UtilConsts::ORB_COUNTDOWN_TIME;
 			g_text_log.put_line("As Megalith collapses to the ground, you see a glowing orb near his body.");
-			g_text_log.put_line("You hold it aloft, staring at the mysterious glow.");
-			g_text_log.put_line("Perhaps you should return this to town...");
+			g_text_log.put_line("You hold it aloft, staring at the mysterious glow. You hear it whisper:");
+			g_text_log.put_line("'Return me to where the blood flows among the dead.  Quickly!'");
 			g_state_flags.update_text_dialog = true;
 			g_state_flags.update_display = true;			
 		}
@@ -2272,6 +2346,8 @@ void reset_game_flags() {
 	g_game_flags.has_unlocked_marble_halls = false;
 	g_game_flags.has_unlocked_crystal_depths = false;
 	g_game_flags.has_finished_game = false;
+	g_game_flags.has_received_orb = false;
+	g_game_flags.orb_countdown_timer = 0;
 	for (int i = 0; i < UtilConsts::NUM_BOSSES; ++i)
 		g_game_flags.has_defeated_bosses[i] = false;
 }

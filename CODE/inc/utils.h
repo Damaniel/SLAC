@@ -71,6 +71,10 @@ namespace UtilConsts {
 
     // The number of bosses in the game; used for game flags
     const int NUM_BOSSES = 7;
+
+    // The number of turns the player has to return Megalith's Soul Orb
+    const int ORB_COUNTDOWN_TIME = 1000;
+
 }
 
 // A collection of flags relevant to the game loop.  The game loop will want
@@ -142,6 +146,8 @@ struct GameFlags {
     bool has_unlocked_marble_halls;
     bool has_unlocked_crystal_depths;
     bool has_defeated_bosses[UtilConsts::NUM_BOSSES];
+    bool has_received_orb;
+    int  orb_countdown_timer;
     bool has_finished_game;
     unsigned int elapsed_time;
     int generation;           // The current generation of player
@@ -205,5 +211,7 @@ void process_shop_move(std::pair<int, int> proposed_location);
 void process_dungeon_move(std::pair<int, int> proposed_location);
 void check_and_process_gates(int x, int y);
 void check_for_active_area(int x, int y);
+void process_orb_logic(void);
+void check_and_process_endgame(int x, int y);
 
 #endif

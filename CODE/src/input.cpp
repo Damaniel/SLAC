@@ -338,11 +338,8 @@ void process_game_state(int key) {
                     }
                     break;
                 case KEY_H:
-                    // Give myself stupidly high stats
-                    g_player.hp = 10000;
-                    g_player.actual.max_hp = 10000;
-                    g_player.actual.atk = 255;
-                    g_player.actual.str = 255;
+                    g_game_flags.has_received_orb = true;
+                    g_game_flags.orb_countdown_timer = 1000;
                     break;
                 case KEY_I:
                     // Reset the cursor position to the top left

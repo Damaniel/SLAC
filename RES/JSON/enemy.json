@@ -721,7 +721,7 @@
             },
             "antman": {
                 "id": 30,
-                "name": "New Enemy",
+                "name": "antman",
                 "bid": 0,
                 "gid": 30,
                 "hp": 95,
