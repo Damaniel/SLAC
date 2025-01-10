@@ -52,7 +52,10 @@ int write_initial_header(FILE *f) {
 //   Number of bytes written to the file
 //----------------------------------------------------------------------------
 int write_player_data(FILE *f) {
+    int bytes_written = 0;
     fprintf(f, "PLAY");
+    bytes_written += 4;
+
     // Get and write up to the first 16 characters of the name, then pad
     // with nulls if there's space left
     int len = g_player.name.length();
@@ -63,6 +66,8 @@ int write_player_data(FILE *f) {
         fputc(name[i], f);
     for (int i = 0; i < 16 - len; i++)
         fputc(0x00, f);
+    bytes_written += 16;
+
     // Write the rest of the non stat data
     fwrite(&(g_player.hp), sizeof(short), 1, f);
     fwrite(&(g_player.level), sizeof(short), 1, f);
@@ -70,23 +75,28 @@ int write_player_data(FILE *f) {
     fwrite(&(g_player.exp), sizeof(int), 1, f);
     fwrite(&(g_player.is_poisoned), sizeof(bool), 1, f);
     fwrite(&(g_player.is_equip_poisoned), sizeof(bool), 1, f);
+    bytes_written += 14;
 
     // Write the potion effects
     for (int i = 0; i < ItemConsts::NUM_TURN_POTION_EFFECTS; ++i) {
         fwrite(&(g_player.potion_effects[i].enabled), sizeof(bool), 1, f);
         fwrite(&(g_player.potion_effects[i].turns_remaining), sizeof(char), 1, f);
+        bytes_written += 2;
     }
 
     // Write the base stats
     fwrite(&(g_player.base), sizeof(Stats), 1, f);
+    bytes_written += sizeof(Stats);
 
     // Write the actual stats
     fwrite(&(g_player.actual), sizeof(Stats), 1, f);
+    bytes_written += sizeof(Stats);
 
     // Write the recall and effect flags
     fwrite(&(g_player.recall_active), sizeof(bool), 1, f);
     fwrite(&(g_player.recall_floor), sizeof(int), 1, f);
     fwrite(&(g_player.effects), sizeof(ArtifactEffectFlags), 1, f);
+    bytes_written += (5 + sizeof(ArtifactEffectFlags));
 
     // Iterate through and determine which inventory slots have any equipped gear
     // Write those slot numbers (or -1) for each slot
@@ -101,7 +111,9 @@ int write_player_data(FILE *f) {
     slot[7] = g_inventory->get_slot_of_item(g_player.equipment.shield);
     slot[8] = g_inventory->get_slot_of_item(g_player.equipment.weapon);
     fwrite(slot, sizeof(int), 9, f);
-    return 0;
+    bytes_written += 36;
+
+    return bytes_written;
 }
 
 //----------------------------------------------------------------------------
@@ -127,7 +139,11 @@ int write_inventory_data(FILE *f) {
 //   Number of bytes written to the file
 //----------------------------------------------------------------------------
 int write_artifact_data(FILE *f) {
-    return 0;
+    fprintf(f, "ARTI");
+    fwrite(g_collected_artifacts, sizeof(short), NUM_ARTIFACTS, f);
+    fwrite(g_active_artifacts, sizeof(short), NUM_ARTIFACTS, f);
+
+    return (2 * sizeof(short) * NUM_ARTIFACTS) + 4;
 }
 
 //----------------------------------------------------------------------------
@@ -140,7 +156,15 @@ int write_artifact_data(FILE *f) {
 //   Number of bytes written to the file
 //----------------------------------------------------------------------------
 int write_dungeon_data(FILE *f) {
-    return 0;
+    fprintf(f, "DUNG");
+    fwrite(&(g_dungeon.maze_id), sizeof(int), 1, f);
+    fwrite(&(g_dungeon.depth), sizeof(int), 1, f);
+    fwrite(&(g_dungeon.max_depth), sizeof(int), 1, f);
+    fwrite(&(g_dungeon.ilevel), sizeof(int), 1, f);
+    fwrite(&(g_dungeon.width), sizeof(int), 1, f);
+    fwrite(&(g_dungeon.height), sizeof(int), 1, f);
+
+    return 24;
 }
 
 //----------------------------------------------------------------------------
@@ -153,7 +177,12 @@ int write_dungeon_data(FILE *f) {
 //   Number of bytes written to the file
 //----------------------------------------------------------------------------
 int write_game_flags(FILE *f) {
-    return 0;
+    fprintf(f, "FLAG");
+    fwrite(&(g_state_flags.text_log_extended), sizeof(bool), 1, f);
+    fwrite(&(g_state_flags.in_dungeon), sizeof(bool), 1, f);
+    fwrite(&(g_game_flags), sizeof(GameFlags), 1, f);
+
+    return 2 + sizeof(GameFlags);
 }
 
 //----------------------------------------------------------------------------
@@ -166,7 +195,12 @@ int write_game_flags(FILE *f) {
 //   Number of bytes written to the file
 //----------------------------------------------------------------------------
 int write_potion_scramble_data(FILE *f) {
-    return 0;
+    fprintf(f, "POTS");
+    for (int i=0; i < g_scrambled_potion_icons.size(); ++i) {
+        fwrite(&(g_scrambled_potion_icons[i]), sizeof(int), 1, f);    
+    }
+
+    return g_scrambled_potion_icons.size() * sizeof(int);
 }
 
 //----------------------------------------------------------------------------
@@ -179,7 +213,12 @@ int write_potion_scramble_data(FILE *f) {
 //   Number of bytes written to the file
 //----------------------------------------------------------------------------
 int write_scroll_scramble_data(FILE *f) {
-    return 0;
+    fprintf(f, "SCRS");
+    for (int i=0; i < g_scrambled_scroll_icons.size(); ++i) {
+        fwrite(&(g_scrambled_scroll_icons[i]), sizeof(int), 1, f);    
+    }
+
+    return g_scrambled_scroll_icons.size() * sizeof(int);
 }
 
 //----------------------------------------------------------------------------
@@ -192,7 +231,13 @@ int write_scroll_scramble_data(FILE *f) {
 //   Number of bytes written to the file
 //----------------------------------------------------------------------------
 int write_identified_potions(FILE *f) {
-    return 0;
+    fprintf(f, "POTI");
+    for (int i=0; i < g_identified_potions.size(); ++i) {
+        bool b = g_identified_potions[i];
+        fwrite(&b, sizeof(bool), 1, f);    
+    }
+
+    return g_identified_potions.size() * sizeof(bool);
 }
 
 //----------------------------------------------------------------------------
@@ -205,7 +250,13 @@ int write_identified_potions(FILE *f) {
 //   Number of bytes written to the file
 //----------------------------------------------------------------------------
 int write_identified_scrolls(FILE *f) {
-    return 0;
+    fprintf(f, "SCRI");
+    for (int i=0; i < g_identified_scrolls.size(); ++i) {
+        bool b = g_identified_scrolls[i];
+        fwrite(&b, sizeof(bool), 1, f);    
+    }
+
+    return g_identified_scrolls.size() * sizeof(bool);
 }
 
 //----------------------------------------------------------------------------
