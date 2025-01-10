@@ -337,7 +337,10 @@ void process_game_state(int key) {
 	        	        g_state_flags.update_display = true;
                     }
                     break;
-                case KEY_H:
+                case KEY_L:
+                    load_game("test.sav");
+                    break;
+                case KEY_S:
                     save_game("test.sav");
                     break;
                 case KEY_I:

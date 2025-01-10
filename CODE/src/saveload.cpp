@@ -34,8 +34,41 @@
 //----------------------------------------------------------------------------
 int write_initial_header(FILE *f) {
     fprintf(f, "SLAC");
-    fputc(0x01, f);
-    for(int i=0; i < 123; ++i)
+    fputc(SaveLoadConsts::FILE_VERSION, f);
+
+    // The file has a known size for each section, so we'll write offsets
+    // with hardcoded values.  If this changes, we'll have to be more
+    // dynamic
+
+    // Player data
+    int offset = SaveLoadConsts::PLAYER_DATA_OFFSET;
+    fwrite(&offset, sizeof(int), 1, f);
+    // Inventory data
+    offset = SaveLoadConsts::INVENTORY_DATA_OFFSET;
+    fwrite(&offset, sizeof(int), 1, f);
+    // Artifact data
+    offset = SaveLoadConsts::ARTIFACT_DATA_OFFSET;
+    fwrite(&offset, sizeof(int), 1, f);
+    // Dungeon data
+    offset = SaveLoadConsts::DUNGEON_DATA_OFFSET;
+    fwrite(&offset, sizeof(int), 1, f);
+    // Game flags
+    offset = SaveLoadConsts::GAME_FLAGS_OFFSET;
+    fwrite(&offset, sizeof(int), 1, f);
+    // Potion scramblings
+    offset = SaveLoadConsts::POTION_SCRAMBLINGS_OFFSET;
+    fwrite(&offset, sizeof(int), 1, f);
+    // scroll scramblings
+    offset = SaveLoadConsts::SCROLL_SCRAMBLINGS_OFFSET;
+    fwrite(&offset, sizeof(int), 1, f);
+    // identified potions
+    offset = SaveLoadConsts::ID_POTIONS_OFFSET;
+    fwrite(&offset, sizeof(int), 1, f);
+    // identified scrolls
+    offset = SaveLoadConsts::ID_SCROLLS_OFFSET;
+    fwrite(&offset, sizeof(int), 1, f);
+    
+    for(int i=0; i < 87; ++i)
         fputc(0x00, f);
 
     // Return the number of bytes we wrote
@@ -126,8 +159,105 @@ int write_player_data(FILE *f) {
 //   Number of bytes written to the file
 //----------------------------------------------------------------------------
 int write_inventory_data(FILE *f) {
-    return 0;
+    int bytes_written = 0;
+    fprintf(f, "ITEM");
+    bytes_written += 4;
+
+    for (int i = 0; i < InventoryConsts::INVENTORY_SIZE; ++i) {
+        Item *cur_item = g_inventory->get_item_in_slot(i);
+        if (cur_item == NULL) {
+            // load dummy data for the item
+            fputc(0x00, f);
+            for(int j = 0; j < 290; j++) {
+                fputc(0x00, f);
+            }
+            bytes_written += 291;
+        }
+        else {
+            fputc(0x01, f);
+            short val = cur_item->get_id();
+            char cval;
+            bool bval;
+            fwrite(&val, sizeof(short), 1, f);
+            val = cur_item->get_quantity();
+            fwrite(&val, sizeof(short), 1, f);
+            
+            // Write the full name
+            std::string strval = cur_item->get_full_name();
+            int len = strval.length();
+            const char *name = strval.c_str();  
+            if (len > 128)
+                len = 128;
+            for (int k = 0; k < len; k++) 
+                fputc(name[k], f);
+            for (int k = 0; k < 128 - len; k++)
+                fputc(0x00, f);
+
+            // Write the description
+            strval = cur_item->get_description();
+            len = strval.length();
+            name = strval.c_str();  
+            if (len > 128)
+                len = 128;
+            for (int k = 0; k < len; k++) 
+                fputc(strval[k], f);
+            for (int k = 0; k < 128 - len; k++)
+                fputc(0x00, f);
+
+            // Write the rest of the data
+            val = cur_item->get_gid();
+            fwrite(&val, sizeof(short), 1, f);
+            val = cur_item->get_type_id();
+            fwrite(&val, sizeof(short), 1, f);
+            cval = cur_item->get_rarity();
+            fwrite(&cval, sizeof(char), 1, f);
+            cval = cur_item->get_ilevel();
+            fwrite(&cval, sizeof(char), 1, f);
+            int ival = cur_item->get_item_class();
+            fwrite(&ival, sizeof(int), 1, f);
+            // Write the base boolean flags
+            bool flags[8];
+            flags[0] = cur_item->can_have_a_prefix();
+            flags[1] = cur_item->can_have_a_suffix();
+            flags[2] = cur_item->can_have_curse();
+            flags[3] = cur_item->can_it_stack();
+            flags[4] = cur_item->can_be_used();
+            flags[5] = cur_item->can_be_dropped();
+            flags[6] = cur_item->can_be_equipped();
+            flags[7] = cur_item->is_it_identified();
+            fwrite(flags, sizeof(bool), 8, f);
+            // Write the prefix and suffix
+            val = (short)(cur_item->get_prefix());
+            fwrite(&val, sizeof(short), 1, f);
+            val = (short)(cur_item->get_suffix());
+            fwrite(&val, sizeof(short), 1, f);
+            // Write the cursed/equipped flags
+            bval = cur_item->is_it_cursed();
+            fwrite(&bval, sizeof(bool), 1, f);
+            bval = cur_item->is_it_equipped();
+            fwrite(&bval, sizeof(bool), 1, f);
+            // Write attack/defense values (or -1 if not the right kind of equipment) 
+            if (cur_item->get_item_class() == ItemConsts::WEAPON_CLASS) {
+                val = (short)(cur_item->get_attack());
+            }
+            else {
+                val = -1;
+            }
+            fwrite(&val, sizeof(short), 1, f);
+            if (cur_item->get_item_class() == ItemConsts::ARMOR_CLASS) {
+                val = (short)(cur_item->get_defense());
+            }
+            else {
+                val = -1;
+            }
+            fwrite(&val, sizeof(short), 1, f);
+            bytes_written += 291;
+        }
+    }
+
+    return bytes_written;
 }
+
 
 //----------------------------------------------------------------------------
 // Writes the artifact data to the save file
@@ -164,7 +294,7 @@ int write_dungeon_data(FILE *f) {
     fwrite(&(g_dungeon.width), sizeof(int), 1, f);
     fwrite(&(g_dungeon.height), sizeof(int), 1, f);
 
-    return 24;
+    return 28;
 }
 
 //----------------------------------------------------------------------------
@@ -182,7 +312,7 @@ int write_game_flags(FILE *f) {
     fwrite(&(g_state_flags.in_dungeon), sizeof(bool), 1, f);
     fwrite(&(g_game_flags), sizeof(GameFlags), 1, f);
 
-    return 2 + sizeof(GameFlags);
+    return 6 + sizeof(GameFlags);
 }
 
 //----------------------------------------------------------------------------
@@ -200,7 +330,7 @@ int write_potion_scramble_data(FILE *f) {
         fwrite(&(g_scrambled_potion_icons[i]), sizeof(int), 1, f);    
     }
 
-    return g_scrambled_potion_icons.size() * sizeof(int);
+    return g_scrambled_potion_icons.size() * sizeof(int) + 4;
 }
 
 //----------------------------------------------------------------------------
@@ -218,7 +348,7 @@ int write_scroll_scramble_data(FILE *f) {
         fwrite(&(g_scrambled_scroll_icons[i]), sizeof(int), 1, f);    
     }
 
-    return g_scrambled_scroll_icons.size() * sizeof(int);
+    return g_scrambled_scroll_icons.size() * sizeof(int) + 4;
 }
 
 //----------------------------------------------------------------------------
@@ -237,7 +367,7 @@ int write_identified_potions(FILE *f) {
         fwrite(&b, sizeof(bool), 1, f);    
     }
 
-    return g_identified_potions.size() * sizeof(bool);
+    return g_identified_potions.size() * sizeof(bool) + 4;
 }
 
 //----------------------------------------------------------------------------
@@ -256,7 +386,7 @@ int write_identified_scrolls(FILE *f) {
         fwrite(&b, sizeof(bool), 1, f);    
     }
 
-    return g_identified_scrolls.size() * sizeof(bool);
+    return g_identified_scrolls.size() * sizeof(bool) + 4;
 }
 
 //----------------------------------------------------------------------------
@@ -269,16 +399,6 @@ int write_identified_scrolls(FILE *f) {
 //   true if the file load was sucessful, false otherwise
 //----------------------------------------------------------------------------
 bool save_game(std::string filename) {
-    // File offsets into the save file
-    int player_data_offset;
-    int inventory_data_offset;
-    int artifact_data_offset;
-    int dungeon_data_offset;
-    int game_flags_offset;
-    int potion_scramble_offset;
-    int scroll_scramble_offset;
-    int identified_potions_offset;
-    int identified_scrolls_offset;
     int bytes_written = 0;
 
     // Open the file
@@ -289,35 +409,25 @@ bool save_game(std::string filename) {
     }
 
     bytes_written += write_initial_header(fp);
-    player_data_offset = bytes_written;
-    
-    bytes_written += write_player_data(fp);
-    inventory_data_offset = bytes_written;
-    
+    std::cout << bytes_written << std::endl;
+    bytes_written += write_player_data(fp); 
+    std::cout << bytes_written << std::endl;
     bytes_written += write_inventory_data(fp);
-    artifact_data_offset = bytes_written;
-
+    std::cout << bytes_written << std::endl;
     bytes_written += write_artifact_data(fp);
-    dungeon_data_offset = bytes_written;
-
+    std::cout << bytes_written << std::endl;
     bytes_written += write_dungeon_data(fp);
-    game_flags_offset = bytes_written;
-
+    std::cout << bytes_written << std::endl;
     bytes_written += write_game_flags(fp);
-    potion_scramble_offset = bytes_written;
-
+    std::cout << bytes_written << std::endl;
     bytes_written += write_potion_scramble_data(fp);
-    scroll_scramble_offset = bytes_written;
-
+    std::cout << bytes_written << std::endl;
     bytes_written += write_scroll_scramble_data(fp);
-    identified_potions_offset = bytes_written;
-
+    std::cout << bytes_written << std::endl;
     bytes_written += write_identified_potions(fp);
-    identified_scrolls_offset = bytes_written;
-
+    std::cout << bytes_written << std::endl;
     bytes_written += write_identified_scrolls(fp);
-
-    // Write the offsets into the header
+    std::cout << bytes_written << std::endl;
 
     // Close the file
     fclose(fp);
@@ -335,5 +445,88 @@ bool save_game(std::string filename) {
 //   true if file load was successful, false otherwise
 //----------------------------------------------------------------------------
 bool load_game(std::string filename) {
+    FILE *fp = fopen(filename.c_str(), "rb");
+    if (fp == NULL) {
+        std::cout << "Unable to open save file for reading!" << std::endl;
+        return false;
+    }
 
+    char magic[4];
+    int idata;
+    short sdata;
+    char cdata;
+    bool bdata;
+    bool result;
+
+    // Load the header and get the offsets
+    fread(magic, sizeof(char), 4, fp);
+    if (magic[0] != 'S' || magic[1] != 'L' || magic[2] != 'A' || magic[3] != 'C') {
+        std::cout << "header magic bad" << std::endl;
+        fclose(fp);
+        return false;
+    }
+    fread(&cdata, sizeof(char), 1, fp);
+    if(cdata != SaveLoadConsts::FILE_VERSION) {
+        std::cout << "header version bad" << std::endl;
+        fclose(fp);
+        return false;
+    }
+
+    // Load the player data
+    result = read_player_data(fp, SaveLoadConsts::PLAYER_DATA_OFFSET);
+    if (!result) {
+        std::cout << "player data bad" << std::endl;
+        fclose(fp);
+        return false;
+    }
+
+
+    // Load the inventory data
+
+    // Load the artifact data
+
+    // Load the dungeon data
+
+    // Load the game flags
+
+    // Load the potion scramblings
+
+    // Load the scroll scramblings
+
+    // Load the IDed potions
+
+    // Load the IDed scrolls
+
+
+    // Ensure the headers point to the correct sections
+    // fseek(fp, SaveLoadConsts::PLAYER_DATA_OFFSET, SEEK_SET);
+    // fread(magic, sizeof(char), 4, fp);
+    // std::cout << magic << std::endl;
+    // fseek(fp, SaveLoadConsts::INVENTORY_DATA_OFFSET, SEEK_SET);
+    // fread(magic, sizeof(char), 4, fp);
+    // std::cout << magic << std::endl;
+    // fseek(fp, SaveLoadConsts::ARTIFACT_DATA_OFFSET, SEEK_SET);
+    // fread(magic, sizeof(char), 4, fp);
+    // std::cout << magic << std::endl;
+    // fseek(fp, SaveLoadConsts::DUNGEON_DATA_OFFSET, SEEK_SET);
+    // fread(magic, sizeof(char), 4, fp);
+    // std::cout << magic << std::endl;
+    // fseek(fp, SaveLoadConsts::GAME_FLAGS_OFFSET, SEEK_SET);
+    // fread(magic, sizeof(char), 4, fp);
+    // std::cout << magic << std::endl;
+    // fseek(fp, SaveLoadConsts::POTION_SCRAMBLINGS_OFFSET, SEEK_SET);
+    // fread(magic, sizeof(char), 4, fp);
+    // std::cout << magic << std::endl;
+    // fseek(fp, SaveLoadConsts::SCROLL_SCRAMBLINGS_OFFSET, SEEK_SET);
+    // fread(magic, sizeof(char), 4, fp);
+    // std::cout << magic << std::endl;
+    // fseek(fp, SaveLoadConsts::ID_POTIONS_OFFSET, SEEK_SET);
+    // fread(magic, sizeof(char), 4, fp);
+    // std::cout << magic << std::endl;
+    // fseek(fp, SaveLoadConsts::ID_SCROLLS_OFFSET, SEEK_SET);
+    // fread(magic, sizeof(char), 4, fp);
+    // std::cout << magic << std::endl;
+
+    fclose(fp);
+    return true;
 }

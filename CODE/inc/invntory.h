@@ -275,6 +275,8 @@ public:
     unsigned short get_gid() { return gid; }
     unsigned short get_id() { return id; }
     unsigned short get_type_id() { return type_id; }
+    unsigned char get_rarity() { return rarity; }
+    unsigned char get_ilevel() { return ilevel; }
     virtual ~Item() { /*std::cout << "~Item: Deleting item" << std::endl; */ }
 };
 

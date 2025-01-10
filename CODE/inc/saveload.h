@@ -24,6 +24,20 @@
 #ifndef __SAVELOAD_H__
 #define __SAVELOAD_H__
 
+namespace SaveLoadConsts {
+    const int FILE_VERSION = 0x01;
+
+    const int PLAYER_DATA_OFFSET = 128;
+    const int INVENTORY_DATA_OFFSET = 409;
+    const int ARTIFACT_DATA_OFFSET = 14381;
+    const int DUNGEON_DATA_OFFSET = 14665;
+    const int GAME_FLAGS_OFFSET = 14693;
+    const int POTION_SCRAMBLINGS_OFFSET = 14727;
+    const int SCROLL_SCRAMBLINGS_OFFSET = 14771;
+    const int ID_POTIONS_OFFSET = 14819;
+    const int ID_SCROLLS_OFFSET = 14833;
+}
+
 int write_initial_header(FILE *f);
 int write_player_data(FILE *f);
 int write_inventory_data(FILE *f);
