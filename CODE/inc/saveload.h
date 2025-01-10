@@ -27,16 +27,31 @@
 namespace SaveLoadConsts {
     const int FILE_VERSION = 0x01;
 
+    // The save file format uses fixed field sizes for everything
+    // in version 1, so the offsets are fixed and known.
+    // In future versions, if these values need to become dynamic,
+    // they'll cease to be constants.
     const int PLAYER_DATA_OFFSET = 128;
     const int INVENTORY_DATA_OFFSET = 409;
-    const int ARTIFACT_DATA_OFFSET = 14381;
-    const int DUNGEON_DATA_OFFSET = 14665;
-    const int GAME_FLAGS_OFFSET = 14693;
-    const int POTION_SCRAMBLINGS_OFFSET = 14727;
-    const int SCROLL_SCRAMBLINGS_OFFSET = 14771;
-    const int ID_POTIONS_OFFSET = 14819;
-    const int ID_SCROLLS_OFFSET = 14833;
+    const int ARTIFACT_DATA_OFFSET = 14285;
+    const int DUNGEON_DATA_OFFSET = 14569;
+    const int GAME_FLAGS_OFFSET = 14597;
+    const int POTION_SCRAMBLINGS_OFFSET = 14631;
+    const int SCROLL_SCRAMBLINGS_OFFSET = 14675;
+    const int ID_POTIONS_OFFSET = 14723;
+    const int ID_SCROLLS_OFFSET = 14737;
 }
+
+bool process_player_data(FILE *f);
+bool process_inventory_data(FILE *f);
+bool process_artifact_data(FILE *f);
+bool process_dungeon_data(FILE *f);
+bool process_game_flags(FILE *f);
+bool process_potion_scramble_data(FILE *f);
+bool process_scroll_scramble_data(FILE *f);
+bool process_ided_potion_data(FILE *f);
+bool process_ided_scroll_data(FILE *f);
+bool finish_other_load_tasks(void);
 
 int write_initial_header(FILE *f);
 int write_player_data(FILE *f);
