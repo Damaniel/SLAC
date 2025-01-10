@@ -19,7 +19,7 @@ CFLAGS=-O2 -Iinc
 LIBS=-lalleg -lm
 
 TARGET=slac.exe
-OBJS=obj/gen_data.o obj/tiledata.o obj/utils.o obj/town.o obj/textlog.o obj/maze.o obj/render.o obj/player.o obj/enemy.o obj/invntory.o obj/itemgen.o obj/item_use.o obj/input.o obj/main.o 
+OBJS=obj/gen_data.o obj/tiledata.o obj/utils.o obj/town.o obj/textlog.o obj/maze.o obj/render.o obj/player.o obj/enemy.o obj/saveload.o obj/invntory.o obj/itemgen.o obj/item_use.o obj/input.o obj/main.o 
 
 $(TARGET): $(OBJS)
 	$(CC) -o $(TARGET) $(OBJS) $(LIBS)
@@ -30,6 +30,9 @@ prod: $(TARGET)
 
 obj/utils.o: src/utils.cpp inc/globals.h
 	$(CC) -c $(CFLAGS) -o obj/utils.o src/utils.cpp
+
+obj/saveload.o: src/saveload.cpp inc/globals.h
+	$(CC) -c $(CFLAGS) -o obj/saveload.o src/saveload.cpp
 
 obj/town.o: src/town.cpp inc/town.h
 	$(CC) -c $(CFLAGS) -o obj/town.o src/town.cpp

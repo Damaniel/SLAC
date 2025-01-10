@@ -338,8 +338,7 @@ void process_game_state(int key) {
                     }
                     break;
                 case KEY_H:
-                    g_game_flags.has_received_orb = true;
-                    g_game_flags.orb_countdown_timer = 1000;
+                    save_game("test.sav");
                     break;
                 case KEY_I:
                     // Reset the cursor position to the top left

@@ -259,6 +259,26 @@ int Inventory::get_stackable_item_slot(Item *item) {
 }
 
 //----------------------------------------------------------------------------
+// Determines which inventory slot a particular Item * represents
+//
+// Arguments: 
+//   i - the item to check
+//
+// Returns:
+//   The inventory slot number, or -1 if not in the inventory
+//----------------------------------------------------------------------------
+int Inventory::get_slot_of_item(Item *i) {
+    if (i == NULL)
+        return -1;
+
+    for (int idx = 0; idx < InventoryConsts::INVENTORY_SIZE; ++idx) {
+        if (i == inv[idx])
+            return idx;
+    }
+    return -1;
+}
+
+//----------------------------------------------------------------------------
 // Clears an existing item slot (after a transfer to somewhere else)
 //
 // Arguments: 

@@ -1750,19 +1750,19 @@ void process_orb_logic(void) {
 
 	bool log;
 	// Warn when 50% of the allowed moves are gone
-	if (g_game_flags.orb_countdown_timer == UtilFlags::ORB_COUNTDOWN_TIME / 2) {
+	if (g_game_flags.orb_countdown_timer == UtilConsts::ORB_COUNTDOWN_TIME / 2) {
 		g_text_log.put_line("The Soul Orb starts to vibrate in your hands.");
 		log = true;
 	}
 
 	// Warn again if 75% of the allowed moves are gone
-	if (g_game_flags.orb_countdown_timer == UtilFlags::ORB_COUNTDOWN_TIME / 4) {
+	if (g_game_flags.orb_countdown_timer == UtilConsts::ORB_COUNTDOWN_TIME / 4) {
 		g_text_log.put_line("The Soul Orb starts to vibrate more intensely.");
 		log = true;
 	}
 
 	// Warn one last time when 90% of the allowed moves are gone
-	if (g_game_flags.orb_countdown_timer == UtilFlags::ORB_COUNTDOWN_TIME / 10 ) {
+	if (g_game_flags.orb_countdown_timer == UtilConsts::ORB_COUNTDOWN_TIME / 10 ) {
 		g_text_log.put_line("The Soul Orb begins to shake violently!");
 		log = true;
 	}

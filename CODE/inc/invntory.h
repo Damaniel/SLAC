@@ -486,6 +486,7 @@ public:
     Inventory();
     ~Inventory();
     Item *get_item_in_slot(int slot);
+    int get_slot_of_item(Item *i);
     int add_at_slot(Item *i, int slot);
     int add_at_first_empty(Item *i);
     int get_first_empty_slot();

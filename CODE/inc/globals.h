@@ -56,6 +56,7 @@
 #include "item_use.h"
 #include "maze.h"
 #include "utils.h"
+#include "saveload.h"
 #include "gen_data.h"
 #include "render.h"
 #include "main.h"

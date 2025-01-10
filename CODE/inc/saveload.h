@@ -21,15 +21,21 @@
 //   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //   SOFTWARE.
 //==========================================================================================
-#ifndef __INPUT_H__
-#define __INPUT_H__
+#ifndef __SAVELOAD_H__
+#define __SAVELOAD_H__
 
-void process_inventory_common_tasks(void) ;
-void process_inventory_substate(int key);
-void process_map_substate(int key);
-void process_game_state(int key);
-void process_dead_state(int key);
+int write_initial_header(FILE *f);
+int write_player_data(FILE *f);
+int write_inventory_data(FILE *f);
+int write_artifact_data(FILE *f);
+int write_dungeon_data(FILE *f);
+int write_game_flags(FILE *f);
+int write_potion_scramble_data(FILE *f);
+int write_scroll_scramble_data(FILE *f);
+int write_identified_potions(FILE *f);
+int write_identified_scrolls(FILE *f);
 
-void process_input(void);
+bool load_game(std::string filename);
+bool save_game(std::string filename);
 
 #endif
