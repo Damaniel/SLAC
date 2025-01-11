@@ -78,7 +78,7 @@ bool identify_item(bool log)
     while (count < InventoryConsts::INVENTORY_SIZE) {
         i = g_inventory->get_item_in_slot(count);
         if (i != NULL) {
-            if (!i->is_it_identified()) {
+            if (!i->is_identified) {
                 perform_identification_action(i, log);
                 return true;
             }
@@ -143,8 +143,8 @@ bool decurse_item(bool log)
     while (count < InventoryConsts::INVENTORY_SIZE) {
         i = g_inventory->get_item_in_slot(count);
         if (i != NULL) {
-            if (i->is_it_cursed()) {
-                i->set_curse_state(false);
+            if (i->is_cursed) {
+                i->is_cursed = false;
                 if (log) {
                     sprintf(text, "%s was decursed.", i->get_full_name().c_str());
                     g_text_log.put_line(text);
@@ -442,8 +442,8 @@ bool curse_item(void) {
     while (count < InventoryConsts::INVENTORY_SIZE) {
         i = g_inventory->get_item_in_slot(count);
         if (i != NULL) {
-            if (i->can_have_curse() && !i->is_it_cursed()) {
-                i->set_curse_state(true);
+            if (i->can_be_cursed && !i->is_cursed) {
+                i->is_cursed = true;
                 g_text_log.put_line("Your " + i->get_full_name() + " has been cursed!");
                 return true;
             }

@@ -535,7 +535,7 @@ void Render::render_item_submenu(BITMAP *destination) {
 
 	// The use option
 	int text_color;
-	if (i->can_be_used()) 
+	if (i->can_use) 
 		text_color = FontConsts::FONT_YELLOW;
 	else
 		text_color = FontConsts::FONT_GRAY;
@@ -544,7 +544,7 @@ void Render::render_item_submenu(BITMAP *destination) {
 				FontConsts::TEXT_LEFT_JUSTIFIED);
 
 	// The equip/unequip options
-	if(i->can_be_equipped() && !i->is_it_equipped()) 
+	if(i->can_equip && !i->is_equipped) 
 		text_color = FontConsts::FONT_YELLOW;
 	else
 		text_color = FontConsts::FONT_GRAY;
@@ -553,7 +553,7 @@ void Render::render_item_submenu(BITMAP *destination) {
 				FontConsts::TEXT_LEFT_JUSTIFIED);
 
 	// Allow the item to be unequipped if it's equipped and not cursed
-	if(i->can_be_equipped() && i->is_it_equipped() && !i->is_it_cursed()) 
+	if(i->can_equip && i->is_equipped && !i->is_cursed) 
 		text_color = FontConsts::FONT_YELLOW;
 	else
 		text_color = FontConsts::FONT_GRAY;
@@ -562,15 +562,16 @@ void Render::render_item_submenu(BITMAP *destination) {
 				FontConsts::TEXT_LEFT_JUSTIFIED);	
 
 	// The drop / destroy options
-	if (g_state_flags.in_dungeon && i->can_be_dropped() && !i->is_it_equipped())
+	if (g_state_flags.in_dungeon && i->can_drop && !i->is_equipped)
 		text_color = FontConsts::FONT_YELLOW;
 	else
 		text_color = FontConsts::FONT_GRAY;
 	render_text(destination, "Drop", inv_menu_x + 4, UiConsts::INVENTORY_MENU_Y + 3 + 28, 
 	            text_color, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_LEFT_JUSTIFIED);
+
 	// The drop / destroy options
-	if (i->can_be_dropped() && !i->is_it_equipped())
+	if (i->can_drop && !i->is_equipped)
 		text_color = FontConsts::FONT_YELLOW;
 	else
 		text_color = FontConsts::FONT_GRAY;
@@ -601,14 +602,14 @@ void Render::render_item_submenu(BITMAP *destination) {
 void Render::render_description_fields(BITMAP *destination, Item *it) {
 	char text[24];
 	
-	int item_class = it->get_item_class();
+	int item_class = it->item_class;
 
 	// This value will increment by 10 every time we put a new line on the screen
 	int text_y = UiConsts::INVENTORY_ITEM_NAME_Y + 10;
 
 	// Show quantity for stackable items
-	if (it->can_it_stack()) {
-		sprintf(text, "Quantity: %d", it->get_quantity());
+	if (it->can_stack) {
+		sprintf(text, "Quantity: %d", it->quantity);
 		render_text(destination, text, UiConsts::INVENTORY_ITEM_NAME_X, 
 					text_y, FontConsts::FONT_YELLOW, 
 					FontConsts::FONT_NARROW_PROPORTIONAL, 
@@ -618,7 +619,7 @@ void Render::render_description_fields(BITMAP *destination, Item *it) {
 
 	// Show attack or defense rating for equipment
 	if (item_class == ItemConsts::WEAPON_CLASS) {
-		sprintf(text, "Attack Rating: %d", it->get_attack());
+		sprintf(text, "Attack Rating: %d", it->attack);
 		render_text(destination, text, UiConsts::INVENTORY_ITEM_NAME_X, 
 					text_y, FontConsts::FONT_YELLOW, 
 					FontConsts::FONT_NARROW_PROPORTIONAL, 
@@ -626,7 +627,7 @@ void Render::render_description_fields(BITMAP *destination, Item *it) {
 		text_y += 10;		
 	}
 	else if (item_class == ItemConsts::ARMOR_CLASS) {
-		sprintf(text, "Defense Rating: %d", it->get_defense());
+		sprintf(text, "Defense Rating: %d", it->defense);
 		render_text(destination, text, UiConsts::INVENTORY_ITEM_NAME_X, 
 					text_y, FontConsts::FONT_YELLOW, 
 					FontConsts::FONT_NARROW_PROPORTIONAL, 
@@ -635,14 +636,14 @@ void Render::render_description_fields(BITMAP *destination, Item *it) {
 	}
 
 	// Show description for identified items (or for any artifact)
-	if (item_class == ItemConsts::ARTIFACT_CLASS || (it->is_it_identified() && (item_class == ItemConsts::POTION_CLASS || item_class == ItemConsts::SCROLL_CLASS))) {
-		render_text(destination, (char *)it->get_description().c_str(), UiConsts::INVENTORY_ITEM_NAME_X, 
+	if (item_class == ItemConsts::ARTIFACT_CLASS || (it->is_identified && (item_class == ItemConsts::POTION_CLASS || item_class == ItemConsts::SCROLL_CLASS))) {
+		render_text(destination, (char *)it->description.c_str(), UiConsts::INVENTORY_ITEM_NAME_X, 
 					text_y, FontConsts::FONT_YELLOW, 
 					FontConsts::FONT_NARROW_PROPORTIONAL, 
 					FontConsts::TEXT_LEFT_JUSTIFIED);	
 		text_y += 10;
 	}
-	else if (!it->is_it_identified() && (item_class == ItemConsts::POTION_CLASS || item_class == ItemConsts::SCROLL_CLASS)) {
+	else if (!it->is_identified && (item_class == ItemConsts::POTION_CLASS || item_class == ItemConsts::SCROLL_CLASS)) {
 		render_text(destination, "(This item is unidentified)", UiConsts::INVENTORY_ITEM_NAME_X, 
 					text_y, FontConsts::FONT_YELLOW, 
 					FontConsts::FONT_NARROW_PROPORTIONAL, 
@@ -651,26 +652,26 @@ void Render::render_description_fields(BITMAP *destination, Item *it) {
 	}
 
 	else if (item_class == ItemConsts::WEAPON_CLASS || item_class == ItemConsts::ARMOR_CLASS) {
-		if (it->is_it_identified()) {
+		if (it->is_identified) {
 			std::string description;
-			if (it->get_prefix() != -1) {
-				if (it->is_it_cursed()) {
-					description = g_cursed_item_prefix_ids[it->get_prefix()].description;
+			if (it->prefix_id != -1) {
+				if (it->is_cursed) {
+					description = g_cursed_item_prefix_ids[it->prefix_id].description;
 				}
 				else {
-					description = g_item_prefix_ids[it->get_prefix()].description;
+					description = g_item_prefix_ids[it->prefix_id].description;
 				}
 				render_text(destination, (char *)description.c_str(), UiConsts::INVENTORY_ITEM_NAME_X, 
 							text_y, FontConsts::FONT_YELLOW, 
 							FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);	
 				text_y += 10;
 			}
-			if (it->get_suffix() != -1) {
-				if (it->is_it_cursed()) {
-					description = g_cursed_item_suffix_ids[it->get_suffix()].description;
+			if (it->suffix_id != -1) {
+				if (it->is_cursed) {
+					description = g_cursed_item_suffix_ids[it->suffix_id].description;
 				}
 				else {
-					description = g_item_suffix_ids[it->get_suffix()].description;
+					description = g_item_suffix_ids[it->suffix_id].description;
 				}
 				render_text(destination, (char *)description.c_str(), UiConsts::INVENTORY_ITEM_NAME_X, 
 							text_y, FontConsts::FONT_YELLOW, 
@@ -721,7 +722,7 @@ void Render::render_inventory_content(BITMAP *destination) {
 		 					UiConsts::TILE_PIXEL_WIDTH,
 		 					UiConsts::TILE_PIXEL_HEIGHT);
 				// Draw the equipped icon if the item is equipped
-				if (it->is_it_equipped()) {
+				if (it->is_equipped) {
 					masked_blit((BITMAP *)g_game_data[DAMRL_EQUIPPED].dat,
 								destination,
 								0, 0, 

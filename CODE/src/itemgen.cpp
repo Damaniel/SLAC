@@ -84,30 +84,7 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
 
     generated = false;
 
-    switch (item_type) {
-        case ItemConsts::WEAPON_CLASS:
-            i = new Weapon();
-            break;
-        case ItemConsts::ARMOR_CLASS:
-            i = new Armor();
-            break;
-        case ItemConsts::CURRENCY_CLASS:
-            i = new Currency();
-            break;
-        case ItemConsts::POTION_CLASS:
-            i = new Potion();
-            break;
-        case ItemConsts::SCROLL_CLASS:
-            i = new Scroll();
-            break;
-        case ItemConsts::ARTIFACT_CLASS:
-            i = new Artifact();
-            break;
-        default:
-            std::cout << "Unknown item type!" << std::endl;
-            i = new Weapon();
-            break;
-    }
+    i = new Item(item_type);
 
     attempt = 0;
     
@@ -171,24 +148,24 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
     // (that is, an item with id 0)
     if (generated) {
         // std::cout << "generator: generating the item" << std::endl;
-        i->init(rolled_base_type);
+        i->init(i->item_class, rolled_base_type);
     }
     else {
         // std::cout << "generator: item base roll failed, generating 'default' item" << std::endl;
-        i->init(0);
+        i->init(i->item_class, 0);
     }
         
     // Attempt to apply a curse to items that can be.  This will dictate what kinds of affixes can roll.
-    if (i->can_have_curse()) {
+    if (i->can_be_cursed) {
         ItemGenerator::apply_curse(i, ilevel);
     }
 
     // Attempt to add a prefix or suffix to items that can have them
-    if (i->can_have_a_prefix()) {
+    if (i->can_have_prefix) {
         // std::cout << "generator: attempting to add prefix" << std::endl;
         ItemGenerator::apply_affix(i, ItemConsts::PREFIX_CLASS, ilevel);
     }
-    if (i->can_have_a_suffix()) {
+    if (i->can_have_suffix) {
         // std::cout << "generator: attempting to add suffix" << std::endl;
         ItemGenerator::apply_affix(i, ItemConsts::SUFFIX_CLASS, ilevel);
     }
@@ -196,8 +173,8 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
     // If the item is cursed but didn't get a prefix or a suffix, demote it back to 
     // a non-cursed item (so we don't end up with a cursed item with no adjusted
     // stats)
-    if (i->is_it_cursed() && i->get_prefix() == -1 && i->get_suffix() == -1) {
-        i->set_curse_state(false);
+    if (i->is_cursed && i->prefix_id == -1 && i->suffix_id == -1) {
+        i->is_cursed = false;
     }
 
     // If the item is a potion or scroll and has been previously identified, 
@@ -234,7 +211,7 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
             // std::cout << "generator: ilevel roll attempt " << (attempt + 1) << " of " << MAX_GENERATOR_REROLLS << std::endl;
             // generate the affix
             if (affix_type == ItemConsts::PREFIX_CLASS) {
-                if (i->is_it_cursed()) {
+                if (i->is_cursed) {
                     rolled_affix_type = roll_from_pool(g_cursed_item_prefix_pool, g_cursed_item_prefix_pool_count, g_cursed_item_prefix_pool_entries);
                     base_ilevel = g_cursed_item_prefix_ids[rolled_affix_type].ilevel;
                 }
@@ -244,7 +221,7 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
                 }
             }
             if (affix_type == ItemConsts::SUFFIX_CLASS) {
-                if (i->is_it_cursed()) {
+                if (i->is_cursed) {
                     rolled_affix_type = roll_from_pool(g_cursed_item_suffix_pool, g_cursed_item_suffix_pool_count, g_cursed_item_suffix_pool_entries);
                     base_ilevel = g_cursed_item_suffix_ids[rolled_affix_type].ilevel;
                 }
@@ -285,25 +262,25 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
         if (generated) {
             // std::cout << "generator: applying the affix" << std::endl;
             if (affix_type == ItemConsts::PREFIX_CLASS)
-                i->add_prefix(rolled_affix_type);
+                i->prefix_id = rolled_affix_type;
             if (affix_type == ItemConsts::SUFFIX_CLASS)
-                i->add_suffix(rolled_affix_type);
+                i->suffix_id = rolled_affix_type;
         }
         else {
             // std::cout << "generator: no affix was applied" << std::endl;
             if (affix_type == ItemConsts::PREFIX_CLASS)
-                i->remove_prefix();
+                i->prefix_id = -1;
             if (affix_type == ItemConsts::SUFFIX_CLASS)
-                i->remove_suffix();           
+                i->prefix_id = -1;           
         }
     }
     else
     {
         // std::cout << "generator: 'apply affix' roll failed, no affix was applied" << std::endl;
         if (affix_type == ItemConsts::PREFIX_CLASS)
-            i->remove_prefix();
+            i->prefix_id = -1;
         if (affix_type == ItemConsts::SUFFIX_CLASS)
-            i->remove_suffix();
+            i->suffix_id = -1;
     } 
 }
 
@@ -312,7 +289,6 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
 //
 // Arguments:
 //   i - the item to curse
-//   i
 //
 // Returns:
 //   Nothing.
@@ -322,10 +298,10 @@ void ItemGenerator::apply_curse(Item *i, int ilevel) {
     // The chance of a curse is the base chance plus 1% per 10 ilevels
     // (so an item with ilevel 100 has a 20% chance of being cursed)
     if (roll < (ItemConsts::BASE_CHANCE_OF_CURSE + (ilevel / 10))) {
-        i->set_curse_state(true);
+        i->is_cursed = true;
         //std::cout << "generator: Item was cursed" << std::endl;
     }
     else {
-        i->set_curse_state(false);
+        i->is_cursed = false;
     }
 }

@@ -239,7 +239,7 @@ int Inventory::get_stackable_item_slot(Item *item) {
 
     // First check if the item is stackable.  If not,
     // return
-    if (item->can_it_stack() == false) {
+    if (item->can_stack == false) {
         return -1;
     }
 
@@ -248,7 +248,7 @@ int Inventory::get_stackable_item_slot(Item *item) {
     // return -1.
     for (int i = 0; i < InventoryConsts::INVENTORY_SIZE; ++i) {
         if(inv[i] != NULL) {
-            if (item->get_gid() == inv[i]->get_gid()) {
+            if (item->gid == inv[i]->gid) {
                 return i;
             }
         }
@@ -295,7 +295,7 @@ void Inventory::remove_item_in_slot(int slot) {
 //==================================================================
 
 //----------------------------------------------------------------------------
-// Dumps information common to all Items to the console.
+// Dumps item information to the console.
 //
 // Arguments:
 //   None
@@ -303,7 +303,7 @@ void Inventory::remove_item_in_slot(int slot) {
 // Returns:
 //   None
 //----------------------------------------------------------------------------
-void Item::dump_item_common(void) {
+void Item::dump_item(void) {
     std::cout << "====== Common ============================" << std::endl;
     std::cout << "Name:        " << get_full_name() << std::endl;
     std::cout << "Description: " << description << std::endl;
@@ -343,14 +343,91 @@ void Item::dump_item_common(void) {
     else
         std::cout << "u";
     std::cout << std::endl;
+
+    switch (item_class) {
+        case ItemConsts::WEAPON_CLASS:
+            std::cout << "====== Weapon Specific ===================" << std::endl;
+            std::cout << "Type:      " << g_weapon_type_ids[g_weapon_base_ids[id].type_id].name << std::endl;
+            std::cout << "Attack:    " << attack << std::endl;
+            std::cout << "Cursed:    " << is_cursed << std::endl;
+            dump_prefix();
+            dump_suffix();
+            break;
+        case ItemConsts::ARMOR_CLASS:
+            std::cout << "====== Armor Specific ===================" << std::endl;
+            std::cout << "Type:      " << g_armor_type_ids[g_armor_base_ids[id].type_id].name << std::endl;
+            std::cout << "Defense:    " << defense << std::endl;
+            std::cout << "Cursed:    " << is_cursed << std::endl;
+            dump_prefix();
+            dump_suffix();
+            break;
+        case ItemConsts::CURRENCY_CLASS:
+            std::cout << "====== Currency Specific ===================" << std::endl;
+            std::cout << "  Nothing yet" << std::endl;
+            break;
+        case ItemConsts::POTION_CLASS:
+            std::cout << "====== Armor Specific ===================" << std::endl;
+            std::cout << "Type:      " << type_id << std::endl;
+            std::cout << "Effect ID: " << effect_id << " (expanded form TBD)" << std::endl;
+            break;
+        case ItemConsts::SCROLL_CLASS:
+            std::cout << "====== Scroll Specific ===================" << std::endl;
+            std::cout << "Type:      " << type_id << std::endl;
+            std::cout << "Effect ID: " << effect_id << " (expanded form TBD)" << std::endl;
+            break;
+        case ItemConsts::ARTIFACT_CLASS:
+            std::cout << "====== Artifact Specific ===================" << std::endl;
+            std::cout << "Type: ";
+            if(type_id == ItemConsts::STANDARD_ARTIFACT) {
+                std::cout << "Standard" << std::endl;
+            } 
+            else if (type_id == ItemConsts::MULTIPART_ARTIFACT) {
+                std::cout << "Multipart: (" << pieces << " parts)" << std::endl;
+            }
+            else if (type_id == ItemConsts::MULTIGEN_ARTIFACT) {
+                std::cout << "Multi-generation (" << pieces << " generations)" << std::endl;
+            }
+            std::cout << "Effect ID: " << effect_id << " (expanded form TBD)" << std::endl;
+            break;
+    }
 }
 
-//==================================================================
-// Equipment
-//==================================================================
+// //----------------------------------------------------------------------------
+// // Item::Item
+// //
+// // Constructor.
+// //
+// // Constructs a dummy item (weapon)with base id of zero.  This item will
+// // generally be something modified later using generate(). 
+// //----------------------------------------------------------------------------
+Item::Item() {
+    init (ItemConsts::WEAPON_CLASS, 0);
+}
 
 //----------------------------------------------------------------------------
-// Gets the base name of the equipment type.
+// Item::Item
+//
+// Constructor.
+//
+// Constructs an item of a base type using the appropriate base type table
+//----------------------------------------------------------------------------
+Item::Item(int item_class, int idx) {
+    init(item_class, idx);
+}
+
+//----------------------------------------------------------------------------
+// Item::Item
+//
+// Constructor.
+//
+// Constructs a generic item of a base type using the appropriate base type table
+//----------------------------------------------------------------------------
+Item::Item(int item_class) {
+    init(item_class, 0);
+}
+
+//----------------------------------------------------------------------------
+// Gets the base name of the item type
 //
 // Arguments: 
 //   None
@@ -358,12 +435,34 @@ void Item::dump_item_common(void) {
 // Returns:
 //   A string containing the base type name.
 //----------------------------------------------------------------------------
-std::string Equipment::get_type_name() {
-    return name;
+std::string Item::get_type_name() {
+    if (item_class == ItemConsts::CURRENCY_CLASS) {
+        return "Currency";
+    }
+    else if (item_class == ItemConsts::SCROLL_CLASS) {
+        return "Scroll";
+    }
+    else {
+        return name;
+    }
 }
 
+// //----------------------------------------------------------------------------
+// // Weapon::Weapon
+// //
+// // Constructor.
+// //
+// // Constructs using an offset (relative to to the base types table).
+// //----------------------------------------------------------------------------
+// Weapon::Weapon(unsigned int idx) {
+//     //std::cout << "Creating weapon" << std::endl;
+//     // Assign the fields from the weapon base type list at index idx here
+//     WeaponBaseType *b = &(g_weapon_base_ids[idx]);
+//     init(b);
+// }
+
 //----------------------------------------------------------------------------
-// Gets the full name (base+affixes) of the equipment type.
+// Gets the full name of the item type.
 //
 // Arguments: 
 //   None
@@ -371,36 +470,52 @@ std::string Equipment::get_type_name() {
 // Returns:
 //   A string containing the full item name.
 //----------------------------------------------------------------------------
-std::string Equipment::get_full_name() {
+std::string Item::get_full_name() {
     std::string prefix_text;
     std::string suffix_text;
 
-    if (is_identified) {
-        if (can_have_prefix && prefix_id >= 0) {
-            if (is_cursed) 
-                prefix_text = g_cursed_item_prefix_ids[prefix_id].name + " ";        
+    if (item_class == ItemConsts::ARMOR_CLASS || item_class == ItemConsts::WEAPON_CLASS) 
+    {
+        if (is_identified) {
+            if (can_have_prefix && prefix_id >= 0) {
+                if (is_cursed) 
+                    prefix_text = g_cursed_item_prefix_ids[prefix_id].name + " ";        
 
-            else
-                prefix_text = g_item_prefix_ids[prefix_id].name + " ";        
+                else
+                    prefix_text = g_item_prefix_ids[prefix_id].name + " ";        
+            }
+            else {
+                prefix_text = "";
+            }
+            if (can_have_suffix && suffix_id >= 0) {
+                if (is_cursed)
+                    suffix_text = " " + g_cursed_item_suffix_ids[suffix_id].name;
+                else
+                    suffix_text = " " + g_item_suffix_ids[suffix_id].name;
+            }
+            else {
+                suffix_text = "";
+            }
         }
         else {
-            prefix_text = "";
-        }
-        if (can_have_suffix && suffix_id >= 0) {
-            if (is_cursed)
-                suffix_text = " " + g_cursed_item_suffix_ids[suffix_id].name;
-            else
-                suffix_text = " " + g_item_suffix_ids[suffix_id].name;
+            prefix_text = "(?) ";
+        }   
+
+        return prefix_text + name + suffix_text;
+    }
+    if (item_class == ItemConsts::POTION_CLASS || item_class == ItemConsts::SCROLL_CLASS) {
+        if (is_identified) {
+            return name;
         }
         else {
-            suffix_text = "";
+            return "(?) " + get_type_name();
         }
     }
-    else {
-        prefix_text = "(?) ";
+    if (item_class == ItemConsts::CURRENCY_CLASS) {
+        char name[32];
+        sprintf(name, "%d gold worth of %s", quantity, (char *)g_currency_ids[id].name.c_str());
+        return std::string(name);        
     }
-
-    return prefix_text + name + suffix_text;
 }
 
 //----------------------------------------------------------------------------
@@ -412,24 +527,26 @@ std::string Equipment::get_full_name() {
 // Returns:
 //   None
 //----------------------------------------------------------------------------
-void Equipment::dump_prefix() {
-    if (can_have_prefix && prefix_id >= 0) {
-        ItemPrefixType *it;
-        if (is_cursed) {
-            it = &(g_cursed_item_prefix_ids[prefix_id]);
-        }
-        else {
-            it = &(g_item_prefix_ids[prefix_id]);
-        }
-        std::cout << "====== Prefix info ===================" << std::endl;
-        std::cout << "Name:      " << it->name << std::endl;
-        std::cout << "Num mods:  " << (int)it->num_modifiers << std::endl;
-        for (int i = 0; i < it->num_modifiers; ++i) {
-            ModifierMagType *mt = &(it->modifiers[i]); 
-            std::cout << " Mod " << (i+1) << ":" << std::endl;
-            std::cout << "  Name:      " << g_modifier_ids[mt->modifier_id].name << std::endl;
-            std::cout << "  Modifier mode:  " << (int)mt->modifier_mode << std::endl;
-            std::cout << "  Magnitude: " << mt->magnitude << std::endl;
+void Item::dump_prefix() {
+    if (item_class == ItemConsts::ARMOR_CLASS || item_class == ItemConsts::WEAPON_CLASS) {
+        if (can_have_prefix && prefix_id >= 0) {
+            ItemPrefixType *it;
+            if (is_cursed) {
+                it = &(g_cursed_item_prefix_ids[prefix_id]);
+            }
+            else {
+                it = &(g_item_prefix_ids[prefix_id]);
+            }
+            std::cout << "====== Prefix info ===================" << std::endl;
+            std::cout << "Name:      " << it->name << std::endl;
+            std::cout << "Num mods:  " << (int)it->num_modifiers << std::endl;
+            for (int i = 0; i < it->num_modifiers; ++i) {
+                ModifierMagType *mt = &(it->modifiers[i]); 
+                std::cout << " Mod " << (i+1) << ":" << std::endl;
+                std::cout << "  Name:      " << g_modifier_ids[mt->modifier_id].name << std::endl;
+                std::cout << "  Modifier mode:  " << (int)mt->modifier_mode << std::endl;
+                std::cout << "  Magnitude: " << mt->magnitude << std::endl;
+            }
         }
     }
 }
@@ -443,66 +560,205 @@ void Equipment::dump_prefix() {
 // Returns:
 //   None
 //----------------------------------------------------------------------------
-void Equipment::dump_suffix() {
-    if (can_have_suffix && suffix_id >= 0) {
-        ItemSuffixType *it;
-        if (is_cursed) {
-            it = &(g_cursed_item_suffix_ids[suffix_id]);
-        }
-        else {
-            it = &(g_item_suffix_ids[suffix_id]);
-        }
-        std::cout << "====== Suffix info ===================" << std::endl;
-        std::cout << "Name:      " << it->name << std::endl;
-        std::cout << "Num mods:  " << (int)it->num_modifiers << std::endl;
-        for (int i = 0; i < it->num_modifiers; ++i) {
-            ModifierMagType *mt = &(it->modifiers[i]); 
-            std::cout << " Mod " << (i+1) << ":" << std::endl;
-            std::cout << "  Name:      " << g_modifier_ids[mt->modifier_id].name << std::endl;
-            std::cout << "  Modifier mode:  " << (int)mt->modifier_mode << std::endl;
-            std::cout << "  Magnitude: " << mt->magnitude << std::endl;
+void Item::dump_suffix() {
+    if (item_class == ItemConsts::ARMOR_CLASS || item_class == ItemConsts::WEAPON_CLASS) {
+        if (can_have_suffix && suffix_id >= 0) {
+            ItemSuffixType *it;
+            if (is_cursed) {
+                it = &(g_cursed_item_suffix_ids[suffix_id]);
+            }
+            else {
+                it = &(g_item_suffix_ids[suffix_id]);
+            }
+            std::cout << "====== Suffix info ===================" << std::endl;
+            std::cout << "Name:      " << it->name << std::endl;
+            std::cout << "Num mods:  " << (int)it->num_modifiers << std::endl;
+            for (int i = 0; i < it->num_modifiers; ++i) {
+                ModifierMagType *mt = &(it->modifiers[i]); 
+                std::cout << " Mod " << (i+1) << ":" << std::endl;
+                std::cout << "  Name:      " << g_modifier_ids[mt->modifier_id].name << std::endl;
+                std::cout << "  Modifier mode:  " << (int)mt->modifier_mode << std::endl;
+                std::cout << "  Magnitude: " << mt->magnitude << std::endl;
+            }
         }
     }
 }
 
-//==================================================================
-// Weapon
-//==================================================================
-
 //----------------------------------------------------------------------------
-// Initializes a Weapon using an entry from the weapon base type
+// Initializes an item using an offset into the appropriate base table
 //  table.
 //
 // Arguments: 
-//   b - a pointer to an entry in the weapon base type table
+//   ic - the type of item to init
+//   idx - the offset into the item type table to use
 //
 // Returns:
 //   Nothing.
 //----------------------------------------------------------------------------
-void Weapon::init(WeaponBaseType *b) {
-    // Assign the fields from the weapon base type here
-    id = b->id;
-    name = b->name;
+void Item::init(int ic, int idx) {
+    item_class = ic;
+    WeaponBaseType *wb;
+    ArmorBaseType *ab;
+    CurrencyType *cb;
+    ScrollType *sb;
+    PotionType *pb;
+    ArtifactType *arb;
+
+    // set some default values common to all cases (or which are overriden)
+    attack = -1;
+    defense = -1;
     description = "";
-    gid = b->gid;
-    type_id = b->type_id;
-    attack = b->attack;
-    rarity = b->rarity;
-    ilevel = b->ilevel;
-    value = b->value;
-    can_be_cursed = b->can_be_cursed;
-    can_have_prefix = b->can_have_prefix;
-    can_have_suffix = b->can_have_suffix;
-    can_stack = b->can_stack;
-    can_equip = b->can_equip;
-    can_drop = b->can_drop;
-    can_use = b->can_use;
     is_equipped = false;
     is_cursed = false;
-    is_identified = false;
     prefix_id = -1;
     suffix_id = -1;
     quantity = 1;
+    is_identified = false;
+
+    switch (item_class) {
+        case ItemConsts::WEAPON_CLASS:
+            wb = &(g_weapon_base_ids[idx]);
+            // Assign the fields from the weapon base type here
+            id = wb->id;
+            name = wb->name;
+            gid = wb->gid;
+            type_id = wb->type_id;
+            attack = wb->attack;
+            rarity = wb->rarity;
+            ilevel = wb->ilevel;
+            value = wb->value;
+            can_be_cursed = wb->can_be_cursed;
+            can_have_prefix = wb->can_have_prefix;
+            can_have_suffix = wb->can_have_suffix;
+            can_stack = wb->can_stack;
+            can_equip = wb->can_equip;
+            can_drop = wb->can_drop;
+            can_use = wb->can_use;
+            break;
+        case ItemConsts::ARMOR_CLASS:
+            ab = &(g_armor_base_ids[idx]);
+            id = ab->id;
+            name = ab->name;
+            gid = ab->gid;
+            type_id = ab->type_id;
+            defense = ab->defense;
+            rarity = ab->rarity;
+            ilevel = ab->ilevel;
+            value = ab->value;
+            can_be_cursed = ab->can_be_cursed;
+            can_have_prefix = ab->can_have_prefix;
+            can_have_suffix = ab->can_have_suffix;
+            can_stack = ab->can_stack;
+            can_equip = ab->can_equip;
+            can_drop = ab->can_drop;
+            can_use = ab->can_use;
+            break;
+        case ItemConsts::CURRENCY_CLASS:
+            cb = &(g_currency_ids[idx]);
+            id = cb->id;
+            name = cb->name;
+            gid = cb->gid;
+            type_id = cb->type_id;
+            rarity = cb->rarity;
+            ilevel = cb->ilevel;
+            value = cb->value;
+            can_be_cursed = cb->can_be_cursed;
+            can_have_prefix = cb->can_have_prefix;
+            can_have_suffix = cb->can_have_suffix;
+            can_stack = cb->can_stack;
+            can_equip = cb->can_equip;
+            can_drop = cb->can_drop;
+            can_use = cb->can_use;
+            is_identified = true;
+            quantity = cb->value * (rand() % 50 + 1);    
+            break;
+        case ItemConsts::POTION_CLASS:
+            pb = &(g_potion_ids[idx]);
+            id = pb->id;
+            name = pb->name;
+            description = pb->description;
+            gid = pb->gid;
+            type_id = pb->type_id;
+            effect_id = pb->effect_id;
+            rarity = pb->rarity;
+            ilevel = pb->ilevel;
+            value = pb->value;
+            can_be_cursed = pb->can_be_cursed;
+            can_have_prefix = pb->can_have_prefix;
+            can_have_suffix = pb->can_have_suffix;
+                can_stack = pb->can_stack;
+            can_equip = pb->can_equip;
+            can_drop = pb->can_drop;
+            can_use = pb->can_use;
+            is_identified = g_identified_potions[id];
+            break;
+        case ItemConsts::SCROLL_CLASS:
+            sb = &(g_scroll_ids[idx]);
+            id = sb->id;
+            name = sb->name;
+            description = sb->description;
+            gid = sb->gid;
+            type_id = sb->type_id;
+            effect_id = sb->effect_id;
+            rarity = sb->rarity;
+            ilevel = sb->ilevel;
+            value = sb->value;
+            can_be_cursed = sb->can_be_cursed;
+            can_have_prefix = sb->can_have_prefix;
+            can_have_suffix = sb->can_have_suffix;
+            can_stack = sb->can_stack;
+            can_equip = sb->can_equip;
+            can_drop = sb->can_drop;
+            can_use = sb->can_use;
+            is_identified = g_identified_scrolls[id];
+            quantity = 1;
+            break;
+        case ItemConsts::ARTIFACT_CLASS:
+            arb = &(g_artifact_ids[idx]);
+            id = arb->id;
+            name = arb->name;
+            description = arb->description;
+            gid = arb->gid;
+            type_id = arb->type_id;
+            pieces = arb->pieces;
+            effect_id = arb->effect_id;
+            rarity = arb->rarity;
+            ilevel = arb->ilevel;
+            can_be_cursed = arb->can_be_cursed;
+            can_have_prefix = arb->can_have_prefix;
+            can_have_suffix = arb->can_have_suffix;
+            can_stack = arb->can_stack;
+            can_equip = arb->can_equip;
+            can_drop = arb->can_drop;
+            can_use = arb->can_use;
+            is_identified = true;
+            break;
+    }
+}
+
+//----------------------------------------------------------------------------
+// 'Uses' the item; i.e. applies its effect
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void Item::use() {
+    switch (item_class) {
+        case ItemConsts::POTION_CLASS:
+            g_text_log.put_line("You use the " + get_full_name() + ".");
+            use_potion_action(id);
+            //std::cout << "use: potion used" << std::endl;
+            break;
+        case ItemConsts::SCROLL_CLASS:
+            g_text_log.put_line("You use the " + get_full_name() + ".");
+            // Do the thing based on the particular item
+            use_scroll_action(id);
+            //std::cout << "use: scroll used" << std::endl;
+            break;
+    }
 }
 
 //----------------------------------------------------------------------------
@@ -514,48 +770,48 @@ void Weapon::init(WeaponBaseType *b) {
 // Returns:
 //   Nothing
 //----------------------------------------------------------------------------
-void Weapon::init(int idx) {
-    init(&(g_weapon_base_ids[idx]));
-}
+// void Weapon::init(int idx) {
+//     init(&(g_weapon_base_ids[idx]));
+// }
 
-//----------------------------------------------------------------------------
-// Weapon::Weapon
-//
-// Constructor.
-//
-// Constructs a dummy item with base id of zero.  This item will
-// generally be something modified later using generate(). 
-//----------------------------------------------------------------------------
-Weapon::Weapon() {
-    //std::cout << "Creating weapon" << std::endl;
-    WeaponBaseType *b = &(g_weapon_base_ids[0]);
-    init(b);
-}
+// //----------------------------------------------------------------------------
+// // Weapon::Weapon
+// //
+// // Constructor.
+// //
+// // Constructs a dummy item with base id of zero.  This item will
+// // generally be something modified later using generate(). 
+// //----------------------------------------------------------------------------
+// Weapon::Weapon() {
+//     //std::cout << "Creating weapon" << std::endl;
+//     //WeaponBaseType *b = &(g_weapon_base_ids[0]);
+//     init(ItemConsts::WEAPON_CLASS, 0);
+// }
 
-//----------------------------------------------------------------------------
-// Weapon::Weapon
-//
-// Constructor.
-//
-// Constructs using a pointer to an entry in the base types table
-//----------------------------------------------------------------------------
-Weapon::Weapon(WeaponBaseType *b) {
-    init(b);
-}
+// //----------------------------------------------------------------------------
+// // Weapon::Weapon
+// //
+// // Constructor.
+// //
+// // Constructs using a pointer to an entry in the base types table
+// //----------------------------------------------------------------------------
+// Weapon::Weapon(WeaponBaseType *b) {
+//     init(b);
+// }
 
-//----------------------------------------------------------------------------
-// Weapon::Weapon
-//
-// Constructor.
-//
-// Constructs using an offset (relative to to the base types table).
-//----------------------------------------------------------------------------
-Weapon::Weapon(unsigned int idx) {
-    //std::cout << "Creating weapon" << std::endl;
-    // Assign the fields from the weapon base type list at index idx here
-    WeaponBaseType *b = &(g_weapon_base_ids[idx]);
-    init(b);
-}
+// //----------------------------------------------------------------------------
+// // Weapon::Weapon
+// //
+// // Constructor.
+// //
+// // Constructs using an offset (relative to to the base types table).
+// //----------------------------------------------------------------------------
+// Weapon::Weapon(unsigned int idx) {
+//     //std::cout << "Creating weapon" << std::endl;
+//     // Assign the fields from the weapon base type list at index idx here
+//     WeaponBaseType *b = &(g_weapon_base_ids[idx]);
+//     init(b);
+// }
 
 //----------------------------------------------------------------------------
 // Sets the 'is_equipped' state of the item
@@ -566,9 +822,9 @@ Weapon::Weapon(unsigned int idx) {
 // Returns:
 //   None
 //----------------------------------------------------------------------------
-void Weapon::mark_equipped() {
-    is_equipped = true;
-}
+// void Weapon::mark_equipped() {
+//     is_equipped = true;
+// }
 
 //----------------------------------------------------------------------------
 // Clears the 'is_equipped' state of the item
@@ -579,10 +835,10 @@ void Weapon::mark_equipped() {
 // Returns:
 //   None
 //----------------------------------------------------------------------------
-void Weapon::mark_removed() {
-    //std::cout << "weapon removed" << std::endl;
-    is_equipped = false;
-}
+// void Weapon::mark_removed() {
+//     //std::cout << "weapon removed" << std::endl;
+//     is_equipped = false;
+// }
 
 //----------------------------------------------------------------------------
 // Gets the item class of a weapon.
@@ -593,9 +849,9 @@ void Weapon::mark_removed() {
 // Returns:
 //   WEAPON_CLASS
 //----------------------------------------------------------------------------
-int Weapon::get_item_class() {
-    return ItemConsts::WEAPON_CLASS;
-}
+// int Weapon::get_item_class() {
+//     return ItemConsts::WEAPON_CLASS;
+// }
 
 //----------------------------------------------------------------------------
 // Dumps information specific to weapons to the console.
@@ -606,15 +862,15 @@ int Weapon::get_item_class() {
 // Returns:
 //   None
 //----------------------------------------------------------------------------
-void Weapon::dump_item() {
-    dump_item_common();
-    std::cout << "====== Weapon Specific ===================" << std::endl;
-    std::cout << "Type:      " << g_weapon_type_ids[g_weapon_base_ids[id].type_id].name << std::endl;
-    std::cout << "Attack:    " << attack << std::endl;
-    std::cout << "Cursed:    " << is_cursed << std::endl;
-    dump_prefix();
-    dump_suffix();
-}
+// void Weapon::dump_item() {
+//     dump_item_common();
+//     std::cout << "====== Weapon Specific ===================" << std::endl;
+//     std::cout << "Type:      " << g_weapon_type_ids[g_weapon_base_ids[id].type_id].name << std::endl;
+//     std::cout << "Attack:    " << attack << std::endl;
+//     std::cout << "Cursed:    " << is_cursed << std::endl;
+//     dump_prefix();
+//     dump_suffix();
+// }
 
 //==================================================================
 // Armor
@@ -630,31 +886,10 @@ void Weapon::dump_item() {
 // Returns:
 //   Nothing.
 //----------------------------------------------------------------------------
-void Armor::init(ArmorBaseType *b) {
-    // Assign the fields from the armor base type here
-    id = b->id;
-    name = b->name;
-    description = "";
-    gid = b->gid;
-    type_id = b->type_id;
-    defense = b->defense;
-    rarity = b->rarity;
-    ilevel = b->ilevel;
-    value = b->value;
-    can_be_cursed = b->can_be_cursed;
-    can_have_prefix = b->can_have_prefix;
-    can_have_suffix = b->can_have_suffix;
-    can_stack = b->can_stack;
-    can_equip = b->can_equip;
-    can_drop = b->can_drop;
-    can_use = b->can_use;
-    is_equipped = false;
-    is_cursed = false;
-    is_identified = false;
-    prefix_id = -1;
-    suffix_id = -1;
-    quantity = 1;
-}
+// void Armor::init(ArmorBaseType *b) {
+//     // Assign the fields from the armor base type here
+
+// }
 
 //----------------------------------------------------------------------------
 // Initializes an Armor using an index into the armor base type table
@@ -665,9 +900,9 @@ void Armor::init(ArmorBaseType *b) {
 // Returns:
 //   Nothing
 //----------------------------------------------------------------------------
-void Armor::init(int idx) {
-    init(&(g_armor_base_ids[idx]));
-}
+// void Armor::init(int idx) {
+//     init(&(g_armor_base_ids[idx]));
+// }
 
 //----------------------------------------------------------------------------
 // Armor::Armor
@@ -677,11 +912,11 @@ void Armor::init(int idx) {
 // Constructs a dummy item with base id of zero.  This item will
 // generally be something modified later using generate(). 
 //----------------------------------------------------------------------------
-Armor::Armor() {
-    //std::cout << "Creating armor" << std::endl;
-    ArmorBaseType *b = &(g_armor_base_ids[0]);
-    init(b);
-}
+// Armor::Armor() {
+//     //std::cout << "Creating armor" << std::endl;
+//     ArmorBaseType *b = &(g_armor_base_ids[0]);
+//     init(b);
+// }
 
 //----------------------------------------------------------------------------
 // Armor::Armor
@@ -690,10 +925,10 @@ Armor::Armor() {
 //
 // Constructs using a pointer to an entry in the base types table
 //----------------------------------------------------------------------------
-Armor::Armor(ArmorBaseType *b) {
-    //std::cout << "Creating armor" << std::endl;
-    init(b);
-}
+// Armor::Armor(ArmorBaseType *b) {
+//     //std::cout << "Creating armor" << std::endl;
+//     init(b);
+// }
 
 //----------------------------------------------------------------------------
 // Armor::Armor
@@ -702,10 +937,10 @@ Armor::Armor(ArmorBaseType *b) {
 //
 // Constructs using an offset (relative to to the base types table).
 //----------------------------------------------------------------------------
-Armor::Armor(unsigned int idx) {
-    ArmorBaseType *b = &(g_armor_base_ids[idx]);
-    init(b);
-}
+// Armor::Armor(unsigned int idx) {
+//     ArmorBaseType *b = &(g_armor_base_ids[idx]);
+//     init(b);
+// }
 
 //----------------------------------------------------------------------------
 // Marks the armor as equipped
@@ -716,9 +951,9 @@ Armor::Armor(unsigned int idx) {
 // Returns:
 //   None
 //----------------------------------------------------------------------------
-void Armor::mark_equipped() {
-    is_equipped = true;
-}
+// void Armor::mark_equipped() {
+//     is_equipped = true;
+// }
 
 //----------------------------------------------------------------------------
 // Marks the armor as removed
@@ -729,10 +964,10 @@ void Armor::mark_equipped() {
 // Returns:
 //   None
 //----------------------------------------------------------------------------
-void Armor::mark_removed() {
-    //std::cout << "armor removed" << std::endl;
-    is_equipped = false;
-}
+// void Armor::mark_removed() {
+//     //std::cout << "armor removed" << std::endl;
+//     is_equipped = false;
+// }
 
 //----------------------------------------------------------------------------
 // Gets the item class of an armor.
@@ -743,9 +978,9 @@ void Armor::mark_removed() {
 // Returns:
 //   ARMOR_CLASS
 //----------------------------------------------------------------------------
-int Armor::get_item_class() {
-    return ItemConsts::ARMOR_CLASS;
-}
+// int Armor::get_item_class() {
+//     return ItemConsts::ARMOR_CLASS;
+// }
 
 //----------------------------------------------------------------------------
 // Dumps information specific to armor to the console.
@@ -756,15 +991,15 @@ int Armor::get_item_class() {
 // Returns:
 //   None
 //----------------------------------------------------------------------------
-void Armor::dump_item() {
-    dump_item_common();
-    std::cout << "====== Armor Specific ===================" << std::endl;
-    std::cout << "Type:      " << g_armor_type_ids[g_armor_base_ids[id].type_id].name << std::endl;
-    std::cout << "Defense:    " << defense << std::endl;
-    std::cout << "Cursed:    " << is_cursed << std::endl;
-    dump_prefix();
-    dump_suffix();
-}
+// void Armor::dump_item() {
+//     dump_item_common();
+//     std::cout << "====== Armor Specific ===================" << std::endl;
+//     std::cout << "Type:      " << g_armor_type_ids[g_armor_base_ids[id].type_id].name << std::endl;
+//     std::cout << "Defense:    " << defense << std::endl;
+//     std::cout << "Cursed:    " << is_cursed << std::endl;
+//     dump_prefix();
+//     dump_suffix();
+// }
 
 
 //==================================================================
@@ -781,14 +1016,14 @@ void Armor::dump_item() {
 // Returns:
 //   The full name of the item
 //----------------------------------------------------------------------------
-std::string Consumable::get_full_name() {
-    if (is_identified) {
-        return name;
-    }
-    else {
-        return "(?) " + get_type_name();
-    }
-}
+// std::string Consumable::get_full_name() {
+//     if (is_identified) {
+//         return name;
+//     }
+//     else {
+//         return "(?) " + get_type_name();
+//     }
+// }
 
 //==================================================================
 // Currency
@@ -803,28 +1038,28 @@ std::string Consumable::get_full_name() {
 // Returns:
 //   Nothing.
 //----------------------------------------------------------------------------
-void Currency::init(CurrencyType *b) {
-    // Assign the fields from the armor base type here
-    id = b->id;
-    name = b->name;
-    description = "";
-    gid = b->gid;
-    type_id = b->type_id;
-    rarity = b->rarity;
-    ilevel = b->ilevel;
-    // The 'value' is the size of the pile of coins
-    // It's set to some random value * the base value
-    value = b->value;
-    can_be_cursed = b->can_be_cursed;
-    can_have_prefix = b->can_have_prefix;
-    can_have_suffix = b->can_have_suffix;
-    can_stack = b->can_stack;
-    can_equip = b->can_equip;
-    can_drop = b->can_drop;
-    can_use = b->can_use;
-    is_identified = true;
-    quantity = b->value * (rand() % 50 + 1);
-}
+// void Currency::init(CurrencyType *b) {
+//     // Assign the fields from the armor base type here
+//     id = b->id;
+//     name = b->name;
+//     description = "";
+//     gid = b->gid;
+//     type_id = b->type_id;
+//     rarity = b->rarity;
+//     ilevel = b->ilevel;
+//     // The 'value' is the size of the pile of coins
+//     // It's set to some random value * the base value
+//     value = b->value;
+//     can_be_cursed = b->can_be_cursed;
+//     can_have_prefix = b->can_have_prefix;
+//     can_have_suffix = b->can_have_suffix;
+//     can_stack = b->can_stack;
+//     can_equip = b->can_equip;
+//     can_drop = b->can_drop;
+//     can_use = b->can_use;
+//     is_identified = true;
+//     quantity = b->value * (rand() % 50 + 1);
+// }
 
 //----------------------------------------------------------------------------
 // Initializes a Currency using an index into the currency type table
@@ -835,9 +1070,9 @@ void Currency::init(CurrencyType *b) {
 // Returns:
 //   Nothing
 //----------------------------------------------------------------------------
-void Currency::init(int idx) {
-    init(&(g_currency_ids[idx]));
-}
+// void Currency::init(int idx) {
+//     init(&(g_currency_ids[idx]));
+// }
 
 //----------------------------------------------------------------------------
 // Currency::Currency
@@ -847,11 +1082,11 @@ void Currency::init(int idx) {
 // Constructs a dummy item with base id of zero.  This item will
 // generally be something modified later using generate(). 
 //----------------------------------------------------------------------------
-Currency::Currency() {
-    //std::cout << "Creating currency" << std::endl;
-    CurrencyType *b = &(g_currency_ids[0]);
-    init(b);
-}
+// Currency::Currency() {
+//     //std::cout << "Creating currency" << std::endl;
+//     CurrencyType *b = &(g_currency_ids[0]);
+//     init(b);
+// }
 
 //----------------------------------------------------------------------------
 // Currency::Currency
@@ -860,10 +1095,10 @@ Currency::Currency() {
 //
 // Constructs using a pointer to an entry in the currency table
 //----------------------------------------------------------------------------
-Currency::Currency(CurrencyType *b) {
-    //std::cout << "Creating currency" << std::endl;
-    init(b);
-}
+// Currency::Currency(CurrencyType *b) {
+//     //std::cout << "Creating currency" << std::endl;
+//     init(b);
+// }
 
 //----------------------------------------------------------------------------
 // Currency::Currency
@@ -872,10 +1107,10 @@ Currency::Currency(CurrencyType *b) {
 //
 // Constructs using an offset (relative to to the type table).
 //----------------------------------------------------------------------------
-Currency::Currency(unsigned int idx) {
-    CurrencyType *b = &(g_currency_ids[idx]);
-    init(b);
-}
+// Currency::Currency(unsigned int idx) {
+//     CurrencyType *b = &(g_currency_ids[idx]);
+//     init(b);
+// }
 
 //----------------------------------------------------------------------------
 // Gets the item class of currency.
@@ -886,9 +1121,9 @@ Currency::Currency(unsigned int idx) {
 // Returns:
 //   CURRENCY_CLASS
 //----------------------------------------------------------------------------
-int Currency::get_item_class() {
-    return ItemConsts::CURRENCY_CLASS;
-}
+// int Currency::get_item_class() {
+//     return ItemConsts::CURRENCY_CLASS;
+// }
 
 //----------------------------------------------------------------------------
 // Dumps information specific to currency to the console.
@@ -899,11 +1134,11 @@ int Currency::get_item_class() {
 // Returns:
 //   None
 //----------------------------------------------------------------------------
-void Currency::dump_item() {
-    dump_item_common();
-    std::cout << "====== Currency Specific ===================" << std::endl;
-    std::cout << "  Nothing yet" << std::endl;
-}
+// void Currency::dump_item() {
+//     dump_item_common();
+//     std::cout << "====== Currency Specific ===================" << std::endl;
+//     std::cout << "  Nothing yet" << std::endl;
+// }
 
 //----------------------------------------------------------------------------
 // Gets the currency's full name
@@ -914,12 +1149,12 @@ void Currency::dump_item() {
 // Returns:
 //   A string containing the full name
 //----------------------------------------------------------------------------
-std::string Currency::get_full_name() {
-    char name[32];
+// std::string Currency::get_full_name() {
+//     char name[32];
 
-    sprintf(name, "%d gold worth of %s", quantity, (char *)g_currency_ids[id].name.c_str());
-    return std::string(name);
-}
+//     sprintf(name, "%d gold worth of %s", quantity, (char *)g_currency_ids[id].name.c_str());
+//     return std::string(name);
+// }
 
 //----------------------------------------------------------------------------
 // Gets the currency's type name
@@ -930,9 +1165,9 @@ std::string Currency::get_full_name() {
 // Returns:
 //   A string containing the type name
 //----------------------------------------------------------------------------
-std::string Currency::get_type_name() {
-    return "Currency";
-}
+// std::string Currency::get_type_name() {
+//     return "Currency";
+// }
 
 //==================================================================
 // Potion
@@ -947,27 +1182,27 @@ std::string Currency::get_type_name() {
 // Returns:
 //   Nothing.
 //----------------------------------------------------------------------------
-void Potion::init(PotionType *b) {
-    // Assign the fields from the potion type here
-    id = b->id;
-    name = b->name;
-    description = b->description;
-    gid = b->gid;
-    type_id = b->type_id;
-    effect_id = b->effect_id;
-    rarity = b->rarity;
-    ilevel = b->ilevel;
-    value = b->value;
-    can_be_cursed = b->can_be_cursed;
-    can_have_prefix = b->can_have_prefix;
-    can_have_suffix = b->can_have_suffix;
-    can_stack = b->can_stack;
-    can_equip = b->can_equip;
-    can_drop = b->can_drop;
-    can_use = b->can_use;
-    is_identified = g_identified_potions[id];
-    quantity = 1;
-}
+// void Potion::init(PotionType *b) {
+//     // Assign the fields from the potion type here
+//     id = b->id;
+//     name = b->name;
+//     description = b->description;
+//     gid = b->gid;
+//     type_id = b->type_id;
+//     effect_id = b->effect_id;
+//     rarity = b->rarity;
+//     ilevel = b->ilevel;
+//     value = b->value;
+//     can_be_cursed = b->can_be_cursed;
+//     can_have_prefix = b->can_have_prefix;
+//     can_have_suffix = b->can_have_suffix;
+//     can_stack = b->can_stack;
+//     can_equip = b->can_equip;
+//     can_drop = b->can_drop;
+//     can_use = b->can_use;
+//     is_identified = g_identified_potions[id];
+//     quantity = 1;
+// }
 
 //----------------------------------------------------------------------------
 // Initializes a Potion using an index into the potion type table
@@ -978,9 +1213,9 @@ void Potion::init(PotionType *b) {
 // Returns:
 //   Nothing
 //----------------------------------------------------------------------------
-void Potion::init(int idx) {
-    init(&(g_potion_ids[idx]));
-}
+// void Potion::init(int idx) {
+//     init(&(g_potion_ids[idx]));
+// }
 
 //----------------------------------------------------------------------------
 // Potion::Potion
@@ -990,11 +1225,11 @@ void Potion::init(int idx) {
 // Constructs a dummy item with base id of zero.  This item will
 // generally be something modified later using generate(). 
 //----------------------------------------------------------------------------
-Potion::Potion() {
-    //std::cout << "Creating potion" << std::endl;
-    PotionType *b = &(g_potion_ids[0]);
-    init(b);
-}
+// Potion::Potion() {
+//     //std::cout << "Creating potion" << std::endl;
+//     PotionType *b = &(g_potion_ids[0]);
+//     init(b);
+// }
 
 //----------------------------------------------------------------------------
 // Potion::Potion
@@ -1003,10 +1238,10 @@ Potion::Potion() {
 //
 // Constructs using a pointer to an entry in the types table
 //----------------------------------------------------------------------------
-Potion::Potion(PotionType *b) {
-    //std::cout << "Creating potion" << std::endl;
-    init(b);
-}
+// Potion::Potion(PotionType *b) {
+//     //std::cout << "Creating potion" << std::endl;
+//     init(b);
+// }
 
 //----------------------------------------------------------------------------
 // Potion::Potion
@@ -1015,25 +1250,10 @@ Potion::Potion(PotionType *b) {
 //
 // Constructs using an offset (relative to to the types table).
 //----------------------------------------------------------------------------
-Potion::Potion(unsigned int idx) {
-    PotionType *b = &(g_potion_ids[idx]);
-    init(b);
-}
-
-//----------------------------------------------------------------------------
-// 'Uses' the potion; i.e. applies its effect
-//
-// Arguments:
-//   None
-//
-// Returns:
-//   Nothing
-//----------------------------------------------------------------------------
-void Potion::use() {
-    g_text_log.put_line("You use the " + get_full_name() + ".");
-    use_potion_action(id);
-    //std::cout << "use: potion used" << std::endl;
-}
+// Potion::Potion(unsigned int idx) {
+//     PotionType *b = &(g_potion_ids[idx]);
+//     init(b);
+// }
 
 //----------------------------------------------------------------------------
 // Gets the item class of a potion.
@@ -1044,9 +1264,9 @@ void Potion::use() {
 // Returns:
 //   POTION_CLASS
 //----------------------------------------------------------------------------
-int Potion::get_item_class() {
-    return ItemConsts::POTION_CLASS;
-}
+// int Potion::get_item_class() {
+//     return ItemConsts::POTION_CLASS;
+// }
 
 //----------------------------------------------------------------------------
 // Dumps information specific to potions to the console.
@@ -1057,12 +1277,12 @@ int Potion::get_item_class() {
 // Returns:
 //   None
 //----------------------------------------------------------------------------
-void Potion::dump_item() {
-    dump_item_common();
-    std::cout << "====== Armor Specific ===================" << std::endl;
-    std::cout << "Type:      " << type_id << std::endl;
-    std::cout << "Effect ID: " << effect_id << " (expanded form TBD)" << std::endl;
-}
+// void Potion::dump_item() {
+//     dump_item_common();
+//     std::cout << "====== Armor Specific ===================" << std::endl;
+//     std::cout << "Type:      " << type_id << std::endl;
+//     std::cout << "Effect ID: " << effect_id << " (expanded form TBD)" << std::endl;
+// }
 
 //----------------------------------------------------------------------------
 // Gets the item's type name
@@ -1073,9 +1293,9 @@ void Potion::dump_item() {
 // Returns:
 //   "Potion";
 //----------------------------------------------------------------------------
-std::string Potion::get_type_name() {
-    return "Potion";
-}
+// std::string Potion::get_type_name() {
+//     return "Potion";
+// }
 
 //==================================================================
 // Scroll
@@ -1090,27 +1310,28 @@ std::string Potion::get_type_name() {
 // Returns:
 //   Nothing.
 //----------------------------------------------------------------------------
-void Scroll::init(ScrollType *b) {
-    // Assign the fields from the potion type here
-    id = b->id;
-    name = b->name;
-    description = b->description;
-    gid = b->gid;
-    type_id = b->type_id;
-    effect_id = b->effect_id;
-    rarity = b->rarity;
-    ilevel = b->ilevel;
-    value = b->value;
-    can_be_cursed = b->can_be_cursed;
-    can_have_prefix = b->can_have_prefix;
-    can_have_suffix = b->can_have_suffix;
-    can_stack = b->can_stack;
-    can_equip = b->can_equip;
-    can_drop = b->can_drop;
-    can_use = b->can_use;
-    is_identified = g_identified_scrolls[id];
-    quantity = 1;
-}
+// void Scroll::init(ScrollType *b) {
+//     // Assign the fields from the potion type here
+//     id = b->id;
+//     name = b->name;
+//     description = b->description;
+//     gid = b->gid;
+//     type_id = b->type_id;
+//     effect_id = b->effect_id;
+//     rarity = b->rarity;
+//     ilevel = b->ilevel;
+//     value = b->value;
+//     can_be_cursed = b->can_be_cursed;
+//     can_have_prefix = b->can_have_prefix;
+//     can_have_suffix = b->can_have_suffix;
+//     can_stack = b->can_stack;
+//     can_equip = b->can_equip;
+//     can_drop = b->can_drop;
+//     can_use = b->can_use;
+//     is_identified = g_identified_scrolls[id];
+//     quantity = 1;
+// }
+
 //----------------------------------------------------------------------------
 // Initializes a Scroll using an index into the scroll type table
 //
@@ -1120,9 +1341,9 @@ void Scroll::init(ScrollType *b) {
 // Returns:
 //   Nothing
 //----------------------------------------------------------------------------
-void Scroll::init(int idx) {
-    init(&(g_scroll_ids[idx]));
-}
+// void Scroll::init(int idx) {
+//     init(&(g_scroll_ids[idx]));
+// }
 
 //----------------------------------------------------------------------------
 // Scroll::Scroll
@@ -1132,11 +1353,11 @@ void Scroll::init(int idx) {
 // Constructs a dummy item with base id of zero.  This item will
 // generally be something modified later using generate(). 
 //----------------------------------------------------------------------------
-Scroll::Scroll() {
-    //std::cout << "Creating scroll" << std::endl;
-    ScrollType *b = &(g_scroll_ids[0]);
-    init(b);
-}
+// Scroll::Scroll() {
+//     //std::cout << "Creating scroll" << std::endl;
+//     ScrollType *b = &(g_scroll_ids[0]);
+//     init(b);
+// }
 
 //----------------------------------------------------------------------------
 // Scroll::Scroll
@@ -1145,10 +1366,10 @@ Scroll::Scroll() {
 //
 // Constructs using a pointer to an entry in the types table
 //----------------------------------------------------------------------------
-Scroll::Scroll(ScrollType *b) {
-    //std::cout << "Creating scroll" << std::endl;
-    init(b);
-}
+// Scroll::Scroll(ScrollType *b) {
+//     //std::cout << "Creating scroll" << std::endl;
+//     init(b);
+// }
 
 //----------------------------------------------------------------------------
 // Scroll::Scroll
@@ -1156,11 +1377,11 @@ Scroll::Scroll(ScrollType *b) {
 // Constructor.
 //
 // Constructs using an offset (relative to to the types table).
-//----------------------------------------------------------------------------
-Scroll::Scroll(unsigned int idx) {
-    ScrollType *b = &(g_scroll_ids[idx]);
-    init(b);
-}
+// //----------------------------------------------------------------------------
+// Scroll::Scroll(unsigned int idx) {
+//     ScrollType *b = &(g_scroll_ids[idx]);
+//     init(b);
+// }
 
 //----------------------------------------------------------------------------
 // 'Uses' the potion; i.e. applies its effect
@@ -1171,12 +1392,12 @@ Scroll::Scroll(unsigned int idx) {
 // Returns:
 //   Nothing
 //----------------------------------------------------------------------------
-void Scroll::use() {
-    g_text_log.put_line("You use the " + get_full_name() + ".");
-    // Do the thing based on the particular item
-    use_scroll_action(id);
-    //std::cout << "use: scroll used" << std::endl;
-}
+// void Scroll::use() {
+//     g_text_log.put_line("You use the " + get_full_name() + ".");
+//     // Do the thing based on the particular item
+//     use_scroll_action(id);
+//     //std::cout << "use: scroll used" << std::endl;
+// }
 
 //----------------------------------------------------------------------------
 // Gets the item class of a scroll.
@@ -1187,9 +1408,9 @@ void Scroll::use() {
 // Returns:
 //   SCROLL_CLASS
 //----------------------------------------------------------------------------
-int Scroll::get_item_class() {
-    return ItemConsts::SCROLL_CLASS;
-}
+// int Scroll::get_item_class() {
+//     return ItemConsts::SCROLL_CLASS;
+// }
 
 //----------------------------------------------------------------------------
 // Dumps information specific to potions to the console.
@@ -1200,12 +1421,12 @@ int Scroll::get_item_class() {
 // Returns:
 //   None
 //----------------------------------------------------------------------------
-void Scroll::dump_item() {
-    dump_item_common();
-    std::cout << "====== Scroll Specific ===================" << std::endl;
-    std::cout << "Type:      " << type_id << std::endl;
-    std::cout << "Effect ID: " << effect_id << " (expanded form TBD)" << std::endl;
-}
+// void Scroll::dump_item() {
+//     dump_item_common();
+//     std::cout << "====== Scroll Specific ===================" << std::endl;
+//     std::cout << "Type:      " << type_id << std::endl;
+//     std::cout << "Effect ID: " << effect_id << " (expanded form TBD)" << std::endl;
+// }
 
 //----------------------------------------------------------------------------
 // Gets the scroll's type name
@@ -1216,9 +1437,9 @@ void Scroll::dump_item() {
 // Returns:
 //   A string containing the scroll type ('Scroll')
 //----------------------------------------------------------------------------
-std::string Scroll::get_type_name() {
-    return "Scroll";
-}
+// std::string Scroll::get_type_name() {
+//     return "Scroll";
+// }
 
 //==================================================================
 // Artifact
@@ -1233,27 +1454,27 @@ std::string Scroll::get_type_name() {
 // Returns:
 //   Nothing.
 //----------------------------------------------------------------------------
-void Artifact::init(ArtifactType *b) {
-    // Assign the fields from the potion type here
-    id = b->id;
-    name = b->name;
-    description = b->description;
-    gid = b->gid;
-    type_id = b->type_id;
-    pieces = b->pieces;
-    effect_id = b->effect_id;
-    rarity = b->rarity;
-    ilevel = b->ilevel;
-    can_be_cursed = b->can_be_cursed;
-    can_have_prefix = b->can_have_prefix;
-    can_have_suffix = b->can_have_suffix;
-    can_stack = b->can_stack;
-    can_equip = b->can_equip;
-    can_drop = b->can_drop;
-    can_use = b->can_use;
-    is_identified = true;
-    quantity = 1;
-}
+// void Artifact::init(ArtifactType *b) {
+//     // Assign the fields from the potion type here
+//     id = b->id;
+//     name = b->name;
+//     description = b->description;
+//     gid = b->gid;
+//     type_id = b->type_id;
+//     pieces = b->pieces;
+//     effect_id = b->effect_id;
+//     rarity = b->rarity;
+//     ilevel = b->ilevel;
+//     can_be_cursed = b->can_be_cursed;
+//     can_have_prefix = b->can_have_prefix;
+//     can_have_suffix = b->can_have_suffix;
+//     can_stack = b->can_stack;
+//     can_equip = b->can_equip;
+//     can_drop = b->can_drop;
+//     can_use = b->can_use;
+//     is_identified = true;
+//     quantity = 1;
+// }
 
 //----------------------------------------------------------------------------
 // Initializes an Artifact using an index into the artifact type table
@@ -1264,9 +1485,9 @@ void Artifact::init(ArtifactType *b) {
 // Returns:
 //   Nothing
 //----------------------------------------------------------------------------
-void Artifact::init(int idx) {
-    init(&(g_artifact_ids[idx]));
-}
+// void Artifact::init(int idx) {
+//     init(&(g_artifact_ids[idx]));
+// }
 
 //----------------------------------------------------------------------------
 // Artifact::Artifact
@@ -1276,11 +1497,11 @@ void Artifact::init(int idx) {
 // Constructs a dummy item with base id of zero.  This item will
 // generally be something modified later using generate(). 
 //----------------------------------------------------------------------------
-Artifact::Artifact() {
-    //std::cout << "Creating artifact" << std::endl;
-    ArtifactType *b = &(g_artifact_ids[0]);
-    init(b);
-}
+// Artifact::Artifact() {
+//     //std::cout << "Creating artifact" << std::endl;
+//     ArtifactType *b = &(g_artifact_ids[0]);
+//     init(b);
+// }
 
 //----------------------------------------------------------------------------
 // Artifact::Artifact
@@ -1289,10 +1510,10 @@ Artifact::Artifact() {
 //
 // Constructs using a pointer to an entry in the artifacts table
 //----------------------------------------------------------------------------
-Artifact::Artifact(ArtifactType *b) {
-    //std::cout << "Creating artifact" << std::endl;
-    init(b);
-}
+// Artifact::Artifact(ArtifactType *b) {
+//     //std::cout << "Creating artifact" << std::endl;
+//     init(b);
+// }
 
 //----------------------------------------------------------------------------
 // Artifact::Artifact
@@ -1301,10 +1522,10 @@ Artifact::Artifact(ArtifactType *b) {
 //
 // Constructs using an offset (relative to to the artifacts table).
 //----------------------------------------------------------------------------
-Artifact::Artifact(unsigned int idx) {
-    ArtifactType *b = &(g_artifact_ids[idx]);
-    init(b);
-}
+// Artifact::Artifact(unsigned int idx) {
+//     ArtifactType *b = &(g_artifact_ids[idx]);
+//     init(b);
+// }
 
 //----------------------------------------------------------------------------
 // Gets the item class of an artifact.
@@ -1315,9 +1536,9 @@ Artifact::Artifact(unsigned int idx) {
 // Returns:
 //   ARTIFACT_CLASS
 //----------------------------------------------------------------------------
-int Artifact::get_item_class() {
-    return ItemConsts::ARTIFACT_CLASS;
-}
+// int Artifact::get_item_class() {
+//     return ItemConsts::ARTIFACT_CLASS;
+// }
 
 //----------------------------------------------------------------------------
 // Dumps information specific to artifacts to the console.
@@ -1328,21 +1549,21 @@ int Artifact::get_item_class() {
 // Returns:
 //   None
 //----------------------------------------------------------------------------
-void Artifact::dump_item() {
-    dump_item_common();
-    std::cout << "====== Artifact Specific ===================" << std::endl;
-    std::cout << "Type: ";
-    if(type_id == ItemConsts::STANDARD_ARTIFACT) {
-        std::cout << "Standard" << std::endl;
-    } 
-    else if (type_id == ItemConsts::MULTIPART_ARTIFACT) {
-        std::cout << "Multipart: (" << pieces << " parts)" << std::endl;
-    }
-    else if (type_id == ItemConsts::MULTIGEN_ARTIFACT) {
-        std::cout << "Multi-generation (" << pieces << " generations)" << std::endl;
-    }
-    std::cout << "Effect ID: " << effect_id << " (expanded form TBD)" << std::endl;
-}
+// void Artifact::dump_item() {
+//     dump_item_common();
+//     std::cout << "====== Artifact Specific ===================" << std::endl;
+//     std::cout << "Type: ";
+//     if(type_id == ItemConsts::STANDARD_ARTIFACT) {
+//         std::cout << "Standard" << std::endl;
+//     } 
+//     else if (type_id == ItemConsts::MULTIPART_ARTIFACT) {
+//         std::cout << "Multipart: (" << pieces << " parts)" << std::endl;
+//     }
+//     else if (type_id == ItemConsts::MULTIGEN_ARTIFACT) {
+//         std::cout << "Multi-generation (" << pieces << " generations)" << std::endl;
+//     }
+//     std::cout << "Effect ID: " << effect_id << " (expanded form TBD)" << std::endl;
+// }
 
 //----------------------------------------------------------------------------
 // Gets the arftifact's full name
@@ -1354,9 +1575,9 @@ void Artifact::dump_item() {
 //   A string containing the full name of the artifact (which is just the 
 //   type name)
 //----------------------------------------------------------------------------
-std::string Artifact::get_full_name() {
-    return get_type_name();
-}
+// std::string Artifact::get_full_name() {
+//     return get_type_name();
+// }
 
 //----------------------------------------------------------------------------
 // Gets the artifact's type name
@@ -1367,9 +1588,9 @@ std::string Artifact::get_full_name() {
 // Returns:
 //   A string containing the type name
 //----------------------------------------------------------------------------
-std::string Artifact::get_type_name() {
-    return name;
-}
+// std::string Artifact::get_type_name() {
+//     return name;
+// }
 
 //----------------------------------------------------------------------------
 // Non-class functions
@@ -1390,11 +1611,11 @@ std::string Artifact::get_type_name() {
 void perform_identification_action(Item *i, bool log) {
 	std::string old_name = i->get_full_name();
                 
-	i->identify();
-	if (i->get_item_class() == ItemConsts::POTION_CLASS)
-		g_identified_potions[i->get_id()] = true;
-	if (i->get_item_class() == ItemConsts::SCROLL_CLASS)
-		g_identified_scrolls[i->get_id()] = true;
+	i->is_identified = true;
+	if (i->item_class == ItemConsts::POTION_CLASS)
+		g_identified_potions[i->id] = true;
+	if (i->item_class == ItemConsts::SCROLL_CLASS)
+		g_identified_scrolls[i->id] = true;
     if (log) {
         g_text_log.put_line(old_name + " is " + i->get_full_name() + ".");
     }
@@ -1413,17 +1634,14 @@ void perform_identification_action(Item *i, bool log) {
 //----------------------------------------------------------------------------
 int get_tile_to_render(Item *i) {
 
-	int i_class = i->get_item_class();
-	int i_id = i->get_id();
-
-	if (i_class == ItemConsts::POTION_CLASS) {
-		return g_scrambled_potion_icons[i_id];
+	if (i->item_class == ItemConsts::POTION_CLASS) {
+		return g_scrambled_potion_icons[i->id];
 	}
-	else if (i_class == ItemConsts::SCROLL_CLASS) {
-		return g_scrambled_scroll_icons[i_id];	
+	else if (i->item_class == ItemConsts::SCROLL_CLASS) {
+		return g_scrambled_scroll_icons[i->id];	
 	}
 	else {
-		return i->get_gid();
+		return i->gid;
 	}
 }
 

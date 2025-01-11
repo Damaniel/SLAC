@@ -275,24 +275,21 @@ Item** Player::get_item_slot_by_type(int type) {
 //   Nothing.
 //------------------------------------------------------------------------------
 void Player::equip(Item *i) {
-	int item_class = i->get_item_class();
 	Item **item_slot;
 	Item **extra_slot;
 
 	// If not a weapon or armor, do nothing
-	if (item_class != ItemConsts::WEAPON_CLASS && item_class != ItemConsts::ARMOR_CLASS) {
+	if (i->item_class != ItemConsts::WEAPON_CLASS && i->item_class != ItemConsts::ARMOR_CLASS) {
 		return;
 	}
 
-	int item_type = i->get_type_id();
-
 	// If a weapon, get the weapon slot.  Otherwise, get the appropriate armor slot
 	// based on what the item is
-	if (item_class == ItemConsts::WEAPON_CLASS) {
+	if (i->item_class == ItemConsts::WEAPON_CLASS) {
 		item_slot = &(equipment.weapon);
 	}
 	else {
-		item_slot = get_item_slot_by_type(i->get_type_id());
+		item_slot = get_item_slot_by_type(i->type_id);
 		// If the item slot isn't empty, unequip it
 		if (item_slot == NULL) {
 			//std::cout << "equip: Not a valid item slot!" << std::endl;
@@ -302,10 +299,10 @@ void Player::equip(Item *i) {
 	
 	// If the item to equip is a shield and a two handed weapon is equipped, then 
 	// unequip the weapon 
-	if (item_type == ItemConsts::ARMOR_TYPE_SHIELD || item_type == ItemConsts::ARMOR_TYPE_BUCKLER) {
+	if (i->type_id == ItemConsts::ARMOR_TYPE_SHIELD || i->type_id == ItemConsts::ARMOR_TYPE_BUCKLER) {
 		extra_slot = &(equipment.weapon);
 		if (*extra_slot != NULL) {
-			int extra_type = (*extra_slot)->get_type_id();
+			int extra_type = (*extra_slot)->type_id;
 			if (extra_type == ItemConsts::WEAPON_TYPE_BATTLEAXE || 
 			    extra_type == ItemConsts::WEAPON_TYPE_BROADSWORD ||
 				extra_type == ItemConsts::WEAPON_TYPE_MAUL) {
@@ -316,9 +313,9 @@ void Player::equip(Item *i) {
 
 	// If the item to equip is a two-handed weapon and a shield is equipped, then
 	// unequip the shield
-	if (item_type == ItemConsts::WEAPON_TYPE_BATTLEAXE ||
-	    item_type == ItemConsts::WEAPON_TYPE_BROADSWORD ||
-		item_type == ItemConsts::WEAPON_TYPE_MAUL) {
+	if (i->type_id == ItemConsts::WEAPON_TYPE_BATTLEAXE ||
+	    i->type_id == ItemConsts::WEAPON_TYPE_BROADSWORD ||
+		i->type_id == ItemConsts::WEAPON_TYPE_MAUL) {
 		extra_slot = &(equipment.shield);
 		if (*extra_slot != NULL) {
 			unequip(extra_slot);
@@ -331,13 +328,13 @@ void Player::equip(Item *i) {
 
 	// Attach the item to the slot and equip it
 	//std::cout << "equip: Attaching item to item slot" << std::endl;
-	if ((*item_slot == NULL) || !(*item_slot)->is_it_cursed()) {
+	if ((*item_slot == NULL) || !(*item_slot)->is_cursed) {
 		*item_slot = i;
-		(*item_slot)->mark_equipped();
+		(*item_slot)->is_equipped = true;
 		// Only log the message if we're not loading a save file
 		if (!g_state_flags.loading_save) {
 			g_text_log.put_line("Equipped the " + (*item_slot)->get_full_name() + ".");
-			if ((*item_slot)->is_it_cursed()) {
+			if ((*item_slot)->is_cursed) {
 				g_text_log.put_line("Oh no!  The " + (*item_slot)->get_full_name() + " is cursed!");
 			}
 		}
@@ -359,7 +356,7 @@ void Player::unequip(Item **slot) {
 	// Free the item slot if it has an item and it isn't cursed.  
 	// Note that the item still exists in the inventory so it's not actually deleted here.
 	// If the item is cursed, it can't be removed.
-	if ((*slot)->is_it_cursed()) {
+	if ((*slot)->is_cursed) {
 		g_text_log.put_line("Unfortunately you can't remove that.");
 		g_text_log.put_line("The " + (*slot)->get_full_name() + " is cursed.");
 		return;
@@ -368,7 +365,7 @@ void Player::unequip(Item **slot) {
 	// Only log the message if we're not loading a save file
 	if (!g_state_flags.loading_save)
 		g_text_log.put_line("Removed the " + (*slot)->get_full_name() + ".");
-	(*slot)->mark_removed();
+	(*slot)->is_equipped = false;
 	//std::cout << "process_unequip:  Remove called" << std::endl;
 	*slot = NULL;
 	recalculate_actual_stats();

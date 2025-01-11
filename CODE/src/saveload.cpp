@@ -171,56 +171,37 @@ void create_item_from_save_data(FILE *f, int slot) {
     fread(&defense, sizeof(short), 1, f);
 
     // Create the appropriate base item type based on the type id
-    switch (item_class) {
-        case ItemConsts::WEAPON_CLASS:
-            i = new Weapon();
-            break;
-        case ItemConsts::ARMOR_CLASS:
-            i = new Armor();
-            break;
-        case ItemConsts::CURRENCY_CLASS:
-            i = new Currency();
-            break;
-        case ItemConsts::POTION_CLASS:
-            i = new Potion();
-            break;
-        case ItemConsts::SCROLL_CLASS:
-            i = new Scroll();
-            break;
-        case ItemConsts::ARTIFACT_CLASS:
-            i = new Artifact();
-            break;
-    }
+    i = new Item(item_class);
 
     // Start populating fields
     s_name = name;
     s_desc = desc;
-    i->set_id(id);
-    i->set_quantity(quantity);
-    i->set_name(s_name);;
-    i->set_description(s_desc);
-    i->set_gid(gid);
-    i->set_type_id(type_id);
-    i->set_rarity(rarity);
-    i->set_ilevel(ilevel);
+    i->id = id;
+    i->quantity = quantity;
+    i->name = s_name;
+    i->description = s_desc;
+    i->gid = gid;
+    i->type_id = type_id;
+    i->rarity = rarity;
+    i->ilevel = ilevel;
     // Item class is determined by the specific Item class, not the value in the save file
-    i->set_can_have_a_prefix(flags[0]);
-    i->set_can_have_a_suffix(flags[1]);
-    i->set_can_have_curse(flags[2]);
-    i->set_can_it_stack(flags[3]);
-    i->set_can_be_used(flags[4]);
-    i->set_can_be_dropped(flags[5]);
-    i->set_can_be_equipped(flags[6]);
-    i->set_is_it_identified(flags[7]);
-    i->add_prefix(prefix);
-    i->add_suffix(suffix);
-    i->set_curse_state(cursed);
+    i->can_have_prefix = flags[0];
+    i->can_have_suffix = flags[1];
+    i->can_be_cursed = flags[2];
+    i->can_stack = flags[3];
+    i->can_use = flags[4];
+    i->can_drop = flags[5];
+    i->can_equip = flags[6];
+    i->is_identified = flags[7];
+    i->prefix_id = prefix;
+    i->suffix_id = suffix;
+    i->is_cursed = cursed;
     if (equipped)
-        i->mark_equipped();
+        i->is_equipped = true;
     else
-        i->mark_removed();
-    i->set_attack(attack);
-    i->set_defense(defense);
+        i->is_equipped = false;
+    i->attack = attack;
+    i->defense = defense;
 
     g_inventory->add_at_slot(i, slot);
 }
@@ -624,15 +605,15 @@ int write_inventory_data(FILE *f) {
         }
         else {
             fputc(0x01, f);                                // 1
-            short val = cur_item->get_id();
+            short val = cur_item->id;
             char cval;
             bool bval;
             fwrite(&val, sizeof(short), 1, f);             // 2
-            val = cur_item->get_quantity();
+            val = cur_item->quantity;
             fwrite(&val, sizeof(short), 1, f);             // 2
             
             // Write the full name
-            std::string strval = cur_item->get_name();
+            std::string strval = cur_item->name;
             int len = strval.length();
             const char *name = strval.c_str();  
             if (len > 128)
@@ -643,7 +624,7 @@ int write_inventory_data(FILE *f) {
                 fputc(0x00, f);                            // /
 
             // Write the description
-            strval = cur_item->get_description();
+            strval = cur_item->description;
             len = strval.length();
             name = strval.c_str();  
             if (len > 128)
@@ -654,47 +635,47 @@ int write_inventory_data(FILE *f) {
                 fputc(0x00, f);
 
             // Write the rest of the data
-            val = cur_item->get_gid();
+            val = cur_item->gid;
             fwrite(&val, sizeof(short), 1, f);              // 2
-            val = cur_item->get_type_id();
+            val = cur_item->type_id;
             fwrite(&val, sizeof(short), 1, f);              // 2
-            cval = cur_item->get_rarity();
+            cval = cur_item->rarity;
             fwrite(&cval, sizeof(char), 1, f);              // 1
-            cval = cur_item->get_ilevel();
+            cval = cur_item->ilevel;
             fwrite(&cval, sizeof(char), 1, f);              // 1
-            int ival = cur_item->get_item_class();
+            int ival = cur_item->item_class;
             fwrite(&ival, sizeof(int), 1, f);               // 4
             // Write the base boolean flags
             bool flags[8];
-            flags[0] = cur_item->can_have_a_prefix();
-            flags[1] = cur_item->can_have_a_suffix();
-            flags[2] = cur_item->can_have_curse();
-            flags[3] = cur_item->can_it_stack();
-            flags[4] = cur_item->can_be_used();
-            flags[5] = cur_item->can_be_dropped();
-            flags[6] = cur_item->can_be_equipped();
-            flags[7] = cur_item->is_it_identified();
+            flags[0] = cur_item->can_have_prefix;
+            flags[1] = cur_item->can_have_suffix;
+            flags[2] = cur_item->can_be_cursed;
+            flags[3] = cur_item->can_stack;
+            flags[4] = cur_item->can_use;
+            flags[5] = cur_item->can_drop;
+            flags[6] = cur_item->can_equip;
+            flags[7] = cur_item->is_identified;
             fwrite(flags, sizeof(bool), 8, f);              // 8
             // Write the prefix and suffix
-            val = (short)(cur_item->get_prefix());
+            val = (short)(cur_item->prefix_id);
             fwrite(&val, sizeof(short), 1, f);              // 2
-            val = (short)(cur_item->get_suffix());
+            val = (short)(cur_item->suffix_id);
             fwrite(&val, sizeof(short), 1, f);              // 2
             // Write the cursed/equipped flags
-            bval = cur_item->is_it_cursed();
+            bval = cur_item->is_cursed;
             fwrite(&bval, sizeof(bool), 1, f);              // 1
-            bval = cur_item->is_it_equipped();
+            bval = cur_item->is_equipped;
             fwrite(&bval, sizeof(bool), 1, f);              // 1
             // Write attack/defense values (or -1 if not the right kind of equipment) 
-            if (cur_item->get_item_class() == ItemConsts::WEAPON_CLASS) {
-                val = (short)(cur_item->get_attack()); 
+            if (cur_item->item_class == ItemConsts::WEAPON_CLASS) {
+                val = (short)(cur_item->attack); 
             }
             else {
                 val = -1;
             }
             fwrite(&val, sizeof(short), 1, f);              // 2
-            if (cur_item->get_item_class() == ItemConsts::ARMOR_CLASS) {
-                val = (short)(cur_item->get_defense());
+            if (cur_item->item_class == ItemConsts::ARMOR_CLASS) {
+                val = (short)(cur_item->defense);
             }
             else {
                 val = -1;

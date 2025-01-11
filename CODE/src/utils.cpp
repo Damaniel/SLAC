@@ -854,8 +854,8 @@ void pick_up_item_at(int x, int y) {
         // For currency, add the value to the player's gold directly
         // Also, delete the currency item because it's going away
         // (not on the floor, not in the inventory)
-        if (i->get_item_class() == ItemConsts::CURRENCY_CLASS) {
-            g_player.add_gold(i->get_quantity());
+        if (i->item_class == ItemConsts::CURRENCY_CLASS) {
+            g_player.add_gold(i->quantity);
 		    delete i;
             g_state_flags.update_status_dialog = true;
 			g_state_flags.update_status_hp_exp = true;
@@ -864,8 +864,8 @@ void pick_up_item_at(int x, int y) {
         else {
 			// If the item is an artifact, add it to the relevant collected artifact
 			// entry
-			if (i->get_item_class() == ItemConsts::ARTIFACT_CLASS) {
-				int artifact_index = i->get_id();
+			if (i->item_class == ItemConsts::ARTIFACT_CLASS) {
+				int artifact_index = i->id;
 				g_collected_artifacts[artifact_index] += 1;
 			}
 
@@ -877,7 +877,7 @@ void pick_up_item_at(int x, int y) {
             // item in the existing slot, then delete the picked up one
             if (stackable_slot != -1) {
                 Item *si = g_inventory->get_item_in_slot(stackable_slot);
-                si->adjust_quantity(1);
+                si->quantity += 1;
                 delete i;
                 picked_up = true;
             }
@@ -924,19 +924,19 @@ void perform_inventory_menu_action(void) {
 	switch (g_ui_globals.sel_item_option) {
 		case UiConsts::ITEM_OPTION_USE:
 			// If the item can be used, use it
-			if (i->can_be_used()) {
+			if (i->can_use) {
 				// If the item was a potion or scroll, using it identifies all items of that kind until
 				// the current gen of player dies.  The 'identify' function works for the current 
 				// stack in the inventory; g_identified_<XYZ> ensures future items are auto-identified
-				if (g_identified_potions[i->get_id()] == false && i->get_item_class() == ItemConsts::POTION_CLASS) 
+				if (g_identified_potions[i->id] == false && i->item_class == ItemConsts::POTION_CLASS) 
 					perform_identification_action(i, true);
-				if (g_identified_scrolls[i->get_id()] == false && i->get_item_class() == ItemConsts::SCROLL_CLASS)
+				if (g_identified_scrolls[i->id] == false && i->item_class == ItemConsts::SCROLL_CLASS)
 					perform_identification_action(i, true);
 
 				// Use the item.  Take one from the stack, or delete the item if there was only 1
 				i->use();
-				i->adjust_quantity(-1);
-				if (i->get_quantity() <= 0) {
+				i->quantity -= 1;
+				if (i->quantity <= 0) {
 					// The item was used and there are none left, get rid of it
 					//std::cout << "perform_inventory_menu_action: stack is depleted, deleting item" << std::endl;
 					g_inventory->delete_item_in_slot(slot);
@@ -945,22 +945,22 @@ void perform_inventory_menu_action(void) {
 			break;
 		case UiConsts::ITEM_OPTION_EQUIP:
 			// If it can be equipped and isn't, have the player equip it
-			if (i->can_be_equipped() && !i->is_it_equipped()) {
+			if (i->can_equip && !i->is_equipped) {
 				//std::cout << "perform_inventory_menu_action: equipping item" << std::endl;
 				g_player.equip(i);
 			}
 			break;
 		case UiConsts::ITEM_OPTION_UNEQUIP:
 			// If it can be equipped and currently is, have the player unequip it
-			if (i->can_be_equipped() && i->is_it_equipped()) {
+			if (i->can_equip && i->is_equipped) {
 				//std::cout << "perform_inventory_menu_action: unequipping item" << std::endl;
-				Item **equip_slot = g_player.get_item_slot_by_type(i->get_type_id());
+				Item **equip_slot = g_player.get_item_slot_by_type(i->type_id);
 				g_player.unequip(equip_slot);
 			}
 			break;
 		case UiConsts::ITEM_OPTION_DROP:
 			// If the item can be dropped, and currently isn't equipped, drop it on the ground
-			if (g_state_flags.in_dungeon && i->can_be_dropped() && !i->is_it_equipped()) {
+			if (g_state_flags.in_dungeon && i->can_drop && !i->is_equipped) {
 				//std::cout << "perform_inventory_menu_action: dropping item" << std::endl;
 				drop_item_at(i, g_player.get_x_pos(), g_player.get_y_pos());
 				g_inventory->remove_item_in_slot(slot);
@@ -968,7 +968,7 @@ void perform_inventory_menu_action(void) {
 			break;
 		case UiConsts::ITEM_OPTION_DESTROY:
 			// If the item can be dropped and currently isn't equipped, destroy it
-			if (i->can_be_dropped() && !i->is_it_equipped()) {
+			if (i->can_drop && !i->is_equipped) {
 				// Delete the item; it will delete the entire stack
 				//std::cout << "perform_inventory_menu_action: deleting item(s)" << std::endl;
 				g_inventory->delete_item_in_slot(slot);
@@ -1421,26 +1421,25 @@ void apply_single_modifier(ModifierMagType m, Stats *fixed, Stats *multiplicativ
 //   Nothing
 //----------------------------------------------------------------------------
 void apply_item_values_to_stats(Item *i, Stats *fixed, Stats *multiplicative, std::vector<ModifierMagType> &mods) {
-	if (i->get_item_class() == ItemConsts::WEAPON_CLASS) {
+	if (i->item_class == ItemConsts::WEAPON_CLASS) {
 		//std::cout << "apply_item_values_to_stats: attack was " << fixed->atk << std::endl;
-		fixed->atk += i->get_attack();
+		fixed->atk += i->attack;
 		//std::cout << "apply_item_values_to_stats: attack is now " << fixed->atk << std::endl;
 	}
-	if (i->get_item_class() == ItemConsts::ARMOR_CLASS) {
+	if (i->item_class == ItemConsts::ARMOR_CLASS) {
 		//std::cout << "apply_item_values_to_stats: defense was " << fixed->def << std::endl;
-		fixed->def += i->get_defense();
+		fixed->def += i->defense;
 		//std::cout << "apply_item_values_to_stats: defense is now " << fixed->def << std::endl;
 	}
 
 	int idx;
-	if(i->get_prefix() != -1) {
+	if(i->prefix_id != -1) {
 		ItemPrefixType p;
-		int prefix = i->get_prefix();
-		if (i->is_it_cursed()) {
-			p = g_cursed_item_prefix_ids[prefix];
+		if (i->is_cursed) {
+			p = g_cursed_item_prefix_ids[i->prefix_id];
 		}
 		else {
-			p = g_item_prefix_ids[prefix];
+			p = g_item_prefix_ids[i->prefix_id];
 		}
 		//std::cout << "apply_item_values_to_stats: name: " << p.name << ", num mods = " << (int)p.num_modifiers << std::endl;
 		for (idx=0; idx < p.num_modifiers; idx++) {
@@ -1448,14 +1447,13 @@ void apply_item_values_to_stats(Item *i, Stats *fixed, Stats *multiplicative, st
 			apply_single_modifier(p.modifiers[idx], fixed, multiplicative, mods);
 		}
 	}
-	if(i->get_suffix() != -1) {
+	if(i->suffix_id != -1) {
 		ItemSuffixType p;
-		int suffix = i->get_suffix();
-		if (i->is_it_cursed()) {
-			p = g_cursed_item_suffix_ids[suffix];
+		if (i->is_cursed) {
+			p = g_cursed_item_suffix_ids[i->suffix_id];
 		}
 		else {
-			p = g_item_suffix_ids[suffix];
+			p = g_item_suffix_ids[i->suffix_id];
 		}
 		//std::cout << "apply_item_values_to_stats: name: " << p.name << ", num mods = " << (int)p.num_modifiers << std::endl;
 		for (idx=0; idx < p.num_modifiers; idx++) {
@@ -1517,14 +1515,14 @@ void scramble_scroll_icons(void) {
 void identify_if_previously_known(Item *i) {
     // If the item is a potion or scroll and has been previously identified, 
     // mark it as such
-    if(i->get_item_class() == ItemConsts::POTION_CLASS){
-        if (g_identified_potions[i->get_id()] == true)
-            i->identify();
+    if(i->item_class == ItemConsts::POTION_CLASS){
+        if (g_identified_potions[i->id] == true)
+            i->is_identified = true;
     }        
-    if(i->get_item_class() == ItemConsts::SCROLL_CLASS)
+    if(i->item_class == ItemConsts::SCROLL_CLASS)
     {
-        if (g_identified_scrolls[i->get_id()] == true) {
-            i->identify();
+        if (g_identified_scrolls[i->id] == true) {
+            i->is_identified = true;
         }
     }
 }
