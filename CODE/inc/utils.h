@@ -160,6 +160,7 @@ struct StateFlags {
 
     // - control flags
     bool exit_game;           // Did the player choose to exit the game?
+    bool loading_save;        // Is a save currently being loaded?
 };
 
 // A collection of flags related to game progression

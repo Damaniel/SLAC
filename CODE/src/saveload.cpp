@@ -23,6 +23,18 @@
 //==========================================================================================
 #include "globals.h"
 
+void equip_items_back_on_player(int *slots) {
+    Item *i;
+    
+    for (int idx = 0; idx < 9; idx++) {
+        if (slots[idx] != -1) {
+             i = g_inventory->get_item_in_slot(slots[idx]);
+             if (i != NULL)
+                 g_player.equip(i);
+        }
+    }
+}
+
 bool finish_other_load_tasks(void) {
     // NOTE: I don't believe this should leak memory, since
     // generate_new_dungeon_floor will either be called in the 
@@ -68,7 +80,7 @@ bool finish_other_load_tasks(void) {
 // Returns:
 //   true if processing was OK, false otherwise
 //----------------------------------------------------------------------------
-bool process_player_data(FILE *f) {
+bool process_player_data(FILE *f, int *slots) {
     char magic[4];
     char name[16];
 
@@ -100,16 +112,117 @@ bool process_player_data(FILE *f) {
     fread(&(g_player.actual), sizeof(Stats), 1, f);
 
     // Read the recall and effect flags
-    fwrite(&(g_player.recall_active), sizeof(bool), 1, f);
-    fwrite(&(g_player.recall_floor), sizeof(int), 1, f);
-    fwrite(&(g_player.effects), sizeof(ArtifactEffectFlags), 1, f);
+    fread(&(g_player.recall_active), sizeof(bool), 1, f);
+    fread(&(g_player.recall_floor), sizeof(int), 1, f);
+    fread(&(g_player.effects), sizeof(ArtifactEffectFlags), 1, f);
 
-    // Iterate through and determine which inventory slots have any equipped gear
-    // Write those slot numbers (or -1) for each slot
-
-    // TBD - need to load inventory first
+    fread(slots, sizeof(int), 9, f);
 
     return true;
+}
+
+//----------------------------------------------------------------------------
+// Loads data for a particular item, creates it, and puts it in the inventory
+//
+// Arguments:
+//   f - the file pointer
+//   slot - the item the slot goes in
+//
+// Returns:
+//   true if processing was OK, false otherwise
+//----------------------------------------------------------------------------
+void create_item_from_save_data(FILE *f, int slot) {
+    Item *i;
+    char name[128];
+    char desc[128];
+    short id;
+    short quantity;
+    short gid;
+    short type_id;
+    unsigned char rarity;
+    unsigned char ilevel;
+    int item_class;
+    bool flags[8];
+    short prefix;
+    short suffix;
+    bool cursed;
+    bool equipped;
+    short attack;
+    short defense;
+    std::string s_name;
+    std::string s_desc;
+
+    // read all the item data into the temporary variables
+    fread(&id, sizeof(short), 1, f);
+    fread(&quantity, sizeof(short), 1, f);
+    fread(&name, sizeof(char), 128, f);
+    fread(&desc, sizeof(char), 128, f);
+    fread(&gid, sizeof(short), 1, f);
+    fread(&type_id, sizeof(short), 1, f);
+    fread(&rarity, sizeof(unsigned char), 1, f);
+    fread(&ilevel, sizeof(unsigned char), 1, f);
+    fread(&item_class, sizeof(int), 1, f);
+    fread(&flags, sizeof(bool), 8, f);
+    fread(&prefix, sizeof(short), 1, f);
+    fread(&suffix, sizeof(short), 1, f);
+    fread(&cursed, sizeof(bool), 1, f);
+    fread(&equipped, sizeof(bool), 1, f);
+    fread(&attack, sizeof(short), 1, f);
+    fread(&defense, sizeof(short), 1, f);
+
+    // Create the appropriate base item type based on the type id
+    switch (item_class) {
+        case ItemConsts::WEAPON_CLASS:
+            i = new Weapon();
+            break;
+        case ItemConsts::ARMOR_CLASS:
+            i = new Armor();
+            break;
+        case ItemConsts::CURRENCY_CLASS:
+            i = new Currency();
+            break;
+        case ItemConsts::POTION_CLASS:
+            i = new Potion();
+            break;
+        case ItemConsts::SCROLL_CLASS:
+            i = new Scroll();
+            break;
+        case ItemConsts::ARTIFACT_CLASS:
+            i = new Artifact();
+            break;
+    }
+
+    // Start populating fields
+    s_name = name;
+    s_desc = desc;
+    i->set_id(id);
+    i->set_quantity(quantity);
+    i->set_name(s_name);;
+    i->set_description(s_desc);
+    i->set_gid(gid);
+    i->set_type_id(type_id);
+    i->set_rarity(rarity);
+    i->set_ilevel(ilevel);
+    // Item class is determined by the specific Item class, not the value in the save file
+    i->set_can_have_a_prefix(flags[0]);
+    i->set_can_have_a_suffix(flags[1]);
+    i->set_can_have_curse(flags[2]);
+    i->set_can_it_stack(flags[3]);
+    i->set_can_be_used(flags[4]);
+    i->set_can_be_dropped(flags[5]);
+    i->set_can_be_equipped(flags[6]);
+    i->set_is_it_identified(flags[7]);
+    i->add_prefix(prefix);
+    i->add_suffix(suffix);
+    i->set_curse_state(cursed);
+    if (equipped)
+        i->mark_equipped();
+    else
+        i->mark_removed();
+    i->set_attack(attack);
+    i->set_defense(defense);
+
+    g_inventory->add_at_slot(i, slot);
 }
 
 //----------------------------------------------------------------------------
@@ -123,7 +236,42 @@ bool process_player_data(FILE *f) {
 //   true if processing was OK, false otherwise
 //----------------------------------------------------------------------------
 bool process_inventory_data(FILE *f) {
+    char magic[4];
+    bool exists;
 
+    // This one is tricky
+
+    // start by clearing the existing inventory
+    if (g_inventory != NULL)
+        delete g_inventory;
+    g_inventory = new Inventory();
+
+    // For each inventory item:
+    // Load all the data
+    // If the first value is 0, set the inventory slot to null
+    // If it's set to 1
+    //   - create a new item of the appropriate base type
+    //   - Assign prefix, suffix and other flags to the item
+    //   - Attach it to the inventory slot
+
+    fseek(f, SaveLoadConsts::INVENTORY_DATA_OFFSET, SEEK_SET);
+
+    fread(&magic, sizeof(char), 4, f);
+    if (magic[0] != 'I' || magic[1] != 'T' || magic[2] != 'E' || magic[3] != 'M' ) {
+        return false;
+    }
+
+    for (int i = 0; i < InventoryConsts::INVENTORY_SIZE; ++i) {
+        fread(&exists, sizeof(bool), 1, f);
+        if (exists) {
+            create_item_from_save_data(f, i);
+        }
+        else {
+            // Skip past to the next record
+            fseek(f, SaveLoadConsts::INVENTORY_ITEM_SIZE - 1, SEEK_CUR);
+        }
+    }
+    return true;
 }
     
 //----------------------------------------------------------------------------
@@ -472,7 +620,7 @@ int write_inventory_data(FILE *f) {
             for(int j = 0; j < 288; j++) {                 // 288
                 fputc(0x00, f);
             }
-            bytes_written += 289;
+            bytes_written += SaveLoadConsts::INVENTORY_ITEM_SIZE;
         }
         else {
             fputc(0x01, f);                                // 1
@@ -484,7 +632,7 @@ int write_inventory_data(FILE *f) {
             fwrite(&val, sizeof(short), 1, f);             // 2
             
             // Write the full name
-            std::string strval = cur_item->get_full_name();
+            std::string strval = cur_item->get_name();
             int len = strval.length();
             const char *name = strval.c_str();  
             if (len > 128)
@@ -552,7 +700,7 @@ int write_inventory_data(FILE *f) {
                 val = -1;
             }
             fwrite(&val, sizeof(short), 1, f);              // 2
-            bytes_written += 289;
+            bytes_written += SaveLoadConsts::INVENTORY_ITEM_SIZE;
         }
     }
 
@@ -761,6 +909,9 @@ bool save_game(std::string filename) {
 //   true if file load was successful, false otherwise
 //----------------------------------------------------------------------------
 bool load_game(std::string filename) {
+
+    g_state_flags.loading_save = true;
+
     FILE *fp = fopen(filename.c_str(), "rb");
     if (fp == NULL) {
         std::cout << "Unable to open save file for reading!" << std::endl;
@@ -769,6 +920,7 @@ bool load_game(std::string filename) {
 
     char magic[5];
     magic[4] = 0x00;
+    int slots[9];
 
     int idata;
     short sdata;
@@ -799,7 +951,7 @@ bool load_game(std::string filename) {
     }
 
     // Load the player data
-    result = process_player_data(fp);
+    result = process_player_data(fp, slots);
     if (!result) {
         std::cout << "player data bad" << std::endl;
         fclose(fp);
@@ -884,8 +1036,12 @@ bool load_game(std::string filename) {
 
     fclose(fp);
 
+    equip_items_back_on_player(slots);
+
     // do any additional processing (init, state changes, etc)
     result = finish_other_load_tasks(); 
+
+    g_state_flags.loading_save = false;
 
     return result;
 }

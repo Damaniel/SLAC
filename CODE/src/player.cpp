@@ -334,9 +334,12 @@ void Player::equip(Item *i) {
 	if ((*item_slot == NULL) || !(*item_slot)->is_it_cursed()) {
 		*item_slot = i;
 		(*item_slot)->mark_equipped();
-		g_text_log.put_line("Equipped the " + (*item_slot)->get_full_name() + ".");
-		if ((*item_slot)->is_it_cursed()) {
-			g_text_log.put_line("Oh no!  The " + (*item_slot)->get_full_name() + " is cursed!");
+		// Only log the message if we're not loading a save file
+		if (!g_state_flags.loading_save) {
+			g_text_log.put_line("Equipped the " + (*item_slot)->get_full_name() + ".");
+			if ((*item_slot)->is_it_cursed()) {
+				g_text_log.put_line("Oh no!  The " + (*item_slot)->get_full_name() + " is cursed!");
+			}
 		}
 	}
 	recalculate_actual_stats();
@@ -362,7 +365,9 @@ void Player::unequip(Item **slot) {
 		return;
 	}
 	//std::cout << "process_unequip: calling remove on item" << std::endl;
-	g_text_log.put_line("Removed the " + (*slot)->get_full_name() + ".");
+	// Only log the message if we're not loading a save file
+	if (!g_state_flags.loading_save)
+		g_text_log.put_line("Removed the " + (*slot)->get_full_name() + ".");
 	(*slot)->mark_removed();
 	//std::cout << "process_unequip:  Remove called" << std::endl;
 	*slot = NULL;

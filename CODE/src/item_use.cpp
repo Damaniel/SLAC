@@ -549,7 +549,10 @@ void use_scroll_action(int id) {
             g_text_log.put_line(text);
             break;
         case ItemConsts::SCROLL_OF_MAGIC_MAP:
-            expose_map();
+            if (g_state_flags.in_dungeon)
+                expose_map();
+            else
+                g_text_log.put_line("This scroll does nothing here.");
             break;
         case ItemConsts::SCROLL_OF_DECURSE:
             result = decurse_item(true);
@@ -563,19 +566,34 @@ void use_scroll_action(int id) {
             g_text_log.put_line(text);
             break;
         case ItemConsts::SCROLL_OF_TELEPORT:
-            teleport_player();
+            if (g_state_flags.in_dungeon)
+                teleport_player();
+            else
+                g_text_log.put_line("This scroll does nothing here.");                
             break;
         case ItemConsts::SCROLL_OF_DARKNESS:
-            darken_area();
+            if (g_state_flags.in_dungeon)
+                darken_area();
+            else
+                g_text_log.put_line("This scroll does nothing here.");                
             break;
         case ItemConsts::SCROLL_OF_FORGET_AREA:
-            hide_map();
+            if (g_state_flags.in_dungeon)
+                hide_map();
+            else
+                g_text_log.put_line("This scroll does nothing here.");                
             break;
         case ItemConsts::SCROLL_OF_RECALL:
-            activate_recall();
+            if (g_state_flags.in_dungeon)
+                activate_recall();
+            else
+                g_text_log.put_line("This scroll does nothing here.");                
             break;
         case ItemConsts::SCROLL_OF_SUMMON_ITEM:
-            summon_item(15);
+            if (g_state_flags.in_dungeon)
+                summon_item(15);
+            else
+                g_text_log.put_line("This scroll does nothing here.");                
             break;
         case ItemConsts::SCROLL_OF_CURSE:
             result = curse_item();

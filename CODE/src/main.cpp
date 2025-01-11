@@ -100,6 +100,8 @@ void init_game() {
 
 	// Make the game loop until 'done' (right now, mainly by pressing ESC)
 	g_state_flags.exit_game = false;
+
+	g_state_flags.loading_save = false;
 }
 
 //----------------------------------------------------------------------------

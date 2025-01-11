@@ -239,6 +239,7 @@ protected:
 public:
     virtual std::string get_full_name() = 0;
     virtual std::string get_type_name() = 0;
+    virtual std::string get_name() { return name; };
     virtual void init(int idx) = 0;
     virtual void dump_item() = 0;
     virtual void dump_prefix() = 0;
@@ -255,6 +256,8 @@ public:
     virtual int get_item_class() = 0;
     virtual int get_attack() = 0;
     virtual int get_defense() = 0;
+    virtual void set_attack(unsigned short val) = 0;
+    virtual void set_defense(unsigned short val) = 0;
     virtual void mark_equipped() = 0;
     virtual void mark_removed() = 0;
     virtual bool is_it_equipped() = 0;
@@ -267,6 +270,14 @@ public:
     bool can_be_used() { return can_use; }
     bool can_be_dropped() { return can_drop; }
     bool can_be_equipped() { return can_equip; }
+    void set_can_have_curse(bool val) { can_be_cursed = val; }
+    void set_can_have_a_prefix(bool val) { can_have_prefix = val; }
+    void set_can_have_a_suffix(bool val) { can_have_suffix = val; }
+    void set_can_it_stack(bool val) { can_stack = val; }
+    void set_can_be_equipped(bool val) { can_equip = val; }
+    void set_can_be_dropped(bool val) { can_drop = val; }
+    void set_can_be_used(bool val) { can_use = val; }
+    void set_is_it_identified(bool val) { is_identified = val; }
     void identify() { is_identified = true; }
     bool is_it_identified() { return is_identified; }
     unsigned short get_quantity() { return quantity; }
@@ -277,6 +288,15 @@ public:
     unsigned short get_type_id() { return type_id; }
     unsigned char get_rarity() { return rarity; }
     unsigned char get_ilevel() { return ilevel; }
+    void set_gid(unsigned short val) { gid = val; }
+    void set_id(unsigned short val) { id = val; }
+    void set_quantity(unsigned short val) { quantity = val; }
+    void set_type_id(unsigned short val) { type_id = val; }
+    void set_rarity(unsigned char val) { rarity = val; }
+    void set_ilevel(unsigned char val) { ilevel = val; }
+    void set_name(std::string val) { name = val; }
+    void set_description(std::string val) { description = val; }
+
     virtual ~Item() { /*std::cout << "~Item: Deleting item" << std::endl; */ }
 };
 
@@ -297,6 +317,8 @@ public:
     virtual int get_item_class() = 0;
     virtual int get_attack() = 0;
     virtual int get_defense() = 0;
+    virtual void set_attack(unsigned short val) = 0;
+    virtual void set_defense(unsigned short val) = 0;
     std::string get_full_name();
     std::string get_type_name();
     void use() {}
@@ -327,6 +349,8 @@ public:
     void init(int idx);
     int get_attack(void) { return attack; }
     int get_defense(void) { return -1; }
+    void set_attack(unsigned short val) { attack = val; }
+    void set_defense(unsigned short val) {}
     int get_item_class(void);
     void dump_item();
     void mark_equipped();
@@ -345,6 +369,8 @@ public:
     void init(int idx);
     int get_attack(void) { return -1; }
     int get_defense(void) { return defense; }
+    void set_attack(unsigned short val) {}
+    void set_defense(unsigned short val) { defense = val; }
     int get_item_class(void);
     void dump_item();
     void mark_equipped();
@@ -369,6 +395,8 @@ public:
     int get_suffix() { return -1; }
     int get_attack() { return -1; }
     int get_defense() { return -1; }
+    void set_attack(unsigned short val) {}
+    void set_defense(unsigned short val) {}
     void dump_prefix() {}
     void dump_suffix() {}
     void add_prefix(int pid) {}
@@ -432,6 +460,8 @@ public:
     int get_suffix() { return -1; }
     int get_attack() { return -1; }
     int get_defense() { return -1; }
+    void set_attack(unsigned short val) {}
+    void set_defense(unsigned short val) {}
     void dump_prefix() {}
     void dump_suffix() {}
     void add_prefix(int pid) {}
@@ -462,6 +492,8 @@ public:
     int get_suffix() { return -1; }
     int get_attack() { return -1; }
     int get_defense() { return -1; }
+    void set_attack(unsigned short val) {}
+    void set_defense(unsigned short val) {}
     void dump_prefix() {}
     void dump_suffix() {}
     void add_prefix(int pid) {}

@@ -40,9 +40,15 @@ namespace SaveLoadConsts {
     const int SCROLL_SCRAMBLINGS_OFFSET = 14675;
     const int ID_POTIONS_OFFSET = 14723;
     const int ID_SCROLLS_OFFSET = 14737;
+
+    const int INVENTORY_ITEM_SIZE = 289;
 }
 
-bool process_player_data(FILE *f);
+void equip_items_back_on_player(int *slots);
+void create_item_from_save_data(FILE *f, int slot);
+bool finish_other_load_tasks(void);
+
+bool process_player_data(FILE *f, int *slots);
 bool process_inventory_data(FILE *f);
 bool process_artifact_data(FILE *f);
 bool process_dungeon_data(FILE *f);
