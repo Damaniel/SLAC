@@ -96,7 +96,7 @@ namespace UtilConsts {
     const int NUM_BOSSES = 7;
 
     // The number of turns the player has to return Megalith's Soul Orb
-    const int ORB_COUNTDOWN_TIME = 1000;
+    const int ORB_COUNTDOWN_TIME = 200;
 
 }
 
@@ -128,7 +128,7 @@ struct StateFlags {
     bool update_maze_area;              // Should the maze area be redrawn?
     bool update_status_hp_exp;          // Should the HP/XP bars be updated?
     bool update_status_elapsed_time;    // Should the elapsed time be updated
-    
+
     // - subscreen dialogs
     bool update_map_dialog;             // Should the map screen be redrawn?
     bool update_inventory_dialog;       // Should the inventory dialog be redrawn?

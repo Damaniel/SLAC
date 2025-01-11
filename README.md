@@ -27,12 +27,11 @@ This release currently uses a specific ancient version of DJGPP, g++ (2.95.2) an
 
 The game is technically playable from beginning to end, but is missing multiple essential features that would make that effectively impossible:
 
-- The ability to save and load (in progress)
 - A hall of fame screen for successful runs
 - Functional shops and museum
 - More balancing.  A lot more balancing.
 
-## Screenshots
+## Screenshots (in DOSBox-X)
 
 ![in the item shop](https://github.com/Damaniel/SLAC/blob/0acaeaa50e1eab44d211c3648d5ebfe703d5f53d/RES/IMAGES/screenshots/slac_1.jpg)
 ![running from enemies](https://github.com/Damaniel/SLAC/blob/0acaeaa50e1eab44d211c3648d5ebfe703d5f53d/RES/IMAGES/screenshots/slac_2.jpg)
