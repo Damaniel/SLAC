@@ -1,5 +1,7 @@
 # Secret Legacy of the Ancient Caves
 
+![game shot](https://github.com/Damaniel/SLAC/blob/0acaeaa50e1eab44d211c3648d5ebfe703d5f53d/RES/IMAGES/screenshots/slac_0.jpg)
+
 Secret Legacy of the Ancient Caves (SLAC) is a roguelike for MS-DOS computers.  Explore the dungeons in town and work to seal away the powerful armored beast, Megalith, forever.  If you fail, fear not - your heirs will see the task through to the very end.
 
 ## Features
@@ -32,7 +34,11 @@ The game is technically playable from beginning to end, but is missing multiple 
 
 ## Screenshots
 
-To be added.
+![in the item shop](https://github.com/Damaniel/SLAC/blob/0acaeaa50e1eab44d211c3648d5ebfe703d5f53d/RES/IMAGES/screenshots/slac_1.jpg)
+![running from enemies](https://github.com/Damaniel/SLAC/blob/0acaeaa50e1eab44d211c3648d5ebfe703d5f53d/RES/IMAGES/screenshots/slac_2.jpg)
+![inventory](https://github.com/Damaniel/SLAC/blob/0acaeaa50e1eab44d211c3648d5ebfe703d5f53d/RES/IMAGES/screenshots/slac_3.jpg)
+![map](https://github.com/Damaniel/SLAC/blob/0acaeaa50e1eab44d211c3648d5ebfe703d5f53d/RES/IMAGES/screenshots/slac_4.jpg)
+![death screen](https://github.com/Damaniel/SLAC/blob/0acaeaa50e1eab44d211c3648d5ebfe703d5f53d/RES/IMAGES/screenshots/slac_5.jpg)
 
 ## License and attributions
 
