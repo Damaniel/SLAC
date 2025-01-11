@@ -65,6 +65,7 @@ bool finish_other_load_tasks(void) {
     g_state_flags.update_text_dialog = true;
     g_state_flags.update_status_dialog = true;
     g_state_flags.update_status_hp_exp = true;
+    g_state_flags.update_status_elapsed_time = true;
     g_state_flags.update_display = true;
 
     return true;

@@ -903,6 +903,39 @@ void Render::render_hp_exp_bar(BITMAP *destination) {
 }
 
 //------------------------------------------------------------------------------
+// Draws the elapsed time
+//
+// Arguments:
+//   destination - the BITMAP to render to
+//   x1, y1, x2, y2 - the extents of the box to be rendered
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Render::render_elapsed_time(BITMAP *destination) {
+	// clear the time area
+	rectfill(destination, UiConsts::ELAPSED_TEXT_X, UiConsts::ELAPSED_VALUE_Y, 
+	         UiConsts::ELAPSED_VALUE_X, UiConsts::ELAPSED_VALUE_Y + 10, 23);
+
+	// Render the elapsed time
+	char elapsed[20];
+	int etime = g_game_flags.elapsed_time;
+	int hours = etime / 3600;
+	int minutes = (etime - (hours * 3600)) / 60;
+	int seconds = (etime - (hours * 3600)) % 60;
+  
+    if (hours >= 1000)
+    	sprintf(elapsed, "999:59:59");
+    else if(hours >= 100)
+    	sprintf(elapsed, "%03d:%02d:%02d", hours, minutes, seconds);
+  	else
+    	sprintf(elapsed, "%02d:%02d:%02d", hours, minutes, seconds);
+
+	render_text(destination, elapsed, UiConsts::ELAPSED_VALUE_X, UiConsts::ELAPSED_VALUE_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_RIGHT_JUSTIFIED);
+}
+
+//------------------------------------------------------------------------------
 // Draws the contents of the status area (Name/Level/HP/EXP/gold) to the screen
 //
 // Arguments:
@@ -948,12 +981,12 @@ void Render::render_status_ui(BITMAP *destination) {
 	if (g_state_flags.in_dungeon) {
 		render_text(destination, (char *)get_dungeon_name(g_dungeon.maze_id, true).c_str(), UiConsts::DUNGEON_NAME_X,
 		  			UiConsts::DUNGEON_NAME_Y, FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL,
-					FontConsts::TEXT_CENTERED);
+					FontConsts::TEXT_RIGHT_JUSTIFIED);
 	}
 	else {
 		render_text(destination, "Town", UiConsts::DUNGEON_NAME_X,
 		  			UiConsts::DUNGEON_NAME_Y, FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL,
-					FontConsts::TEXT_CENTERED);		
+					FontConsts::TEXT_RIGHT_JUSTIFIED);		
 	}
 
 	render_text(destination, "Floor:", UiConsts::FLOOR_TEXT_X, UiConsts::FLOOR_TEXT_Y,
@@ -975,6 +1008,10 @@ void Render::render_status_ui(BITMAP *destination) {
 	render_text(destination, text, UiConsts::GOLD_VALUE_X, UiConsts::GOLD_VALUE_Y, 
 	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
 				FontConsts::TEXT_RIGHT_JUSTIFIED);
+
+	// Elapsed time text
+	render_text(destination, "Elapsed Time:", UiConsts::ELAPSED_TEXT_X, UiConsts::ELAPSED_TEXT_Y, 
+	            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_LEFT_JUSTIFIED);
 }
 
 //------------------------------------------------------------------------------
@@ -1786,6 +1823,7 @@ void force_update_screen(void) {
 	g_state_flags.update_text_dialog = true;
 	g_state_flags.update_status_dialog = true;
 	g_state_flags.update_status_hp_exp = true;
+	g_state_flags.update_status_elapsed_time = true;
 	g_state_flags.update_display = true;
 	update_display();	
 }

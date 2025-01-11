@@ -48,6 +48,32 @@ GameFlags      g_game_flags;
 Render         g_render;
 DungeonFloor   g_dungeon;
 
+/*=============================================================================
+ * process_timing_stuff
+ *============================================================================*/
+void process_per_frame() {
+
+	if (g_state_flags.cur_state == STATE_MAIN_GAME) {
+		g_state_flags.time_to_update_elapsed -= 1;
+		if (g_state_flags.time_to_update_elapsed <= 0) {
+			g_game_flags.elapsed_time += 1;
+			g_state_flags.time_to_update_elapsed = FRAME_RATE;
+			g_state_flags.update_status_elapsed_time = true;
+			g_state_flags.update_display = true;
+		}
+	}
+}
+
+/*=============================================================================
+ * int_handler
+ *============================================================================*/
+void int_handler() {
+  /* do animation stuff here */
+  g_state_flags.frame_counter++;
+  g_state_flags.next_frame = 1;
+}
+END_OF_FUNCTION(int_handler);
+
 //----------------------------------------------------------------------------
 // Does required startup tasks (init/load graphics, set graphics mode,
 // set game flags)
@@ -66,6 +92,8 @@ void init_game() {
 	allegro_init();
 	install_timer();
 	install_keyboard();
+
+  	install_int(int_handler, 1000/FRAME_RATE);
 
 	// Set graphics mode
 	int mode_result = set_gfx_mode(GFX_MODEX, 320, 240, 320, 640);
@@ -102,6 +130,12 @@ void init_game() {
 	g_state_flags.exit_game = false;
 
 	g_state_flags.loading_save = false;
+
+	// Timer related stuff
+	g_state_flags.frame_counter = 0;
+	g_state_flags.next_frame = 1;
+	g_game_flags.elapsed_time = 0;
+	g_state_flags.time_to_update_elapsed = FRAME_RATE;
 }
 
 //----------------------------------------------------------------------------
@@ -143,6 +177,10 @@ int main(void) {
 	// Main game loop
 	do {
 		process_input();
+		if (g_state_flags.next_frame) {
+			process_per_frame();
+			g_state_flags.next_frame = 0;
+		}
 		if (g_state_flags.update_display == true) {
 			update_display();					
 		}

@@ -395,6 +395,7 @@ void process_game_state(int key) {
 		            g_state_flags.update_maze_area = true;
 		            g_state_flags.update_status_dialog = true;
                     g_state_flags.update_status_hp_exp = true;
+                    g_state_flags.update_status_elapsed_time = true;
 		            g_state_flags.update_display = true;
                     break;
 	        }
@@ -412,6 +413,9 @@ void process_game_state(int key) {
 //   Nothing
 //----------------------------------------------------------------------------
 void process_input(void) {
+    if (!keypressed())
+        return;
+
 	int key = (readkey() >> 8);
 
     switch(g_state_flags.cur_state) {

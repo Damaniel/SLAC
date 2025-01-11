@@ -130,19 +130,19 @@ std::pair<int, int> DungeonFloor::get_random_position_for_enemy() {
 //   the enemy id of the boss on the floor if it's alive, -1 otherwise
 //------------------------------------------------------------------------------
 int DungeonFloor::is_boss_alive_here() {
-	if (maze_id == DUSTY_TUNNELS && depth == 25 && !g_game_flags.has_defeated_bosses[EnemyConsts::PRANG_WAR_ELEPHANT])
+	if (maze_id == DUSTY_TUNNELS && depth == 12 && !g_game_flags.has_defeated_bosses[EnemyConsts::PRANG_WAR_ELEPHANT])
 		return EnemyConsts::ID_PRANG_WAR_ELEPHANT;
-	else if (maze_id == DUSTY_TUNNELS && depth == 50 && !g_game_flags.has_defeated_bosses[EnemyConsts::STEENKEY_ELDER_NAGA])
+	else if (maze_id == DUSTY_TUNNELS && depth == 25 && !g_game_flags.has_defeated_bosses[EnemyConsts::STEENKEY_ELDER_NAGA])
 		return EnemyConsts::ID_STEENKEY_ELDER_NAGA;
-	else if (maze_id == MARBLE_HALLS && depth == 50 && !g_game_flags.has_defeated_bosses[EnemyConsts::NAMELESS_BLACK_ORC])
+	else if (maze_id == MARBLE_HALLS && depth == 25 && !g_game_flags.has_defeated_bosses[EnemyConsts::NAMELESS_BLACK_ORC])
 		return EnemyConsts::ID_NAMELESS_BLACK_ORC;		
-	else if (maze_id == MARBLE_HALLS && depth == 100 && !g_game_flags.has_defeated_bosses[EnemyConsts::GROZ_GOBLIN_KING])
+	else if (maze_id == MARBLE_HALLS && depth == 50 && !g_game_flags.has_defeated_bosses[EnemyConsts::GROZ_GOBLIN_KING])
 		return EnemyConsts::ID_GROZ_GOBLIN_KING;
-	else if (maze_id == CRYSTAL_DEPTHS && depth == 50 && !g_game_flags.has_defeated_bosses[EnemyConsts::LORTROX_DRAGON_KNIGHT])
+	else if (maze_id == CRYSTAL_DEPTHS && depth == 35 && !g_game_flags.has_defeated_bosses[EnemyConsts::LORTROX_DRAGON_KNIGHT])
 		return EnemyConsts::ID_LORTROX_DRAGON_KNIGHT;
-	else if (maze_id == CRYSTAL_DEPTHS && depth == 100 && !g_game_flags.has_defeated_bosses[EnemyConsts::SILANT_ICE_GIANT])
+	else if (maze_id == CRYSTAL_DEPTHS && depth == 70 && !g_game_flags.has_defeated_bosses[EnemyConsts::SILANT_ICE_GIANT])
 		return EnemyConsts::ID_SILANT_ICE_GIANT;
-	else if (maze_id == CRYSTAL_DEPTHS && depth == 150 && !g_game_flags.has_defeated_bosses[EnemyConsts::MEGALITH_ARMORED_BEAST])
+	else if (maze_id == CRYSTAL_DEPTHS && depth == 100 && !g_game_flags.has_defeated_bosses[EnemyConsts::MEGALITH_ARMORED_BEAST])
 		return EnemyConsts::ID_MEGALITH_ARMORED_BEAST;
 
 	// None of these are true, return -1
@@ -366,6 +366,11 @@ void update_main_game_display(void) {
 		g_state_flags.update_status_hp_exp = false;
 	}
 
+	if(g_state_flags.update_status_elapsed_time == true) {
+		g_render.render_elapsed_time(g_back_buffer);
+		g_state_flags.update_status_elapsed_time = false;
+	}
+
 	// Update the text dialog if requested
 	if(g_state_flags.update_text_dialog == true) {
 		g_render.render_text_base(g_back_buffer, g_state_flags.text_log_extended);
@@ -408,6 +413,7 @@ void update_dead_display(void) {
 		g_state_flags.update_maze_area = true;
 		g_state_flags.update_status_dialog = true;
 		g_state_flags.update_status_hp_exp = true;
+		g_state_flags.update_status_elapsed_time = true;
 		g_state_flags.update_text_dialog = true;
 		update_main_game_display();
 
@@ -642,18 +648,18 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 	// floor they're on
 	switch (d.maze_id) {
 		case DUSTY_TUNNELS:
-			d.ilevel = level / 2;
+			d.ilevel = level;
 			if (d.ilevel < 1 ) d.ilevel = 1;
 			if (d.ilevel > 25) d.ilevel = 25;
 			break;
 		case MARBLE_HALLS:
-			d.ilevel = 20 + (level / 2);
+			d.ilevel = 20 + level;
 			if (d.ilevel < 20 ) d.ilevel = 20;
 			if (d.ilevel > 70) d.ilevel = 70;
 			break;
 		case CRYSTAL_DEPTHS:
-			d.ilevel = 30 + (level / 2);
-			if (d.ilevel < 30 ) d.ilevel = 30;
+			d.ilevel = 50 + (level / 2);
+			if (d.ilevel < 50 ) d.ilevel = 50;
 			if (d.ilevel > 100) d.ilevel = 100;
 			break;
 		default:
@@ -859,6 +865,7 @@ void pick_up_item_at(int x, int y) {
 		    delete i;
             g_state_flags.update_status_dialog = true;
 			g_state_flags.update_status_hp_exp = true;
+			g_state_flags.update_status_elapsed_time = true;
             picked_up = true;
         }
         else {

@@ -112,6 +112,12 @@ struct StateFlags {
     int  cur_substate;
 
     //--------------------------------------------------------------------------
+    // Timer state
+    //--------------------------------------------------------------------------
+    volatile long int frame_counter;
+    volatile int next_frame;
+
+    //--------------------------------------------------------------------------
     // Graphics state
     //--------------------------------------------------------------------------
     bool update_display;                // Is the screen ready to be redrawn?
@@ -121,7 +127,8 @@ struct StateFlags {
     bool update_status_dialog;          // Should the status display be redrawn?
     bool update_maze_area;              // Should the maze area be redrawn?
     bool update_status_hp_exp;          // Should the HP/XP bars be updated?
-
+    bool update_status_elapsed_time;    // Should the elapsed time be updated
+    
     // - subscreen dialogs
     bool update_map_dialog;             // Should the map screen be redrawn?
     bool update_inventory_dialog;       // Should the inventory dialog be redrawn?
@@ -161,6 +168,8 @@ struct StateFlags {
     // - control flags
     bool exit_game;           // Did the player choose to exit the game?
     bool loading_save;        // Is a save currently being loaded?
+
+    int time_to_update_elapsed;  // How many frames until we increment the elapsed counter
 };
 
 // A collection of flags related to game progression

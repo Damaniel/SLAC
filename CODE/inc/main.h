@@ -24,6 +24,9 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
+// The base frame rate for the game (updates and such)
+const int FRAME_RATE = 20;
+
 // States for the state machine god.  This is a first shot at some; there will
 // be more.  He must feed.
 
@@ -60,9 +63,10 @@ enum {
 };
 
 // The maximum depth of each of the 3 dungeons
-const int g_max_dungeon_depths[3] = {50, 100, 150};
+const int g_max_dungeon_depths[3] = {25, 50, 100};
 const int g_dungeon_sizes[3] = {48, 48, 64};
 
+void int_handler();
 void init_game();
 void shut_down_game();
 

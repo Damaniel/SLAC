@@ -225,24 +225,31 @@ namespace UiConsts {
 
 	// Positions of area indicators on the right side of the main screen
 	const int DUNGEON_TEXT_X = 246;
-	const int DUNGEON_TEXT_Y = 114;
+	const int DUNGEON_TEXT_Y = 108;
 
-	const int DUNGEON_NAME_X = 280;
-	const int DUNGEON_NAME_Y = 126;
+	const int DUNGEON_NAME_X = 313;
+	const int DUNGEON_NAME_Y = 117;
 
 	// Positions of area indicators on the right side of the main screen
 	const int FLOOR_TEXT_X = 246;
-	const int FLOOR_TEXT_Y = 140;
+	const int FLOOR_TEXT_Y = 131;
 
 	const int FLOOR_VALUE_X = 313;
-	const int FLOOR_VALUE_Y = 152;
+	const int FLOOR_VALUE_Y = 141;
 
 	// Positions of status indicators on the right side of the main screen
 	const int GOLD_TEXT_X = 246;
-	const int GOLD_TEXT_Y = 167;
+	const int GOLD_TEXT_Y = 156;
 
 	const int GOLD_VALUE_X = 313;
-	const int GOLD_VALUE_Y = 178;
+	const int GOLD_VALUE_Y = 166;
+
+	// Positions of the elapsed time indicators on the right side of the screen
+	const int ELAPSED_TEXT_X = 246;
+	const int ELAPSED_TEXT_Y = 178;
+	
+	const int ELAPSED_VALUE_X = 313;
+	const int ELAPSED_VALUE_Y = 188;
 
 	// The stats screen
 	const int STATS_SCREEN_X1 = 48;
@@ -656,6 +663,7 @@ class Render {
 		void render_map(BITMAP *destination);
 		void render_inventory(BITMAP *destination);
 		void render_status_ui(BITMAP *destination);
+		void render_elapsed_time(BITMAP *destination);
 		void render_status_base(BITMAP *destination);
 		void render_text(BITMAP *dest, char *text, int x_pos, int y_pos, int font_idx, int style, int alignment);
 		void render_text_base(BITMAP *destination, bool extended);		
