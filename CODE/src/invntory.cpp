@@ -442,6 +442,9 @@ std::string Item::get_type_name() {
     else if (item_class == ItemConsts::SCROLL_CLASS) {
         return "Scroll";
     }
+    else if (item_class == ItemConsts::POTION_CLASS) {
+        return "Potion";
+    }
     else {
         return name;
     }
