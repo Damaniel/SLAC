@@ -38,7 +38,7 @@ namespace MazeConsts {
 	const int DIRECTION_NORTHEAST = 5;
 	const int DIRECTION_SOUTHWEST = 6;
 	const int DIRECTION_SOUTHEAST = 7;
-	
+
 	// Square types used by the maze generator
 	const int EMPTY = 0;
 	const int PASSAGE = 1;
@@ -62,13 +62,13 @@ namespace MazeConsts {
 	const int MAX_MAZE_WIDTH = 64;
 	const int MAX_MAZE_HEIGHT = 64;
 
-	// Controls the generator's behavior regarding whether to render 
+	// Controls the generator's behavior regarding whether to render
 	// both kinds of stairs in the maze, or only one or the other.
 	enum {
 		GENERATE_BOTH_STAIRS,
 		GENERATE_NO_UP_STAIRS,
 		GENERATE_NO_DOWN_STAIRS,
-		GENERATE_NO_STAIRS				// Not used 
+		GENERATE_NO_STAIRS				// Not used
 	};
 }
 
@@ -89,7 +89,7 @@ struct Stair {
 //------------------------------------------------------------------------------
 // WallLoc struct definition
 //
-// Used to track walls leading to rooms.  These walls can be opened, linking 
+// Used to track walls leading to rooms.  These walls can be opened, linking
 // rooms to passageways.
 //------------------------------------------------------------------------------
 struct WallLoc {
@@ -104,7 +104,7 @@ struct WallLoc {
 //
 // Location and size of rooms - open areas with no internal passageways.
 //
-// Note: hasBeenEntered is used to mark a room as having been visited by the 
+// Note: hasBeenEntered is used to mark a room as having been visited by the
 // player.  This information may be of use to the renderer.
 //------------------------------------------------------------------------------
 struct Room {
@@ -135,7 +135,7 @@ struct Square {
 //------------------------------------------------------------------------------
 // Maze class definition
 //
-// All of the information required to hold and generate a maze.  The maze 
+// All of the information required to hold and generate a maze.  The maze
 // generator generates a perfect maze, adds rooms, and then removes
 // unnecessary dead ends.
 //------------------------------------------------------------------------------
@@ -152,27 +152,27 @@ private:
 
 	void add_stairs(int num_up_stairs, int num_down_stairs);
 	void carve(int x, int y, int tag);
-	void carve_direction(int x, int y, int direction, int tag);	
+	void carve_direction(int x, int y, int direction, int tag);
 	bool create_room(int x, int y, int w, int h);
 	void generate_passages(int x, int y);
 	void generate_rooms(int num_attempts, int min_size, int max_size);
 	void get_directions(std::vector<int> & directions, int x, int y);
-	void mark_walls(void);	
+	void mark_walls(void);
 	void open_room(Room &r);
 	void place_stairs(int room_id, int type);
-	void remove_dead_ends(void); 	
+	void remove_dead_ends(void);
 	void uncarve(int x, int y);
-	
+
 public:
 	Maze();
 	Maze(int x, int y, int il);
-	void change_lit_status_around(int x, int y, bool lit);	
+	void change_lit_status_around(int x, int y, bool lit);
 	void change_lit_status_at(int x, int y, bool lit);
 	void change_room_lit_status(int room, bool lit);
 	void generate(void);
 	int get_height(void) { return rows; }
 	std::pair<int, int> get_random_stair(int direction);
-	Room get_room(int room_id);	
+	Room get_room(int room_id);
 	int get_room_id_at(int x, int y);
 	Square get_square(int x, int y);
 	int get_width(void) { return cols; }
@@ -181,7 +181,7 @@ public:
 	bool is_square_lit(int x, int y);
 	void knock_out_walls(int chance);
 	void print(void);
-	void print_memory_usage(void); 
+	void print_memory_usage(void);
 	void print_room_ids(void);
 	void set_room_entered_state(int room_id, bool state);
 	void set_stair_gen_behavior(int behavior) { stair_gen_behavior = behavior; }

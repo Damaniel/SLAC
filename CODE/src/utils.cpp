@@ -49,7 +49,7 @@ void DungeonFloor::clear_lists() {
 				delete *list_it;
 			}
 		}
-	}	
+	}
 
 	// Deallocate any remaining Enemies in the list before clearing it
 	std::list<Enemy *>::iterator enemy_it;
@@ -65,7 +65,7 @@ void DungeonFloor::clear_lists() {
 }
 
 //------------------------------------------------------------------------------
-// Populates the maze with a quantity of generated enemies of appropriate enemy 
+// Populates the maze with a quantity of generated enemies of appropriate enemy
 // level.
 //
 // Arguments:
@@ -86,7 +86,7 @@ void DungeonFloor::generate_enemies(int min_enemies, int max_enemies) {
 	//      - if not
 	//        - Add the enemy to the list of enemies
 	//        - Mark done with iteration
-	
+
 	int num_enemies = (rand() % (max_enemies - min_enemies)) + min_enemies;
 	for (int i = 0; i < num_enemies; ++i) {
 		std::pair<int, int> pos = get_random_position_for_enemy();
@@ -135,7 +135,7 @@ int DungeonFloor::is_boss_alive_here() {
 	else if (maze_id == DUSTY_TUNNELS && depth == 25 && !g_game_flags.has_defeated_bosses[EnemyConsts::STEENKEY_ELDER_NAGA])
 		return EnemyConsts::ID_STEENKEY_ELDER_NAGA;
 	else if (maze_id == MARBLE_HALLS && depth == 25 && !g_game_flags.has_defeated_bosses[EnemyConsts::NAMELESS_BLACK_ORC])
-		return EnemyConsts::ID_NAMELESS_BLACK_ORC;		
+		return EnemyConsts::ID_NAMELESS_BLACK_ORC;
 	else if (maze_id == MARBLE_HALLS && depth == 50 && !g_game_flags.has_defeated_bosses[EnemyConsts::GROZ_GOBLIN_KING])
 		return EnemyConsts::ID_GROZ_GOBLIN_KING;
 	else if (maze_id == CRYSTAL_DEPTHS && depth == 35 && !g_game_flags.has_defeated_bosses[EnemyConsts::LORTROX_DRAGON_KNIGHT])
@@ -281,7 +281,7 @@ int DungeonFloor::get_num_items_at(int x, int y) {
 //
 // Arguments:
 //   x, y - the coordinates of the location to process
-// 
+//
 // Returns:
 //   nothing
 //
@@ -468,15 +468,15 @@ void update_hall_of_champions(void) {
 void update_title_screen(void) {
 	if (g_state_flags.update_title_background == true) {
 		g_render.render_title_background(g_back_buffer);
-		// Draw the background and overlay the title 
+		// Draw the background and overlay the title
 		// Draw the copyright text
 		g_state_flags.update_title_background = false;
 	}
-	if (g_state_flags.update_title_menu == true) { 
+	if (g_state_flags.update_title_menu == true) {
 		g_render.render_title_menu(g_back_buffer);
 		g_state_flags.update_title_menu = false;
 
-	}	
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -506,8 +506,8 @@ void update_display(void) {
 
 	// Now actually put the image on the visible part of the screen
 	vsync();
-	blit(g_back_buffer, screen, 0, 0, 0, 0, 320, 240);	
-	
+	blit(g_back_buffer, screen, 0, 0, 0, 0, 320, 240);
+
 	// Display is updated - we don't want to do it again right now.
 	g_state_flags.update_display = false;
 }
@@ -538,7 +538,7 @@ std::string get_dungeon_name(int dungeon, bool abbrev) {
 				break;
 		}
 
-	} 
+	}
 	else {
 		switch (dungeon) {
 			case DUSTY_TUNNELS:
@@ -627,27 +627,27 @@ std::string get_generation_string(int generation) {
 //   0 if data was loaded successfully, non-zero otherwise
 //------------------------------------------------------------------------------
 int load_resources(void) {
-	
+
 	g_game_data = load_datafile("SLAC.DAT");
 	if(g_game_data == NULL) {
 		printf("Unable to open game data file.  Is it in the right place?\n");
 		return 1;
-	}		
+	}
 	return 0;
 }
 
 //------------------------------------------------------------------------------
 // Perform any initializtion tasks that need to be done with game data.
-// 
+//
 // Arguments:
 //   r - a reference to the Render object to init
 //
 // Returns:
 //   Nothing
 //------------------------------------------------------------------------------
-void init_resources(Render &r) {	
-	r.copy_data_to_offscreen_vram();	
-	set_palette((RGB *)g_game_data[DAMRL_DB16].dat);		
+void init_resources(Render &r) {
+	r.copy_data_to_offscreen_vram();
+	set_palette((RGB *)g_game_data[DAMRL_DB16].dat);
 	g_back_buffer = create_sub_bitmap(screen, 0, 240, 320, 240);
 }
 
@@ -670,7 +670,7 @@ void unload_resources(void) {
 // Arguments:
 //   d - a reference to a DungeonFloor that will contain the new floor
 //   level - the dungeon level to generate (affects iLevel)
-//   stairs_from - the kind of stairs the player came from 
+//   stairs_from - the kind of stairs the player came from
 //
 // Returns:
 //   Nothing
@@ -748,12 +748,12 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 	// Place the player at the stair location
 	g_player.set_position(stairLoc.first, stairLoc.second);
 
-	// Light the room and mark it as visited	
+	// Light the room and mark it as visited
 	int initial_room = d.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos());
-	g_player.set_last_room_entered(initial_room);	
+	g_player.set_last_room_entered(initial_room);
 	if (initial_room != -1) {
-		//d.maze->change_room_lit_status(initial_room, false);		
-		d.maze->change_room_lit_status(initial_room, true);			
+		//d.maze->change_room_lit_status(initial_room, false);
+		d.maze->change_room_lit_status(initial_room, true);
 	}
 
 	// Update the distance from the player to each enemy and sort
@@ -828,7 +828,7 @@ void initialize_main_game_state(void) {
 		g_text_log.put_line("You head out to continue your ongoing efforts to discover the town's secrets.");
 		g_state_flags.recently_died = false;
 	}
-	
+
 	// Set initial flags to render stuff like the UI, unless we've loaded a save; we'll update the screen
 	// once the loading is all finished up
 	if (!g_state_flags.save_loaded) {
@@ -875,7 +875,7 @@ void change_state(int new_state) {
 		    move_new_artifacts_to_existing();
 			break;
 		case STATE_HALL_OF_CHAMPIONS:
-			// Determine which position on the hall of fame the 
+			// Determine which position on the hall of fame the
 			// player is.
 			g_state_flags.hall_of_champions_ranking = get_hall_of_champions_ranking();
 
@@ -897,7 +897,7 @@ void change_state(int new_state) {
 			}
 			// Clear the text log and place some informative info here
 			display_hall_of_champions_log();
-			break;			
+			break;
 		case STATE_EXIT:
 			// Tell the game to exit
 			g_state_flags.exit_game = true;
@@ -916,10 +916,10 @@ void change_state(int new_state) {
 //------------------------------------------------------------------------------
 int get_hall_of_champions_ranking() {
 	// Loop through the list.  Return the lowest rank in the list by
-	// time (or first entry without a time) and return it.  If we went through 
+	// time (or first entry without a time) and return it.  If we went through
 	// the entire list, the player doesn't qualify for the hall of champions
 	for (int i = 0; i < UtilConsts::NUM_HALL_OF_CHAMPIONS_ENTRIES; ++i) {
-		if ((g_hall_of_champions[i].has_entry && g_game_flags.elapsed_time <= g_hall_of_champions[i].elapsed) || (!g_hall_of_champions[i].has_entry)) 
+		if ((g_hall_of_champions[i].has_entry && g_game_flags.elapsed_time <= g_hall_of_champions[i].elapsed) || (!g_hall_of_champions[i].has_entry))
 			return i;
 	}
 	return -1;
@@ -942,7 +942,7 @@ void display_hall_of_champions_log() {
 		g_text_log.put_line("                    You've earned a spot in the Hall of Champions!");
 	}
 	else {
-		g_text_log.put_line("            You won, but weren't able to earn a spot in the Hall of Champions.");		
+		g_text_log.put_line("            You won, but weren't able to earn a spot in the Hall of Champions.");
 	}
 	g_text_log.put_line("                      Press Enter to return to the title screen.");
 	g_text_log.put_line("==============================================================================");
@@ -996,15 +996,15 @@ void pick_up_item_at(int x, int y) {
     // Check for items.  Only do something if there are.
     if (g_dungeon.get_num_items_at(x, y) <= 0) {
         return;
-    } 
+    }
     else {
-        // Get the item list and process the one at the end 
+        // Get the item list and process the one at the end
         // (which is the one that the player can see)
         std::list<Item *> items = g_dungeon.get_items_at(x, y);
 
         // Get the item name.  Currency items and stackable items
-        // will be deleted before the end of the function so we'll 
-        // grab it for all items and use it instead of accidentally 
+        // will be deleted before the end of the function so we'll
+        // grab it for all items and use it instead of accidentally
         //trying to blit a deleted item.
         Item *i = items.back();
         item_name = i->get_full_name();
@@ -1052,7 +1052,7 @@ void pick_up_item_at(int x, int y) {
                 }
             }
         }
-        
+
         // If an item was picked up, tell the player.
 		// Also, update the map to remove the item from it
         if (picked_up) {
@@ -1078,16 +1078,16 @@ void perform_inventory_menu_action(void) {
 	// Get the item under the cursor
 	int slot = g_ui_globals.inv_cursor_y * UiConsts::INVENTORY_ITEMS_PER_ROW + g_ui_globals.inv_cursor_x;
     Item *i = g_inventory->get_item_in_slot(slot);
-	
+
 	// Determine if the action can be done by the item
 	switch (g_ui_globals.sel_item_option) {
 		case UiConsts::ITEM_OPTION_USE:
 			// If the item can be used, use it
 			if (i->can_use) {
 				// If the item was a potion or scroll, using it identifies all items of that kind until
-				// the current gen of player dies.  The 'identify' function works for the current 
+				// the current gen of player dies.  The 'identify' function works for the current
 				// stack in the inventory; g_identified_<XYZ> ensures future items are auto-identified
-				if (g_identified_potions[i->id] == false && i->item_class == ItemConsts::POTION_CLASS) 
+				if (g_identified_potions[i->id] == false && i->item_class == ItemConsts::POTION_CLASS)
 					perform_identification_action(i, true);
 				if (g_identified_scrolls[i->id] == false && i->item_class == ItemConsts::SCROLL_CLASS)
 					perform_identification_action(i, true);
@@ -1135,7 +1135,7 @@ void perform_inventory_menu_action(void) {
 			break;
 		default:
 			break;
-	} 
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -1151,7 +1151,7 @@ void perform_inventory_menu_action(void) {
 //   Does nothing if there are no stairs in the provided location
 //----------------------------------------------------------------------------
 void use_stairs(int x, int y) {
-    int stairs; 
+    int stairs;
     int depth;
 
 	if (g_state_flags.in_dungeon) {
@@ -1162,7 +1162,7 @@ void use_stairs(int x, int y) {
         	return;
 
 	    // If the stairs are down stairs, the new floor should be
-	    // one greater than the current one (with a limit of the 
+	    // one greater than the current one (with a limit of the
 	    // maximum floor value for the current dungeon)
 	    if (stairs == MazeConsts::STAIRS_DOWN) {
 			// If the player is on a boss floor and the boss hasn't been
@@ -1192,7 +1192,7 @@ void use_stairs(int x, int y) {
     	}
 
     	// Generate a new dungeon with the new floor value
-    	generate_new_dungeon_floor(g_dungeon, depth, stairs); 
+    	generate_new_dungeon_floor(g_dungeon, depth, stairs);
 	}
 	else {
 		// Check to see if we're sitting on one of the dungeon
@@ -1240,7 +1240,7 @@ void exit_dungeon(bool used_recall) {
 			if (used_recall) {
 				g_player.x_pos = TownConsts::CD_RECALL_X;
 				g_player.y_pos = TownConsts::CD_RECALL_Y;
-			}	
+			}
 			else {
 				g_player.x_pos = TownConsts::CRYSTAL_DEPTHS_X;
 				g_player.y_pos = TownConsts::CRYSTAL_DEPTHS_Y;
@@ -1251,7 +1251,7 @@ void exit_dungeon(bool used_recall) {
 }
 
 //----------------------------------------------------------------------------
-// Applies a modifier based on a mode (absolute or relative) to the 
+// Applies a modifier based on a mode (absolute or relative) to the
 // specified locations
 //
 // Arguments:
@@ -1287,7 +1287,7 @@ void apply_modifier_value(ModifierMagType m, float *fixed, float *multiplicative
 void apply_mode_2_modifier_value(ModifierMagType m) {
 	float *from_val, *to_val;
 
-	// Determine where the value comes from 
+	// Determine where the value comes from
 	switch (m.modifier_id) {
 		case ItemConsts::MODIFIER_STR:		// STR
 			//std::cout << "apply_mode_2_modifier_value: source stat = STR" << std::endl;
@@ -1573,7 +1573,7 @@ void apply_single_modifier(ModifierMagType m, Stats *fixed, Stats *multiplicativ
 // Arguments:
 //   i - the item to process
 //   fixed - a set of stats to apply fixed increases/decreases to
-//   multiplicative - a set of stats to apply multiplicative 
+//   multiplicative - a set of stats to apply multiplicative
 //                    increases/decreases to
 //
 // Returns:
@@ -1662,7 +1662,7 @@ void scramble_scroll_icons(void) {
 }
 
 //----------------------------------------------------------------------------
-// If the specified item type (potion or scroll) has been previously 
+// If the specified item type (potion or scroll) has been previously
 // identified, identify it automatically
 //
 // Arguments:
@@ -1672,12 +1672,12 @@ void scramble_scroll_icons(void) {
 //   Nothing
 //----------------------------------------------------------------------------
 void identify_if_previously_known(Item *i) {
-    // If the item is a potion or scroll and has been previously identified, 
+    // If the item is a potion or scroll and has been previously identified,
     // mark it as such
     if(i->item_class == ItemConsts::POTION_CLASS){
         if (g_identified_potions[i->id] == true)
             i->is_identified = true;
-    }        
+    }
     if(i->item_class == ItemConsts::SCROLL_CLASS)
     {
         if (g_identified_scrolls[i->id] == true) {
@@ -1713,7 +1713,7 @@ int roll_from_pool(const int *pool, int pool_size, int max_val) {
 // octile distance would be, but it doesn't use any square roots
 //
 // Arguments:
-//   x1, y1 - the first point 
+//   x1, y1 - the first point
 //   x2, y2 - the second point
 //
 // Returns:
@@ -1728,7 +1728,7 @@ int get_diagonal_distance_between(int x1, int y1, int x2, int y2) {
 // Pythagorean method, but much faster
 //
 // Arguments:
-//   x1, y1 - the first point 
+//   x1, y1 - the first point
 //   x2, y2 - the second point
 //
 // Returns:
@@ -1743,7 +1743,7 @@ int get_manhattan_distance_between(int x1, int y1, int x2, int y2) {
 // but the square root makes it slower
 //
 // Arguments:
-//   x1, y1 - the first point 
+//   x1, y1 - the first point
 //   x2, y2 - the second point
 //
 // Returns:
@@ -1869,7 +1869,7 @@ void process_enemy_item_drop(Enemy *e) {
 //  proposed_location - the place the player wants to move to
 //
 // Returns:
-//   Nothing.  This function directly moves the player (and enemies, if 
+//   Nothing.  This function directly moves the player (and enemies, if
 //   present)
 //----------------------------------------------------------------------------
 void process_move(std::pair<int, int> proposed_location) {
@@ -1877,7 +1877,7 @@ void process_move(std::pair<int, int> proposed_location) {
 		process_dungeon_move(proposed_location);
 	}
 	else {
-		if (g_state_flags.in_weapon_shop || g_state_flags.in_item_shop || g_state_flags.in_museum) 
+		if (g_state_flags.in_weapon_shop || g_state_flags.in_item_shop || g_state_flags.in_museum)
 			process_shop_move(proposed_location);
 		else
 			process_town_move(proposed_location);
@@ -1893,7 +1893,7 @@ void process_move(std::pair<int, int> proposed_location) {
 }
 
 //----------------------------------------------------------------------------
-// Handles the behavior of the soul orb when the player has it and makes a 
+// Handles the behavior of the soul orb when the player has it and makes a
 // move
 //
 // Arguments:
@@ -2025,19 +2025,19 @@ void process_shop_move(std::pair<int, int> proposed_location) {
 		g_player.set_x_pos(x);
 		g_player.set_y_pos(y);
 		// If we've stepped on an exit tile (or the tile below) for a shop or the museum, exit
-		if (g_state_flags.in_weapon_shop && x == TownConsts::WEAPON_SHOP_EXIT_X && 
+		if (g_state_flags.in_weapon_shop && x == TownConsts::WEAPON_SHOP_EXIT_X &&
 		    (y == TownConsts::WEAPON_SHOP_EXIT_Y || y == TownConsts::WEAPON_SHOP_EXIT_Y +1)) {
 			g_state_flags.in_weapon_shop = false;
 			g_player.set_x_pos(TownConsts::WEAPON_SHOP_X);
 			g_player.set_y_pos(TownConsts::WEAPON_SHOP_Y + 1);
 		}
-		if (g_state_flags.in_item_shop && x == TownConsts::ITEM_SHOP_EXIT_X && 
+		if (g_state_flags.in_item_shop && x == TownConsts::ITEM_SHOP_EXIT_X &&
 		    (y == TownConsts::ITEM_SHOP_EXIT_Y || y == TownConsts::ITEM_SHOP_EXIT_Y + 1)) {
 			g_state_flags.in_item_shop = false;
 			g_player.set_x_pos(TownConsts::ITEM_SHOP_X);
 			g_player.set_y_pos(TownConsts::ITEM_SHOP_Y + 1);
 		}
-		if (g_state_flags.in_museum && x == TownConsts::MUSEUM_EXIT_X && 
+		if (g_state_flags.in_museum && x == TownConsts::MUSEUM_EXIT_X &&
 		    (y == TownConsts::MUSEUM_EXIT_Y || y == TownConsts::MUSEUM_EXIT_Y + 1)) {
 			g_state_flags.in_museum = false;
 			g_player.set_x_pos(TownConsts::MUSEUM_X);
@@ -2045,11 +2045,11 @@ void process_shop_move(std::pair<int, int> proposed_location) {
 		}
 		g_state_flags.update_maze_area = true;
 		g_state_flags.update_text_dialog = true;
-		g_state_flags.update_display = true;		
+		g_state_flags.update_display = true;
 	}
 	else {
 		//  - Check to see if the player is trying to talk to the shopkeeper
-		// in one of the shops.  If so, start the process of dealing with 
+		// in one of the shops.  If so, start the process of dealing with
 		// shopping
 	}
 }
@@ -2114,7 +2114,7 @@ void check_and_process_endgame(int x, int y) {
 		g_text_log.put_line("As you reach the tomb, you pull the lid back, throw the orb in, and close it quickly.");
 		g_text_log.put_line("A beam of light shoots to the heavens and then all falls silent.  The soul of");
 		g_text_log.put_line("Megalith has been sealed away -- hopefully forever!");
-		g_text_log.put_line("        --  You have finished the game!  Press ENTER to continue.  -- "); 
+		g_text_log.put_line("        --  You have finished the game!  Press ENTER to continue.  -- ");
 		g_game_flags.has_finished_game = true;
 		g_state_flags.cur_substate = GAME_SUBSTATE_HALL_OF_CHAMPIONS;
 	}
@@ -2173,7 +2173,7 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 	//  - Put together a queue of enemy and player actions based
 	//    on relative speed
 	//  - Execute each action (move, attack) in turn
-	//  - Store any fractions of a turn not executed in the 
+	//  - Store any fractions of a turn not executed in the
 	//    enemy or player structure
 	//  - If the player moved, describe items on the ground
 	//  - Mark things to be updated
@@ -2201,14 +2201,14 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 	//	   Turn 5: Player gets no additional to pool + 100 remainder, spends 100, has 0 remainder
 	//             Enemy gets 110 to pool + 30 remainder, spends 100, has 40 remainder
 	//	   And so on...
-	// 
+	//
 	//   The net result is that the player gets an additional turn every 4th turn, so compared
-	//   to an enemy with a base speed of 100, the player gets 5 turns to the enemy's 4.	
+	//   to an enemy with a base speed of 100, the player gets 5 turns to the enemy's 4.
 
 	// The queue consists of a single player turn and any enemy turns that go along with it,
 	// and is executed in order.  It's possible that a queue will have one player move and
 	// zero enemy moves, or one player move and multiple moves from one or more enemies -
-	// and the player and/or enemies can be queued anywhere in the turn depending on 
+	// and the player and/or enemies can be queued anywhere in the turn depending on
 	// relative pool size (generally, if both a player and enemy have an extra turn coming,
 	// the one to move first will be the one with the highest residual).
 
@@ -2216,16 +2216,16 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 	//  - If the player has 100 or greater residual:
 	//       If any enemies do as well, queue the player and then the enemy (or enemies)
 	//       with >100 residual and queue no others.  The player is added to
-    //       the queue once, even if they have 200+ residual, 
-	//       but enemies will be queued in turn until their excess residual is spent. 
+    //       the queue once, even if they have 200+ residual,
+	//       but enemies will be queued in turn until their excess residual is spent.
 	//       Nobody gets additional speed to their pool this turn.
-	//  
+	//
 	//    Example:  given a player with 120 residual, and enemies A and B with 210 and 140 residuals,
 	//              the resulting queue would be A, B, player, A
 	//
 	//	- If the player has less than 100 residual:
 	//       - If one or more enemies have >100, queue them first until they have less than 100,
-	//         then the player, then all enemies by distance.  The enemies with >100 
+	//         then the player, then all enemies by distance.  The enemies with >100
 	//         residual get no extra in their pool at the time of their turn, but get that extra
 	//         after all their overage turns have completed and they run from the rest of the
 	//         queue
@@ -2254,7 +2254,7 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 			done = true;
 		}
 		++enemy_it;
-	}	
+	}
 
 	//std::cout << "process_move: " << enemies.size() << " enemies are being processed" << std::endl;
 
@@ -2439,7 +2439,7 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 
     // Tell the game to do the redraw
 	g_state_flags.update_display = true;
-} 
+}
 
 //----------------------------------------------------------------------------
 // If the enemy ID corresponds to a boss, mark that boss as defeated
@@ -2471,7 +2471,7 @@ void mark_boss_as_defeated(int id) {
 			g_text_log.put_line("As Groz falls, you see a crystal key near his body.");
 			g_text_log.put_line("You pick the key up and put it in your pocket.");
 			g_state_flags.update_text_dialog = true;
-			g_state_flags.update_display = true;			
+			g_state_flags.update_display = true;
 		}
 
 		// If Megalith was defeated, mark the game as completed
@@ -2482,7 +2482,7 @@ void mark_boss_as_defeated(int id) {
 			g_text_log.put_line("You hold it aloft, staring at the mysterious glow. You hear it whisper:");
 			g_text_log.put_line("'Return me to where the blood flows among the dead.  Quickly!'");
 			g_state_flags.update_text_dialog = true;
-			g_state_flags.update_display = true;			
+			g_state_flags.update_display = true;
 		}
 	}
 }

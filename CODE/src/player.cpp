@@ -72,7 +72,7 @@ void Player::init(int x, int y) {
 	// Set the player's name
 	if (g_state_flags.new_character_created) {
 		name = g_state_flags.character_name;
-	} 
+	}
 	else {
 		name = "NoName";
 	}
@@ -100,7 +100,7 @@ void Player::init(int x, int y) {
 	// Set the level 1 base stats
 	init_base_stats();
 
-	// Call recalculate_actual_stats to reset all stats and 
+	// Call recalculate_actual_stats to reset all stats and
 	// apply artifact effects
 	recalculate_actual_stats();
 
@@ -125,7 +125,7 @@ void Player::set_position(int x, int y) {
 
 //------------------------------------------------------------------------------
 // Gets the player's x position
-// 
+//
 // Arguments:
 //   None
 //
@@ -138,7 +138,7 @@ int Player::get_x_pos() {
 
 //------------------------------------------------------------------------------
 // Gets the player's y position
-// 
+//
 // Arguments:
 //   None
 //
@@ -151,7 +151,7 @@ int Player::get_y_pos() {
 
 //------------------------------------------------------------------------------
 // Sets the player's x position
-// 
+//
 // Arguments:
 //   pos - the position to set to
 //
@@ -164,7 +164,7 @@ void Player::set_x_pos(int pos) {
 
 //------------------------------------------------------------------------------
 // Sets the player's y position
-// 
+//
 // Arguments:
 //   pos - the position to set to
 //
@@ -177,7 +177,7 @@ void Player::set_y_pos(int pos) {
 
 //------------------------------------------------------------------------------
 // Adds to the player's copper stash
-// 
+//
 // Arguments:
 //   amount - the amount to add
 //
@@ -190,7 +190,7 @@ void Player::add_gold(int amount) {
 
 //------------------------------------------------------------------------------
 // Retreives the player's gold
-// 
+//
 // Arguments:
 //   None
 //
@@ -203,7 +203,7 @@ int Player::get_gold(void) {
 
 //------------------------------------------------------------------------------
 // Gets a pointer to the item slot associated with the specified item type
-// 
+//
 // Arguments:
 //   type - the item (presumably equipment) type associated with a part
 //
@@ -274,7 +274,7 @@ Item** Player::get_item_slot_by_type(int type) {
 //------------------------------------------------------------------------------
 // Equips an item by attaching an item (presumably from the inventory) to the
 // appropriate player equipment slot
-// 
+//
 // Arguments:
 //   i - the item (presumably equipment) type
 //
@@ -303,20 +303,20 @@ void Player::equip(Item *i) {
 			return;
 		}
 	}
-	
-	// If the item to equip is a shield and a two handed weapon is equipped, then 
-	// unequip the weapon 
+
+	// If the item to equip is a shield and a two handed weapon is equipped, then
+	// unequip the weapon
 	if (i->type_id == ItemConsts::ARMOR_TYPE_SHIELD || i->type_id == ItemConsts::ARMOR_TYPE_BUCKLER) {
 		extra_slot = &(equipment.weapon);
 		if (*extra_slot != NULL) {
 			int extra_type = (*extra_slot)->type_id;
-			if (extra_type == ItemConsts::WEAPON_TYPE_BATTLEAXE || 
+			if (extra_type == ItemConsts::WEAPON_TYPE_BATTLEAXE ||
 			    extra_type == ItemConsts::WEAPON_TYPE_BROADSWORD ||
 				extra_type == ItemConsts::WEAPON_TYPE_MAUL) {
 					unequip(extra_slot);
-				}			
+				}
 		}
-	}	
+	}
 
 	// If the item to equip is a two-handed weapon and a shield is equipped, then
 	// unequip the shield
@@ -330,7 +330,7 @@ void Player::equip(Item *i) {
 	}
 
 	// Unequip any existing item if something is equipped (or no-op if nothing is there)
-	if (*item_slot != NULL) 
+	if (*item_slot != NULL)
 		unequip(item_slot);
 
 	// Attach the item to the slot and equip it
@@ -352,7 +352,7 @@ void Player::equip(Item *i) {
 //------------------------------------------------------------------------------
 // Removes an item by detaching an item (in the player's inventory, attached
 // to the player) from the appropriate player equipment slot
-// 
+//
 // Arguments:
 //   slot - the item slot
 //
@@ -360,7 +360,7 @@ void Player::equip(Item *i) {
 //   Nothing.
 //------------------------------------------------------------------------------
 void Player::unequip(Item **slot) {
-	// Free the item slot if it has an item and it isn't cursed.  
+	// Free the item slot if it has an item and it isn't cursed.
 	// Note that the item still exists in the inventory so it's not actually deleted here.
 	// If the item is cursed, it can't be removed.
 	if ((*slot)->is_cursed) {
@@ -380,7 +380,7 @@ void Player::unequip(Item **slot) {
 
 //------------------------------------------------------------------------------
 // Moves the player's base stats into their actual (computed) stats
-// 
+//
 // Arguments:
 //   None
 //
@@ -415,9 +415,9 @@ void Player::assign_base_stats_to_actual(void) {
 }
 
 //------------------------------------------------------------------------------
-// Takes a set of fixed and multiplicative stats and applies them to the 
+// Takes a set of fixed and multiplicative stats and applies them to the
 // player's actual (computed) stats
-// 
+//
 // Arguments:
 //   fixed - a set of fixed stat values
 //   multiplicative - a set of multiplicative stat values
@@ -456,7 +456,7 @@ void Player::apply_stats_to_actual(Stats *fixed, Stats *multiplicative) {
 	actual.acc = actual.acc * multiplicative->acc;
 	actual.apt = actual.apt * multiplicative->apt;
 	actual.atk = actual.atk * multiplicative->atk;
-	actual.block = actual.block * multiplicative->block;	
+	actual.block = actual.block * multiplicative->block;
 	actual.gold_drop = actual.gold_drop * multiplicative->gold_drop;
 	actual.max_f_def = actual.max_f_def * multiplicative->max_f_def;
 	actual.max_i_def = actual.max_i_def * multiplicative->max_i_def;
@@ -495,7 +495,7 @@ void Player::apply_stats_to_actual(Stats *fixed, Stats *multiplicative) {
 
 //------------------------------------------------------------------------------
 // Initializes all of the values of a fixed and multiplicative stats table set
-// 
+//
 // Arguments:
 //   f - a set of fixed stat values
 //   m - a set of multiplicative stat values
@@ -559,7 +559,7 @@ void Player::init_temp_stats(Stats *f, Stats *m) {
 //------------------------------------------------------------------------------
 // Iterates through all equipped items, artifacts and used items with active effects,
 // calculating what the player's modified (that is, actual) stats are.
-// 
+//
 // Arguments:
 //   None
 //
@@ -582,7 +582,7 @@ void Player::recalculate_actual_stats(void) {
 	//std::cout << "recalculate_actual_stats: before" << std::endl;
 	//dump_stats(&actual);
 
-	// Iterate through the player's equipped items, adding fixed and multiplicitive 
+	// Iterate through the player's equipped items, adding fixed and multiplicitive
 	// totals
 	if(equipment.amulet != NULL) {
 		apply_item_values_to_stats(equipment.amulet, &fixed, &multiplicative, type_2_mods);
@@ -642,7 +642,7 @@ void Player::recalculate_actual_stats(void) {
 // A subset of recalculate_stats - this one ignores all equipment and potions,
 // and only adds up the total stats provided by artifacts.  This is used
 // to show on the death screen
-// 
+//
 // Arguments:
 //   None
 //
@@ -689,7 +689,7 @@ void Player::apply_experience(int quantity) {
 		// while unlikely, it's possible that the player killed something that
 		// would give them more than one level.  If so, burn through until
 		// we've reached the appropriate level
-		while (exp >= PlayerConsts::g_player_exp_table[level]) 
+		while (exp >= PlayerConsts::g_player_exp_table[level])
 			level_up();
 	}
 }
@@ -717,7 +717,7 @@ void Player::level_up() {
 	base.acc = PlayerConsts::g_player_base_stats[level - 1].acc;
 
 	recalculate_actual_stats();
-	
+
 	// Refill the player's health now that we've recalculated
 	hp = (unsigned short)base.max_hp;
 
@@ -748,7 +748,7 @@ float Player::pct_exp_to_next_level() {
 
 //------------------------------------------------------------------------------
 // Sets the player's base stats to defaults
-// 
+//
 // Arguments:
 //   None
 //
@@ -797,7 +797,7 @@ void Player::init_base_stats() {
 // then future me will deal with it then.
 //----------------------------------------------------------------------------
 void Player::apply_artifact_mods(Stats *fixed, Stats *multiplicative) {
-	
+
     //------------------------------------------
     // Single piece
     //------------------------------------------
@@ -809,7 +809,7 @@ void Player::apply_artifact_mods(Stats *fixed, Stats *multiplicative) {
     fixed->def += g_active_artifacts[4];    // Sign of Defense
     fixed->acc += g_active_artifacts[5];	// Sign of Accuracy
     fixed->spd += g_active_artifacts[6];    // Sign of Speed
-    
+
     fixed->str += (g_active_artifacts[7] * 2);    // Medal of Strength
     fixed->con += (g_active_artifacts[8] * 2);    // Medal of Constitution
     fixed->dex += (g_active_artifacts[9] * 2);    // Medal of Dexterity
@@ -901,7 +901,7 @@ void Player::apply_artifact_mods(Stats *fixed, Stats *multiplicative) {
     fixed->gold_drop += effect_quantity * 0.1;
     // Puzzle Box of Frivolity
     effect_quantity = g_active_artifacts[46] / g_artifact_ids[46].pieces;
-    if (effect_quantity > 0) 
+    if (effect_quantity > 0)
         effects.bragging_rights = true;
     else
         effects.bragging_rights = false;
@@ -950,7 +950,7 @@ void Player::apply_artifact_mods(Stats *fixed, Stats *multiplicative) {
     fixed->l_def += effect_quantity * 10;
     // Glasses of Foresight
     effect_quantity = g_active_artifacts[55] / g_artifact_ids[55].pieces;
-    if (effect_quantity > 0) 
+    if (effect_quantity > 0)
         effects.permanent_discovery = true;
     else
         effects.permanent_discovery = false;
@@ -1012,7 +1012,7 @@ void Player::apply_artifact_mods(Stats *fixed, Stats *multiplicative) {
 //------------------------------------------------------------------------------
 // Sets the player's HP value.  If the value is less than zero, the player will
 // die.
-// 
+//
 // Arguments:
 //   new_hp - the value to set the player's HP to
 //
@@ -1035,7 +1035,7 @@ void Player::set_hp(int new_hp) {
 
 //------------------------------------------------------------------------------
 // Activates the potion with the specified effect for a given duration
-// 
+//
 // Arguments:
 //   effect - the potion effect to activate
 //   duration - how many turns it should be active for
@@ -1060,7 +1060,7 @@ void Player::activate_potion_effect(int effect, int duration) {
 
 //------------------------------------------------------------------------------
 // Deactivates the potion with the specified effect
-// 
+//
 // Arguments:
 //   effect - the potion effect to deactivate
 //
@@ -1073,7 +1073,7 @@ void Player::deactivate_potion_effect(int effect) {
 
 	potion_effects[effect].enabled = false;
 
-	switch (effect) {		
+	switch (effect) {
 		case ItemConsts::EFFECT_BERSERK_STRENGTH:
 			g_text_log.put_line("Your strength returns to normal.");
 			break;
@@ -1089,7 +1089,7 @@ void Player::deactivate_potion_effect(int effect) {
 		case ItemConsts::EFFECT_POISON:
 			is_poisoned = false;
 			g_text_log.put_line("The poison has cleared from your body.");
-			break; 
+			break;
 	}
 
 	// Recalculate stats now that a potion was disabled
@@ -1098,7 +1098,7 @@ void Player::deactivate_potion_effect(int effect) {
 
 //------------------------------------------------------------------------------
 // Determines if the specified potion effect is active
-// 
+//
 // Arguments:
 //   effect - the potion effect to check
 //
@@ -1115,7 +1115,7 @@ bool Player::is_potion_active(int effect) {
 //------------------------------------------------------------------------------
 // Returns the number of turns that the specified potion effect will remain
 //  active
-// 
+//
 // Arguments:
 //   effect - the potion effect to check
 //
@@ -1132,7 +1132,7 @@ int Player::num_effect_turns_remaining(int effect) {
 //------------------------------------------------------------------------------
 // Manages per-turn potion effect management.  Decrements effect time counter
 //  and applies poison (if required)
-// 
+//
 // Arguments:
 //   None
 //
@@ -1163,7 +1163,7 @@ void Player::decrement_potion_turn_count() {
 
 //------------------------------------------------------------------------------
 // Applies the active potion effects to the player's active stats
-// 
+//
 // Arguments:
 //   None
 //
@@ -1191,7 +1191,7 @@ void Player::add_potion_effects_to_stats() {
 
 //------------------------------------------------------------------------------
 // Displays a list of the specified stats.
-// 
+//
 // Arguments:
 //   s - the stats to dump
 //
@@ -1306,7 +1306,7 @@ void perform_player_combat(Enemy *target) {
 		//std::cout << "perform_player_combat: lightning damage taken = " << enemy_lightning_damage_taken << std::endl;
 
 		// Sum up all damage
-		int total_damage_taken = enemy_base_damage_taken + enemy_fire_damage_taken + enemy_ice_damage_taken + enemy_lightning_damage_taken;		
+		int total_damage_taken = enemy_base_damage_taken + enemy_fire_damage_taken + enemy_ice_damage_taken + enemy_lightning_damage_taken;
 		if (attack_crits) {
 			g_text_log.put_line("Critical hit!");
 			total_damage_taken = total_damage_taken * 2;
@@ -1316,7 +1316,7 @@ void perform_player_combat(Enemy *target) {
 		g_text_log.put_line(text);
 		total_damage_from_all_attacks += total_damage_taken;
 	}
-	
+
 	// Subtract enemy HP
 	target->set_hp(target->get_hp() - total_damage_from_all_attacks);
 }

@@ -54,13 +54,13 @@ namespace ItemConsts {
 
     // odds tables for generating main item classes.  Currently:
     //
-    //   weapon: 10% 
+    //   weapon: 10%
     //   armor 38%
     //   currency 15%
     //   potion 15%
     //   scroll: 20%
-    //   artifact 2% 
-    // 
+    //   artifact 2%
+    //
     // Note: key items will be handled separately.
     const int g_item_class_pool[]= {10, 48, 63, 78, 98, 100};
     // const int g_item_class_pool[]= {10, 48, 63, 78, 79, 100};
@@ -97,7 +97,7 @@ namespace ItemConsts {
         WEAPON_TYPE_AXE,
         WEAPON_TYPE_BATTLEAXE,
         WEAPON_TYPE_MACE,
-        WEAPON_TYPE_MAUL, 
+        WEAPON_TYPE_MAUL,
         ARMOR_TYPE_HAT,
         ARMOR_TYPE_HELM,
         ARMOR_TYPE_GLOVES,
@@ -115,7 +115,7 @@ namespace ItemConsts {
         NUM_ARMOR_TYPES
     };
 
-    enum { 
+    enum {
         MODIFIER_STR,
         MODIFIER_CON,
         MODIFIER_DEX,
@@ -138,7 +138,7 @@ namespace ItemConsts {
         MODIFIER_ADMG,
         NUM_MODIFIERS
     };
-    
+
     const int FIRST_POTION_GID =  130;
     const int LAST_POTION_GID =   139;
     const int NUM_POTIONS = (LAST_POTION_GID - FIRST_POTION_GID) + 1;

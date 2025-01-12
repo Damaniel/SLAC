@@ -23,9 +23,19 @@
 //==========================================================================================
 #include "globals.h"
 
+//----------------------------------------------------------------------------
+// Determines which player slots had equipped items, and re-equips them from
+// the inventory
+//
+// Arguments:
+//   slots - a list of inventory slots corresponding to equipped items
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
 void equip_items_back_on_player(int *slots) {
     Item *i;
-    
+
     for (int idx = 0; idx < 9; idx++) {
         if (slots[idx] != -1) {
              i = g_inventory->get_item_in_slot(slots[idx]);
@@ -35,9 +45,18 @@ void equip_items_back_on_player(int *slots) {
     }
 }
 
+//----------------------------------------------------------------------------
+// Performs whatever tasks are needed after loading a save (mainly placing
+// the player in the correct place)
+//
+// Arguments:
+//
+// Returns:
+//   true
+//----------------------------------------------------------------------------
 bool finish_other_load_tasks(void) {
     // NOTE: I don't believe this should leak memory, since
-    // generate_new_dungeon_floor will either be called in the 
+    // generate_new_dungeon_floor will either be called in the
     // first block below, or if the player enters the dungeon after
     // going through the second block below.  Either route will
     // delete any existing dungeon.
@@ -185,7 +204,6 @@ void create_item_from_save_data(FILE *f, int slot) {
     i->type_id = type_id;
     i->rarity = rarity;
     i->ilevel = ilevel;
-    // Item class is determined by the specific Item class, not the value in the save file
     i->can_have_prefix = flags[0];
     i->can_have_suffix = flags[1];
     i->can_be_cursed = flags[2];
@@ -221,8 +239,6 @@ bool process_inventory_data(FILE *f) {
     char magic[4];
     bool exists;
 
-    // This one is tricky
-
     // start by clearing the existing inventory
     if (g_inventory != NULL)
         delete g_inventory;
@@ -255,7 +271,7 @@ bool process_inventory_data(FILE *f) {
     }
     return true;
 }
-    
+
 //----------------------------------------------------------------------------
 // Loads the artifact portion of the save file and populates the relevant
 // structures
@@ -268,7 +284,7 @@ bool process_inventory_data(FILE *f) {
 //----------------------------------------------------------------------------
 bool process_artifact_data(FILE *f) {
     char magic[4];
-    
+
     fseek(f, SaveLoadConsts::ARTIFACT_DATA_OFFSET, SEEK_SET);
 
     fread(&magic, sizeof(char), 4, f);
@@ -281,7 +297,7 @@ bool process_artifact_data(FILE *f) {
 
     return true;
 }
-    
+
 //----------------------------------------------------------------------------
 // Loads the dungeon portion of the save file and populates the relevant
 // structures
@@ -294,7 +310,7 @@ bool process_artifact_data(FILE *f) {
 //----------------------------------------------------------------------------
 bool process_dungeon_data(FILE *f) {
     char magic[4];
-    
+
     fseek(f, SaveLoadConsts::DUNGEON_DATA_OFFSET, SEEK_SET);
     fread(&magic, sizeof(char), 4, f);
     if (magic[0] != 'D' || magic[1] != 'U' || magic[2] != 'N' || magic[3] != 'G' ) {
@@ -323,7 +339,7 @@ bool process_dungeon_data(FILE *f) {
 //----------------------------------------------------------------------------
 bool process_game_flags(FILE *f) {
     char magic[4];
-    
+
     fseek(f, SaveLoadConsts::GAME_FLAGS_OFFSET, SEEK_SET);
     fread(&magic, sizeof(char), 4, f);
     if (magic[0] != 'F' || magic[1] != 'L' || magic[2] != 'A' || magic[3] != 'G' ) {
@@ -336,7 +352,7 @@ bool process_game_flags(FILE *f) {
 
     return true;
 }
-    
+
 //----------------------------------------------------------------------------
 // Loads the potion scramble data of the save file and populates the relevant
 // structures
@@ -349,7 +365,7 @@ bool process_game_flags(FILE *f) {
 //----------------------------------------------------------------------------
 bool process_potion_scramble_data(FILE *f) {
     char magic[4];
-    
+
     fseek(f, SaveLoadConsts::POTION_SCRAMBLINGS_OFFSET, SEEK_SET);
     fread(&magic, sizeof(char), 4, f);
     if (magic[0] != 'P' || magic[1] != 'O' || magic[2] != 'T' || magic[3] != 'S' ) {
@@ -357,7 +373,7 @@ bool process_potion_scramble_data(FILE *f) {
     }
 
     for (int i=0; i < ItemConsts::NUM_POTIONS; ++i) {
-        fread(&(g_scrambled_potion_icons[i]), sizeof(int), 1, f);    
+        fread(&(g_scrambled_potion_icons[i]), sizeof(int), 1, f);
     }
 
     return true;
@@ -375,7 +391,7 @@ bool process_potion_scramble_data(FILE *f) {
 //----------------------------------------------------------------------------
 bool process_scroll_scramble_data(FILE *f) {
     char magic[4];
-    
+
     fseek(f, SaveLoadConsts::SCROLL_SCRAMBLINGS_OFFSET, SEEK_SET);
     fread(&magic, sizeof(char), 4, f);
     if (magic[0] != 'S' || magic[1] != 'C' || magic[2] != 'R' || magic[3] != 'S' ) {
@@ -383,7 +399,7 @@ bool process_scroll_scramble_data(FILE *f) {
     }
 
     for (int i=0; i < ItemConsts::NUM_SCROLLS; ++i) {
-        fread(&(g_scrambled_scroll_icons[i]), sizeof(int), 1, f);    
+        fread(&(g_scrambled_scroll_icons[i]), sizeof(int), 1, f);
     }
 
     return true;
@@ -401,7 +417,7 @@ bool process_scroll_scramble_data(FILE *f) {
 //----------------------------------------------------------------------------
 bool process_ided_potion_data(FILE *f) {
     char magic[4];
-    
+
     fseek(f, SaveLoadConsts::ID_POTIONS_OFFSET, SEEK_SET);
     fread(&magic, sizeof(char), 4, f);
     if (magic[0] != 'P' || magic[1] != 'O' || magic[2] != 'T' || magic[3] != 'I' ) {
@@ -429,7 +445,7 @@ bool process_ided_potion_data(FILE *f) {
 //----------------------------------------------------------------------------
 bool process_ided_scroll_data(FILE *f) {
     char magic[4];
-    
+
     fseek(f, SaveLoadConsts::ID_SCROLLS_OFFSET, SEEK_SET);
     fread(&magic, sizeof(char), 4, f);
     if (magic[0] != 'S' || magic[1] != 'C' || magic[2] != 'R' || magic[3] != 'I' ) {
@@ -492,7 +508,7 @@ int write_initial_header(FILE *f) {
     // identified scrolls
     offset = SaveLoadConsts::ID_SCROLLS_OFFSET;
     fwrite(&offset, sizeof(int), 1, f);
-    
+
     for(int i=0; i < 87; ++i)
         fputc(0x00, f);
 
@@ -520,10 +536,10 @@ int write_player_data(FILE *f) {
     // Get and write up to the first 16 characters of the name, then pad
     // with nulls if there's space left
     int len = g_player.name.length();
-    const char *name = g_player.name.c_str();  
+    const char *name = g_player.name.c_str();
     if (len > 16)
         len = 16;
-    for (int i = 0; i < len; i++) 
+    for (int i = 0; i < len; i++)
         fputc(name[i], f);
     for (int i = 0; i < 16 - len; i++)
         fputc(0x00, f);
@@ -565,7 +581,7 @@ int write_player_data(FILE *f) {
     slot[0] = g_inventory->get_slot_of_item(g_player.equipment.amulet);
     slot[1] = g_inventory->get_slot_of_item(g_player.equipment.chest);
     slot[2] = g_inventory->get_slot_of_item(g_player.equipment.feet);
-    slot[3] = g_inventory->get_slot_of_item(g_player.equipment.hands);    
+    slot[3] = g_inventory->get_slot_of_item(g_player.equipment.hands);
     slot[4] = g_inventory->get_slot_of_item(g_player.equipment.head);
     slot[5] = g_inventory->get_slot_of_item(g_player.equipment.legs);
     slot[6] = g_inventory->get_slot_of_item(g_player.equipment.ring);
@@ -598,54 +614,54 @@ int write_inventory_data(FILE *f) {
         Item *cur_item = g_inventory->get_item_in_slot(i);
         if (cur_item == NULL) {
             // load dummy data for the item
-            fputc(0x00, f);                                // 1
-            for(int j = 0; j < 288; j++) {                 // 288
+            fputc(0x00, f);
+            for(int j = 0; j < 288; j++) {
                 fputc(0x00, f);
             }
             bytes_written += SaveLoadConsts::INVENTORY_ITEM_SIZE;
         }
         else {
-            fputc(0x01, f);                                // 1
+            fputc(0x01, f);
             short val = cur_item->id;
             char cval;
             bool bval;
-            fwrite(&val, sizeof(short), 1, f);             // 2
+            fwrite(&val, sizeof(short), 1, f);
             val = cur_item->quantity;
-            fwrite(&val, sizeof(short), 1, f);             // 2
-            
+            fwrite(&val, sizeof(short), 1, f);
+
             // Write the full name
             std::string strval = cur_item->name;
             int len = strval.length();
-            const char *name = strval.c_str();  
+            const char *name = strval.c_str();
             if (len > 128)
                 len = 128;
-            for (int k = 0; k < len; k++) 
-                fputc(name[k], f);                         // \ 
-            for (int k = 0; k < 128 - len; k++)            //  - 128
-                fputc(0x00, f);                            // /
+            for (int k = 0; k < len; k++)
+                fputc(name[k], f);
+            for (int k = 0; k < 128 - len; k++)
+                fputc(0x00, f);
 
             // Write the description
             strval = cur_item->description;
             len = strval.length();
-            name = strval.c_str();  
+            name = strval.c_str();
             if (len > 128)
                 len = 128;
-            for (int k = 0; k < len; k++)                  // \ 
-                fputc(strval[k], f);                       //  - 128
-            for (int k = 0; k < 128 - len; k++)            // / 
+            for (int k = 0; k < len; k++)
+                fputc(strval[k], f);
+            for (int k = 0; k < 128 - len; k++)
                 fputc(0x00, f);
 
             // Write the rest of the data
             val = cur_item->gid;
-            fwrite(&val, sizeof(short), 1, f);              // 2
+            fwrite(&val, sizeof(short), 1, f);
             val = cur_item->type_id;
-            fwrite(&val, sizeof(short), 1, f);              // 2
+            fwrite(&val, sizeof(short), 1, f);
             cval = cur_item->rarity;
-            fwrite(&cval, sizeof(char), 1, f);              // 1
+            fwrite(&cval, sizeof(char), 1, f);
             cval = cur_item->ilevel;
-            fwrite(&cval, sizeof(char), 1, f);              // 1
+            fwrite(&cval, sizeof(char), 1, f);
             int ival = cur_item->item_class;
-            fwrite(&ival, sizeof(int), 1, f);               // 4
+            fwrite(&ival, sizeof(int), 1, f);
             // Write the base boolean flags
             bool flags[8];
             flags[0] = cur_item->can_have_prefix;
@@ -656,32 +672,32 @@ int write_inventory_data(FILE *f) {
             flags[5] = cur_item->can_drop;
             flags[6] = cur_item->can_equip;
             flags[7] = cur_item->is_identified;
-            fwrite(flags, sizeof(bool), 8, f);              // 8
+            fwrite(flags, sizeof(bool), 8, f);
             // Write the prefix and suffix
             val = (short)(cur_item->prefix_id);
-            fwrite(&val, sizeof(short), 1, f);              // 2
+            fwrite(&val, sizeof(short), 1, f);
             val = (short)(cur_item->suffix_id);
-            fwrite(&val, sizeof(short), 1, f);              // 2
+            fwrite(&val, sizeof(short), 1, f);
             // Write the cursed/equipped flags
             bval = cur_item->is_cursed;
-            fwrite(&bval, sizeof(bool), 1, f);              // 1
+            fwrite(&bval, sizeof(bool), 1, f);
             bval = cur_item->is_equipped;
-            fwrite(&bval, sizeof(bool), 1, f);              // 1
-            // Write attack/defense values (or -1 if not the right kind of equipment) 
+            fwrite(&bval, sizeof(bool), 1, f);
+            // Write attack/defense values (or -1 if not the right kind of equipment)
             if (cur_item->item_class == ItemConsts::WEAPON_CLASS) {
-                val = (short)(cur_item->attack); 
+                val = (short)(cur_item->attack);
             }
             else {
                 val = -1;
             }
-            fwrite(&val, sizeof(short), 1, f);              // 2
+            fwrite(&val, sizeof(short), 1, f);
             if (cur_item->item_class == ItemConsts::ARMOR_CLASS) {
                 val = (short)(cur_item->defense);
             }
             else {
                 val = -1;
             }
-            fwrite(&val, sizeof(short), 1, f);              // 2
+            fwrite(&val, sizeof(short), 1, f);
             bytes_written += SaveLoadConsts::INVENTORY_ITEM_SIZE;
         }
     }
@@ -772,7 +788,7 @@ int write_potion_scramble_data(FILE *f) {
     fputc('S', f);
 
     for (int i=0; i < g_scrambled_potion_icons.size(); ++i) {
-        fwrite(&(g_scrambled_potion_icons[i]), sizeof(int), 1, f);    
+        fwrite(&(g_scrambled_potion_icons[i]), sizeof(int), 1, f);
     }
 
     return g_scrambled_potion_icons.size() * sizeof(int) + 4;
@@ -793,7 +809,7 @@ int write_scroll_scramble_data(FILE *f) {
     fputc('R', f);
     fputc('S', f);
     for (int i=0; i < g_scrambled_scroll_icons.size(); ++i) {
-        fwrite(&(g_scrambled_scroll_icons[i]), sizeof(int), 1, f);    
+        fwrite(&(g_scrambled_scroll_icons[i]), sizeof(int), 1, f);
     }
 
     return g_scrambled_scroll_icons.size() * sizeof(int) + 4;
@@ -816,7 +832,7 @@ int write_identified_potions(FILE *f) {
 
     for (int i=0; i < g_identified_potions.size(); ++i) {
         bool b = g_identified_potions[i];
-        fwrite(&b, sizeof(bool), 1, f);    
+        fwrite(&b, sizeof(bool), 1, f);
     }
 
     return g_identified_potions.size() * sizeof(bool) + 4;
@@ -838,7 +854,7 @@ int write_identified_scrolls(FILE *f) {
     fputc('I', f);
     for (int i=0; i < g_identified_scrolls.size(); ++i) {
         bool b = g_identified_scrolls[i];
-        fwrite(&b, sizeof(bool), 1, f);    
+        fwrite(&b, sizeof(bool), 1, f);
     }
 
     return g_identified_scrolls.size() * sizeof(bool) + 4;
@@ -864,8 +880,8 @@ bool save_game(std::string filename) {
         return false;
     }
 
-    write_initial_header(fp); 
-    write_player_data(fp); 
+    write_initial_header(fp);
+    write_player_data(fp);
     write_inventory_data(fp);
     write_artifact_data(fp);
     write_dungeon_data(fp);
@@ -996,32 +1012,12 @@ bool load_game(std::string filename) {
         return false;
     }
 
-    // Ensure the headers point to the correct sections
-    fseek(fp, SaveLoadConsts::PLAYER_DATA_OFFSET, SEEK_SET);
-    fread(magic, sizeof(char), 4, fp);
-    fseek(fp, SaveLoadConsts::INVENTORY_DATA_OFFSET, SEEK_SET);
-    fread(magic, sizeof(char), 4, fp);
-    fseek(fp, SaveLoadConsts::ARTIFACT_DATA_OFFSET, SEEK_SET);
-    fread(magic, sizeof(char), 4, fp);
-    fseek(fp, SaveLoadConsts::DUNGEON_DATA_OFFSET, SEEK_SET);
-    fread(magic, sizeof(char), 4, fp);
-    fseek(fp, SaveLoadConsts::GAME_FLAGS_OFFSET, SEEK_SET);
-    fread(magic, sizeof(char), 4, fp);
-    fseek(fp, SaveLoadConsts::POTION_SCRAMBLINGS_OFFSET, SEEK_SET);
-    fread(magic, sizeof(char), 4, fp);
-    fseek(fp, SaveLoadConsts::SCROLL_SCRAMBLINGS_OFFSET, SEEK_SET);
-    fread(magic, sizeof(char), 4, fp);
-    fseek(fp, SaveLoadConsts::ID_POTIONS_OFFSET, SEEK_SET);
-    fread(magic, sizeof(char), 4, fp);
-    fseek(fp, SaveLoadConsts::ID_SCROLLS_OFFSET, SEEK_SET);
-    fread(magic, sizeof(char), 4, fp);
-
     fclose(fp);
 
     equip_items_back_on_player(slots);
 
     // do any additional processing (init, state changes, etc)
-    result = finish_other_load_tasks(); 
+    result = finish_other_load_tasks();
 
     g_state_flags.loading_save = false;
 
@@ -1121,7 +1117,7 @@ bool load_hall_of_champions() {
         g_hall_of_champions[i].elapsed = elapsed;
         g_hall_of_champions[i].generation = gen;
     }
-    
+
     fclose(fp);
     return true;
 }

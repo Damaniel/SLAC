@@ -24,7 +24,7 @@
 #include "globals.h"
 
 //----------------------------------------------------------------------------
-// Generates an item.  This can be anything, weighted by overall item class, 
+// Generates an item.  This can be anything, weighted by overall item class,
 // item base type and mod types, assuming a max item level of 100
 //
 // Arguments:
@@ -38,8 +38,8 @@ Item *ItemGenerator::generate() {
 }
 
 //----------------------------------------------------------------------------
-// Generates an item based on a specified item level.  Within that constraint, 
-// this can be anything, weighted by overall item class, item base type and 
+// Generates an item based on a specified item level.  Within that constraint,
+// this can be anything, weighted by overall item class, item base type and
 // mod types.
 //
 // Arguments:
@@ -51,8 +51,8 @@ Item *ItemGenerator::generate() {
 //----------------------------------------------------------------------------
 Item *ItemGenerator::generate(int ilevel) {
     Item *i;
-    int item_type = roll_from_pool(ItemConsts::g_item_class_pool, 
-                                   ItemConsts::g_item_class_pool_count, 
+    int item_type = roll_from_pool(ItemConsts::g_item_class_pool,
+                                   ItemConsts::g_item_class_pool_count,
                                    ItemConsts::g_item_class_pool_entries);
     i = ItemGenerator::generate(item_type, ilevel);
 
@@ -63,7 +63,7 @@ Item *ItemGenerator::generate(int ilevel) {
 }
 
 //----------------------------------------------------------------------------
-// Generates an item of a particular item class, weighted by base type and mod 
+// Generates an item of a particular item class, weighted by base type and mod
 // types.
 //
 // Arguments:
@@ -73,7 +73,7 @@ Item *ItemGenerator::generate(int ilevel) {
 // Returns:
 //   A pointer to a randomly generated Item of the item type.
 //
-// Valid item types are (WEAPON_CLASS, ARMOR_CLASS, CURRENCY_CLASS, 
+// Valid item types are (WEAPON_CLASS, ARMOR_CLASS, CURRENCY_CLASS,
 // CONSUMABLE_CLASS, ARTIFACT_CLASS).
 //----------------------------------------------------------------------------
 Item *ItemGenerator::generate(int item_type, int ilevel) {
@@ -87,8 +87,8 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
     i = new Item(item_type);
 
     attempt = 0;
-    
-    // Roll (up to 'g_item_generate_max_cycles' times) for an item base.  Only keep it if it meets the ilevel requirements.  If no item is 
+
+    // Roll (up to 'g_item_generate_max_cycles' times) for an item base.  Only keep it if it meets the ilevel requirements.  If no item is
     // generated, make a default item (in this case, an item with id 0).
     do {
         // std::cout << "generator: ilevel roll attempt " << (attempt + 1) << " of " << MAX_GENERATOR_REROLLS << std::endl;
@@ -104,26 +104,26 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
             case ItemConsts::CURRENCY_CLASS:
                 rolled_base_type = roll_from_pool(g_currency_pool, g_currency_pool_count, g_currency_pool_entries);
                 base_ilevel = g_currency_ids[rolled_base_type].ilevel;
-                break;        
+                break;
              case ItemConsts::POTION_CLASS:
                 rolled_base_type = roll_from_pool(g_potion_pool, g_potion_pool_count, g_potion_pool_entries);
                 base_ilevel = g_potion_ids[rolled_base_type].ilevel;
                 break;
-            case ItemConsts::SCROLL_CLASS:                               
+            case ItemConsts::SCROLL_CLASS:
                 rolled_base_type = roll_from_pool(g_scroll_pool, g_scroll_pool_count, g_scroll_pool_entries);
                 base_ilevel = g_scroll_ids[rolled_base_type].ilevel;
-                break;        
-            case ItemConsts::ARTIFACT_CLASS:                               
+                break;
+            case ItemConsts::ARTIFACT_CLASS:
                 rolled_base_type = roll_from_pool(g_artifact_pool, g_artifact_pool_count, g_artifact_pool_entries);
                 base_ilevel = g_artifact_ids[rolled_base_type].ilevel;
-                break;        
+                break;
         }
-  
+
         // If the item is at or below the ilevel as-is, accept it immediately
         if (base_ilevel <= ilevel) {
             // std::cout <<  "  generator: item meets ilevel requirements, generating base" << std::endl;
             generated = true;
-        } 
+        }
         else {
             // Otherwise, do the 'level difference' roll to see if we generate it anyway
             // std::cout << "  generator: item doesn't meet ilevel requirement, rolling difference" << std::endl;
@@ -144,7 +144,7 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
         ++attempt;
     } while (generated == false && attempt < ItemConsts::MAX_GENERATOR_REROLLS);
 
-    // If the item was successfully generated, initialize it, otherwise create a 'default' item 
+    // If the item was successfully generated, initialize it, otherwise create a 'default' item
     // (that is, an item with id 0)
     if (generated) {
         // std::cout << "generator: generating the item" << std::endl;
@@ -154,7 +154,7 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
         // std::cout << "generator: item base roll failed, generating 'default' item" << std::endl;
         i->init(i->item_class, 0);
     }
-        
+
     // Attempt to apply a curse to items that can be.  This will dictate what kinds of affixes can roll.
     if (i->can_be_cursed) {
         ItemGenerator::apply_curse(i, ilevel);
@@ -170,14 +170,14 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
         ItemGenerator::apply_affix(i, ItemConsts::SUFFIX_CLASS, ilevel);
     }
 
-    // If the item is cursed but didn't get a prefix or a suffix, demote it back to 
+    // If the item is cursed but didn't get a prefix or a suffix, demote it back to
     // a non-cursed item (so we don't end up with a cursed item with no adjusted
     // stats)
     if (i->is_cursed && i->prefix_id == -1 && i->suffix_id == -1) {
         i->is_cursed = false;
     }
 
-    // If the item is a potion or scroll and has been previously identified, 
+    // If the item is a potion or scroll and has been previously identified,
     // mark it as such
     identify_if_previously_known(i);
 
@@ -186,7 +186,7 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
 }
 
 //----------------------------------------------------------------------------
-// Generates and applies a random affix to an item, if the item is capable of 
+// Generates and applies a random affix to an item, if the item is capable of
 // taking one
 //
 // Arguments:
@@ -238,7 +238,7 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
                 generated = true;
             }
             else {
-                // otherwise, do the same ilevel difference check as for item bases, 
+                // otherwise, do the same ilevel difference check as for item bases,
                 // and apply the affix if it passes
                 // std::cout << "  generator: affix doesn't meet ilevel requirement, rolling difference" << std::endl;
                 int i = rand() % 100;
@@ -271,7 +271,7 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
             if (affix_type == ItemConsts::PREFIX_CLASS)
                 i->prefix_id = -1;
             if (affix_type == ItemConsts::SUFFIX_CLASS)
-                i->prefix_id = -1;           
+                i->prefix_id = -1;
         }
     }
     else
@@ -281,7 +281,7 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
             i->prefix_id = -1;
         if (affix_type == ItemConsts::SUFFIX_CLASS)
             i->suffix_id = -1;
-    } 
+    }
 }
 
 //----------------------------------------------------------------------------

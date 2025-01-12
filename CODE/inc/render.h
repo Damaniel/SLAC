@@ -135,7 +135,7 @@ namespace UiConsts {
 	// can skip drawing due to them being obscured.
 	const int TEXT_AREA_EXT_MAZE_ROWS_OBSCURED = 3;
 
-	// The offset (in tiles) into the player graphic where the player is.  
+	// The offset (in tiles) into the player graphic where the player is.
 	const int PLAYER_TILE_OFFSET = 9;
 
 	// The offset (in tiles) into the play area where the player graphic is placed.  The player
@@ -172,7 +172,7 @@ namespace UiConsts {
 	// The offset of the upper left corner of the first inventory item.  Each other one is a multiple
 	// of TILE_PIXEL_WIDTH or TILE_PIXEL_HEIGHT pixels away
 	const int INVENTORY_ITEMS_X = INVENTORY_DIALOG_X + 10;
-	const int INVENTORY_ITEMS_Y	= INVENTORY_DIALOG_Y + 19; 
+	const int INVENTORY_ITEMS_Y	= INVENTORY_DIALOG_Y + 19;
 
 	// The offset of the lower right corner of the item box area
 	const int INVENTORY_ITEMS_X2 = INVENTORY_ITEMS_X + ((INVENTORY_CURSOR_SIZE - 1) * INVENTORY_ITEMS_PER_ROW);
@@ -209,7 +209,7 @@ namespace UiConsts {
 	const int HP_BAR_Y = 57;
 
 	// Positions of EXP text and indicator on the right side of the screen
-	const int EXP_TEXT_X = 246; 
+	const int EXP_TEXT_X = 246;
 	const int EXP_TEXT_Y = 78;
 
 	const int EXP_BAR_X = 246;
@@ -247,7 +247,7 @@ namespace UiConsts {
 	// Positions of the elapsed time indicators on the right side of the screen
 	const int ELAPSED_TEXT_X = 246;
 	const int ELAPSED_TEXT_Y = 178;
-	
+
 	const int ELAPSED_VALUE_X = 313;
 	const int ELAPSED_VALUE_Y = 188;
 
@@ -336,7 +336,7 @@ namespace UiConsts {
 	const int STATS_LDMG_TEXT_Y = 131;
 	const int STATS_LDMG_VAL_X =  185;
 	const int STATS_LDMG_VAL_Y =  131;
-	
+
 	const int STATS_ADMG_TEXT_X = 125;
 	const int STATS_ADMG_TEXT_Y = 140;
 	const int STATS_ADMG_VAL_X =  185;
@@ -448,7 +448,7 @@ namespace UiConsts {
 	const int NEXT_GEN_LDMG_TEXT_Y = 123;
 	const int NEXT_GEN_LDMG_VAL_X =  187;
 	const int NEXT_GEN_LDMG_VAL_Y =  123;
-	
+
 	const int NEXT_GEN_ADMG_TEXT_X = 129;
 	const int NEXT_GEN_ADMG_TEXT_Y = 132;
 	const int NEXT_GEN_ADMG_VAL_X =  187;
@@ -456,7 +456,7 @@ namespace UiConsts {
 
 	const int NEXT_GEN_APT_TEXT_X = 129;
 	const int NEXT_GEN_APT_TEXT_Y = 141;
-	const int NEXT_GEN_APT_VAL_X =  187; 
+	const int NEXT_GEN_APT_VAL_X =  187;
 	const int NEXT_GEN_APT_VAL_Y =  141;
 
 	const int NEXT_GEN_BLOCK_TEXT_X = 129;
@@ -539,7 +539,7 @@ namespace UiConsts {
 	// The contents of the 'legacy erased forever' dialog
 	const int TITLE_MENU_ERASED_FOREVER_X = 159;
 	const int TITLE_MENU_ERASED_FOREVER_LINE_1_Y = 177;
-	const int TITLE_MENU_ERASED_FOREVER_LINE_2_Y = 188; 
+	const int TITLE_MENU_ERASED_FOREVER_LINE_2_Y = 188;
 	const int TITLE_MENU_ERASED_FOREVER_LINE_3_Y = 201;
 
 	// The contents of the 'new legacy' dialog
@@ -590,7 +590,7 @@ namespace UiConsts {
 
 	// An enum containing entries for each of the 16 colors of 'map dots' sitting
 	// in the datafile.  Some of them aren't used on the minimap, but those that
-	// are will have a name describing what they're used for (for example, 
+	// are will have a name describing what they're used for (for example,
 	// MAP_DOT_FLOOR is used for unoccupied floor spaces)
 	enum {
 		MAP_DOT_FLOOR,
@@ -649,28 +649,28 @@ namespace FontConsts {
 		TEXT_RIGHT_JUSTIFIED
 	};
 
-	// Width and height of all characters from ASCII values 32 to 127 in the standard 
+	// Width and height of all characters from ASCII values 32 to 127 in the standard
 	// proportional font
 	const unsigned char prop_font_width[UiConsts::FONT_ENTRIES] = {
-		6, 2, 6, 7, 6, 6, 7, 2, 4, 4, 5, 5, 2, 6, 2, 6, 
-		7, 4, 7, 7, 7, 7, 7, 7, 7, 7, 2, 2, 5, 6, 5, 6, 
-		8, 8, 7, 7, 7, 7, 7, 7, 8, 4, 7, 8, 7, 8, 8, 7, 
-		7, 7, 8, 7, 6, 8, 8, 8, 8, 8, 6, 4, 6, 4, 5, 8, 
-		3, 7, 7, 6, 7, 6, 5, 7, 8, 4, 6, 7, 4, 8, 8, 6, 
-		7, 7, 7, 6, 4, 7, 8, 7, 6, 6, 6, 4, 2, 4, 7, 7  
+		6, 2, 6, 7, 6, 6, 7, 2, 4, 4, 5, 5, 2, 6, 2, 6,
+		7, 4, 7, 7, 7, 7, 7, 7, 7, 7, 2, 2, 5, 6, 5, 6,
+		8, 8, 7, 7, 7, 7, 7, 7, 8, 4, 7, 8, 7, 8, 8, 7,
+		7, 7, 8, 7, 6, 8, 8, 8, 8, 8, 6, 4, 6, 4, 5, 8,
+		3, 7, 7, 6, 7, 6, 5, 7, 8, 4, 6, 7, 4, 8, 8, 6,
+		7, 7, 7, 6, 4, 7, 8, 7, 6, 6, 6, 4, 2, 4, 7, 7
 	};
 	const int prop_font_height = 8;
 
 	// Offsets into the font bitmap for each character (based on the character widths
 	// defined in prop_font_width)
 	const unsigned short prop_font_offset[UiConsts::FONT_ENTRIES] = {
-		0,    6,    8,  14,  21,  27,  33,  40,  42,  46,  50,  55,  60,  62,  68,  70, 
-		76,  83,   87,  94, 101, 108, 115, 122, 129, 136, 143, 145, 147, 152, 158, 163, 
+		0,    6,    8,  14,  21,  27,  33,  40,  42,  46,  50,  55,  60,  62,  68,  70,
+		76,  83,   87,  94, 101, 108, 115, 122, 129, 136, 143, 145, 147, 152, 158, 163,
 		169, 177, 185, 192, 199, 206, 213, 220, 227, 235, 239, 246, 254, 261, 269, 277,
-		284, 291, 298, 306, 313, 319, 327, 335, 343, 351, 359, 365, 369, 375, 379, 384, 
-		392, 395, 402, 409, 415, 422, 428, 433, 440, 448, 452, 458, 465, 469, 477, 485, 
+		284, 291, 298, 306, 313, 319, 327, 335, 343, 351, 359, 365, 369, 375, 379, 384,
+		392, 395, 402, 409, 415, 422, 428, 433, 440, 448, 452, 458, 465, 469, 477, 485,
 		491, 498, 505, 512, 518, 522, 529, 537, 544, 550, 556, 562, 566, 568, 572, 579
-	};	
+	};
 
 	const unsigned char prop_narrow_font_width[UiConsts::FONT_ENTRIES] = {
   		3, 1, 3, 5, 5, 5, 5, 1, 2, 2, 3, 5, 2, 5, 1, 3,
@@ -702,11 +702,11 @@ namespace FontConsts {
 	};
 
 	const unsigned short tiny_font_offset[UiConsts::FONT_ENTRIES] = {
-		  0,    2,    3,   6,  11,  11,  14,  14,  15,  17,  19,  22,  25,  27,  29,  30, 
-		  33,   36,  39,  42,  45,  48,  51,  54,  57,  60,  63,  64,  66,  69,  72,  75,  
-		  78,   78,  81,  84,  87,  90,  93,  96,  99, 102, 105, 108, 111, 114, 119, 123, 
-		  126, 129, 133, 136, 139, 142, 145, 148, 153, 156, 159, 162, 164, 167, 169, 172, 
-		  174, 176, 179, 182, 185, 188, 191, 194, 197, 200, 201, 203, 206, 208, 213, 216, 
+		  0,    2,    3,   6,  11,  11,  14,  14,  15,  17,  19,  22,  25,  27,  29,  30,
+		  33,   36,  39,  42,  45,  48,  51,  54,  57,  60,  63,  64,  66,  69,  72,  75,
+		  78,   78,  81,  84,  87,  90,  93,  96,  99, 102, 105, 108, 111, 114, 119, 123,
+		  126, 129, 133, 136, 139, 142, 145, 148, 153, 156, 159, 162, 164, 167, 169, 172,
+		  174, 176, 179, 182, 185, 188, 191, 194, 197, 200, 201, 203, 206, 208, 213, 216,
 		  219, 222, 225, 228, 231, 234, 237, 240, 245, 248, 251, 254, 256, 257, 259, 263
 	};
 
@@ -748,7 +748,7 @@ class Render {
 		void render_description_fields(BITMAP *destination, Item *it);
 		void render_item_submenu(BITMAP *destination);
 		void render_ui_box(BITMAP *destination, int x1, int x2, int y1, int);
-		int get_prop_text_width(char *text, int style);	
+		int get_prop_text_width(char *text, int style);
 		void fill_in_map_square(DungeonFloor *f, int x, int y);
 	public:
 		Render();
@@ -756,7 +756,7 @@ class Render {
 		void add_area_to_map_bitmap(DungeonFloor *f, int x, int y);
 		void fill_in_entire_map(DungeonFloor *f);
 		void mark_item_or_stair(DungeonFloor *f, int x, int y);
-		void copy_data_to_offscreen_vram(void);		
+		void copy_data_to_offscreen_vram(void);
 		void render_prop_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx, int style);
 		void render_tiny_text(BITMAP *destination, char *text, int x_pos, int y_pos, int font_idx);
 		void render_map(BITMAP *destination);
@@ -765,7 +765,7 @@ class Render {
 		void render_elapsed_time(BITMAP *destination);
 		void render_status_base(BITMAP *destination);
 		void render_text(BITMAP *dest, char *text, int x_pos, int y_pos, int font_idx, int style, int alignment);
-		void render_text_base(BITMAP *destination, bool extended);		
+		void render_text_base(BITMAP *destination, bool extended);
 		void render_text_log(BITMAP *destination, bool extended);
 		void render_world_at(BITMAP *destination, DungeonFloor *f, int maze_x, int maze_y);
 		void render_world_at_player(BITMAP *destination, DungeonFloor *f, int maze_x, int maze_y);
@@ -782,8 +782,4 @@ class Render {
 
 void force_update_screen(void);
 
-#endif	
-	
-	
-	
-	
+#endif

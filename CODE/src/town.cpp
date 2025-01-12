@@ -79,7 +79,7 @@ void check_and_process_npc_here(int x, int y) {
 			g_state_flags.update_display = true;
 			return;
 		}
-	} 
+	}
 }
 
 //----------------------------------------------------------------------------

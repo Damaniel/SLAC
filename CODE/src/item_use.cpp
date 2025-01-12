@@ -41,7 +41,7 @@ void heal_player(int amount)
 
     old_hp = g_player.hp;
     g_player.hp += amount;
-    if (g_player.hp > (int)g_player.actual.max_hp) { 
+    if (g_player.hp > (int)g_player.actual.max_hp) {
         g_player.hp = (int)g_player.actual.max_hp;
         actual_healed = g_player.hp - old_hp;
 
@@ -134,7 +134,7 @@ int identify_all(void)
 // Notes:
 //   This function checks from lowest inventory slot to highest.
 //----------------------------------------------------------------------------
-bool decurse_item(bool log) 
+bool decurse_item(bool log)
 {
     Item *i;
     int count = 0;
@@ -205,9 +205,9 @@ int decurse_all() {
 void item_use_update_screen_flags() {
     g_state_flags.update_maze_area = true;
     g_state_flags.update_text_dialog = true;
-    if(g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY || 
+    if(g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY ||
        g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY_MENU) {
-            // Don't actually update the inventory menu since the 
+            // Don't actually update the inventory menu since the
             // item may be gone and the state will be reverted back
             // to SUBSTATE_INVENTORY shortly
             g_state_flags.update_inventory_cursor = true;
@@ -218,7 +218,7 @@ void item_use_update_screen_flags() {
 }
 
 //----------------------------------------------------------------------------
-// Performs the action of a teleport scroll (randomly moves the player to a 
+// Performs the action of a teleport scroll (randomly moves the player to a
 // new location on the floor)
 //
 // Arguments:
@@ -265,10 +265,10 @@ void teleport_player() {
 
     // If the player was teleported into a room, light it
 	int room_id = g_dungeon.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos());
-	g_player.set_last_room_entered(room_id);	
+	g_player.set_last_room_entered(room_id);
 	if (room_id != -1) {
-		//g_dungeon.maze->change_room_lit_status(room_id, false);		
-		g_dungeon.maze->change_room_lit_status(room_id, true);			
+		//g_dungeon.maze->change_room_lit_status(room_id, false);
+		g_dungeon.maze->change_room_lit_status(room_id, true);
 	}
 
     g_text_log.put_line("You are whisked away to somewhere new...");
@@ -277,7 +277,7 @@ void teleport_player() {
 }
 
 //----------------------------------------------------------------------------
-// Performs the action of a magic map scroll (marks every square in the 
+// Performs the action of a magic map scroll (marks every square in the
 // maze as seen, as if the player had walked through each square)
 //
 // Arguments:
@@ -303,17 +303,17 @@ void expose_map() {
             }
         }
     }
-    
+
     // Draw it all on the map
     g_render.fill_in_entire_map(&g_dungeon);
-    
+
     g_text_log.put_line("The walls of the dungeon are revealed.");
 
     item_use_update_screen_flags();
 }
 
 //----------------------------------------------------------------------------
-// Performs the action of a darkness scroll 
+// Performs the action of a darkness scroll
 //
 // Arguments:
 //   None
@@ -332,7 +332,7 @@ void darken_area() {
 }
 
 //----------------------------------------------------------------------------
-// Performs the action of a forget area scroll (darkens every square in the 
+// Performs the action of a forget area scroll (darkens every square in the
 // maze) and forgets it
 //
 // Arguments:
@@ -358,7 +358,7 @@ void hide_map() {
             }
         }
     }
-    
+
     // Clear the map bitmap
     g_render.initialize_map_bitmap(&g_dungeon);
 
@@ -383,12 +383,12 @@ void activate_recall(void) {
         g_player.recall_count = 0;
         g_text_log.put_line("The energy pulling you to the surface subsides.");
         return;
-    } 
+    }
     else {
         if (g_state_flags.in_dungeon) {
             g_player.recall_active = true;
             g_player.recall_floor = g_dungeon.depth;
-            g_player.recall_count = (rand() % (ItemConsts::RECALL_SCROLL_MAX_TURNS - ItemConsts::RECALL_SCROLL_MIN_TURNS)) + 
+            g_player.recall_count = (rand() % (ItemConsts::RECALL_SCROLL_MAX_TURNS - ItemConsts::RECALL_SCROLL_MIN_TURNS)) +
                                     ItemConsts::RECALL_SCROLL_MIN_TURNS;
             g_text_log.put_line("Magical energy starts to tug you toward the surface...");
         }
@@ -514,7 +514,7 @@ void use_potion_action(int id) {
         case ItemConsts::POT_OF_DEATH:
             g_player.hp = 0;
             g_text_log.put_line("You feel the touch of Death upon you.");
-            break;        
+            break;
         default:
             g_text_log.put_line("This potion shouldn't exist!");
             break;
@@ -569,31 +569,31 @@ void use_scroll_action(int id) {
             if (g_state_flags.in_dungeon)
                 teleport_player();
             else
-                g_text_log.put_line("This scroll does nothing here.");                
+                g_text_log.put_line("This scroll does nothing here.");
             break;
         case ItemConsts::SCROLL_OF_DARKNESS:
             if (g_state_flags.in_dungeon)
                 darken_area();
             else
-                g_text_log.put_line("This scroll does nothing here.");                
+                g_text_log.put_line("This scroll does nothing here.");
             break;
         case ItemConsts::SCROLL_OF_FORGET_AREA:
             if (g_state_flags.in_dungeon)
                 hide_map();
             else
-                g_text_log.put_line("This scroll does nothing here.");                
+                g_text_log.put_line("This scroll does nothing here.");
             break;
         case ItemConsts::SCROLL_OF_RECALL:
             if (g_state_flags.in_dungeon)
                 activate_recall();
             else
-                g_text_log.put_line("This scroll does nothing here.");                
+                g_text_log.put_line("This scroll does nothing here.");
             break;
         case ItemConsts::SCROLL_OF_SUMMON_ITEM:
             if (g_state_flags.in_dungeon)
                 summon_item(15);
             else
-                g_text_log.put_line("This scroll does nothing here.");                
+                g_text_log.put_line("This scroll does nothing here.");
             break;
         case ItemConsts::SCROLL_OF_CURSE:
             result = curse_item();

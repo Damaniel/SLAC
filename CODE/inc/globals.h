@@ -61,11 +61,11 @@
 #include "render.h"
 #include "main.h"
 
-// The datafile - contains all sprite, font and sound data.  
+// The datafile - contains all sprite, font and sound data.
 // -- Defined in main.cpp
 extern DATAFILE *g_game_data;
 
-// A memory buffer to render to - it will be blitted to the display in one shot.  
+// A memory buffer to render to - it will be blitted to the display in one shot.
 // -- Defined in main.cpp
 extern BITMAP   *g_back_buffer;
 

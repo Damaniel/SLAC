@@ -55,7 +55,7 @@ void TextLog::put_line(std::string s) {
 // Gets a line from the log, where 0 is the oldest line
 //
 // Arguments:
-//   line - the line number to retreive.  
+//   line - the line number to retreive.
 //
 // Returns:
 //   The string at that line, or a blank line if the index is invalid
@@ -133,4 +133,3 @@ void TextLog::dump_lines() {
         std::cout << "Line " << line <<  ": " << *it << std::endl;
     }
 }
-

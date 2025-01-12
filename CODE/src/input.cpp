@@ -54,13 +54,13 @@ void process_inventory_common_tasks(int key) {
     }
 
     // Wrap the cursor around if necessary
-    if (g_ui_globals.inv_cursor_x < 0) 
+    if (g_ui_globals.inv_cursor_x < 0)
         g_ui_globals.inv_cursor_x = UiConsts::INVENTORY_ITEMS_PER_ROW - 1;
-    if (g_ui_globals.inv_cursor_x >= UiConsts::INVENTORY_ITEMS_PER_ROW) 
+    if (g_ui_globals.inv_cursor_x >= UiConsts::INVENTORY_ITEMS_PER_ROW)
         g_ui_globals.inv_cursor_x = 0;
-    if (g_ui_globals.inv_cursor_y < 0) 
+    if (g_ui_globals.inv_cursor_y < 0)
         g_ui_globals.inv_cursor_y = UiConsts::INVENTORY_ROWS - 1;
-    if (g_ui_globals.inv_cursor_y >= UiConsts::INVENTORY_ROWS) 
+    if (g_ui_globals.inv_cursor_y >= UiConsts::INVENTORY_ROWS)
         g_ui_globals.inv_cursor_y = 0;
 
     // Redraw the inventory cursor and description areas
@@ -104,8 +104,8 @@ void process_inventory_menu_substate(int key) {
                 g_state_flags.update_inventory_cursor = true;
                 g_state_flags.update_inventory_items = true;
                 g_state_flags.update_inventory_description = true;
-                g_state_flags.update_display = true;    
-            } 
+                g_state_flags.update_display = true;
+            }
             else {
                 // Do the thing that the selected menu option does, if valid
                 perform_inventory_menu_action();
@@ -117,9 +117,9 @@ void process_inventory_menu_substate(int key) {
                     g_state_flags.update_inventory_cursor = true;
                     g_state_flags.update_inventory_items = true;
                     g_state_flags.update_inventory_description = true;
-                    g_state_flags.update_display = true;    
+                    g_state_flags.update_display = true;
                 }
-            }           
+            }
             break;
         case KEY_ESC:
             g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY;
@@ -155,9 +155,9 @@ void process_inventory_substate(int key) {
         // in the slot.
         case KEY_ENTER:
             {
-                Item *i = g_inventory->get_item_in_slot(g_ui_globals.inv_cursor_y * 
+                Item *i = g_inventory->get_item_in_slot(g_ui_globals.inv_cursor_y *
                                        UiConsts::INVENTORY_ITEMS_PER_ROW + g_ui_globals.inv_cursor_x);
-                if (i != NULL) {    
+                if (i != NULL) {
                     g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY_MENU;
                     g_state_flags.update_inventory_submenu = true;
                     g_state_flags.update_display = true;
@@ -175,7 +175,7 @@ void process_inventory_substate(int key) {
             g_state_flags.update_maze_area = true;
             if (g_state_flags.text_log_extended) {
                 g_state_flags.update_text_dialog = true;
-            }        
+            }
             g_state_flags.update_display = true;
             break;
     }
@@ -204,7 +204,7 @@ void process_map_substate(int key) {
 		    }
             g_state_flags.update_display = true;
             break;
-    } 
+    }
 }
 
 //----------------------------------------------------------------------------
@@ -230,7 +230,7 @@ void process_stats_substate(int key) {
 		    }
             g_state_flags.update_display = true;
             break;
-    } 
+    }
 }
 
 //----------------------------------------------------------------------------
@@ -251,7 +251,7 @@ void process_dead_state(int key) {
             g_state_flags.recently_died = true;
             change_state(STATE_MAIN_GAME);
             break;
-    } 
+    }
 }
 
 //----------------------------------------------------------------------------
@@ -306,7 +306,7 @@ void process_game_state(int key) {
 	    	    if (g_player.get_last_room_entered() == -1) {
     	    	    g_dungeon.maze->change_lit_status_around(g_player.get_x_pos(), g_player.get_y_pos(), false);
 		        }
-            }            
+            }
             switch (key) {
                 case KEY_ESC:
             	    g_state_flags.cur_substate = GAME_SUBSTATE_CONFIRM_EXIT;
@@ -314,9 +314,9 @@ void process_game_state(int key) {
                     break;
                 case KEY_LEFT:
                     process_move(std::make_pair(g_player.get_x_pos() - 1, g_player.get_y_pos()));
-                    break;           
+                    break;
 	            case KEY_RIGHT:
-                    process_move(std::make_pair(g_player.get_x_pos() + 1, g_player.get_y_pos()));                
+                    process_move(std::make_pair(g_player.get_x_pos() + 1, g_player.get_y_pos()));
                     break;
     	        case KEY_UP:
                     process_move(std::make_pair(g_player.get_x_pos(), g_player.get_y_pos() - 1));
@@ -329,13 +329,13 @@ void process_game_state(int key) {
                     break;
                 case KEY_PGUP:   // Up and right
                     process_move(std::make_pair(g_player.get_x_pos() + 1, g_player.get_y_pos() - 1));
-                    break;         
+                    break;
                 case KEY_END:   // Down and left
                     process_move(std::make_pair(g_player.get_x_pos() - 1, g_player.get_y_pos() + 1));
-                    break;                         
+                    break;
                 case KEY_PGDN:  // Down and right
                     process_move(std::make_pair(g_player.get_x_pos() + 1, g_player.get_y_pos() + 1));
-                    break;        
+                    break;
                 case KEY_DEL: // Do nothing (sit in place)
                     process_move(std::make_pair(g_player.get_x_pos(), g_player.get_y_pos()));
                     break;
@@ -372,7 +372,7 @@ void process_game_state(int key) {
                     break;
                 case KEY_G:
                     if (g_state_flags.in_dungeon) {
-                        pick_up_item_at(g_player.get_x_pos(), g_player.get_y_pos());    
+                        pick_up_item_at(g_player.get_x_pos(), g_player.get_y_pos());
                     }
                     break;
                 case KEY_COMMA:
@@ -449,7 +449,7 @@ void process_title_screen_menu_substate(int key) {
             switch (g_state_flags.title_menu_index) {
                 case 0:
                     g_state_flags.cur_substate = TITLE_SUBSTATE_NEW;
-                    // Put the character cursor in the correct position, reset the name 
+                    // Put the character cursor in the correct position, reset the name
                     // and clear the character text box
                     g_state_flags.new_game_char_text_index = 0;
                     g_state_flags.character_name[0] = '\0';
@@ -597,7 +597,7 @@ void process_title_screen_delete_substate(int key) {
             g_state_flags.update_title_menu = true;
             g_state_flags.update_display = true;
             break;
-    }    
+    }
 }
 
 //----------------------------------------------------------------------------
@@ -700,7 +700,7 @@ void process_input(void) {
 
 	int key = readkey();
     int scancode = key >> 8;
-    
+
     switch(g_state_flags.cur_state) {
         // Title screen gets the raw key value since we need specifically
         // to extract ASCII values from the key

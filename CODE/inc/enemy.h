@@ -28,7 +28,7 @@
 
 namespace EnemyConsts {
     // Used in the generator function.  When rolling an enemy with a target elevel,
-    // the actual elevel range considered will be 
+    // the actual elevel range considered will be
     // (elevel * MIN_ELEVEL_RANGE) to (elevel * MAX_ELEVEL_RANGE), inclusive and
     // capped at 0 and 100 at each end.
     const float MIN_ELEVEL_RANGE = 0.5;
@@ -90,8 +90,8 @@ private:
     // positional
     int id;                     // The enemy id in the enemy definition array
     unsigned short x_pos;       // Position in the dungeon
-    unsigned short y_pos;             
-    int distance;               // The distance to the player (used for sorting and determining 
+    unsigned short y_pos;
+    int distance;               // The distance to the player (used for sorting and determining
                                 // which enemies to process on a turn)
     // stats
     short hp;                   // The current enemy HP
@@ -100,7 +100,7 @@ private:
     bool has_seen_player;       // Has the enemy seen the player before?
     bool is_pursuing_player;    // Is the enemy currently chasing the player?
 
-    // Movement 
+    // Movement
     int residual_action_points; // Any action points left over after their last executed turn
 
     bool is_alive;              // Used to flag enemy for future deletion

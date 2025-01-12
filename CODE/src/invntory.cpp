@@ -38,8 +38,8 @@ unsigned short g_active_artifacts[NUM_ARTIFACTS];
 //==================================================================
 
 //----------------------------------------------------------------------------
-// Copies all artifacts the player has collected in this run to the 
-// running artifact total.  
+// Copies all artifacts the player has collected in this run to the
+// running artifact total.
 //
 // Arguments:
 //   None
@@ -47,7 +47,7 @@ unsigned short g_active_artifacts[NUM_ARTIFACTS];
 // Returns:
 //   Nothing
 //
-// Notes:  artifacts 
+// Notes:  artifacts
 //----------------------------------------------------------------------------
 void move_new_artifacts_to_existing(void) {
     for (int i=0; i < NUM_ARTIFACTS; i++) {
@@ -83,7 +83,7 @@ Inventory::Inventory() {
 // Inventory::~Inventory
 //
 // Destructor.  Frees any allocated Item objects along the way
-//----------------------------------------------------------------------------    
+//----------------------------------------------------------------------------
 Inventory::~Inventory() {
     for (std::vector<Item *>::iterator it = inv.begin(); it != inv.end(); ++it) {
         if(*it != NULL)
@@ -106,13 +106,13 @@ Item *Inventory::get_item_in_slot(int slot) {
 
 //----------------------------------------------------------------------------
 // Adds an item at the specified slot, removing any existing item from it.
-// 
+//
 // Arguments:
 //   i - the item to be added to the inventory
 //   slot - the slot to add the item at
 //
 // Returns:
-//   The slot the item was added at.  This will be the same as the value of 
+//   The slot the item was added at.  This will be the same as the value of
 //   'slot'.
 //----------------------------------------------------------------------------
 int Inventory::add_at_slot(Item *i, int slot) {
@@ -141,7 +141,7 @@ int Inventory::add_at_first_empty(Item *i) {
 }
 
 //----------------------------------------------------------------------------
-// Gets the location of the first empty inventory slot.  
+// Gets the location of the first empty inventory slot.
 //
 // Arguments:
 //   None
@@ -163,7 +163,7 @@ int Inventory::get_first_empty_slot() {
 }
 
 //----------------------------------------------------------------------------
-// Gets the number of used inventory slots.  
+// Gets the number of used inventory slots.
 //
 // Arguments:
 //   None
@@ -184,7 +184,7 @@ int Inventory::get_num_slots_in_use() {
 //----------------------------------------------------------------------------
 // Determines if the inventory is full.
 //
-// Arguments: 
+// Arguments:
 //   None
 //
 // Returns:
@@ -201,14 +201,14 @@ bool Inventory::inventory_is_full() {
 //----------------------------------------------------------------------------
 // Removes an item from the specified inventory slot
 //
-// Arguments: 
+// Arguments:
 //   idx - the slot to delete the item from
 //
 // Returns:
 //   Nothing.
 //----------------------------------------------------------------------------
 void Inventory::delete_item_in_slot(int slot) {
-    if (inv[slot] != NULL) { 
+    if (inv[slot] != NULL) {
         delete inv[slot];
         inv[slot] = NULL;
     }
@@ -229,7 +229,7 @@ void Inventory::dump_inventory(void) {
 // If stackable, finds and returns the item slot where any existing stack of
 // the specified item is.
 //
-// Arguments: 
+// Arguments:
 //   i - the item to check
 //
 // Returns:
@@ -243,7 +243,7 @@ int Inventory::get_stackable_item_slot(Item *item) {
         return -1;
     }
 
-    // Iterate through the inventory.  If an item with the same gid 
+    // Iterate through the inventory.  If an item with the same gid
     // is found in a slot, return the slot number.  Otherwise,
     // return -1.
     for (int i = 0; i < InventoryConsts::INVENTORY_SIZE; ++i) {
@@ -253,7 +253,7 @@ int Inventory::get_stackable_item_slot(Item *item) {
             }
         }
     }
-    
+
     // There's no existing stackable item in the inventory.
     return -1;
 }
@@ -261,7 +261,7 @@ int Inventory::get_stackable_item_slot(Item *item) {
 //----------------------------------------------------------------------------
 // Determines which inventory slot a particular Item * represents
 //
-// Arguments: 
+// Arguments:
 //   i - the item to check
 //
 // Returns:
@@ -281,7 +281,7 @@ int Inventory::get_slot_of_item(Item *i) {
 //----------------------------------------------------------------------------
 // Clears an existing item slot (after a transfer to somewhere else)
 //
-// Arguments: 
+// Arguments:
 //   slot - the slot of the item to clear out
 //
 // Returns:
@@ -322,7 +322,7 @@ void Item::dump_item(void) {
         std::cout << "P";
     else
         std::cout << "p";
-    if (can_have_suffix) 
+    if (can_have_suffix)
         std::cout << "S";
     else
         std::cout << "s";
@@ -380,7 +380,7 @@ void Item::dump_item(void) {
             std::cout << "Type: ";
             if(type_id == ItemConsts::STANDARD_ARTIFACT) {
                 std::cout << "Standard" << std::endl;
-            } 
+            }
             else if (type_id == ItemConsts::MULTIPART_ARTIFACT) {
                 std::cout << "Multipart: (" << pieces << " parts)" << std::endl;
             }
@@ -398,7 +398,7 @@ void Item::dump_item(void) {
 // Constructor.
 //
 // Constructs a dummy item (weapon)with base id of zero.  This item will
-// generally be something modified later using generate(). 
+// generally be something modified later using generate().
 //----------------------------------------------------------------------------
 Item::Item() {
     init (ItemConsts::WEAPON_CLASS, 0);
@@ -429,7 +429,7 @@ Item::Item(int item_class) {
 //----------------------------------------------------------------------------
 // Gets the base name of the item type
 //
-// Arguments: 
+// Arguments:
 //   None
 //
 // Returns:
@@ -453,7 +453,7 @@ std::string Item::get_type_name() {
 //----------------------------------------------------------------------------
 // Gets the full name of the item type.
 //
-// Arguments: 
+// Arguments:
 //   None
 //
 // Returns:
@@ -463,15 +463,15 @@ std::string Item::get_full_name() {
     std::string prefix_text;
     std::string suffix_text;
 
-    if (item_class == ItemConsts::ARMOR_CLASS || item_class == ItemConsts::WEAPON_CLASS) 
+    if (item_class == ItemConsts::ARMOR_CLASS || item_class == ItemConsts::WEAPON_CLASS)
     {
         if (is_identified) {
             if (can_have_prefix && prefix_id >= 0) {
-                if (is_cursed) 
-                    prefix_text = g_cursed_item_prefix_ids[prefix_id].name + " ";        
+                if (is_cursed)
+                    prefix_text = g_cursed_item_prefix_ids[prefix_id].name + " ";
 
                 else
-                    prefix_text = g_item_prefix_ids[prefix_id].name + " ";        
+                    prefix_text = g_item_prefix_ids[prefix_id].name + " ";
             }
             else {
                 prefix_text = "";
@@ -488,7 +488,7 @@ std::string Item::get_full_name() {
         }
         else {
             prefix_text = "(?) ";
-        }   
+        }
 
         return prefix_text + name + suffix_text;
     }
@@ -503,10 +503,10 @@ std::string Item::get_full_name() {
     if (item_class == ItemConsts::CURRENCY_CLASS) {
         char name[32];
         sprintf(name, "%d gold worth of %s", quantity, (char *)g_currency_ids[id].name.c_str());
-        return std::string(name);        
+        return std::string(name);
     }
     if (item_class == ItemConsts::ARTIFACT_CLASS) {
-        return get_type_name();        
+        return get_type_name();
     }
 }
 
@@ -533,7 +533,7 @@ void Item::dump_prefix() {
             std::cout << "Name:      " << it->name << std::endl;
             std::cout << "Num mods:  " << (int)it->num_modifiers << std::endl;
             for (int i = 0; i < it->num_modifiers; ++i) {
-                ModifierMagType *mt = &(it->modifiers[i]); 
+                ModifierMagType *mt = &(it->modifiers[i]);
                 std::cout << " Mod " << (i+1) << ":" << std::endl;
                 std::cout << "  Name:      " << g_modifier_ids[mt->modifier_id].name << std::endl;
                 std::cout << "  Modifier mode:  " << (int)mt->modifier_mode << std::endl;
@@ -566,7 +566,7 @@ void Item::dump_suffix() {
             std::cout << "Name:      " << it->name << std::endl;
             std::cout << "Num mods:  " << (int)it->num_modifiers << std::endl;
             for (int i = 0; i < it->num_modifiers; ++i) {
-                ModifierMagType *mt = &(it->modifiers[i]); 
+                ModifierMagType *mt = &(it->modifiers[i]);
                 std::cout << " Mod " << (i+1) << ":" << std::endl;
                 std::cout << "  Name:      " << g_modifier_ids[mt->modifier_id].name << std::endl;
                 std::cout << "  Modifier mode:  " << (int)mt->modifier_mode << std::endl;
@@ -580,7 +580,7 @@ void Item::dump_suffix() {
 // Initializes an item using an offset into the appropriate base table
 //  table.
 //
-// Arguments: 
+// Arguments:
 //   ic - the type of item to init
 //   idx - the offset into the item type table to use
 //
@@ -662,7 +662,7 @@ void Item::init(int ic, int idx) {
             can_drop = cb->can_drop;
             can_use = cb->can_use;
             is_identified = true;
-            quantity = cb->value * (rand() % 50 + 1);    
+            quantity = cb->value * (rand() % 50 + 1);
             break;
         case ItemConsts::POTION_CLASS:
             pb = &(g_potion_ids[idx]);
@@ -758,7 +758,7 @@ void Item::use() {
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-// Do all tasks related to identification.  This includes marking the 
+// Do all tasks related to identification.  This includes marking the
 // item as identified, marking all potions and scrolls of the identified type
 // as identified, and optionally displaying a message to the log
 //
@@ -771,7 +771,7 @@ void Item::use() {
 //----------------------------------------------------------------------------
 void perform_identification_action(Item *i, bool log) {
 	std::string old_name = i->get_full_name();
-                
+
 	i->is_identified = true;
 	if (i->item_class == ItemConsts::POTION_CLASS)
 		g_identified_potions[i->id] = true;
@@ -799,7 +799,7 @@ int get_tile_to_render(Item *i) {
 		return g_scrambled_potion_icons[i->id];
 	}
 	else if (i->item_class == ItemConsts::SCROLL_CLASS) {
-		return g_scrambled_scroll_icons[i->id];	
+		return g_scrambled_scroll_icons[i->id];
 	}
 	else {
 		return i->gid;

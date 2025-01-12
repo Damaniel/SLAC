@@ -105,7 +105,7 @@ void init_game() {
 		exit(1);
 	}
 	clear(screen);
-	
+
 	// Load the graphics datafile
 	int res_result = load_resources();
 	if(res_result != 0) {
@@ -117,14 +117,14 @@ void init_game() {
 	// Initializes some extra graphics stuff (the map bitmap, the palette,
 	// etc)
 	init_resources(g_render);
-	
+
 	// Reset the global game flags
 	reset_game_flags();
 
 	// Null out the inventory
 	g_inventory = NULL;
 
-	// Create the player	
+	// Create the player
 	g_player = Player();
 
 	// Make the game loop until 'done' (right now, mainly by pressing ESC)
@@ -132,7 +132,7 @@ void init_game() {
 
 	g_state_flags.loading_save = false;
 	g_state_flags.save_loaded = false;
-	
+
 	// Timer related stuff
 	g_state_flags.frame_counter = 0;
 	g_state_flags.next_frame = 1;
@@ -169,10 +169,10 @@ void shut_down_game() {
 	// Delete the maze
 	if (g_dungeon.maze != NULL)
 		delete g_dungeon.maze;
-	
+
 	// Delete all items/enemies that were associated with the maze
 	g_dungeon.clear_lists();
-	
+
 	// Unload graphics and reset the video mode
 	unload_resources();
 	set_gfx_mode(GFX_TEXT, 80, 25, 0, 0);
@@ -196,7 +196,7 @@ int main(void) {
 			g_state_flags.next_frame = 0;
 		}
 		if (g_state_flags.update_display == true) {
-			update_display();					
+			update_display();
 		}
 	} while (g_state_flags.exit_game == false);
 

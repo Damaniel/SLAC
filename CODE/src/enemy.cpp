@@ -51,8 +51,8 @@ void Enemy::init(int eid) {
 // Returns:
 //   the enemy's name
 //----------------------------------------------------------------------------
-std::string Enemy::get_name() { 
-    return g_enemy_ids[id].name; 
+std::string Enemy::get_name() {
+    return g_enemy_ids[id].name;
 }
 
 //----------------------------------------------------------------------------
@@ -64,8 +64,8 @@ std::string Enemy::get_name() {
 // Returns:
 //   the enemy's gid
 //----------------------------------------------------------------------------
-int Enemy::get_gid() { 
-    return g_enemy_ids[id].gid; 
+int Enemy::get_gid() {
+    return g_enemy_ids[id].gid;
 }
 
 //----------------------------------------------------------------------------
@@ -77,8 +77,8 @@ int Enemy::get_gid() {
 // Returns:
 //   the enemy's bid
 //----------------------------------------------------------------------------
-int Enemy::get_bid() { 
-    return g_enemy_ids[id].bid; 
+int Enemy::get_bid() {
+    return g_enemy_ids[id].bid;
 }
 
 //----------------------------------------------------------------------------
@@ -90,8 +90,8 @@ int Enemy::get_bid() {
 // Returns:
 //   the enemy's max HP
 //----------------------------------------------------------------------------
-int Enemy::get_max_hp() { 
-    return g_enemy_ids[id].hp; 
+int Enemy::get_max_hp() {
+    return g_enemy_ids[id].hp;
 }
 
 //----------------------------------------------------------------------------
@@ -103,8 +103,8 @@ int Enemy::get_max_hp() {
 // Returns:
 //   the enemy's STR
 //----------------------------------------------------------------------------
-int Enemy::get_str() { 
-    return g_enemy_ids[id].str; 
+int Enemy::get_str() {
+    return g_enemy_ids[id].str;
 }
 
 //----------------------------------------------------------------------------
@@ -116,8 +116,8 @@ int Enemy::get_str() {
 // Returns:
 //   the enemy's ATK
 //----------------------------------------------------------------------------
-int Enemy::get_atk() { 
-    return g_enemy_ids[id].atk; 
+int Enemy::get_atk() {
+    return g_enemy_ids[id].atk;
 }
 
 //----------------------------------------------------------------------------
@@ -129,8 +129,8 @@ int Enemy::get_atk() {
 // Returns:
 //   the enemy's DEF
 //----------------------------------------------------------------------------
-int Enemy::get_def() { 
-    return g_enemy_ids[id].def; 
+int Enemy::get_def() {
+    return g_enemy_ids[id].def;
 }
 
 //----------------------------------------------------------------------------
@@ -142,8 +142,8 @@ int Enemy::get_def() {
 // Returns:
 //   the enemy's SPD
 //----------------------------------------------------------------------------
-int Enemy::get_spd() { 
-    return g_enemy_ids[id].spd; 
+int Enemy::get_spd() {
+    return g_enemy_ids[id].spd;
 }
 
 //----------------------------------------------------------------------------
@@ -155,8 +155,8 @@ int Enemy::get_spd() {
 // Returns:
 //   the enemy's APT
 //----------------------------------------------------------------------------
-int Enemy::get_apt() { 
-    return g_enemy_ids[id].apt; 
+int Enemy::get_apt() {
+    return g_enemy_ids[id].apt;
 }
 
 //----------------------------------------------------------------------------
@@ -168,8 +168,8 @@ int Enemy::get_apt() {
 // Returns:
 //   the enemy's FATK
 //----------------------------------------------------------------------------
-int Enemy::get_fatk() { 
-    return g_enemy_ids[id].f_atk; 
+int Enemy::get_fatk() {
+    return g_enemy_ids[id].f_atk;
 }
 
 //----------------------------------------------------------------------------
@@ -181,8 +181,8 @@ int Enemy::get_fatk() {
 // Returns:
 //   the enemy's IATK
 //----------------------------------------------------------------------------
-int Enemy::get_iatk() { 
-    return g_enemy_ids[id].i_atk; 
+int Enemy::get_iatk() {
+    return g_enemy_ids[id].i_atk;
 }
 
 //----------------------------------------------------------------------------
@@ -194,8 +194,8 @@ int Enemy::get_iatk() {
 // Returns:
 //   the enemy's LATK
 //----------------------------------------------------------------------------
-int Enemy::get_latk() { 
-    return g_enemy_ids[id].l_atk; 
+int Enemy::get_latk() {
+    return g_enemy_ids[id].l_atk;
 }
 
 //----------------------------------------------------------------------------
@@ -207,8 +207,8 @@ int Enemy::get_latk() {
 // Returns:
 //   the enemy's FDEF
 //----------------------------------------------------------------------------
-int Enemy::get_fdef() { 
-    return g_enemy_ids[id].f_def; 
+int Enemy::get_fdef() {
+    return g_enemy_ids[id].f_def;
 }
 
 //----------------------------------------------------------------------------
@@ -220,8 +220,8 @@ int Enemy::get_fdef() {
 // Returns:
 //   the enemy's IDEF
 //----------------------------------------------------------------------------
-int Enemy::get_idef() { 
-    return g_enemy_ids[id].i_def; 
+int Enemy::get_idef() {
+    return g_enemy_ids[id].i_def;
 }
 
 //----------------------------------------------------------------------------
@@ -233,12 +233,12 @@ int Enemy::get_idef() {
 // Returns:
 //   the enemy's LDEF
 //----------------------------------------------------------------------------
-int Enemy::get_ldef() { 
-    return g_enemy_ids[id].l_def; 
+int Enemy::get_ldef() {
+    return g_enemy_ids[id].l_def;
 }
 
 //----------------------------------------------------------------------------
-// Looks up the experience given on defeat of the enemy in the enemy 
+// Looks up the experience given on defeat of the enemy in the enemy
 // lookup table
 //
 // Arguments:
@@ -247,8 +247,8 @@ int Enemy::get_ldef() {
 // Returns:
 //   the enemy's EXP
 //----------------------------------------------------------------------------
-int Enemy::get_exp() { 
-    return g_enemy_ids[id].exp; 
+int Enemy::get_exp() {
+    return g_enemy_ids[id].exp;
 }
 
 //----------------------------------------------------------------------------
@@ -261,11 +261,11 @@ int Enemy::get_exp() {
 //   the enemy's elevel
 //
 // Notes:
-//   elevel is similar to the idea of ilevel for items - the deeper in the 
+//   elevel is similar to the idea of ilevel for items - the deeper in the
 //   dungeon, the higher elevel of monsters that can spawn.
 //----------------------------------------------------------------------------
-int Enemy::get_elevel() { 
-    return g_enemy_ids[id].elevel; 
+int Enemy::get_elevel() {
+    return g_enemy_ids[id].elevel;
 }
 
 //----------------------------------------------------------------------------
@@ -277,8 +277,8 @@ int Enemy::get_elevel() {
 // Returns:
 //   the enemy's rarity (255=most common, 1=most rare)
 //----------------------------------------------------------------------------
-int Enemy::get_rarity() { 
-    return g_enemy_ids[id].rarity; 
+int Enemy::get_rarity() {
+    return g_enemy_ids[id].rarity;
 }
 
 //----------------------------------------------------------------------------
@@ -290,12 +290,12 @@ int Enemy::get_rarity() {
 // Returns:
 //   the enemy's ilevel
 //----------------------------------------------------------------------------
-int Enemy::get_ilevel() { 
-    return g_enemy_ids[id].ilevel; 
+int Enemy::get_ilevel() {
+    return g_enemy_ids[id].ilevel;
 }
 
 //----------------------------------------------------------------------------
-// Looks up the maximum items the enemy can drop on kill in the enemy 
+// Looks up the maximum items the enemy can drop on kill in the enemy
 // lookup table
 //
 // Arguments:
@@ -304,8 +304,8 @@ int Enemy::get_ilevel() {
 // Returns:
 //   the enemy's maximum number of item drops
 //----------------------------------------------------------------------------
-int Enemy::get_max_items() { 
-    return g_enemy_ids[id].max_items; 
+int Enemy::get_max_items() {
+    return g_enemy_ids[id].max_items;
 }
 
 //----------------------------------------------------------------------------
@@ -344,7 +344,7 @@ Enemy* EnemyGenerator::generate(int elevel) {
     // Ensure the range of elevels falls between 0 and 100
     if (elevel_low < 0 )
         elevel_low = 0;
-    if (elevel_high >= 100) 
+    if (elevel_high >= 100)
         elevel_high = 100;
 
     // Take advantage of the fact that there are 2 assigned enemies per elevel
@@ -388,8 +388,8 @@ Enemy* EnemyGenerator::generate_arbitrary(int id) {
 //   True if the target can be seen, false otherwise
 //----------------------------------------------------------------------------
 bool Enemy::check_if_can_see(int x, int y) {
-    // To do the check, we'll essentially use an integer-only version of 
-    // something like Bresenham's algorithm.  As we iterate through 
+    // To do the check, we'll essentially use an integer-only version of
+    // something like Bresenham's algorithm.  As we iterate through
     // each point of the 'line', if it hits a wall, the target can't be seen.
     int dx = abs(x - x_pos);
     int sx = (x_pos < x) ? 1 : -1;
@@ -420,7 +420,7 @@ bool Enemy::check_if_can_see(int x, int y) {
         if (e2 >= dy) {
             error += dy;
             cur_x += sx;
-        }     
+        }
         if (e2 <= dx) {
             error += dx;
             cur_y += sy;
@@ -478,7 +478,7 @@ void get_enemy_distances(std::list<Enemy *> &el, int x, int y) {
 }
 
 //----------------------------------------------------------------------------
-// For any sufficiently close enemies, check to see if they can see the 
+// For any sufficiently close enemies, check to see if they can see the
 // player.
 //
 // Arguments:
@@ -493,7 +493,7 @@ void process_enemy_vision(std::list<Enemy *> &el) {
 	for(enemy_it = el.begin(); enemy_it != el.end(); ++enemy_it) {
 		if ((*enemy_it)->has_seen_the_player()) {
 			//std::cout << "process_enemy_vision: the " << (*enemy_it)->get_name() << " has already seen player" << std::endl;
-		} 
+		}
 		else {
 			//std::cout << "process_enemy_vision: processing the " << (*enemy_it)->get_name() << std::endl;
 			int distance = get_diagonal_distance_between((*enemy_it)->get_x_pos(), (*enemy_it)->get_y_pos(), g_player.get_x_pos(), g_player.get_y_pos());
@@ -501,7 +501,7 @@ void process_enemy_vision(std::list<Enemy *> &el) {
 				bool seen = (*enemy_it)->check_if_can_see(g_player.get_x_pos(), g_player.get_y_pos());
 				if (seen) {
 					(*enemy_it)->mark_has_seen_player(true);
-				}	
+				}
 			}
 			else {
 				//std::cout << "  - enemy is too far away to care" << std::endl;
@@ -511,8 +511,8 @@ void process_enemy_vision(std::list<Enemy *> &el) {
 }
 
 //----------------------------------------------------------------------------
-// Marks every enemy too far from the player as having forgotten that the 
-// player exists. 
+// Marks every enemy too far from the player as having forgotten that the
+// player exists.
 //
 // Arguments:
 //	el - the enemy list
@@ -635,7 +635,7 @@ bool is_valid_enemy_position(int x, int y) {
 //----------------------------------------------------------------------------
 void perform_enemy_action(Enemy *e) {
 	// Does the following :
-	//   - Check to see if the player is adjacent.  
+	//   - Check to see if the player is adjacent.
 	//      - If so, attack the player
 	//   - Otherwise, for each of the 8 directions
 	//      - If the position can be moved to (no wall, no enemy, no player)
@@ -783,7 +783,7 @@ void perform_enemy_combat(Enemy *e) {
 			base_lightning_damage = (int)((e->get_latk() + (0.1 * e->get_str())) * ((rand() % 50) + 75) / 100);
 			lightning_attack_done = true;
 			//std::cout << "peform_enemy_combat: enemy base lightning = " << base_lightning_damage << std::endl;
-		}		
+		}
 
 		// Check for critical hit
 		bool attack_crits = false;
@@ -793,7 +793,7 @@ void perform_enemy_combat(Enemy *e) {
 		if (rand() % 100 < chance_of_crit) {
 			attack_crits = true;
 			//std::cout << "perform_enemy_combat: attack crits!" << std::endl;
-		}	
+		}
 
 		int player_base_damage_taken;
 		// Calculate actual base damage
@@ -826,7 +826,7 @@ void perform_enemy_combat(Enemy *e) {
 		//std::cout << "perform_enemy_combat: lightning damage taken = " << player_lightning_damage_taken << std::endl;
 
 		// Sum up all damage
-		int total_damage_taken = player_base_damage_taken + player_fire_damage_taken + player_ice_damage_taken + player_lightning_damage_taken;		
+		int total_damage_taken = player_base_damage_taken + player_fire_damage_taken + player_ice_damage_taken + player_lightning_damage_taken;
 		if (attack_crits) {
 			g_text_log.put_line("Critical hit!");
 			int prevent_chance = (int)(g_player.actual.con / 2);
@@ -853,7 +853,7 @@ void perform_enemy_combat(Enemy *e) {
 		char text[80];
 		sprintf(text, "You take %d damage!", total_damage_taken);
 		g_text_log.put_line(text);
-		
+
 		total_damage_for_all_attacks += total_damage_taken;
 	}
 

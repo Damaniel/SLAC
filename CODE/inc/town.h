@@ -82,9 +82,9 @@ namespace TownConsts {
 
     // The length (and width) of the town in tiles
     const int TOWN_SIZE = 48;
-    
+
     // The length and width of the museum
-    const int MUSEUM_WIDTH = 21; 
+    const int MUSEUM_WIDTH = 21;
     const int MUSEUM_HEIGHT = 24;
 
     // The length and width of the item and weapon shops

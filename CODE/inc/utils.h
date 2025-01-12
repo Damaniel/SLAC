@@ -95,7 +95,7 @@ namespace UtilConsts {
     // current dungeon floor
     const int DUNGEON_ENEMY_GENERATE_ATTEMPTS = 20;
 
-    // The maximum number of enemies the new enemy generator will 
+    // The maximum number of enemies the new enemy generator will
     // allow in the enemy list before choosing not to generate another
     const int DUNGEON_MAX_ENEMIES = 70;
 
@@ -117,7 +117,7 @@ namespace UtilConsts {
 
 // A collection of flags relevant to the game loop.  The game loop will want
 // to farm tasks out to other functions; this provides a way to have them all
-// in one place to make them easy to query, while keeping things manageable. 
+// in one place to make them easy to query, while keeping things manageable.
 struct StateFlags {
     //--------------------------------------------------------------------------
     // State machine (states + substates)
@@ -151,7 +151,7 @@ struct StateFlags {
     // - subscreen dialogs
     bool update_map_dialog;             // Should the map screen be redrawn?
     bool update_inventory_dialog;       // Should the inventory dialog be redrawn?
-    
+
     // - inventory
     bool update_inventory_cursor;       // Should the inventory cursor be redrawn?
     bool update_inventory_description;  // Should the description area be redrawn?
@@ -175,7 +175,7 @@ struct StateFlags {
     //  - (probably others I'll find along the way)
     bool in_dungeon;            // Is the player currently in the dungeon?
 
-    // If the player is in town, they may be in one of the shops.  If so, 
+    // If the player is in town, they may be in one of the shops.  If so,
     // these flags will allow the game to render the shop areas instead of
     // the main town.  (Note that the shop behavior themselves will be managed
     // by a dedicated substate since the controls/actions are different;
@@ -189,7 +189,7 @@ struct StateFlags {
     bool loading_save;        // Is a save currently being loaded?
 
     // - hall of champions;
-    int hall_of_champions_ranking; 
+    int hall_of_champions_ranking;
 
     // - time flags
     int time_to_update_elapsed;  // How many frames until we increment the elapsed counter
@@ -205,7 +205,7 @@ struct StateFlags {
     bool new_character_created;
     bool recently_died;
     bool save_loaded;
-    
+
 };
 
 // A collection of flags related to game progression
