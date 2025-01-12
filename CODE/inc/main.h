@@ -39,10 +39,11 @@ enum {
 
 // Substates of the title screen state
 enum {
-    TITLE_SUBSTATE_DEFAULT,     // The main part of the title screen
-    TITLE_SUBSTATE_MENU,        // The menu
-    TITLE_SUBSTATE_NEW,         // When 'New Legacy' is selected
-    TITLE_SUBSTATE_DELETE       // When 'Delete Legacy' is selected
+    TITLE_SUBSTATE_DEFAULT,        // The main part of the title screen
+    TITLE_SUBSTATE_MENU,           // The menu
+    TITLE_SUBSTATE_NEW,            // When 'New Legacy' is selected
+    TITLE_SUBSTATE_DELETE,         // When 'Delete Legacy' is selected
+    TITLE_SUBSTATE_LEGACY_DELETED  // When the player confirms they want to delete
 };
 
 // Substates of the main game state.  The difference between a main state and a substate

@@ -451,6 +451,7 @@ void process_title_screen_menu_substate(int key) {
                 case 0:
                     //g_state_flags.cur_substate = TITLE_SUBSTATE_NEW;
                     // TODO: remove this when we've implemented the New game menu
+                    reset_game_flags();
                     change_state(STATE_MAIN_GAME);
                     force_update_screen();
                     break;
@@ -464,6 +465,8 @@ void process_title_screen_menu_substate(int key) {
                 case 2:
                     if(slac_file_exists(SaveLoadConsts::save_file)) {
                         g_state_flags.cur_substate = TITLE_SUBSTATE_DELETE;
+                        g_state_flags.update_title_menu = true;
+                        g_state_flags.update_display = true;
                     }
                     break;
             }
@@ -499,8 +502,20 @@ void process_title_screen_new_substate(int key) {
 //----------------------------------------------------------------------------
 void process_title_screen_delete_substate(int key) {
     switch (key) {
+        case KEY_Y:
+            // Delete the save file
+            remove((SaveLoadConsts::save_file).c_str());
+            g_state_flags.cur_substate = TITLE_SUBSTATE_LEGACY_DELETED;
+            // Highlight the 'new' option
+            g_state_flags.title_menu_index = 0;
+            g_state_flags.update_title_menu = true;
+            g_state_flags.update_display = true;
+            break;
         case KEY_ESC:
+        case KEY_N:
             g_state_flags.cur_substate = TITLE_SUBSTATE_MENU;
+            g_state_flags.update_title_menu = true;
+            g_state_flags.update_display = true;
             break;
     }    
 }
@@ -536,6 +551,16 @@ void process_title_screen_state(int key) {
             break;
         case TITLE_SUBSTATE_DELETE:
             process_title_screen_delete_substate(key);
+            break;
+        case TITLE_SUBSTATE_LEGACY_DELETED:
+            // The only valid key here is ENTER, to return to the main menu
+            switch (key) {
+                case KEY_ENTER:
+                    g_state_flags.cur_substate = TITLE_SUBSTATE_MENU;
+                    g_state_flags.update_title_menu = true;
+                    g_state_flags.update_display = true;
+                    break;
+            }
             break;
     }
 }

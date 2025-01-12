@@ -820,6 +820,9 @@ void initialize_main_game_state(void) {
 	// clear the text log
 	g_text_log.clear();
 
+	// Set the elapsed time to zero
+	g_game_flags.elapsed_time = 0;
+
 	// Set initial flags to render stuff like the UI
 	force_update_screen();
 }
@@ -2492,6 +2495,7 @@ void reset_game_flags() {
 	g_game_flags.has_unlocked_crystal_depths = false;
 	g_game_flags.has_finished_game = false;
 	g_game_flags.has_received_orb = false;
+	g_game_flags.elapsed_time = 0;
 	g_game_flags.orb_countdown_timer = 0;
 	for (int i = 0; i < UtilConsts::NUM_BOSSES; ++i)
 		g_game_flags.has_defeated_bosses[i] = false;

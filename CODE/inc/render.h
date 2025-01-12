@@ -527,6 +527,22 @@ namespace UiConsts {
 	const int TITLE_MENU_LEFT_BRACKET_X = 102;
 	const int TITLE_MENU_RIGHT_BRACKET_X = 210;
 
+	// The contents of the 'confirm delete' dialog
+	const int TITLE_MENU_CONFIRM_DELETE_X = 159;
+	const int TITLE_MENU_CONFIRM_DELETE_LINE_1_Y = 172;
+	const int TITLE_MENU_CONFIRM_DELETE_LINE_2_Y = 182;
+	const int TITLE_MENU_CONFIRM_DELETE_LINE_3_Y = 193;
+	const int TITLE_MENU_CONFIRM_DELETE_YES_X = 137;
+	const int TITLE_MENU_CONFIRM_DELETE_NO_X = 182;
+	const int TITLE_MENU_CONFIRM_DELETE_OPTION_Y = 206;
+
+	// The contents of the 'legacy erased forever' dialog
+	const int TITLE_MENU_ERASED_FOREVER_X = 159;
+	const int TITLE_MENU_ERASED_FOREVER_LINE_1_Y = 177;
+	const int TITLE_MENU_ERASED_FOREVER_LINE_2_Y = 188; 
+	const int TITLE_MENU_ERASED_FOREVER_LINE_3_Y = 201;
+
+	// The contents of the main game 'confirm exit' dialog
 	const int CONFIRM_EXIT_DIALOG_X1 = 57;
 	const int CONFIRM_EXIT_DIALOG_Y1 = 76;
 	const int CONFIRM_EXIT_DIALOG_X2 = 183;
@@ -539,7 +555,7 @@ namespace UiConsts {
 	const int CONFIRM_EXIT_YES_TEXT_X = 99;
 	const int CONFIRM_EXIT_NO_TEXT_X = 144;
 	const int CONFIRM_EXIT_OPTION_TEXT_Y = 119;
-	
+
 	// Only consider enemies closer than this when rendering on the screen
 	// from the player to the edge of the screen, plus a little bit more
 	const int MAXIMUM_ENEMY_RENDER_DISTANCE = 18;

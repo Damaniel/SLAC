@@ -1910,37 +1910,66 @@ void Render::render_title_menu(BITMAP *destination) {
 	rect(destination, UiConsts::TITLE_MENU_BOX_X1 - 2, UiConsts::TITLE_MENU_BOX_Y1 - 2, 
 	         UiConsts::TITLE_MENU_BOX_X2 + 2, UiConsts::TITLE_MENU_BOX_Y2 + 2, 19);			 
 
-	// Draw the menu text
-	render_text(destination, "New Legacy", 
-	            UiConsts::TITLE_MENU_OPTIONS_X, UiConsts::TITLE_MENU_OPTIONS_Y, FontConsts::FONT_YELLOW,
-				FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
-	// Pick the color to use for 'Continue Legacy' and 'Delete Legacy' options depending on whether the save file exists
-	int color;
-	if (slac_file_exists(SaveLoadConsts::save_file)) {
-		color = FontConsts::FONT_YELLOW;
-	}	
-	else {
-		color = FontConsts::FONT_GRAY;
+	if (g_state_flags.cur_substate == TITLE_SUBSTATE_MENU) {
+		// Draw the menu text
+		render_text(destination, "New Legacy", 
+	            	UiConsts::TITLE_MENU_OPTIONS_X, UiConsts::TITLE_MENU_OPTIONS_Y, FontConsts::FONT_YELLOW,
+					FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+		// Pick the color to use for 'Continue Legacy' and 'Delete Legacy' options depending on whether the save file exists
+		int color;
+		if (slac_file_exists(SaveLoadConsts::save_file)) {
+			color = FontConsts::FONT_YELLOW;
+		}	
+		else {
+			color = FontConsts::FONT_GRAY;
+		}
+		render_text(destination, "Continue Legacy", 
+	            	UiConsts::TITLE_MENU_OPTIONS_X, UiConsts::TITLE_MENU_OPTIONS_Y + UiConsts::TITLE_MENU_OPTION_Y_OFFSET, 
+					color, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+		render_text(destination, "Delete Legacy", 
+	            	UiConsts::TITLE_MENU_OPTIONS_X, UiConsts::TITLE_MENU_OPTIONS_Y + (UiConsts::TITLE_MENU_OPTION_Y_OFFSET * 2), 
+					color, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);	
+
+		// Draw the brackets by the selected menu options
+		rectfill(destination, 101, 174, 111, 211, 16);
+		rectfill(destination, 208, 174, 218, 211, 16);	
+
+		render_text(destination, ">>", UiConsts::TITLE_MENU_LEFT_BRACKET_X, 
+	            	UiConsts::TITLE_MENU_OPTIONS_Y + (g_state_flags.title_menu_index * UiConsts::TITLE_MENU_OPTION_Y_OFFSET), 
+					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);	
+		// Draw the brackets by the selected menu options
+		render_text(destination, "<<", UiConsts::TITLE_MENU_RIGHT_BRACKET_X, 
+	            	UiConsts::TITLE_MENU_OPTIONS_Y + (g_state_flags.title_menu_index * UiConsts::TITLE_MENU_OPTION_Y_OFFSET), 
+					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);	
 	}
-	render_text(destination, "Continue Legacy", 
-	            UiConsts::TITLE_MENU_OPTIONS_X, UiConsts::TITLE_MENU_OPTIONS_Y + UiConsts::TITLE_MENU_OPTION_Y_OFFSET, 
-				color, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
-	render_text(destination, "Delete Legacy", 
-	            UiConsts::TITLE_MENU_OPTIONS_X, UiConsts::TITLE_MENU_OPTIONS_Y + (UiConsts::TITLE_MENU_OPTION_Y_OFFSET * 2), 
-				color, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);	
-
-	// Draw the brackets by the selected menu options
-	rectfill(destination, 101, 174, 111, 211, 16);
-	rectfill(destination, 208, 174, 218, 211, 16);	
-
-	render_text(destination, ">>", UiConsts::TITLE_MENU_LEFT_BRACKET_X, 
-	            UiConsts::TITLE_MENU_OPTIONS_Y + (g_state_flags.title_menu_index * UiConsts::TITLE_MENU_OPTION_Y_OFFSET), 
-				FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);	
-	// Draw the brackets by the selected menu options
-	render_text(destination, "<<", UiConsts::TITLE_MENU_RIGHT_BRACKET_X, 
-	            UiConsts::TITLE_MENU_OPTIONS_Y + (g_state_flags.title_menu_index * UiConsts::TITLE_MENU_OPTION_Y_OFFSET), 
-				FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);	
-
+	else if(g_state_flags.cur_substate == TITLE_SUBSTATE_DELETE) {
+		render_text(destination, "Are you sure that you", 
+	            	UiConsts::TITLE_MENU_CONFIRM_DELETE_X, UiConsts::TITLE_MENU_CONFIRM_DELETE_LINE_1_Y,
+					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+		render_text(destination, "want to delete your", 
+	            	UiConsts::TITLE_MENU_CONFIRM_DELETE_X, UiConsts::TITLE_MENU_CONFIRM_DELETE_LINE_2_Y,
+					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+		render_text(destination, "legacy PERMANENTLY?", 
+	            	UiConsts::TITLE_MENU_CONFIRM_DELETE_X, UiConsts::TITLE_MENU_CONFIRM_DELETE_LINE_3_Y,
+					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+		render_text(destination, "(Y)es", 
+	            	UiConsts::TITLE_MENU_CONFIRM_DELETE_YES_X, UiConsts::TITLE_MENU_CONFIRM_DELETE_OPTION_Y,
+					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+		render_text(destination, "(N)o", 
+	            	UiConsts::TITLE_MENU_CONFIRM_DELETE_NO_X, UiConsts::TITLE_MENU_CONFIRM_DELETE_OPTION_Y,
+					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+	}
+	else if (g_state_flags.cur_substate == TITLE_SUBSTATE_LEGACY_DELETED) {
+		render_text(destination, "Your legacy has been", 
+	            	UiConsts::TITLE_MENU_ERASED_FOREVER_X, UiConsts::TITLE_MENU_ERASED_FOREVER_LINE_1_Y,
+					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+		render_text(destination, "erased forever...", 
+	            	UiConsts::TITLE_MENU_ERASED_FOREVER_X, UiConsts::TITLE_MENU_ERASED_FOREVER_LINE_2_Y,
+					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+		render_text(destination, "-- Press ENTER --", 
+	            	UiConsts::TITLE_MENU_ERASED_FOREVER_X, UiConsts::TITLE_MENU_ERASED_FOREVER_LINE_3_Y,
+					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);					
+	}
 }
 
 //------------------------------------------------------------------------------
