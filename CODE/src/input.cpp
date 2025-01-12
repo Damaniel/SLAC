@@ -284,6 +284,9 @@ void process_game_state(int key) {
                     break;
             }
             break;
+        case GAME_SUBSTATE_CONFIRM_EXIT:
+            process_confirm_exit_substate(key);
+            break;
         case GAME_SUBSTATE_HALL_OF_CHAMPIONS:
             switch (key) {
                 case KEY_ENTER:
@@ -304,7 +307,8 @@ void process_game_state(int key) {
             }            
             switch (key) {
                 case KEY_ESC:
-            	    change_state(STATE_EXIT);
+                    // TODO - this should change to the CONFIRM_EXIT substate
+            	    change_state(STATE_TITLE_SCREEN);
                     break;
                 case KEY_LEFT:
                     process_move(std::make_pair(g_player.get_x_pos() - 1, g_player.get_y_pos()));
@@ -345,11 +349,9 @@ void process_game_state(int key) {
 	        	        g_state_flags.update_display = true;
                     }
                     break;
-                case KEY_L:
-                    load_game(SaveLoadConsts::save_file);
-                    break;
                 case KEY_S:
                     save_game(SaveLoadConsts::save_file);
+                    g_text_log.put_line("-- Your game was saved. --");
                     break;
                 case KEY_H:
                     change_state(STATE_HALL_OF_CHAMPIONS);
@@ -447,7 +449,10 @@ void process_title_screen_menu_substate(int key) {
         case KEY_ENTER:
             switch (g_state_flags.title_menu_index) {
                 case 0:
-                    g_state_flags.cur_substate = TITLE_SUBSTATE_NEW;
+                    //g_state_flags.cur_substate = TITLE_SUBSTATE_NEW;
+                    // TODO: remove this when we've implemented the New game menu
+                    change_state(STATE_MAIN_GAME);
+                    force_update_screen();
                     break;
                 case 1:
                     if(slac_file_exists(SaveLoadConsts::save_file)) {
@@ -590,4 +595,17 @@ void process_input(void) {
             process_hall_of_champions_state(key);
             break;
     }
+}
+
+//----------------------------------------------------------------------------
+// Handles all input for the confirm exit substate
+//
+// Arguments:
+//   key - the key that was pressed
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void process_confirm_exit_substate(int key) {
+
 }
