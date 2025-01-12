@@ -810,6 +810,7 @@ void change_state(int new_state) {
     switch (g_state_flags.cur_state) {
 		case STATE_TITLE_SCREEN:
 			g_state_flags.cur_substate = TITLE_SUBSTATE_DEFAULT;
+			g_state_flags.title_menu_index = 0;
 			break;
         case STATE_MAIN_GAME:
 		    g_state_flags.cur_substate = GAME_SUBSTATE_DEFAULT;
@@ -850,8 +851,6 @@ void change_state(int new_state) {
 			display_hall_of_champions_log();
 			break;			
 		case STATE_EXIT:
-			// Save the hall of champions_log
-			save_hall_of_champions();
 			// Tell the game to exit
 			g_state_flags.exit_game = true;
 			break;

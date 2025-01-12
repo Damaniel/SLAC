@@ -30,6 +30,10 @@ void process_map_substate(int key);
 void process_game_state(int key);
 void process_dead_state(int key);
 void process_hall_of_champions_state(int key);
+void process_title_screen_menu_substate(int key);
+void process_title_screen_new_substate(int key);
+void process_title_screen_load_substate(int key);
+void process_title_screen_delete_substate(int key);
 void process_title_screen_state(int key);
 
 void process_input(void);

@@ -160,6 +160,9 @@ void init_game() {
 //   Nothing
 //----------------------------------------------------------------------------
 void shut_down_game() {
+	// Save the hall of champions file
+	save_hall_of_champions();
+	
 	// Delete the inventory and all items in it
 	if (g_inventory != NULL)
 		delete g_inventory;

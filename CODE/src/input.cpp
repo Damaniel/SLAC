@@ -415,7 +415,98 @@ void process_game_state(int key) {
 }
 
 //----------------------------------------------------------------------------
-// Handles all input for the hall of title screen, plus any current substate
+// Handles all input for the title screen menu substate
+//
+// Arguments:
+//   key - the key that was pressed
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void process_title_screen_menu_substate(int key) {
+    switch (key) {
+        case KEY_ESC:
+            g_state_flags.cur_substate = TITLE_SUBSTATE_DEFAULT;
+            break;
+        case KEY_DOWN:
+            g_state_flags.title_menu_index += 1;
+            if (g_state_flags.title_menu_index >= UtilConsts::NUM_TITLE_MENU_ENTRIES)
+                g_state_flags.title_menu_index = 0;
+            break;
+        case KEY_UP:
+            g_state_flags.title_menu_index -= 1;
+            if (g_state_flags.title_menu_index < 0)
+                g_state_flags.title_menu_index = UtilConsts::NUM_TITLE_MENU_ENTRIES - 1;
+            break;
+        case KEY_ENTER:
+            switch (g_state_flags.title_menu_index) {
+                case 0:
+                    g_state_flags.cur_substate = TITLE_SUBSTATE_NEW;
+                    break;
+                case 1:
+                    g_state_flags.cur_substate = TITLE_SUBSTATE_LOAD;
+                    break;
+                case 2:
+                    g_state_flags.cur_substate = TITLE_SUBSTATE_DELETE;
+                    break;
+            }
+            break;
+    }
+}
+
+//----------------------------------------------------------------------------
+// Handles all input for the title screen new substate
+//
+// Arguments:
+//   key - the key that was pressed
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void process_title_screen_new_substate(int key) {
+    switch (key) {
+        case KEY_ESC:
+            g_state_flags.cur_substate = TITLE_SUBSTATE_MENU;
+            break;
+    }
+}
+
+//----------------------------------------------------------------------------
+// Handles all input for the title screen load substate
+//
+// Arguments:
+//   key - the key that was pressed
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void process_title_screen_load_substate(int key) {
+    switch (key) {
+        case KEY_ESC:
+            g_state_flags.cur_substate = TITLE_SUBSTATE_MENU;
+            break;
+    }   
+}
+
+//----------------------------------------------------------------------------
+// Handles all input for the title screen delete substate
+//
+// Arguments:
+//   key - the key that was pressed
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void process_title_screen_delete_substate(int key) {
+    switch (key) {
+        case KEY_ESC:
+            g_state_flags.cur_substate = TITLE_SUBSTATE_MENU;
+            break;
+    }    
+}
+
+//----------------------------------------------------------------------------
+// Handles all input for the title screen, plus any current substate
 //
 // Arguments:
 //   key - the key that was pressed
@@ -424,12 +515,28 @@ void process_game_state(int key) {
 //   Nothing
 //----------------------------------------------------------------------------
 void process_title_screen_state(int key) {
-    switch (key) {
-        case KEY_ENTER:
-            change_state(STATE_MAIN_GAME);
+    switch (g_state_flags.cur_substate) {
+        case TITLE_SUBSTATE_DEFAULT:
+            switch (key) {
+                case KEY_ENTER:
+                    g_state_flags.cur_substate = TITLE_SUBSTATE_MENU;
+                    break;
+                case KEY_ESC:
+                    change_state(STATE_EXIT);
+                    break;
+            }
             break;
-        case KEY_ESC:
-            change_state(STATE_EXIT);
+        case TITLE_SUBSTATE_MENU:
+            process_title_screen_menu_substate(key);
+            break;
+        case TITLE_SUBSTATE_NEW:
+            process_title_screen_new_substate(key);
+            break;
+        case TITLE_SUBSTATE_LOAD:
+            process_title_screen_load_substate(key);
+            break;
+        case TITLE_SUBSTATE_DELETE:
+            process_title_screen_delete_substate(key);
             break;
     }
 }

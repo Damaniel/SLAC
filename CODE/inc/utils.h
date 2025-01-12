@@ -107,6 +107,9 @@ namespace UtilConsts {
 
     // The number of items in the Hall of Champions
     const int NUM_HALL_OF_CHAMPIONS_ENTRIES = 10;
+
+    // The number of options (new, continue, delete) on the title menu
+    const int NUM_TITLE_MENU_ENTRIES = 3;
 }
 
 // A collection of flags relevant to the game loop.  The game loop will want
@@ -183,6 +186,9 @@ struct StateFlags {
 
     // - time flags
     int time_to_update_elapsed;  // How many frames until we increment the elapsed counter
+
+    // - menu flags
+    int title_menu_index;
 
 };
 
