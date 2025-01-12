@@ -828,9 +828,12 @@ void initialize_main_game_state(void) {
 		g_text_log.put_line("You head out to continue your ongoing efforts to discover the town's secrets.");
 		g_state_flags.recently_died = false;
 	}
-
-	// Set initial flags to render stuff like the UI
-	force_update_screen();
+	
+	// Set initial flags to render stuff like the UI, unless we've loaded a save; we'll update the screen
+	// once the loading is all finished up
+	if (!g_state_flags.save_loaded) {
+		force_update_screen();
+	}
 }
 
 //------------------------------------------------------------------------------

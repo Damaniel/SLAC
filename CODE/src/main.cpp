@@ -131,7 +131,8 @@ void init_game() {
 	g_state_flags.exit_game = false;
 
 	g_state_flags.loading_save = false;
-
+	g_state_flags.save_loaded = false;
+	
 	// Timer related stuff
 	g_state_flags.frame_counter = 0;
 	g_state_flags.next_frame = 1;
