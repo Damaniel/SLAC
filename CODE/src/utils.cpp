@@ -848,8 +848,11 @@ void change_state(int new_state) {
 			}
 			// Clear the text log and place some informative info here
 			display_hall_of_champions_log();
-			break;
+			break;			
 		case STATE_EXIT:
+			// Save the hall of champions_log
+			save_hall_of_champions();
+			// Tell the game to exit
 			g_state_flags.exit_game = true;
 			break;
     }
