@@ -178,7 +178,12 @@ struct StateFlags {
     bool exit_game;           // Did the player choose to exit the game?
     bool loading_save;        // Is a save currently being loaded?
 
+    // - hall of champions;
+    int hall_of_champions_ranking; 
+
+    // - time flags
     int time_to_update_elapsed;  // How many frames until we increment the elapsed counter
+
 };
 
 // A collection of flags related to game progression
@@ -222,6 +227,7 @@ void add_items_at_player_to_log(void);
 void initialize_main_game_state(void);
 void change_state(int new_state);
 void display_hall_of_champions_log();
+int get_hall_of_champions_ranking();
 
 // Item functions
 void pick_up_item_at(int x, int y);

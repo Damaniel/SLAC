@@ -469,11 +469,33 @@ namespace UiConsts {
 	const int NEXT_GEN_MAX_HP_VAL_X = 149;
 	const int NEXT_GEN_MAX_HP_VAL_Y = 161;
 
+	// The Hall of Champions
+	const int HOC_SCREEN_X1 = 14;
+	const int HOC_SCREEN_Y1 = 25;
+	const int HOC_SCREEN_X2 = 224;
+	const int HOC_SCREEN_Y2 = 182;
+
+	const int HOC_SCREEN_TITLE_X = 119;
+	const int HOC_SCREEN_TITLE_Y = 30;
+
+	const int HOC_RANK_HEADER_X = 39;
+	const int HOC_RANK_HEADER_Y = 45;
+	const int HOC_NAME_HEADER_X = 86;
+	const int HOC_NAME_HEADER_Y = 45;
+	const int HOC_TIME_HEADER_X = 155;
+	const int HOC_TIME_HEADER_Y = 45;
+	const int HOC_GEN_HEADER_X  = 201;
+	const int HOC_GEN_HEADER_Y  = 45;
+
+	const int HOC_FIRST_ENTRY_Y  = 58;
+	const int HOC_ENTRY_Y_OFFSET = 12;
+
+	const int HOC_LEFT_BRACKETS_X = 21;
+	const int HOC_RIGHT_BRACKETS_X = 210;
+	
 	// Only consider enemies closer than this when rendering on the screen
-	// This distance includes the maximum manhattan distance for an enemy
 	// from the player to the edge of the screen, plus a little bit more
 	const int MAXIMUM_ENEMY_RENDER_DISTANCE = 18;
-
 	// The base tiles that make up the fixed portions of a dungeon level
 	// They map to tile offsets in the dungeon world tiles
 	enum {

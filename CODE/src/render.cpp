@@ -1729,7 +1729,75 @@ void Render::render_death_dialog(BITMAP *destination) {
 //   Nothing
 //----------------------------------------------------------------------------------
 void Render::render_hall_of_champions(BITMAP *destination) {
+	// The main window
+	render_ui_box(destination, UiConsts::HOC_SCREEN_X1, UiConsts::HOC_SCREEN_Y1,
+				   UiConsts::HOC_SCREEN_X2, UiConsts::HOC_SCREEN_Y2);
 
+	render_text(destination, "** Hall of Champions **", UiConsts::HOC_SCREEN_TITLE_X, UiConsts::HOC_SCREEN_TITLE_Y, 
+	        FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+			FontConsts::TEXT_CENTERED);
+
+	render_text(destination, "Rank", UiConsts::HOC_RANK_HEADER_X, UiConsts::HOC_RANK_HEADER_Y, 
+	        FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+			FontConsts::TEXT_CENTERED);
+
+	render_text(destination, "Name", UiConsts::HOC_NAME_HEADER_X, UiConsts::HOC_NAME_HEADER_Y, 
+	        FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+			FontConsts::TEXT_CENTERED);
+
+	render_text(destination, "Time", UiConsts::HOC_TIME_HEADER_X, UiConsts::HOC_TIME_HEADER_Y, 
+	        FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+			FontConsts::TEXT_CENTERED);
+
+	render_text(destination, "Gen", UiConsts::HOC_GEN_HEADER_X, UiConsts::HOC_GEN_HEADER_Y, 
+	        FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, 
+			FontConsts::TEXT_CENTERED);
+
+	for (int i = 0; i < UtilConsts::NUM_HALL_OF_CHAMPIONS_ENTRIES; ++i) {
+		char val[10];
+		int color;
+
+		int offset = UiConsts::HOC_FIRST_ENTRY_Y + (i * UiConsts::HOC_ENTRY_Y_OFFSET);
+		sprintf(val, "%d", (i + 1));
+		render_text(destination, val, UiConsts::HOC_RANK_HEADER_X, offset,
+		            FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL,
+					FontConsts::TEXT_CENTERED);
+		if (g_hall_of_champions[i].has_entry) {
+			// Fill in the rest of the entry
+			render_text(destination, (char *)g_hall_of_champions[i].name.c_str(), UiConsts::HOC_NAME_HEADER_X, offset,
+		      	        FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL,
+						FontConsts::TEXT_CENTERED);		
+
+			int hours = g_hall_of_champions[i].elapsed / 3600;
+			int minutes = (g_hall_of_champions[i].elapsed - (hours * 3600)) / 60;
+			int seconds = (g_hall_of_champions[i].elapsed - (hours * 3600)) % 60;
+		    if (hours >= 1000)
+    			sprintf(val, "999:59:59");
+    		else if(hours >= 100)
+    			sprintf(val, "%03d:%02d:%02d", hours, minutes, seconds);
+  			else
+    			sprintf(val, "%02d:%02d:%02d", hours, minutes, seconds);
+			render_text(destination, val, UiConsts::HOC_TIME_HEADER_X, offset,
+		      	        FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL,
+						FontConsts::TEXT_CENTERED);				
+
+			sprintf(val, "%d", g_hall_of_champions[i].generation);
+			render_text(destination, val, UiConsts::HOC_GEN_HEADER_X, offset,
+		      	        FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL,
+						FontConsts::TEXT_CENTERED);		
+
+			// Draw the brackets for the new entry (if needed)
+			if (i == g_state_flags.hall_of_champions_ranking) {
+				render_text(destination, ">>", UiConsts::HOC_LEFT_BRACKETS_X, offset,
+			      	        FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL,
+							FontConsts::TEXT_LEFT_JUSTIFIED);
+				render_text(destination, "<<", UiConsts::HOC_RIGHT_BRACKETS_X, offset,
+			      	        FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL,
+							FontConsts::TEXT_LEFT_JUSTIFIED);					
+	
+			}	
+		} 
+	}
 }
 
 //------------------------------------------------------------------------------

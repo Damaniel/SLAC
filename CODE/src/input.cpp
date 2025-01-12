@@ -352,8 +352,7 @@ void process_game_state(int key) {
                     save_game("test.sav");
                     break;
                 case KEY_H:
-                    init_hall_of_champions_entries();
-                    save_hall_of_champions();
+                    change_state(STATE_HALL_OF_CHAMPIONS);
                     break;
                 case KEY_I:
                     // Reset the cursor position to the top left
@@ -446,7 +445,12 @@ void process_hall_of_champions_state(int key) {
             g_state_flags.exit_game = true;
             break;
         case KEY_ENTER:
-            change_state(STATE_TITLE_SCREEN);
+            // Save the updated Hall of Champions data
+            save_hall_of_champions();
+            // Go back to the title screen
+            // todo - remove this line
+            g_state_flags.exit_game = true;
+            //change_state(STATE_TITLE_SCREEN);
             break;
     }
 }

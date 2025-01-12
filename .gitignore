@@ -3,3 +3,4 @@ CODE/OBJ/*.o
 CODE/OUT.TXT
 CODE/*.SAV
 RES/TOOLS/SLACedit/__pycache__
+CODE/HOC.DAT

@@ -137,6 +137,17 @@ void init_game() {
 	g_state_flags.next_frame = 1;
 	g_game_flags.elapsed_time = 0;
 	g_state_flags.time_to_update_elapsed = FRAME_RATE;
+
+	// Check to see if the hall of champions file exists
+	// If not, blank out the data
+	FILE *fp = fopen((SaveLoadConsts::hoc_file).c_str(), "rb");
+	if (fp == NULL) {
+		init_hall_of_champions_entries();
+	}
+	else {
+		fclose(fp);
+		load_hall_of_champions();
+	}
 }
 
 //----------------------------------------------------------------------------

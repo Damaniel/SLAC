@@ -826,11 +826,51 @@ void change_state(int new_state) {
 			g_state_flags.update_display = true;
 			break;
 		case STATE_HALL_OF_CHAMPIONS:
+			// Determine which position on the hall of fame the 
+			// player is.
+			g_state_flags.hall_of_champions_ranking = get_hall_of_champions_ranking();
+
+			// If they earned a spot, put them on the list
+			if (g_state_flags.hall_of_champions_ranking != -1) {
+				// Move all items in the list after the new ranked item
+				// down by one
+				for (int i = UtilConsts::NUM_HALL_OF_CHAMPIONS_ENTRIES - 2; i >= g_state_flags.hall_of_champions_ranking; --i) {
+					g_hall_of_champions[i+1].has_entry = g_hall_of_champions[i].has_entry;
+					g_hall_of_champions[i+1].name = g_hall_of_champions[i].name;
+					g_hall_of_champions[i+1].elapsed = g_hall_of_champions[i].elapsed;
+					g_hall_of_champions[i+1].generation = g_hall_of_champions[i].generation;
+				}
+				// Put the current player's stats in the correct spot
+				g_hall_of_champions[g_state_flags.hall_of_champions_ranking].has_entry = true;
+				g_hall_of_champions[g_state_flags.hall_of_champions_ranking].name = g_player.name;
+				g_hall_of_champions[g_state_flags.hall_of_champions_ranking].elapsed = g_game_flags.elapsed_time;
+				g_hall_of_champions[g_state_flags.hall_of_champions_ranking].generation = g_game_flags.generation;
+			}
 			// Clear the text log and place some informative info here
 			display_hall_of_champions_log();
 			break;
 
     }
+}
+
+//------------------------------------------------------------------------------
+// Gets the player's ranking in the hall of fame
+//
+// Arguments:
+//   new_state - the state to change to
+//
+// Returns:
+//   Nothing.
+//------------------------------------------------------------------------------
+int get_hall_of_champions_ranking() {
+	// Loop through the list.  Return the lowest rank in the list by
+	// time (or first entry without a time) and return it.  If we went through 
+	// the entire list, the player doesn't qualify for the hall of champions
+	for (int i = 0; i < UtilConsts::NUM_HALL_OF_CHAMPIONS_ENTRIES; ++i) {
+		if ((g_hall_of_champions[i].has_entry && g_game_flags.elapsed_time <= g_hall_of_champions[i].elapsed) || (!g_hall_of_champions[i].has_entry)) 
+			return i;
+	}
+	return -1;
 }
 
 //------------------------------------------------------------------------------
@@ -846,8 +886,13 @@ void display_hall_of_champions_log() {
 	g_text_log.clear();
 	g_state_flags.text_log_extended = false;
 	g_text_log.put_line("==============================================================================");
-	g_text_log.put_line("                 You've earned a spot in the Champions Hall of Fame!          ");
-	g_text_log.put_line("                    Press Enter to return to the title screen.                ");
+	if (g_state_flags.hall_of_champions_ranking != -1) {
+		g_text_log.put_line("                    You've earned a spot in the Hall of Champions!");
+	}
+	else {
+		g_text_log.put_line("            You won, but weren't able to earn a spot in the Hall of Champions.");		
+	}
+	g_text_log.put_line("                      Press Enter to return to the title screen.");
 	g_text_log.put_line("==============================================================================");
 	g_state_flags.update_text_dialog = true;
 	g_state_flags.update_maze_area = true;
