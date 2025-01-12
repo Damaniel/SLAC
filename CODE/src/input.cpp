@@ -307,8 +307,8 @@ void process_game_state(int key) {
             }            
             switch (key) {
                 case KEY_ESC:
-                    // TODO - this should change to the CONFIRM_EXIT substate
-            	    change_state(STATE_TITLE_SCREEN);
+            	    g_state_flags.cur_substate = GAME_SUBSTATE_CONFIRM_EXIT;
+                    g_state_flags.update_display = true;
                     break;
                 case KEY_LEFT:
                     process_move(std::make_pair(g_player.get_x_pos() - 1, g_player.get_y_pos()));
@@ -607,5 +607,15 @@ void process_input(void) {
 //   Nothing
 //----------------------------------------------------------------------------
 void process_confirm_exit_substate(int key) {
-
+    switch (key) {
+        case KEY_ESC:
+        case KEY_N:
+            g_state_flags.cur_substate = GAME_SUBSTATE_DEFAULT;
+            force_update_screen();
+            break;
+        case KEY_Y:
+            save_game(SaveLoadConsts::save_file);
+            change_state(STATE_TITLE_SCREEN);
+            break;
+    }
 }

@@ -390,6 +390,9 @@ void update_main_game_display(void) {
 		case GAME_SUBSTATE_STATS:
 			g_render.render_stats_screen(g_back_buffer);
 			break;
+		case GAME_SUBSTATE_CONFIRM_EXIT:
+			g_render.render_confirm_exit_dialog(g_back_buffer);
+			break;
 		default:
 			break;
 	}

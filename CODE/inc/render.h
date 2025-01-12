@@ -527,6 +527,19 @@ namespace UiConsts {
 	const int TITLE_MENU_LEFT_BRACKET_X = 102;
 	const int TITLE_MENU_RIGHT_BRACKET_X = 210;
 
+	const int CONFIRM_EXIT_DIALOG_X1 = 57;
+	const int CONFIRM_EXIT_DIALOG_Y1 = 76;
+	const int CONFIRM_EXIT_DIALOG_X2 = 183;
+	const int CONFIRM_EXIT_DIALOG_Y2 = 132;
+
+	const int CONFIRM_EXIT_TEXT_LINE_X = 120;
+	const int CONFIRM_EXIT_TEXT_LINE_1_Y = 81;
+	const int CONFIRM_EXIT_TEXT_LINE_2_Y = 90;
+	const int CONFIRM_EXIT_TEXT_LINE_3_Y = 103;
+	const int CONFIRM_EXIT_YES_TEXT_X = 99;
+	const int CONFIRM_EXIT_NO_TEXT_X = 144;
+	const int CONFIRM_EXIT_OPTION_TEXT_Y = 119;
+	
 	// Only consider enemies closer than this when rendering on the screen
 	// from the player to the edge of the screen, plus a little bit more
 	const int MAXIMUM_ENEMY_RENDER_DISTANCE = 18;
@@ -734,6 +747,7 @@ class Render {
 		void render_hall_of_champions(BITMAP *destination);
 		void render_title_background(BITMAP *destination);
 		void render_title_menu(BITMAP *destination);
+		void render_confirm_exit_dialog(BITMAP *destination);
 };
 
 void force_update_screen(void);

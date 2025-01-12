@@ -1859,6 +1859,40 @@ void Render::render_title_background(BITMAP *destination) {
 }
 
 //----------------------------------------------------------------------------------
+// Draws the exit game confirmation dialog
+//
+// Arguments:
+//   destination - the bitmap to draw to
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------------
+void Render::render_confirm_exit_dialog(BITMAP *destination) {
+	render_ui_box(destination, UiConsts::CONFIRM_EXIT_DIALOG_X1, UiConsts::CONFIRM_EXIT_DIALOG_Y1,
+	              UiConsts::CONFIRM_EXIT_DIALOG_X2, UiConsts::CONFIRM_EXIT_DIALOG_Y2);
+	
+	// Render the text
+	render_text(destination, "Are you sure you want", 
+	            UiConsts::CONFIRM_EXIT_TEXT_LINE_X, UiConsts::CONFIRM_EXIT_TEXT_LINE_1_Y, 
+				FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+	render_text(destination, "to quit?", 
+	            UiConsts::CONFIRM_EXIT_TEXT_LINE_X, UiConsts::CONFIRM_EXIT_TEXT_LINE_2_Y, 
+				FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);	
+	render_text(destination, "(Game will be saved.)", 
+	            UiConsts::CONFIRM_EXIT_TEXT_LINE_X, UiConsts::CONFIRM_EXIT_TEXT_LINE_3_Y, 
+				FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+
+	// Render the Yes/No options
+	render_text(destination, "(Y)es", 
+	            UiConsts::CONFIRM_EXIT_YES_TEXT_X, UiConsts::CONFIRM_EXIT_OPTION_TEXT_Y, 
+				FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+	render_text(destination, "(N)o", 
+	            UiConsts::CONFIRM_EXIT_NO_TEXT_X, UiConsts::CONFIRM_EXIT_OPTION_TEXT_Y, 
+				FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+
+}
+
+//----------------------------------------------------------------------------------
 // Draws the title menu
 //
 // Arguments:
