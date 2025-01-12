@@ -1125,3 +1125,22 @@ bool load_hall_of_champions() {
     fclose(fp);
     return true;
 }
+
+//----------------------------------------------------------------------------
+// Checks if the save file or HOC file exists
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   true if the file exists, false otherwise
+//----------------------------------------------------------------------------
+bool slac_file_exists(std::string name) {
+    FILE *fp = fopen(name.c_str(), "rb");
+    if (fp == NULL)
+        return false;
+
+    fclose(fp);
+    return true;
+
+}

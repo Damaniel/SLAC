@@ -452,6 +452,30 @@ void update_hall_of_champions(void) {
 		g_state_flags.update_display = false;
 	}
 }
+
+//------------------------------------------------------------------------------
+// Updates the main display for the title screen
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void update_title_screen(void) {
+	if (g_state_flags.update_title_background == true) {
+		g_render.render_title_background(g_back_buffer);
+		// Draw the background and overlay the title 
+		// Draw the copyright text
+		g_state_flags.update_title_background = false;
+	}
+	if (g_state_flags.update_title_menu == true) { 
+		g_render.render_title_menu(g_back_buffer);
+		g_state_flags.update_title_menu = false;
+
+	}	
+}
+
 //------------------------------------------------------------------------------
 // Updates the main display for the current state
 //
@@ -463,6 +487,9 @@ void update_hall_of_champions(void) {
 //------------------------------------------------------------------------------
 void update_display(void) {
 	switch (g_state_flags.cur_state) {
+		case STATE_TITLE_SCREEN:
+			update_title_screen();
+			break;
 		case STATE_MAIN_GAME:
 			update_main_game_display();
 			break;
@@ -810,7 +837,15 @@ void change_state(int new_state) {
     switch (g_state_flags.cur_state) {
 		case STATE_TITLE_SCREEN:
 			g_state_flags.cur_substate = TITLE_SUBSTATE_DEFAULT;
-			g_state_flags.title_menu_index = 0;
+			g_state_flags.update_title_background = true;
+			g_state_flags.update_title_menu = false;
+			g_state_flags.update_display = true;
+			// If a save file exists, highlight 'Continue' by default,
+			// otherwise highlight 'New'
+			if(slac_file_exists(SaveLoadConsts::save_file))
+				g_state_flags.title_menu_index = 1;
+			else
+				g_state_flags.title_menu_index = 0;
 			break;
         case STATE_MAIN_GAME:
 		    g_state_flags.cur_substate = GAME_SUBSTATE_DEFAULT;
@@ -823,8 +858,6 @@ void change_state(int new_state) {
 		case STATE_DEAD:
 			// Move the new artifacts to the existing artifact list
 		    move_new_artifacts_to_existing();
-			// Increment the player generation
-			g_state_flags.update_display = true;
 			break;
 		case STATE_HALL_OF_CHAMPIONS:
 			// Determine which position on the hall of fame the 

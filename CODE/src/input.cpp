@@ -346,10 +346,10 @@ void process_game_state(int key) {
                     }
                     break;
                 case KEY_L:
-                    load_game("test.sav");
+                    load_game(SaveLoadConsts::save_file);
                     break;
                 case KEY_S:
-                    save_game("test.sav");
+                    save_game(SaveLoadConsts::save_file);
                     break;
                 case KEY_H:
                     change_state(STATE_HALL_OF_CHAMPIONS);
@@ -427,16 +427,22 @@ void process_title_screen_menu_substate(int key) {
     switch (key) {
         case KEY_ESC:
             g_state_flags.cur_substate = TITLE_SUBSTATE_DEFAULT;
+            g_state_flags.update_title_background = true;
+            g_state_flags.update_display = true;
             break;
         case KEY_DOWN:
             g_state_flags.title_menu_index += 1;
             if (g_state_flags.title_menu_index >= UtilConsts::NUM_TITLE_MENU_ENTRIES)
                 g_state_flags.title_menu_index = 0;
+            g_state_flags.update_title_menu = true;
+            g_state_flags.update_display = true;
             break;
         case KEY_UP:
             g_state_flags.title_menu_index -= 1;
             if (g_state_flags.title_menu_index < 0)
                 g_state_flags.title_menu_index = UtilConsts::NUM_TITLE_MENU_ENTRIES - 1;
+            g_state_flags.update_title_menu = true;
+            g_state_flags.update_display = true;
             break;
         case KEY_ENTER:
             switch (g_state_flags.title_menu_index) {
@@ -444,10 +450,16 @@ void process_title_screen_menu_substate(int key) {
                     g_state_flags.cur_substate = TITLE_SUBSTATE_NEW;
                     break;
                 case 1:
-                    g_state_flags.cur_substate = TITLE_SUBSTATE_LOAD;
+                    if(slac_file_exists(SaveLoadConsts::save_file)) {
+                        change_state(STATE_MAIN_GAME);
+                        load_game(SaveLoadConsts::save_file);
+                        force_update_screen();
+                    }
                     break;
                 case 2:
-                    g_state_flags.cur_substate = TITLE_SUBSTATE_DELETE;
+                    if(slac_file_exists(SaveLoadConsts::save_file)) {
+                        g_state_flags.cur_substate = TITLE_SUBSTATE_DELETE;
+                    }
                     break;
             }
             break;
@@ -469,23 +481,6 @@ void process_title_screen_new_substate(int key) {
             g_state_flags.cur_substate = TITLE_SUBSTATE_MENU;
             break;
     }
-}
-
-//----------------------------------------------------------------------------
-// Handles all input for the title screen load substate
-//
-// Arguments:
-//   key - the key that was pressed
-//
-// Returns:
-//   Nothing
-//----------------------------------------------------------------------------
-void process_title_screen_load_substate(int key) {
-    switch (key) {
-        case KEY_ESC:
-            g_state_flags.cur_substate = TITLE_SUBSTATE_MENU;
-            break;
-    }   
 }
 
 //----------------------------------------------------------------------------
@@ -520,6 +515,8 @@ void process_title_screen_state(int key) {
             switch (key) {
                 case KEY_ENTER:
                     g_state_flags.cur_substate = TITLE_SUBSTATE_MENU;
+                    g_state_flags.update_title_menu = true;
+                    g_state_flags.update_display = true;
                     break;
                 case KEY_ESC:
                     change_state(STATE_EXIT);
@@ -531,9 +528,6 @@ void process_title_screen_state(int key) {
             break;
         case TITLE_SUBSTATE_NEW:
             process_title_screen_new_substate(key);
-            break;
-        case TITLE_SUBSTATE_LOAD:
-            process_title_screen_load_substate(key);
             break;
         case TITLE_SUBSTATE_DELETE:
             process_title_screen_delete_substate(key);

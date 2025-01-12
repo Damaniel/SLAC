@@ -492,7 +492,41 @@ namespace UiConsts {
 
 	const int HOC_LEFT_BRACKETS_X = 21;
 	const int HOC_RIGHT_BRACKETS_X = 210;
-	
+
+	// The title screen
+	const int TITLE_BOX_X1 = 0;
+	const int TITLE_BOX_X2 = 319;
+	const int TITLE_BOX_Y1 = 15;
+	const int TITLE_BOX_Y2 = 224;
+
+	const int TITLE_COPYRIGHT_X = 160;
+	const int TITLE_COPYRIGHT_Y = 228;
+
+	const int TITLE_BG_TILE_WIDTH = 18;
+	const int TITLE_BG_TILE_HEIGHT = 8;
+	const int TITLE_BG_X = 16;
+	const int TITLE_BG_Y = 32;
+	const int TITLE_BG_X2 = 303;
+	const int TITLE_BG_Y2 = 159;
+	const int TITLE_BG_TILE_X = 14;
+	const int TITLE_BG_TILE_Y = 11;
+	const int TITLE_NAME_X = 61;
+	const int TITLE_NAME_Y = 51;
+
+	const int TITLE_PRESS_ENTER_X = 160;
+	const int TITLE_PRESS_ENTER_Y = 189;
+
+	const int TITLE_MENU_BOX_X1 = 95;
+	const int TITLE_MENU_BOX_Y1 = 168;
+	const int TITLE_MENU_BOX_X2 = 223;
+	const int TITLE_MENU_BOX_Y2 = 216;
+
+	const int TITLE_MENU_OPTIONS_X = 160;
+	const int TITLE_MENU_OPTIONS_Y = 175;
+	const int TITLE_MENU_OPTION_Y_OFFSET = 14;
+	const int TITLE_MENU_LEFT_BRACKET_X = 102;
+	const int TITLE_MENU_RIGHT_BRACKET_X = 210;
+
 	// Only consider enemies closer than this when rendering on the screen
 	// from the player to the edge of the screen, plus a little bit more
 	const int MAXIMUM_ENEMY_RENDER_DISTANCE = 18;
@@ -698,6 +732,8 @@ class Render {
 		void render_hp_exp_bar(BITMAP *destination);
 		void render_death_dialog(BITMAP *destination);
 		void render_hall_of_champions(BITMAP *destination);
+		void render_title_background(BITMAP *destination);
+		void render_title_menu(BITMAP *destination);
 };
 
 void force_update_screen(void);

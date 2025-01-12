@@ -1800,6 +1800,115 @@ void Render::render_hall_of_champions(BITMAP *destination) {
 	}
 }
 
+//----------------------------------------------------------------------------------
+// Draws the main portion of the title screen
+//
+// Arguments:
+//   destination - the bitmap to draw to
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------------
+void Render::render_title_background(BITMAP *destination) {
+	int tile_index_to_render;
+	int tile_offset_x;
+	int tile_offset_y;
+
+	clear_to_color(destination, 16);
+
+	// draw the main box
+	render_ui_box(destination, UiConsts::TITLE_BOX_X1, UiConsts::TITLE_BOX_Y1, 
+	              UiConsts::TITLE_BOX_X2, UiConsts::TITLE_BOX_Y2);
+
+	// Draw the borders for the interior box
+	rect(destination, UiConsts::TITLE_BG_X - 1, UiConsts::TITLE_BG_Y - 1,
+		 UiConsts::TITLE_BG_X2 + 1, UiConsts::TITLE_BG_Y2 + 1, 30);
+	rect(destination, UiConsts::TITLE_BG_X - 2, UiConsts::TITLE_BG_Y - 2,
+		 UiConsts::TITLE_BG_X2 + 2, UiConsts::TITLE_BG_Y2 + 2, 16);
+	rect(destination, UiConsts::TITLE_BG_X - 3, UiConsts::TITLE_BG_Y - 3,
+		 UiConsts::TITLE_BG_X2 + 3, UiConsts::TITLE_BG_Y2 + 3, 19);
+
+	// Draw the copyright and press enter text
+	render_text(destination, "Copyright 2025 Shaun Brandt / Holy Meatgoat Productions", 
+	            UiConsts::TITLE_COPYRIGHT_X, UiConsts::TITLE_COPYRIGHT_Y, FontConsts::FONT_YELLOW,
+				FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+	render_text(destination, "-- Press ENTER to play --", 
+	            UiConsts::TITLE_PRESS_ENTER_X, UiConsts::TITLE_PRESS_ENTER_Y, FontConsts::FONT_YELLOW,
+				FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+
+	// Draw the tiles inside the interior box
+	for (int j = 0; j < UiConsts::TITLE_BG_TILE_HEIGHT; ++j) {
+		for (int i = 0; i < UiConsts::TITLE_BG_TILE_WIDTH; ++i) {
+			tile_index_to_render = g_town_tile_data[(j + UiConsts::TITLE_BG_TILE_Y) * TownConsts::TOWN_SIZE + i + UiConsts::TITLE_BG_TILE_X];
+			tile_offset_x = tile_index_to_render % UiConsts::TOWN_TILE_ENTRY_WIDTH;
+			tile_offset_y = tile_index_to_render / UiConsts::TOWN_TILE_ENTRY_WIDTH;
+			blit((BITMAP *)g_game_data[DAMRL_TOWN_TILES].dat, 	
+		     	 destination,
+	    	 	 tile_offset_x * UiConsts::TILE_PIXEL_WIDTH, 
+		 		 tile_offset_y * UiConsts::TILE_PIXEL_HEIGHT, 
+		 		 UiConsts::TITLE_BG_X + (i * UiConsts::TILE_PIXEL_WIDTH),
+ 		 		 UiConsts::TITLE_BG_Y + (j * UiConsts::TILE_PIXEL_HEIGHT),
+			 	 UiConsts::TILE_PIXEL_WIDTH,
+			 	 UiConsts::TILE_PIXEL_HEIGHT);
+		}
+	} 
+
+	// Draw the title over that
+	draw_sprite(destination, (BITMAP *)g_game_data[DAMRL_TITLE].dat, UiConsts::TITLE_NAME_X, UiConsts::TITLE_NAME_Y);
+
+}
+
+//----------------------------------------------------------------------------------
+// Draws the title menu
+//
+// Arguments:
+//   destination - the bitmap to draw to
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------------
+void Render::render_title_menu(BITMAP *destination) {
+	// Draw the menu box
+	rectfill(destination, UiConsts::TITLE_MENU_BOX_X1, UiConsts::TITLE_MENU_BOX_Y1, 
+	         UiConsts::TITLE_MENU_BOX_X2, UiConsts::TITLE_MENU_BOX_Y2, 16);
+	rect(destination, UiConsts::TITLE_MENU_BOX_X1 - 1, UiConsts::TITLE_MENU_BOX_Y1 - 1, 
+	         UiConsts::TITLE_MENU_BOX_X2 + 1, UiConsts::TITLE_MENU_BOX_Y2 + 1, 30);
+	rect(destination, UiConsts::TITLE_MENU_BOX_X1 - 2, UiConsts::TITLE_MENU_BOX_Y1 - 2, 
+	         UiConsts::TITLE_MENU_BOX_X2 + 2, UiConsts::TITLE_MENU_BOX_Y2 + 2, 19);			 
+
+	// Draw the menu text
+	render_text(destination, "New Legacy", 
+	            UiConsts::TITLE_MENU_OPTIONS_X, UiConsts::TITLE_MENU_OPTIONS_Y, FontConsts::FONT_YELLOW,
+				FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+	// Pick the color to use for 'Continue Legacy' and 'Delete Legacy' options depending on whether the save file exists
+	int color;
+	if (slac_file_exists(SaveLoadConsts::save_file)) {
+		color = FontConsts::FONT_YELLOW;
+	}	
+	else {
+		color = FontConsts::FONT_GRAY;
+	}
+	render_text(destination, "Continue Legacy", 
+	            UiConsts::TITLE_MENU_OPTIONS_X, UiConsts::TITLE_MENU_OPTIONS_Y + UiConsts::TITLE_MENU_OPTION_Y_OFFSET, 
+				color, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+	render_text(destination, "Delete Legacy", 
+	            UiConsts::TITLE_MENU_OPTIONS_X, UiConsts::TITLE_MENU_OPTIONS_Y + (UiConsts::TITLE_MENU_OPTION_Y_OFFSET * 2), 
+				color, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);	
+
+	// Draw the brackets by the selected menu options
+	rectfill(destination, 101, 174, 111, 211, 16);
+	rectfill(destination, 208, 174, 218, 211, 16);	
+
+	render_text(destination, ">>", UiConsts::TITLE_MENU_LEFT_BRACKET_X, 
+	            UiConsts::TITLE_MENU_OPTIONS_Y + (g_state_flags.title_menu_index * UiConsts::TITLE_MENU_OPTION_Y_OFFSET), 
+				FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);	
+	// Draw the brackets by the selected menu options
+	render_text(destination, "<<", UiConsts::TITLE_MENU_RIGHT_BRACKET_X, 
+	            UiConsts::TITLE_MENU_OPTIONS_Y + (g_state_flags.title_menu_index * UiConsts::TITLE_MENU_OPTION_Y_OFFSET), 
+				FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);	
+
+}
+
 //------------------------------------------------------------------------------
 // Writes a string in the specified location on the screen, with specified
 // font, width, color and justification.

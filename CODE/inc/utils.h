@@ -134,6 +134,10 @@ struct StateFlags {
     //--------------------------------------------------------------------------
     bool update_display;                // Is the screen ready to be redrawn?
 
+    // - title screen
+    bool update_title_background;       // Update the background portion of the title screen
+    bool update_title_menu;             // Update the menu and anything in it
+
     // - main screen dialogs
     bool update_text_dialog;            // Should the text dialog be redrawn?
     bool update_status_dialog;          // Should the status display be redrawn?

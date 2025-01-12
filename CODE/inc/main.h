@@ -42,7 +42,6 @@ enum {
     TITLE_SUBSTATE_DEFAULT,     // The main part of the title screen
     TITLE_SUBSTATE_MENU,        // The menu
     TITLE_SUBSTATE_NEW,         // When 'New Legacy' is selected
-    TITLE_SUBSTATE_LOAD,        // When 'Continue Legacy' is selected
     TITLE_SUBSTATE_DELETE       // When 'Delete Legacy' is selected
 };
 
@@ -54,12 +53,13 @@ enum {
     GAME_SUBSTATE_DEFAULT,
     GAME_SUBSTATE_MAP,
     GAME_SUBSTATE_INVENTORY,
-    GAME_SUBSTATE_INVENTORY_MENU,       // The item context menu
-    GAME_SUBSTATE_USE_ON_ITEM,          // Used when selecting an item to use another item on 
+    GAME_SUBSTATE_INVENTORY_MENU,        // The item context menu
+    GAME_SUBSTATE_USE_ON_ITEM,           // Used when selecting an item to use another item on 
     GAME_SUBSTATE_STATS,
     GAME_SUBSTATE_STORE,                 // In a shop in town           
-    GAME_SUBSTATE_PLAYER_JUST_DIED,       // Player just hit 0 HP - allows a key to be pressed before transitioning
-    GAME_SUBSTATE_HALL_OF_CHAMPIONS
+    GAME_SUBSTATE_PLAYER_JUST_DIED,      // Player just hit 0 HP - allows a key to be pressed before transitioning
+    GAME_SUBSTATE_HALL_OF_CHAMPIONS,
+    GAME_SUBSTATE_CONFIRM_EXIT           // Displays the 'Are you sure you want to quit? menu'
 };
 
 enum {

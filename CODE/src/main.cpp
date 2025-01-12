@@ -140,13 +140,11 @@ void init_game() {
 
 	// Check to see if the hall of champions file exists
 	// If not, blank out the data
-	FILE *fp = fopen((SaveLoadConsts::hoc_file).c_str(), "rb");
-	if (fp == NULL) {
-		init_hall_of_champions_entries();
+	if (slac_file_exists(SaveLoadConsts::hoc_file)) {
+		load_hall_of_champions();
 	}
 	else {
-		fclose(fp);
-		load_hall_of_champions();
+		init_hall_of_champions_entries();
 	}
 }
 
@@ -162,7 +160,7 @@ void init_game() {
 void shut_down_game() {
 	// Save the hall of champions file
 	save_hall_of_champions();
-	
+
 	// Delete the inventory and all items in it
 	if (g_inventory != NULL)
 		delete g_inventory;
@@ -187,7 +185,7 @@ int main(void) {
 	std::cout << "Loading game..." << std::endl;
 
 	init_game();
-	change_state(STATE_MAIN_GAME);
+	change_state(STATE_TITLE_SCREEN);
 
 	// Main game loop
 	do {

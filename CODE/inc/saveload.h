@@ -44,6 +44,7 @@ namespace SaveLoadConsts {
     const int INVENTORY_ITEM_SIZE = 289;
 
     const std::string hoc_file = "hoc.dat";
+    const std::string save_file = "slac.sav";
 }
 
 void equip_items_back_on_player(int *slots);
@@ -78,5 +79,7 @@ bool save_game(std::string filename);
 void init_hall_of_champions_entries();
 bool save_hall_of_champions();
 bool load_hall_of_champions();
+
+bool slac_file_exists(std::string name);
 
 #endif
