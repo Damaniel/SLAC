@@ -284,6 +284,14 @@ void process_game_state(int key) {
                     break;
             }
             break;
+        case GAME_SUBSTATE_HALL_OF_CHAMPIONS:
+            switch (key) {
+                case KEY_ENTER:
+                    change_state(STATE_HALL_OF_CHAMPIONS);
+                    break;
+            }
+            break;
+
         case GAME_SUBSTATE_DEFAULT:
             // Only process lighting if the player is in the dungeon
             if (g_state_flags.in_dungeon) {
@@ -342,6 +350,10 @@ void process_game_state(int key) {
                     break;
                 case KEY_S:
                     save_game("test.sav");
+                    break;
+                case KEY_H:
+                    init_hall_of_champions_entries();
+                    save_hall_of_champions();
                     break;
                 case KEY_I:
                     // Reset the cursor position to the top left
@@ -404,6 +416,42 @@ void process_game_state(int key) {
 }
 
 //----------------------------------------------------------------------------
+// Handles all input for the hall of title screen, plus any current substate
+//
+// Arguments:
+//   key - the key that was pressed
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void process_title_screen_state(int key) {
+
+}
+
+//----------------------------------------------------------------------------
+// Handles all input for the hall of champions
+//
+// Arguments:
+//   key - the key that was pressed
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void process_hall_of_champions_state(int key) {
+
+    switch (key) {
+        // The only valid key is Enter, which returns to the title screen
+        // Esc is only for testing right now
+        case KEY_ESC:
+            g_state_flags.exit_game = true;
+            break;
+        case KEY_ENTER:
+            change_state(STATE_TITLE_SCREEN);
+            break;
+    }
+}
+
+//----------------------------------------------------------------------------
 // Handles keyboard input for all game states, delegating as needed
 //
 // Arguments:
@@ -419,11 +467,17 @@ void process_input(void) {
 	int key = (readkey() >> 8);
 
     switch(g_state_flags.cur_state) {
+        case STATE_TITLE_SCREEN:
+            process_title_screen_state(key);
+            break;
         case STATE_MAIN_GAME:
             process_game_state(key);
             break;
         case STATE_DEAD:
             process_dead_state(key);
+            break;
+        case STATE_HALL_OF_CHAMPIONS:
+            process_hall_of_champions_state(key);
             break;
     }
 }

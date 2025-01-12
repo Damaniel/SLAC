@@ -92,6 +92,9 @@ extern DungeonFloor g_dungeon;
 // Holds dynamic UI global information (like cursor positions and such)
 extern UiGlobals g_ui_globals;
 
+// Holds the hall of champions
+extern HallOfChampionsEntry g_hall_of_champions[UtilConsts::NUM_HALL_OF_CHAMPIONS_ENTRIES];
+
 // Static tile data (town, shops, etc)
 extern unsigned short g_town_tile_data[TownConsts::TOWN_SIZE * TownConsts::TOWN_SIZE];
 extern unsigned char g_town_movability[TownConsts::TOWN_SIZE * TownConsts::TOWN_SIZE];

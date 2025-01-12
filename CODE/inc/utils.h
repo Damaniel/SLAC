@@ -57,6 +57,13 @@ struct DungeonFloor {
     int is_boss_alive_here();
 };
 
+typedef struct {
+    bool has_entry;
+    std::string name;
+    unsigned long int elapsed;
+    int generation;
+} HallOfChampionsEntry;
+
 namespace UtilConsts {
     // An enum to specify actors in the action queue
     const int ACTION_PLAYER = 0;
@@ -98,6 +105,8 @@ namespace UtilConsts {
     // The number of turns the player has to return Megalith's Soul Orb
     const int ORB_COUNTDOWN_TIME = 200;
 
+    // The number of items in the Hall of Champions
+    const int NUM_HALL_OF_CHAMPIONS_ENTRIES = 10;
 }
 
 // A collection of flags relevant to the game loop.  The game loop will want
@@ -212,6 +221,7 @@ void add_items_at_player_to_log(void);
 // State functions
 void initialize_main_game_state(void);
 void change_state(int new_state);
+void display_hall_of_champions_log();
 
 // Item functions
 void pick_up_item_at(int x, int y);

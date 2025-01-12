@@ -29,6 +29,8 @@ void process_inventory_substate(int key);
 void process_map_substate(int key);
 void process_game_state(int key);
 void process_dead_state(int key);
+void process_hall_of_champions_state(int key);
+void process_title_screen_state(int key);
 
 void process_input(void);
 

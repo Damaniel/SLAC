@@ -42,6 +42,8 @@ namespace SaveLoadConsts {
     const int ID_SCROLLS_OFFSET = 14737;
 
     const int INVENTORY_ITEM_SIZE = 289;
+
+    const std::string hoc_file = "hoc.dat";
 }
 
 void equip_items_back_on_player(int *slots);
@@ -72,5 +74,9 @@ int write_identified_scrolls(FILE *f);
 
 bool load_game(std::string filename);
 bool save_game(std::string filename);
+
+void init_hall_of_champions_entries();
+bool save_hall_of_champions();
+bool load_hall_of_champions();
 
 #endif

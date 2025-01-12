@@ -675,6 +675,7 @@ class Render {
 		void render_stats_screen(BITMAP *destination);
 		void render_hp_exp_bar(BITMAP *destination);
 		void render_death_dialog(BITMAP *destination);
+		void render_hall_of_champions(BITMAP *destination);
 };
 
 void force_update_screen(void);

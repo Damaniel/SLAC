@@ -47,6 +47,7 @@ StateFlags 	   g_state_flags;
 GameFlags      g_game_flags;
 Render         g_render;
 DungeonFloor   g_dungeon;
+HallOfChampionsEntry g_hall_of_champions[UtilConsts::NUM_HALL_OF_CHAMPIONS_ENTRIES];
 
 /*=============================================================================
  * process_timing_stuff

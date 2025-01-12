@@ -430,6 +430,29 @@ void update_dead_display(void) {
 }
 
 //------------------------------------------------------------------------------
+// Updates the main display for the hall of champions
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void update_hall_of_champions(void) {
+	if (g_state_flags.update_display == true) {
+		// Redraw the rest of the screen
+		g_state_flags.update_maze_area = true;
+		g_state_flags.update_status_dialog = true;
+		g_state_flags.update_status_hp_exp = true;
+		g_state_flags.update_status_elapsed_time = true;
+		g_state_flags.update_text_dialog = true;
+		update_main_game_display();
+		// Put the hall of champions on top of it
+		g_render.render_hall_of_champions(g_back_buffer);
+		g_state_flags.update_display = false;
+	}
+}
+//------------------------------------------------------------------------------
 // Updates the main display for the current state
 //
 // Arguments:
@@ -445,6 +468,9 @@ void update_display(void) {
 			break;
 		case STATE_DEAD:
 			update_dead_display();
+			break;
+		case STATE_HALL_OF_CHAMPIONS:
+			update_hall_of_champions();
 			break;
 	}
 
@@ -780,10 +806,13 @@ void initialize_main_game_state(void) {
 void change_state(int new_state) {
     g_state_flags.prev_state = g_state_flags.cur_state;
     g_state_flags.cur_state = new_state;
-    g_state_flags.cur_substate = GAME_SUBSTATE_DEFAULT;
 
     switch (g_state_flags.cur_state) {
+		case STATE_TITLE_SCREEN:
+			g_state_flags.cur_substate = TITLE_SUBSTATE_DEFAULT;
+			break;
         case STATE_MAIN_GAME:
+		    g_state_flags.cur_substate = GAME_SUBSTATE_DEFAULT;
 			g_state_flags.in_dungeon = false;
 			g_state_flags.in_weapon_shop = false;
 			g_state_flags.in_item_shop = false;
@@ -796,7 +825,33 @@ void change_state(int new_state) {
 			// Increment the player generation
 			g_state_flags.update_display = true;
 			break;
+		case STATE_HALL_OF_CHAMPIONS:
+			// Clear the text log and place some informative info here
+			display_hall_of_champions_log();
+			break;
+
     }
+}
+
+//------------------------------------------------------------------------------
+// Displays a message about the hall of fame to the text log
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing.
+//------------------------------------------------------------------------------
+void display_hall_of_champions_log() {
+	g_text_log.clear();
+	g_state_flags.text_log_extended = false;
+	g_text_log.put_line("==============================================================================");
+	g_text_log.put_line("                 You've earned a spot in the Champions Hall of Fame!          ");
+	g_text_log.put_line("                    Press Enter to return to the title screen.                ");
+	g_text_log.put_line("==============================================================================");
+	g_state_flags.update_text_dialog = true;
+	g_state_flags.update_maze_area = true;
+	g_state_flags.update_display = true;
 }
 
 //------------------------------------------------------------------------------
@@ -1964,7 +2019,7 @@ void check_and_process_endgame(int x, int y) {
 		g_text_log.put_line("Megalith has been sealed away -- hopefully forever!");
 		g_text_log.put_line("        --  You have finished the game!  Press ENTER to continue.  -- "); 
 		g_game_flags.has_finished_game = true;
-		// change_state(SOME_STATE_OR_OTHER)
+		g_state_flags.cur_substate = GAME_SUBSTATE_HALL_OF_CHAMPIONS;
 	}
 }
 

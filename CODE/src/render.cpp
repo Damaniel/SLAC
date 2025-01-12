@@ -1719,6 +1719,19 @@ void Render::render_death_dialog(BITMAP *destination) {
 				FontConsts::TEXT_CENTERED);
 }
 
+//----------------------------------------------------------------------------------
+// Draws the dialog showing the Hall of Champions
+//
+// Arguments:
+//   destination - the bitmap to draw to
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------------
+void Render::render_hall_of_champions(BITMAP *destination) {
+
+}
+
 //------------------------------------------------------------------------------
 // Writes a string in the specified location on the screen, with specified
 // font, width, color and justification.

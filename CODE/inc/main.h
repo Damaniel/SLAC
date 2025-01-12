@@ -27,17 +27,21 @@
 // The base frame rate for the game (updates and such)
 const int FRAME_RATE = 20;
 
-// States for the state machine god.  This is a first shot at some; there will
-// be more.  He must feed.
-
+// States for the state machine god.
 enum {
     STATE_LOGO_SCREEN,
     STATE_TITLE_SCREEN,
-    STATE_NEW_GAME,
-    STATE_CONTINUE_GAME,
     STATE_MAIN_GAME,
     STATE_DEAD,
+    STATE_HALL_OF_CHAMPIONS,
     STATE_EXIT
+};
+
+// Substates of the title screen state
+enum {
+    TITLE_SUBSTATE_DEFAULT,
+    TITLE_SUBSTATE_NEW,
+    TITLE_SUBSTATE_LOAD
 };
 
 // Substates of the main game state.  The difference between a main state and a substate
@@ -52,8 +56,8 @@ enum {
     GAME_SUBSTATE_USE_ON_ITEM,          // Used when selecting an item to use another item on 
     GAME_SUBSTATE_STATS,
     GAME_SUBSTATE_STORE,                 // In a shop in town           
-    GAME_SUBSTATE_PLAYER_JUST_DIED       // Player just hit 0 HP - allows a key to be pressed before transitioning
-                                         // to STATE_DEAD
+    GAME_SUBSTATE_PLAYER_JUST_DIED,       // Player just hit 0 HP - allows a key to be pressed before transitioning
+    GAME_SUBSTATE_HALL_OF_CHAMPIONS
 };
 
 enum {

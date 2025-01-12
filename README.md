@@ -25,7 +25,7 @@ This release currently uses a specific ancient version of DJGPP, g++ (2.95.2) an
 
 ## To be added
 
-The game is technically playable from beginning to end, but is missing multiple essential features that would make that effectively impossible:
+The game is technically playable from beginning to end, but is still in active development and many features are missing:
 
 - A hall of fame screen for successful runs
 - Functional shops and museum

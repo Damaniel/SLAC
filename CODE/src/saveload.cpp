@@ -1027,3 +1027,101 @@ bool load_game(std::string filename) {
 
     return result;
 }
+
+//----------------------------------------------------------------------------
+// Fills the Hall of Champions with default values
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void init_hall_of_champions_entries() {
+    for (int i = 0; i < UtilConsts::NUM_HALL_OF_CHAMPIONS_ENTRIES; ++i) {
+        g_hall_of_champions[i].has_entry = false;
+        g_hall_of_champions[i].name = "";
+        g_hall_of_champions[i].elapsed = 0;
+        g_hall_of_champions[i].generation = 0;
+    }
+}
+
+//----------------------------------------------------------------------------
+// Saves the Hall of Champions File
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   true if file save was successful, false otherwise
+//----------------------------------------------------------------------------
+bool save_hall_of_champions() {
+    FILE *fp = fopen((SaveLoadConsts::hoc_file).c_str(), "wb");
+    if (fp == NULL) {
+        std::cout << "save_hall_of_champions: couldn't open file" << std::endl;
+        return false;
+    }
+
+    // Write magic bytes
+    fprintf(fp, "HOCF");
+
+    for (int i=0; i < UtilConsts::NUM_HALL_OF_CHAMPIONS_ENTRIES; ++i) {
+        fwrite(&(g_hall_of_champions[i].has_entry), sizeof(bool), 1, fp);
+        int len = g_hall_of_champions[i].name.size();
+        if (len > 32)
+            len = 32;
+        for (int j = 0; j < len; ++j)
+            fputc(g_hall_of_champions[i].name[j], fp);
+        for (int j = 0; j < 32 - len; ++j)
+            fputc(0x00, fp);
+        fwrite(&(g_hall_of_champions[i].elapsed), sizeof(unsigned long int), 1, fp);
+        fwrite(&(g_hall_of_champions[i].generation), sizeof(int), 1, fp);
+    }
+
+    fclose(fp);
+    return true;
+}
+
+//----------------------------------------------------------------------------
+// Loads the Hall of Champions File
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   true if file load was successful, false otherwise
+//----------------------------------------------------------------------------
+bool load_hall_of_champions() {
+    init_hall_of_champions_entries();
+    FILE *fp = fopen((SaveLoadConsts::hoc_file).c_str(), "rb");
+    if (fp == NULL) {
+        std::cout << "load_hall_of_champions: couldn't open file" << std::endl;
+        return false;
+    }
+
+    char magic[4];
+    fread(magic, sizeof(char), 4, fp);
+    if (magic[0] != 'H' || magic[1] != 'O' || magic[2] != 'C' || magic[3] != 'F') {
+        std::cout << "load_hall_of_champions: bad magic" << std::endl;
+        return false;
+    }
+
+    char name[32];
+    unsigned long int elapsed;
+    int gen;
+    bool has_entry;
+
+    for (int i=0; i < UtilConsts::NUM_HALL_OF_CHAMPIONS_ENTRIES; ++i) {
+        fread(&has_entry, sizeof(bool), 1, fp);
+        fread(name, sizeof(char), 32, fp);
+        fread(&elapsed, sizeof(unsigned long int), 1, fp);
+        fread(&gen, sizeof(int), 1, fp);
+        g_hall_of_champions[i].has_entry = has_entry;
+        g_hall_of_champions[i].name = name;
+        g_hall_of_champions[i].elapsed = elapsed;
+        g_hall_of_champions[i].generation = gen;
+    }
+    
+    fclose(fp);
+    return true;
+}
