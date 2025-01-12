@@ -849,7 +849,9 @@ void change_state(int new_state) {
 			// Clear the text log and place some informative info here
 			display_hall_of_champions_log();
 			break;
-
+		case STATE_EXIT:
+			g_state_flags.exit_game = true;
+			break;
     }
 }
 

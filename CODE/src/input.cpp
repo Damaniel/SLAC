@@ -304,7 +304,7 @@ void process_game_state(int key) {
             }            
             switch (key) {
                 case KEY_ESC:
-            	    g_state_flags.exit_game = true;
+            	    change_state(STATE_EXIT);
                     break;
                 case KEY_LEFT:
                     process_move(std::make_pair(g_player.get_x_pos() - 1, g_player.get_y_pos()));
@@ -424,7 +424,14 @@ void process_game_state(int key) {
 //   Nothing
 //----------------------------------------------------------------------------
 void process_title_screen_state(int key) {
-
+    switch (key) {
+        case KEY_ENTER:
+            change_state(STATE_MAIN_GAME);
+            break;
+        case KEY_ESC:
+            change_state(STATE_EXIT);
+            break;
+    }
 }
 
 //----------------------------------------------------------------------------
@@ -442,15 +449,13 @@ void process_hall_of_champions_state(int key) {
         // The only valid key is Enter, which returns to the title screen
         // Esc is only for testing right now
         case KEY_ESC:
-            g_state_flags.exit_game = true;
+            change_state(STATE_EXIT);
             break;
         case KEY_ENTER:
             // Save the updated Hall of Champions data
             save_hall_of_champions();
             // Go back to the title screen
-            // todo - remove this line
-            g_state_flags.exit_game = true;
-            //change_state(STATE_TITLE_SCREEN);
+            change_state(STATE_TITLE_SCREEN);
             break;
     }
 }
