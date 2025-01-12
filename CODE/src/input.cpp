@@ -355,9 +355,6 @@ void process_game_state(int key) {
                     save_game(SaveLoadConsts::save_file);
                     g_text_log.put_line("-- Your game was saved. --");
                     break;
-                case KEY_H:
-                    change_state(STATE_HALL_OF_CHAMPIONS);
-                    break;
                 case KEY_I:
                     // Reset the cursor position to the top left
                     g_ui_globals.inv_cursor_x = 0;

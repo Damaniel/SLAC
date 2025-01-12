@@ -628,7 +628,7 @@ std::string get_generation_string(int generation) {
 //------------------------------------------------------------------------------
 int load_resources(void) {
 	
-	g_game_data = load_datafile("game.dat");
+	g_game_data = load_datafile("SLAC.DAT");
 	if(g_game_data == NULL) {
 		printf("Unable to open game data file.  Is it in the right place?\n");
 		return 1;
