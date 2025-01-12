@@ -59,7 +59,6 @@ void Player::init(int x, int y) {
 	x_pos = x;
 	y_pos = y;
 	gold = 0;
-	name = "Damaniel";
 	level = 1;
 	exp = 0;
 	residual_action_points = 0;
@@ -68,6 +67,14 @@ void Player::init(int x, int y) {
 	for (int i = 0; i < ItemConsts::NUM_TURN_POTION_EFFECTS; ++i) {
 		potion_effects[i].enabled = false;
 		potion_effects[i].turns_remaining = 0;
+	}
+
+	// Set the player's name
+	if (g_state_flags.new_character_created) {
+		name = g_state_flags.character_name;
+	} 
+	else {
+		name = "NoName";
 	}
 
 	// Null out the item slots

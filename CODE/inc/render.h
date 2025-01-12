@@ -542,6 +542,12 @@ namespace UiConsts {
 	const int TITLE_MENU_ERASED_FOREVER_LINE_2_Y = 188; 
 	const int TITLE_MENU_ERASED_FOREVER_LINE_3_Y = 201;
 
+	// The contents of the 'new legacy' dialog
+	const int TITLE_MENU_NEW_X = 159;
+	const int TITLE_MENU_NEW_LINE_1_Y = 173;
+	const int TITLE_MENU_NEW_LINE_2_Y = 205;
+	const int TITLE_MENU_NEW_NAME_Y = 188;
+
 	// The contents of the main game 'confirm exit' dialog
 	const int CONFIRM_EXIT_DIALOG_X1 = 57;
 	const int CONFIRM_EXIT_DIALOG_Y1 = 76;

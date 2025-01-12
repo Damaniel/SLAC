@@ -1970,6 +1970,18 @@ void Render::render_title_menu(BITMAP *destination) {
 	            	UiConsts::TITLE_MENU_ERASED_FOREVER_X, UiConsts::TITLE_MENU_ERASED_FOREVER_LINE_3_Y,
 					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);					
 	}
+	else if (g_state_flags.cur_substate == TITLE_SUBSTATE_NEW) {
+		render_text(destination, "Enter your name:", 
+	            	UiConsts::TITLE_MENU_NEW_X, UiConsts::TITLE_MENU_NEW_LINE_1_Y,
+					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+		render_text(destination, "Press ENTER when done", 
+	            	UiConsts::TITLE_MENU_NEW_X, UiConsts::TITLE_MENU_NEW_LINE_2_Y,
+					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+		render_text(destination, g_state_flags.character_name, 
+	            	UiConsts::TITLE_MENU_NEW_X, UiConsts::TITLE_MENU_NEW_NAME_Y,
+					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+
+	}
 }
 
 //------------------------------------------------------------------------------

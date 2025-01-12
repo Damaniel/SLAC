@@ -110,6 +110,9 @@ namespace UtilConsts {
 
     // The number of options (new, continue, delete) on the title menu
     const int NUM_TITLE_MENU_ENTRIES = 3;
+
+    // The longest allowed character name
+    const int MAX_CHARACTER_NAME_LENGTH = 10;
 }
 
 // A collection of flags relevant to the game loop.  The game loop will want
@@ -193,7 +196,11 @@ struct StateFlags {
 
     // - menu flags
     int title_menu_index;
+    int new_game_char_text_index;
 
+    // The temporary character name.  Will be copied to player name when ready
+    char character_name[UtilConsts::MAX_CHARACTER_NAME_LENGTH + 1];
+    bool new_character_created;
 };
 
 // A collection of flags related to game progression

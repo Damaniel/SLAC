@@ -449,11 +449,13 @@ void process_title_screen_menu_substate(int key) {
         case KEY_ENTER:
             switch (g_state_flags.title_menu_index) {
                 case 0:
-                    //g_state_flags.cur_substate = TITLE_SUBSTATE_NEW;
-                    // TODO: remove this when we've implemented the New game menu
-                    reset_game_flags();
-                    change_state(STATE_MAIN_GAME);
-                    force_update_screen();
+                    g_state_flags.cur_substate = TITLE_SUBSTATE_NEW;
+                    // Put the character cursor in the correct position, reset the name 
+                    // and clear the character text box
+                    g_state_flags.new_game_char_text_index = 0;
+                    g_state_flags.character_name[0] = '\0';
+                    g_state_flags.update_title_menu = true;
+                    g_state_flags.update_display = true;
                     break;
                 case 1:
                     if(slac_file_exists(SaveLoadConsts::save_file)) {
@@ -484,9 +486,81 @@ void process_title_screen_menu_substate(int key) {
 //   Nothing
 //----------------------------------------------------------------------------
 void process_title_screen_new_substate(int key) {
-    switch (key) {
+    // In this case only, we care about both the scancode and the ASCII value
+    int ascii_val = key & 0xff;
+    int scancode = key >> 8;
+
+    switch (scancode) {
         case KEY_ESC:
             g_state_flags.cur_substate = TITLE_SUBSTATE_MENU;
+            g_state_flags.update_title_menu = true;
+            g_state_flags.update_display = true;
+            break;
+        // These are all of the valid name values (letters, digits, dash, underscore)
+        case KEY_A:
+        case KEY_B:
+        case KEY_C:
+        case KEY_D:
+        case KEY_E:
+        case KEY_F:
+        case KEY_G:
+        case KEY_H:
+        case KEY_I:
+        case KEY_J:
+        case KEY_K:
+        case KEY_L:
+        case KEY_M:
+        case KEY_N:
+        case KEY_O:
+        case KEY_P:
+        case KEY_Q:
+        case KEY_R:
+        case KEY_S:
+        case KEY_T:
+        case KEY_U:
+        case KEY_V:
+        case KEY_W:
+        case KEY_X:
+        case KEY_Y:
+        case KEY_Z:
+        case KEY_0:
+        case KEY_1:
+        case KEY_2:
+        case KEY_3:
+        case KEY_4:
+        case KEY_5:
+        case KEY_6:
+        case KEY_7:
+        case KEY_8:
+        case KEY_9:
+        case KEY_MINUS:
+            if (!(g_state_flags.new_game_char_text_index >= UtilConsts::MAX_CHARACTER_NAME_LENGTH)) {
+                g_state_flags.character_name[g_state_flags.new_game_char_text_index] = ascii_val;
+                g_state_flags.new_game_char_text_index += 1;
+                g_state_flags.character_name[g_state_flags.new_game_char_text_index] = '\0';
+            }
+            g_state_flags.update_title_menu = true;
+            g_state_flags.update_display = true;
+            break;
+        case KEY_BACKSPACE:
+            if (!(g_state_flags.new_game_char_text_index < 0)) {
+                g_state_flags.new_game_char_text_index -= 1;
+                if (g_state_flags.new_game_char_text_index < 0)
+                    g_state_flags.new_game_char_text_index = 0;
+                g_state_flags.character_name[g_state_flags.new_game_char_text_index] = '\0';
+            }
+            g_state_flags.update_title_menu = true;
+            g_state_flags.update_display = true;
+            break;
+        case KEY_ENTER:
+            reset_game_flags();
+            // set the player's name (NoName will be used if you don't set a name)
+            if (strlen(g_state_flags.character_name) > 0) {
+                g_state_flags.character_name[g_state_flags.new_game_char_text_index] = '\0';
+                g_state_flags.new_character_created = true;
+            }
+            change_state(STATE_MAIN_GAME);
+            force_update_screen();
             break;
     }
 }
@@ -532,7 +606,7 @@ void process_title_screen_delete_substate(int key) {
 void process_title_screen_state(int key) {
     switch (g_state_flags.cur_substate) {
         case TITLE_SUBSTATE_DEFAULT:
-            switch (key) {
+            switch (key >> 8) {
                 case KEY_ENTER:
                     g_state_flags.cur_substate = TITLE_SUBSTATE_MENU;
                     g_state_flags.update_title_menu = true;
@@ -544,17 +618,17 @@ void process_title_screen_state(int key) {
             }
             break;
         case TITLE_SUBSTATE_MENU:
-            process_title_screen_menu_substate(key);
+            process_title_screen_menu_substate(key >> 8);
             break;
         case TITLE_SUBSTATE_NEW:
             process_title_screen_new_substate(key);
             break;
         case TITLE_SUBSTATE_DELETE:
-            process_title_screen_delete_substate(key);
+            process_title_screen_delete_substate(key >> 8);
             break;
         case TITLE_SUBSTATE_LEGACY_DELETED:
             // The only valid key here is ENTER, to return to the main menu
-            switch (key) {
+            switch (key >> 8) {
                 case KEY_ENTER:
                     g_state_flags.cur_substate = TITLE_SUBSTATE_MENU;
                     g_state_flags.update_title_menu = true;
@@ -604,20 +678,23 @@ void process_input(void) {
     if (!keypressed())
         return;
 
-	int key = (readkey() >> 8);
-
+	int key = readkey();
+    int scancode = key >> 8;
+    
     switch(g_state_flags.cur_state) {
+        // Title screen gets the raw key value since we need specifically
+        // to extract ASCII values from the key
         case STATE_TITLE_SCREEN:
             process_title_screen_state(key);
             break;
         case STATE_MAIN_GAME:
-            process_game_state(key);
+            process_game_state(scancode);
             break;
         case STATE_DEAD:
-            process_dead_state(key);
+            process_dead_state(scancode);
             break;
         case STATE_HALL_OF_CHAMPIONS:
-            process_hall_of_champions_state(key);
+            process_hall_of_champions_state(scancode);
             break;
     }
 }
