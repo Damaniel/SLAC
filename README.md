@@ -27,7 +27,6 @@ This release currently uses a specific ancient version of DJGPP, g++ (2.95.2) an
 
 The game is technically playable from beginning to end, but is still in active development and many features are missing:
 
-- A hall of fame screen for successful runs
 - Functional shops and museum
 - More balancing.  A lot more balancing.
 
