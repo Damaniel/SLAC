@@ -43,6 +43,7 @@ enum {
     TITLE_SUBSTATE_MENU,           // The menu
     TITLE_SUBSTATE_NEW,            // When 'New Legacy' is selected
     TITLE_SUBSTATE_DELETE,         // When 'Delete Legacy' is selected
+    TITLE_SUBSTATE_CONFIRM_EXIT,
     TITLE_SUBSTATE_LEGACY_DELETED  // When the player confirms they want to delete
 };
 

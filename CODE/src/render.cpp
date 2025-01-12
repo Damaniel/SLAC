@@ -1982,6 +1982,20 @@ void Render::render_title_menu(BITMAP *destination) {
 					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
 
 	}
+	else if (g_state_flags.cur_substate == TITLE_SUBSTATE_CONFIRM_EXIT) {
+		render_text(destination, "Are you sure that you", 
+	            	UiConsts::TITLE_CONFIRM_EXIT_X, UiConsts::TITLE_CONFIRM_EXIT_LINE_1_Y,
+					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+		render_text(destination, "want to exit to DOS?", 
+	            	UiConsts::TITLE_CONFIRM_EXIT_X, UiConsts::TITLE_CONFIRM_EXIT_LINE_2_Y,
+					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+		render_text(destination, "(Y)es", 
+	            	UiConsts::TITLE_CONFIRM_EXIT_YES_TEXT_X, UiConsts::TITLE_CONFIRM_EXIT_OPTION_TEXT_Y,
+					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+		render_text(destination, "(N)o", 
+	            	UiConsts::TITLE_CONFIRM_EXIT_NO_TEXT_X, UiConsts::TITLE_CONFIRM_EXIT_OPTION_TEXT_Y,
+					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);		
+	}
 }
 
 //------------------------------------------------------------------------------

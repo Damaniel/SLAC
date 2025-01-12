@@ -248,6 +248,7 @@ void process_dead_state(int key) {
     // and restart in town
     switch (key) {
         case KEY_ENTER:
+            g_state_flags.recently_died = true;
             change_state(STATE_MAIN_GAME);
             break;
     } 
@@ -280,6 +281,7 @@ void process_game_state(int key) {
             switch (key) {
                 case KEY_ENTER:
                     g_state_flags.cur_substate = GAME_SUBSTATE_DEFAULT;
+                    g_state_flags.update_display = true;
                     change_state(STATE_DEAD);
                     break;
             }
@@ -461,6 +463,7 @@ void process_title_screen_menu_substate(int key) {
                     if(slac_file_exists(SaveLoadConsts::save_file)) {
                         change_state(STATE_MAIN_GAME);
                         load_game(SaveLoadConsts::save_file);
+                        g_text_log.put_line("Welcome back to Secret Legacy of the Ancient caves!");
                         force_update_screen();
                     }
                     break;
@@ -560,6 +563,10 @@ void process_title_screen_new_substate(int key) {
                 g_state_flags.new_character_created = true;
             }
             change_state(STATE_MAIN_GAME);
+            g_text_log.put_line("After many years of adventuring, you've decided to settle down in a town rumored");
+            g_text_log.put_line("to harbor a secret legacy.  Whispers of unspeakable beasts far below the town");
+            g_text_log.put_line("reach your ears.  One day, you decide that now is the time to discover this secret");
+            g_text_log.put_line("for yourself, no matter how long it takes you (or your heirs)!");
             force_update_screen();
             break;
     }
@@ -613,7 +620,9 @@ void process_title_screen_state(int key) {
                     g_state_flags.update_display = true;
                     break;
                 case KEY_ESC:
-                    change_state(STATE_EXIT);
+                    g_state_flags.cur_substate = TITLE_SUBSTATE_CONFIRM_EXIT;
+                    g_state_flags.update_title_menu = true;
+                    g_state_flags.update_display = true;
                     break;
             }
             break;
@@ -626,6 +635,18 @@ void process_title_screen_state(int key) {
         case TITLE_SUBSTATE_DELETE:
             process_title_screen_delete_substate(key >> 8);
             break;
+        case TITLE_SUBSTATE_CONFIRM_EXIT:
+            switch (key >> 8) {
+                case KEY_Y:
+                    change_state(STATE_EXIT);
+                    break;
+                case KEY_N:
+                case KEY_ESC:
+                    g_state_flags.cur_substate = TITLE_SUBSTATE_DEFAULT;
+                    g_state_flags.update_title_background = true;
+                    g_state_flags.update_display = true;
+                    break;
+            }
         case TITLE_SUBSTATE_LEGACY_DELETED:
             // The only valid key here is ENTER, to return to the main menu
             switch (key >> 8) {

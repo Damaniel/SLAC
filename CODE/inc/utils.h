@@ -201,6 +201,8 @@ struct StateFlags {
     // The temporary character name.  Will be copied to player name when ready
     char character_name[UtilConsts::MAX_CHARACTER_NAME_LENGTH + 1];
     bool new_character_created;
+    bool recently_died;
+    
 };
 
 // A collection of flags related to game progression

@@ -548,6 +548,14 @@ namespace UiConsts {
 	const int TITLE_MENU_NEW_LINE_2_Y = 205;
 	const int TITLE_MENU_NEW_NAME_Y = 188;
 
+	// The contents of the main menu 'exit to DOS' dialog
+	const int TITLE_CONFIRM_EXIT_X = 159;
+	const int TITLE_CONFIRM_EXIT_LINE_1_Y = 174;
+	const int TITLE_CONFIRM_EXIT_LINE_2_Y = 185;
+	const int TITLE_CONFIRM_EXIT_YES_TEXT_X = 137;
+	const int TITLE_CONFIRM_EXIT_NO_TEXT_X = 182;
+	const int TITLE_CONFIRM_EXIT_OPTION_TEXT_Y = 202;
+
 	// The contents of the main game 'confirm exit' dialog
 	const int CONFIRM_EXIT_DIALOG_X1 = 57;
 	const int CONFIRM_EXIT_DIALOG_Y1 = 76;
