@@ -351,6 +351,9 @@ void process_game_state(int key) {
 	        	        g_state_flags.update_display = true;
                     }
                     break;
+                case KEY_H:
+                    // magic key for testing stuff
+                    break;
                 case KEY_S:
                     save_game(SaveLoadConsts::save_file);
                     g_text_log.put_line("-- Your game was saved. --");
