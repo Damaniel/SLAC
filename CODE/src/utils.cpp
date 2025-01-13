@@ -367,7 +367,8 @@ void update_main_game_display(void) {
 	}
 
 	if(g_state_flags.update_status_elapsed_time == true) {
-		g_render.render_elapsed_time(g_back_buffer);
+		if (!g_state_flags.text_log_extended)
+			g_render.render_elapsed_time(g_back_buffer);
 		g_state_flags.update_status_elapsed_time = false;
 	}
 
