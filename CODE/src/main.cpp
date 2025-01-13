@@ -121,6 +121,9 @@ void init_game() {
 	// Reset the global game flags
 	reset_game_flags();
 
+	// Populate the museum artifact map
+	init_museum_artifacts();
+
 	// Null out the inventory
 	g_inventory = NULL;
 

@@ -1432,6 +1432,7 @@ void Render::render_world_at_player(BITMAP *destination, DungeonFloor *f, int ma
 //----------------------------------------------------------------------------------
 void Render::render_town_at(BITMAP *destination, int x, int y) {
 	int num_y_tiles;
+	std::map<std::pair<int, int>, int>::iterator it;
 
 	if (g_state_flags.text_log_extended) {
 		num_y_tiles = UiConsts::PLAY_AREA_TILE_HEIGHT - UiConsts::TEXT_AREA_EXT_MAZE_ROWS_OBSCURED;
@@ -1481,6 +1482,22 @@ void Render::render_town_at(BITMAP *destination, int x, int y) {
  		 		 	screen_y * UiConsts::TILE_PIXEL_HEIGHT,
 			 		UiConsts::TILE_PIXEL_WIDTH,
 			 		UiConsts::TILE_PIXEL_HEIGHT);
+
+				if (g_state_flags.in_museum) {
+					it = g_museum_artifacts.find(std::make_pair(tile_to_render_x, tile_to_render_y));
+					if (it != g_museum_artifacts.end() && g_active_artifacts[it->second] > 0) {
+						int it_x = g_artifact_ids[it->second].gid % UiConsts::ITEM_TILE_ENTRY_WIDTH;
+						int it_y = g_artifact_ids[it->second].gid / UiConsts::ITEM_TILE_ENTRY_WIDTH;
+						masked_blit((BITMAP *)g_game_data[DAMRL_ITEMS].dat,
+		     						 destination,
+	    	 						 it_x * UiConsts::TILE_PIXEL_WIDTH,
+		 							 it_y * UiConsts::TILE_PIXEL_HEIGHT,
+		 							 screen_x * UiConsts::TILE_PIXEL_WIDTH,
+ 		 		 					 screen_y * UiConsts::TILE_PIXEL_HEIGHT - 1,  // Push it up just a bit
+			 						 UiConsts::TILE_PIXEL_WIDTH,
+			 						 UiConsts::TILE_PIXEL_HEIGHT);
+					}
+				}
 			}
 			else {
 				// Draw darkness

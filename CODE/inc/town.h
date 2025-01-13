@@ -32,6 +32,11 @@ typedef struct {
     std::string text;
 } NPCInfoType;
 
+typedef struct {
+    short x;
+    short y;
+} ArtifactPos;
+
 namespace TownConsts {
     // How many NPCs and signs that say something exist in town
     const int NUM_NPC_TEXTS = 28;
@@ -116,10 +121,14 @@ namespace TownConsts {
     const int UNLOCKED_GATE_TILE = 40;
 }
 
+extern const ArtifactPos g_museum_artifact_list[];
+extern std::map<std::pair<int, int>, int> g_museum_artifacts;
+
 void check_and_process_npc_here(int x, int y);
 void check_and_process_town_entrances(int x, int y);
 void check_for_active_area(int x, int y);
 void enter_dungeon(int floor);
 void unlock_dungeon(int dungeon);
+void init_museum_artifacts();
 
 #endif

@@ -2048,6 +2048,16 @@ void process_shop_move(std::pair<int, int> proposed_location) {
 		g_state_flags.update_display = true;
 	}
 	else {
+		if (g_state_flags.in_museum) {
+			// Check to see if the spot is the location of an artifact.
+			// If so, describe it in the log if there's more than one
+			std::map<std::pair<int, int>, int>::iterator it;
+			it = g_museum_artifacts.find(std::make_pair(x, y));
+			if (it != g_museum_artifacts.end()) {
+				describe_artifact(it->second);
+			}
+		}
+
 		//  - Check to see if the player is trying to talk to the shopkeeper
 		// in one of the shops.  If so, start the process of dealing with
 		// shopping
@@ -2484,6 +2494,23 @@ void mark_boss_as_defeated(int id) {
 			g_state_flags.update_text_dialog = true;
 			g_state_flags.update_display = true;
 		}
+	}
+}
+
+void describe_artifact(int artifact_id) {
+	char line[80];
+	if(g_active_artifacts[artifact_id] > 0) {
+		g_text_log.put_line("==============================================================================");
+		sprintf(line, "- %s -", g_artifact_ids[artifact_id].name.c_str());
+		g_text_log.put_line(line);
+		sprintf(line, "You have %d of these.  Each provides %s.", g_active_artifacts[artifact_id], g_artifact_ids[artifact_id].description.c_str());
+		g_text_log.put_line(line);
+		g_text_log.put_line("==============================================================================");
+		g_state_flags.update_display = true;
+	}
+	else {
+		g_text_log.put_line("Whatever this display is supposed to hold, you haven't found one yet.");
+		g_state_flags.update_display = true;
 	}
 }
 

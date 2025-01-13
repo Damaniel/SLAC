@@ -244,6 +244,7 @@ void add_new_enemy_to_area();
 
 // Text log functions
 void add_items_at_player_to_log(void);
+void describe_artifact(int artifact_id);
 
 // State functions
 void initialize_main_game_state(void);
