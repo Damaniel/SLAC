@@ -426,6 +426,7 @@ void Player::assign_base_stats_to_actual(void) {
 //   Nothing.
 //------------------------------------------------------------------------------
 void Player::apply_stats_to_actual(Stats *fixed, Stats *multiplicative) {
+
 	// Additive first
 	actual.acc += fixed->acc;
 	actual.apt += fixed->apt;
@@ -491,6 +492,7 @@ void Player::apply_stats_to_actual(Stats *fixed, Stats *multiplicative) {
 		actual.i_def = actual.max_i_def;
 	if (actual.l_def >= actual.max_l_def)
 		actual.l_def = actual.max_l_def;
+
 }
 
 //------------------------------------------------------------------------------
@@ -551,9 +553,9 @@ void Player::init_temp_stats(Stats *f, Stats *m) {
 	m->spd = 1.0;
 	m->str = 1.0;
 	m->gold_drop = 1.0;
-	f->max_f_def = 1.0;
-	f->max_i_def = 1.0;
-	f->max_l_def = 1.0;
+	m->max_f_def = 1.0;
+	m->max_i_def = 1.0;
+	m->max_l_def = 1.0;
 }
 
 //------------------------------------------------------------------------------
@@ -1006,7 +1008,6 @@ void Player::apply_artifact_mods(Stats *fixed, Stats *multiplicative) {
     // Fountain of Youth
     effect_quantity = g_active_artifacts[69] / g_artifact_ids[69].pieces;
     fixed->max_hp += effect_quantity * 100;
-
 }
 
 //------------------------------------------------------------------------------
