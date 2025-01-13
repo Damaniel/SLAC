@@ -77,6 +77,10 @@ bool finish_other_load_tasks(void) {
         g_state_flags.in_weapon_shop = false;
     }
 
+    // ensure that the dungeons are unlocked if they should be
+    unlock_dungeon(MARBLE_HALLS, true);
+    unlock_dungeon(CRYSTAL_DEPTHS, true);
+
     // Ensure stats are up to date
     g_player.recalculate_actual_stats();
     // redraw everything

@@ -2081,7 +2081,7 @@ void check_and_process_gates(int x, int y) {
 		if (g_game_flags.can_enter_marble_halls) {
 			if (!g_game_flags.has_unlocked_marble_halls) {
 				g_text_log.put_line("You place the marble key in the lock.  The gate disappears.");
-				unlock_dungeon(MARBLE_HALLS);
+				unlock_dungeon(MARBLE_HALLS, false);
 				log = true;
 			}
 		}
@@ -2095,7 +2095,7 @@ void check_and_process_gates(int x, int y) {
 		if (g_game_flags.can_enter_crystal_depths) {
 			if (!g_game_flags.has_unlocked_crystal_depths) {
 				g_text_log.put_line("You place the crystal key in the lock.  The gate disappears.");
-				unlock_dungeon(CRYSTAL_DEPTHS);
+				unlock_dungeon(CRYSTAL_DEPTHS, false);
 				log = true;
 			}
 		}

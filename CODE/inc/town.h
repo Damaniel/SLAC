@@ -128,7 +128,7 @@ void check_and_process_npc_here(int x, int y);
 void check_and_process_town_entrances(int x, int y);
 void check_for_active_area(int x, int y);
 void enter_dungeon(int floor);
-void unlock_dungeon(int dungeon);
+void unlock_dungeon(int dungeon, bool loading_save);
 void init_museum_artifacts();
 
 #endif

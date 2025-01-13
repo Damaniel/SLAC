@@ -112,14 +112,19 @@ void enter_dungeon(int floor) {
 // Returns:
 //   Nothing
 //----------------------------------------------------------------------------
-void unlock_dungeon(int dungeon) {
-	if (dungeon == MARBLE_HALLS && g_game_flags.can_enter_marble_halls && !g_game_flags.has_unlocked_marble_halls) {
+void unlock_dungeon(int dungeon, bool loading_save) {
+	// A dungeon should unlock if either:
+	//   - the dungeon exists, the player has unlocked the ability to open it,
+	//     and the player is attempting to open it
+	//   - the dungeon exists, the player has unlocked the ability to open it,
+	//     the player has already opened it in the past, and their save game is being loaded
+	if (dungeon == MARBLE_HALLS && g_game_flags.can_enter_marble_halls && ((loading_save && g_game_flags.has_unlocked_marble_halls) || (!loading_save && !g_game_flags.has_unlocked_marble_halls))) {
 		g_town_tile_data[TownConsts::MARBLE_HALLS_GATE_Y * TownConsts::TOWN_SIZE + TownConsts::MARBLE_HALLS_GATE_X] = TownConsts::UNLOCKED_GATE_TILE;
 		g_town_movability[TownConsts::MARBLE_HALLS_GATE_Y * TownConsts::TOWN_SIZE + TownConsts::MARBLE_HALLS_GATE_X] = 1;
 		g_game_flags.has_unlocked_marble_halls = true;
 	}
 
-	if (dungeon == CRYSTAL_DEPTHS && g_game_flags.can_enter_crystal_depths && !g_game_flags.has_unlocked_crystal_depths) {
+	if (dungeon == CRYSTAL_DEPTHS && g_game_flags.can_enter_crystal_depths && ((loading_save && g_game_flags.has_unlocked_crystal_depths) || (!loading_save && !g_game_flags.has_unlocked_crystal_depths))) {
 		g_town_tile_data[TownConsts::CRYSTAL_DEPTHS_GATE_Y * TownConsts::TOWN_SIZE + TownConsts::CRYSTAL_DEPTHS_GATE_X] = TownConsts::UNLOCKED_GATE_TILE;
 		g_town_movability[TownConsts::CRYSTAL_DEPTHS_GATE_Y * TownConsts::TOWN_SIZE + TownConsts::CRYSTAL_DEPTHS_GATE_X] = 1;
 		g_game_flags.has_unlocked_crystal_depths = true;
