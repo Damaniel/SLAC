@@ -2495,9 +2495,40 @@ void mark_boss_as_defeated(int id) {
 	}
 }
 
+//----------------------------------------------------------------------------
+// Calculates the number of 'complete' artifacts of a type the player has
+//
+// Arguments:
+//   id - the enemy ID to check
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+int get_complete_artifact_quantity(int artifact_id) {
+	// For single piece artifacts, just return the quantity
+	if (g_artifact_ids[artifact_id].type_id == 0) {
+			return g_active_artifacts[artifact_id];
+	}
+	// For multi-piece artifacts, return the number of full sets (total / pieces per artifact)
+	else {
+		return (g_active_artifacts[artifact_id] / g_artifact_ids[artifact_id].pieces);
+	}
+}
+
+//----------------------------------------------------------------------------
+// Writes information about the artifact to the console
+//
+// Arguments:
+//   id - the enemy ID to check
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
 void describe_artifact(int artifact_id) {
 	char line[80];
-	if(g_active_artifacts[artifact_id] > 0) {
+	int quantity = get_complete_artifact_quantity(artifact_id);
+
+	if(quantity > 0) {
 		g_text_log.put_line("==============================================================================");
 		sprintf(line, "- %s -", g_artifact_ids[artifact_id].name.c_str());
 		g_text_log.put_line(line);

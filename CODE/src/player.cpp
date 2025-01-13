@@ -719,6 +719,7 @@ void Player::level_up() {
 	g_text_log.put_line(text);
 	g_state_flags.update_status_dialog = true;
 	g_state_flags.update_status_hp_exp = true;
+	g_state_flags.update_status_elapsed_time = true;
 	g_state_flags.update_display = true;
 }
 
