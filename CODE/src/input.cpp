@@ -559,11 +559,15 @@ void process_title_screen_new_substate(int key) {
             break;
         case KEY_ENTER:
             reset_game_flags();
-            // set the player's name (NoName will be used if you don't set a name)
+            // Set the player's name (or NoName if blank)
             if (strlen(g_state_flags.character_name) > 0) {
                 g_state_flags.character_name[g_state_flags.new_game_char_text_index] = '\0';
-                g_state_flags.new_character_created = true;
             }
+            else {
+                strncpy(g_state_flags.character_name, "NoName", 6);
+                g_state_flags.character_name[6] = '\0';
+            }
+            g_player.name = g_state_flags.character_name;
             change_state(STATE_MAIN_GAME);
             g_text_log.put_line("After many years of adventuring, you've decided to settle down in a town rumored");
             g_text_log.put_line("to harbor a secret legacy.  Whispers of unspeakable beasts far below the town");

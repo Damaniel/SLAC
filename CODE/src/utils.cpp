@@ -821,9 +821,6 @@ void initialize_main_game_state(void) {
 	// clear the text log
 	g_text_log.clear();
 
-	// Set the elapsed time to zero
-	g_game_flags.elapsed_time = 0;
-
 	if (g_state_flags.recently_died) {
 		g_text_log.put_line("You've decided that today is the day you'll continue where your dad left off.");
 		g_text_log.put_line("You head out to continue your ongoing efforts to discover the town's secrets.");

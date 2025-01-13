@@ -202,7 +202,6 @@ struct StateFlags {
     char character_name[UtilConsts::MAX_CHARACTER_NAME_LENGTH + 1];
 
     // Flags related to state changes used by menus
-    bool new_character_created;
     bool recently_died;
     bool save_loaded;
 
