@@ -485,6 +485,7 @@ void use_potion_action(int id) {
                 g_text_log.put_line("Your poison has lifted.");
                 g_state_flags.update_status_dialog = true;
                 g_state_flags.update_status_hp_exp = true;
+                g_state_flags.update_status_elapsed_time = true;
                 g_state_flags.update_display = true;
             }
             else {
