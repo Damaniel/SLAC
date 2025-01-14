@@ -219,6 +219,8 @@ struct GameFlags {
     bool has_finished_game;
     unsigned int elapsed_time;
     int generation;           // The current generation of player
+    int max_ilevel;           // The maximum ilevel (based on dungeon/level) that
+                              // this generation of player has attained
 };
 
 // Update functions

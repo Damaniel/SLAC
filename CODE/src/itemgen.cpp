@@ -63,6 +63,43 @@ Item *ItemGenerator::generate(int ilevel) {
 }
 
 //----------------------------------------------------------------------------
+// Generates an item based on rules for creating items to go into the
+// equipment shop.  Ilevel ranges, adjusted prefix, suffix and curse rates,
+// and identification status are all non-standard compared to the 'usual'
+// item generator, and are further adjusted based on whether the item is
+// a 'mystery' item or not.
+//
+// Arguments:
+//    None
+//
+// Returns:
+//   A pointer to a randomly generated Item.  The memory for this will need
+//   to be freed later since it's heap allocated.
+//----------------------------------------------------------------------------
+Item *ItemGenerator::shop_generate() {
+    Item *i;
+
+    // Determine an ilevel range to roll.  It should be the player's maximum
+    // dungeon ilevel, +/- 20
+
+    // Generate either a weapon or an armor.  Weapons are slightly more likely
+    // on average than an arbitrary piece of armor.  Pick a number from 0-9 -
+    // 0-7 generate armor, 8 or 9 generate a weapon
+
+    // With 1 in 4 odds, flag an item as 'mystery'
+
+    // If mystery, roll prefixes/suffixes/curse with higher odds
+
+    // If standard, roll prefixes/suffixes/curses with standard odds
+
+    // If standard, mark the item as identified.  If mystery, mark as
+    // unidentified
+
+    // return the finished item
+    return i;
+}
+
+//----------------------------------------------------------------------------
 // Generates an item of a particular item class, weighted by base type and mod
 // types.
 //

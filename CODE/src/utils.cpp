@@ -726,6 +726,13 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 
 	d.maze = new Maze(d.width, d.height, d.ilevel);
 
+	// If this ilevel is higher than one previously attained by this generation
+	// of character, then mark it as such.  This is used to determine what
+	// will show up in shops.
+	if (d.ilevel > g_game_flags.max_ilevel) {
+		g_game_flags.max_ilevel = d.ilevel;
+	}
+
 	// If we're at the bottom, direct the maze generator to omit down stairs
 	if(d.depth >= d.max_depth)
 		d.maze->set_stair_gen_behavior(MazeConsts::GENERATE_NO_DOWN_STAIRS);
@@ -2562,6 +2569,7 @@ void reset_game_flags() {
 	g_game_flags.has_received_orb = false;
 	g_game_flags.elapsed_time = 0;
 	g_game_flags.orb_countdown_timer = 0;
+	g_game_flags.max_ilevel = 0;
 	for (int i = 0; i < UtilConsts::NUM_BOSSES; ++i)
 		g_game_flags.has_defeated_bosses[i] = false;
 }

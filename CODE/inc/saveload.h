@@ -36,10 +36,10 @@ namespace SaveLoadConsts {
     const int ARTIFACT_DATA_OFFSET = 14285;
     const int DUNGEON_DATA_OFFSET = 14569;
     const int GAME_FLAGS_OFFSET = 14597;
-    const int POTION_SCRAMBLINGS_OFFSET = 14631;
-    const int SCROLL_SCRAMBLINGS_OFFSET = 14675;
-    const int ID_POTIONS_OFFSET = 14723;
-    const int ID_SCROLLS_OFFSET = 14737;
+    const int POTION_SCRAMBLINGS_OFFSET = 14635;
+    const int SCROLL_SCRAMBLINGS_OFFSET = 14679;
+    const int ID_POTIONS_OFFSET = 14727;
+    const int ID_SCROLLS_OFFSET = 14741;
 
     const int INVENTORY_ITEM_SIZE = 289;
 

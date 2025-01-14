@@ -146,6 +146,8 @@ namespace ItemConsts {
     const int FIRST_SCROLL_GID = 140;
     const int LAST_SCROLL_GID = 150;
     const int NUM_SCROLLS = (LAST_SCROLL_GID - FIRST_SCROLL_GID) + 1;
+
+
 }
 
 // A class that generates instances of items according to weighting rules.  All
@@ -159,6 +161,7 @@ public:
     static Item *generate();
     static Item *generate(int ilevel);
     static Item *generate(int item_type, int ilevel);
+    static Item *shop_generate();
 };
 
 #endif
