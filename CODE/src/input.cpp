@@ -353,6 +353,10 @@ void process_game_state(int key) {
                     break;
                 case KEY_H:
                     // magic key for testing stuff
+	                g_text_log.put_line("==============================================================================");
+                    g_text_log.put_line("Welcome to my shop!  Press 'B' or 'S' to switch between the buy and sell windows.");
+                    g_text_log.put_line("Press Enter to buy or sell the thing under the cursor.");
+	                g_text_log.put_line("==============================================================================");
                     break;
                 case KEY_S:
                     save_game(SaveLoadConsts::save_file);
