@@ -157,10 +157,13 @@ class ItemGenerator {
 private:
     static void apply_affix(Item *i, int affix_type, int ilevel);
     static void apply_curse(Item *i, int ilevel);
+    static int generate_base_type(int item_type);
+    static int get_base_ilevel(int item_type, int item_idx);
 public:
     static Item *generate();
     static Item *generate(int ilevel);
     static Item *generate(int item_type, int ilevel);
+    static Item *generate(int item_type, int min_ilevel, int max_ilevel);
     static Item *shop_generate();
 };
 
