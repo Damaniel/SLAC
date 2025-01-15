@@ -113,6 +113,11 @@ namespace UtilConsts {
 
     // The longest allowed character name
     const int MAX_CHARACTER_NAME_LENGTH = 10;
+
+    // How long after a shop inventory is refreshed until it gets
+    // deleted
+    // TODO: make this number larger (1000) after testing
+    const int SHOP_RESET_TURNS = 100;
 }
 
 // A collection of flags relevant to the game loop.  The game loop will want
@@ -197,6 +202,12 @@ struct StateFlags {
     // - menu flags
     int title_menu_index;
     int new_game_char_text_index;
+
+    // - shop flags
+    bool weapon_shop_in_buy_mode;   // Is the buy or sell inventory displayed?
+    bool item_shop_in_buy_mode;
+    int  turns_until_weapon_shop_reset; // How many turns are left until the shops delete
+    int  turns_until_item_shop_reset;   // their inventories
 
     // The temporary character name.  Will be copied to player name when ready
     char character_name[UtilConsts::MAX_CHARACTER_NAME_LENGTH + 1];
@@ -286,6 +297,7 @@ void process_dungeon_move(std::pair<int, int> proposed_location);
 void check_and_process_gates(int x, int y);
 void check_for_active_area(int x, int y);
 void process_orb_logic(void);
+void process_shop_reset_logic(void);
 void check_and_process_endgame(int x, int y);
 
 #endif

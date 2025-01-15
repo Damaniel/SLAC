@@ -118,6 +118,14 @@ namespace TownConsts {
     const int END_GAME_LOC_X = 2;
     const int END_GAME_LOC_Y = 40;
 
+    // The location of the equipment shop NPC
+    const int WEAPON_SHOP_NPC_X = 4;
+    const int WEAPON_SHOP_NPC_Y = 2;
+
+    // The location of the item shop NPC
+    const int ITEM_SHOP_NPC_X = 4;
+    const int ITEM_SHOP_NPC_Y = 16;
+
     // The tile id to draw when a gate is open
     const int UNLOCKED_GATE_TILE = 40;
 }
@@ -131,6 +139,7 @@ void check_for_active_area(int x, int y);
 void enter_dungeon(int floor);
 void unlock_dungeon(int dungeon, bool loading_save);
 void init_museum_artifacts();
+void populate_shop_inventory();
 
 int get_item_price(Item *i);
 int get_item_sell_price(Item *i);

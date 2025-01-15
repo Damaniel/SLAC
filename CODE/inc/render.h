@@ -730,6 +730,12 @@ typedef struct {
     int prev_inv_cursor_x;
     int prev_inv_cursor_y;
 
+	// The location of the inventory cursor in the shop the player is currently in
+	int shop_inv_cursor_x;
+	int shop_inv_cursor_y;
+	int prev_shop_inv_cursor_x;
+	int prev_shop_inv_cursor_y;
+
 	// Used to center the maze inside the map region
 	int map_maze_xoffset;
 	int map_maze_yoffset;

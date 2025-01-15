@@ -234,6 +234,50 @@ void process_stats_substate(int key) {
 }
 
 //----------------------------------------------------------------------------
+// Handles all input for the store substate (that is, when the stats are
+// on screen)
+//
+// Arguments:
+//   key - the key that was pressed
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void process_store_substate(int key) {
+    switch(key) {
+        case KEY_ESC:
+            g_state_flags.cur_substate = GAME_SUBSTATE_DEFAULT;
+            break;
+        case KEY_UP:
+            break;
+        case KEY_DOWN:
+            break;
+        case KEY_LEFT:
+            break;
+        case KEY_RIGHT:
+            break;
+        case KEY_B:
+            if (g_state_flags.in_weapon_shop) {
+                g_state_flags.weapon_shop_in_buy_mode = true;
+            }
+            else {
+                g_state_flags.item_shop_in_buy_mode = true;
+            }
+             break;
+        case KEY_S:
+            if (g_state_flags.in_weapon_shop) {
+                g_state_flags.weapon_shop_in_buy_mode = false;
+            }
+            else {
+                g_state_flags.item_shop_in_buy_mode = false;
+            }
+            break;
+        case KEY_ENTER:
+            break;
+    }
+}
+
+//----------------------------------------------------------------------------
 // Handles all input for the dead state
 //
 // Arguments:
@@ -265,6 +309,8 @@ void process_dead_state(int key) {
 //----------------------------------------------------------------------------
 void process_game_state(int key) {
     switch (g_state_flags.cur_substate) {
+        case GAME_SUBSTATE_STORE:
+            process_store_substate(key);
         case GAME_SUBSTATE_MAP:
             process_map_substate(key);
             break;

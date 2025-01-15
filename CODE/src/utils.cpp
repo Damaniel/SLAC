@@ -685,6 +685,7 @@ void unload_resources(void) {
 void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 	if (d.maze != NULL) {
 		delete d.maze;
+		d.maze = NULL;
 	}
 
 	// Clear the enemies and items lists
@@ -815,12 +816,16 @@ void initialize_main_game_state(void) {
 	// Delete any existing inventory and create a new one
 	if (g_inventory != NULL) {
 		delete g_inventory;
+		g_inventory = NULL;
 	}
+	g_inventory = new Inventory();
 
 	// Increment the current player generation
 	g_game_flags.generation += 1;
 
-	g_inventory = new Inventory();
+	// Reset the item shop reset counters
+	g_state_flags.turns_until_weapon_shop_reset = 0;
+	g_state_flags.turns_until_item_shop_reset = 0;
 
 	// Clear the player's stats
 	g_player.init(0, 0);
@@ -1894,10 +1899,53 @@ void process_move(std::pair<int, int> proposed_location) {
 	// subtract a turn from any active potions
 	g_player.decrement_potion_turn_count();
 
+	// Check to see if any existing shop inventory should be deleted
+	process_shop_reset_logic();
+
 	// If the player has the soul orb, decrement the counter.  If it reaches zero,
 	// inform the player and reset the boss
 	if (g_game_flags.has_received_orb)
 		process_orb_logic();
+}
+
+//----------------------------------------------------------------------------
+// Handles the behavior of the shops' inventory resets
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void process_shop_reset_logic(void) {
+	// If the counter is greater than zero, decrement it.
+	// If the counter is then below zero, delete any existing inventory
+	if (g_state_flags.turns_until_weapon_shop_reset > 0) {
+		g_state_flags.turns_until_weapon_shop_reset -= 1;
+		// std::cout << "equipment shop turns until reset now = " << g_state_flags.turns_until_weapon_shop_reset << std::endl;
+		if (g_state_flags.turns_until_weapon_shop_reset <= 0) {
+			// std::cout << "process_shop_reset_logic: deleting weapon shop inventory" << std::endl;
+			if (g_weapon_shop_inventory != NULL) {
+				// std::cout << "process_shop_reset_logic: calling delete" << std::endl;
+				delete g_weapon_shop_inventory;
+				g_weapon_shop_inventory = NULL;
+			}
+		}
+	}
+
+	if (g_state_flags.turns_until_item_shop_reset > 0) {
+		g_state_flags.turns_until_item_shop_reset -= 1;
+		// std::cout << "item shop turns until reset now = " << g_state_flags.turns_until_item_shop_reset << std::endl;
+		if (g_state_flags.turns_until_item_shop_reset <= 0) {
+			// std::cout << "process_shop_reset_logic: deleting item shop inventory" << std::endl;
+			if (g_item_shop_inventory != NULL) {
+				// std::cout << "process_shop_reset_logic: calling delete" << std::endl;
+				delete g_item_shop_inventory;
+				g_item_shop_inventory = NULL;
+			}
+		}
+	}
+
 }
 
 //----------------------------------------------------------------------------
@@ -2066,9 +2114,32 @@ void process_shop_move(std::pair<int, int> proposed_location) {
 			}
 		}
 
-		//  - Check to see if the player is trying to talk to the shopkeeper
-		// in one of the shops.  If so, start the process of dealing with
-		// shopping
+		if (g_state_flags.in_weapon_shop && x == TownConsts::WEAPON_SHOP_NPC_X && y == TownConsts::WEAPON_SHOP_NPC_Y) {
+			g_state_flags.cur_substate = GAME_SUBSTATE_STORE;
+			g_state_flags.weapon_shop_in_buy_mode = true;
+			if (g_state_flags.turns_until_weapon_shop_reset <= 0) {
+				g_state_flags.turns_until_weapon_shop_reset = UtilConsts::SHOP_RESET_TURNS;
+				// std::cout << "equipment shop initial turns until reset = " << g_state_flags.turns_until_weapon_shop_reset << std::endl;
+				// Generate and populate a new shop inventory
+				g_weapon_shop_inventory = new Inventory();
+				populate_shop_inventory();
+			}
+			g_text_log.put_line("You're in the weapon shop now.");
+		}
+
+		if (g_state_flags.in_item_shop && x == TownConsts::ITEM_SHOP_NPC_X && y == TownConsts::ITEM_SHOP_NPC_Y) {
+			g_state_flags.cur_substate = GAME_SUBSTATE_STORE;
+			g_state_flags.item_shop_in_buy_mode = true;
+			if (g_state_flags.turns_until_item_shop_reset <=0) {
+				g_state_flags.turns_until_item_shop_reset = UtilConsts::SHOP_RESET_TURNS;
+				// std::cout << "item shop initial turns until reset = " << g_state_flags.turns_until_weapon_shop_reset << std::endl;
+				// Generate and populate a new shop inventory
+				g_item_shop_inventory = new Inventory();
+				populate_shop_inventory();
+			}
+
+			g_text_log.put_line("You're in the item shop now.");
+		}
 	}
 }
 

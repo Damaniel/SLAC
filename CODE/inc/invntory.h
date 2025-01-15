@@ -284,6 +284,8 @@ public:
 };
 
 extern Inventory *g_inventory;
+extern Inventory *g_weapon_shop_inventory;
+extern Inventory *g_item_shop_inventory;
 
 // The list of total active artifacts (which are applied to the player's stats)
 // and collected artifacts (which will also be applied to the next player's stats)

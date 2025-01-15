@@ -25,6 +25,8 @@
 #include "globals.h"
 
 Inventory *g_inventory;
+Inventory *g_weapon_shop_inventory;
+Inventory *g_item_shop_inventory;
 std::vector<int> g_scrambled_potion_icons;
 std::vector<int> g_scrambled_scroll_icons;
 std::vector<bool> g_identified_potions;
@@ -217,7 +219,16 @@ void Inventory::delete_item_in_slot(int slot) {
 void Inventory::dump_inventory(void) {
     for (int i = 0; i < InventoryConsts::INVENTORY_SIZE; ++i) {
         if (inv[i] != NULL) {
-            std::cout << "Item " << (i+1) << ": " << inv[i]->get_full_name() << std::endl;
+            std::cout << "Item " << (i+1) << ": " << inv[i]->get_full_name();
+            if (inv[i]->item_class == ItemConsts::SCROLL_CLASS ||
+                inv[i]->item_class == ItemConsts::POTION_CLASS ||
+                inv[i]->item_class == ItemConsts::ARTIFACT_CLASS) {
+                    std::cout << ", quantity = " << inv[i]->quantity << std::endl;
+            }
+            else {
+                std::cout << std::endl;
+            }
+
         }
         else {
             std::cout << "Item " << (i+1) << ": <empty>" << std::endl;

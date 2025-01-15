@@ -169,6 +169,15 @@ void shut_down_game() {
 	if (g_inventory != NULL)
 		delete g_inventory;
 
+	// If any existing equipment or item shop inventories exist, delete them
+	if (g_weapon_shop_inventory != NULL) {
+		delete g_weapon_shop_inventory;
+	}
+
+	if (g_item_shop_inventory != NULL) {
+		delete g_item_shop_inventory;
+	}
+
 	// Delete the maze
 	if (g_dungeon.maze != NULL)
 		delete g_dungeon.maze;

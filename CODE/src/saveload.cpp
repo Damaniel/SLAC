@@ -246,6 +246,7 @@ bool process_inventory_data(FILE *f) {
     // start by clearing the existing inventory
     if (g_inventory != NULL)
         delete g_inventory;
+        g_inventory = NULL;
     g_inventory = new Inventory();
 
     // For each inventory item:

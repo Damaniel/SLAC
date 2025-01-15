@@ -136,6 +136,62 @@ void unlock_dungeon(int dungeon, bool loading_save) {
 }
 
 //----------------------------------------------------------------------------
+// Creates a set of items for sale in whichever shop the player is in
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void populate_shop_inventory() {
+	if (g_state_flags.in_item_shop) {
+		int item_quantity = rand() % 12 + 24;
+		Item *i;
+		for (int idx = 0; idx < item_quantity; ++idx) {
+			// Pick a scroll or potion with equal chance
+			if (rand() % 2 == 0) {
+				i = ItemGenerator::generate(ItemConsts::POTION_CLASS, g_game_flags.max_ilevel);
+			}
+			else {
+				i = ItemGenerator::generate(ItemConsts::SCROLL_CLASS, g_game_flags.max_ilevel);
+			}
+			i->is_identified = true;
+
+			// Determine if there's already one of these in the inventory
+            int stackable_slot = g_item_shop_inventory->get_stackable_item_slot(i);
+
+            // If an existing one is found, add it to the stack, otherwise add it to the inventory
+            if (stackable_slot != -1) {
+                Item *si = g_item_shop_inventory->get_item_in_slot(stackable_slot);
+                si->quantity += 1;
+                delete i;
+            }
+            else {
+                g_item_shop_inventory->add_at_first_empty(i);
+			}
+		}
+		// std::cout << "=======================" << std::endl;
+		// std::cout << "The item shop contains:" << std::endl;
+		// std::cout << "=======================" << std::endl;
+		// g_item_shop_inventory->dump_inventory();
+
+	}
+	if (g_state_flags.in_weapon_shop) {
+		// Generate between 24 and 36 items and add htem to the inventory
+		int item_quantity = rand() % 12 + 24;
+		Item *i;
+		for (int idx = 0; idx < item_quantity; ++idx) {
+			i = ItemGenerator::shop_generate();
+			g_weapon_shop_inventory->add_at_first_empty(i);
+		}
+		// std::cout << "============================" << std::endl;
+		// std::cout << "The equipment shop contains:" << std::endl;
+		// std::cout << "============================" << std::endl;
+		// g_weapon_shop_inventory->dump_inventory();
+	}
+}
+//----------------------------------------------------------------------------
 // Calculates the amount the vendor will sell an item for
 //
 // Arguments:

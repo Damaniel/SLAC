@@ -35,6 +35,7 @@ void process_title_screen_menu_substate(int key);
 void process_title_screen_new_substate(int key);
 void process_title_screen_delete_substate(int key);
 void process_title_screen_state(int key);
+void process_store_substate(int key);
 
 void process_input(void);
 
