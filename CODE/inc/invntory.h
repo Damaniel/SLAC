@@ -250,7 +250,7 @@ public:
     Item(int item_class);
     Item(int item_class, int idx);
     Item();
-    ~Item() { /* std::cout << "~Item: Deleting item" << std::endl; */ }
+    ~Item() { std::cout << "~Item: Deleting item" << std::endl; }
     std::string get_full_name();
     std::string get_type_name();
     void init(int ic, int idx);

@@ -22,6 +22,7 @@
 //   SOFTWARE.
 //==========================================================================================
 #include "globals.h"
+#include "town.h"
 
 //----------------------------------------------------------------------------
 // Handles common tasks required after the inventory cursor is moved
@@ -315,6 +316,48 @@ void process_store_substate(int key) {
             g_state_flags.update_display = true;
             break;
         case KEY_ENTER:
+            int item_index = (g_ui_globals.shop_inv_cursor_y * UiConsts::INVENTORY_ITEMS_PER_ROW) + g_ui_globals.shop_inv_cursor_x;
+            Item *deal_item;
+            int value;
+            if (g_state_flags.in_item_shop) {
+                if (g_state_flags.item_shop_in_buy_mode) {
+                    //std::cout << "process_store_substate: start buy" << std::endl;
+                    deal_item = g_item_shop_inventory->get_item_in_slot(item_index);
+                    //std::cout << "process_store_substate: got item" << std::endl;
+                    value = g_item_shop_item_values[item_index];
+                    //std::cout << "process_store_substate: ready to buy item" << std::endl;
+                    buy_item(deal_item, value);
+                    // If any of the items were sold completely out, remove them
+                    if (deal_item != NULL && deal_item->quantity <= 0)
+                        g_item_shop_inventory->delete_item_in_slot(item_index);
+                }
+                else {
+                    //std::cout << "process_store_substate: start sell" << std::endl;
+                    deal_item = g_inventory->get_item_in_slot(item_index);
+                    //std::cout << "process_store_substate: got item" << std::endl;
+                    value = get_item_sell_price(deal_item);
+                    sell_item(deal_item, g_item_shop_inventory, value);
+                    if (deal_item != NULL && deal_item->quantity <= 0)
+                        g_inventory->delete_item_in_slot(item_index);
+                }
+            }
+            if (g_state_flags.in_weapon_shop) {
+                if (g_state_flags.weapon_shop_in_buy_mode) {
+                    deal_item = g_weapon_shop_inventory->get_item_in_slot(item_index);
+                    value = g_equipment_shop_item_values[item_index];
+                    buy_item(deal_item, value);
+                    if (deal_item != NULL && deal_item->quantity <= 0)
+                        g_weapon_shop_inventory->delete_item_in_slot(item_index);
+
+                }
+                else {
+                    deal_item = g_inventory->get_item_in_slot(item_index);
+                    value = get_item_sell_price(deal_item);
+                    sell_item(deal_item, g_weapon_shop_inventory, value);
+                    if (deal_item != NULL && deal_item->quantity <= 0)
+                        g_inventory->delete_item_in_slot(item_index);
+                }
+            }
             break;
     }
 }
@@ -441,6 +484,7 @@ void process_game_state(int key) {
                     break;
                 case KEY_H:
                     // magic key for testing stuff
+                    g_player.gold = 100000;
                     break;
                 case KEY_S:
                     save_game(SaveLoadConsts::save_file);

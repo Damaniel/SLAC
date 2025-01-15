@@ -147,7 +147,6 @@ void unlock_dungeon(int dungeon, bool loading_save) {
 void populate_shop_inventory() {
 	if (g_state_flags.in_item_shop) {
 		g_item_shop_item_values.clear();
-		g_item_shop_item_sell_values.clear();
 		int item_quantity = rand() % 12 + 24;
 		Item *i;
 		for (int idx = 0; idx < item_quantity; ++idx) {
@@ -172,7 +171,7 @@ void populate_shop_inventory() {
             else {
                 g_item_shop_inventory->add_at_first_empty(i);
 				g_item_shop_item_values.push_back(get_item_price(i));
-				g_item_shop_item_sell_values.push_back(get_item_sell_price(i));
+
 			}
 		}
 		// std::cout << "=======================" << std::endl;
@@ -183,7 +182,6 @@ void populate_shop_inventory() {
 	}
 	if (g_state_flags.in_weapon_shop) {
 		g_equipment_shop_item_values.clear();
-		g_equipment_shop_item_sell_values.clear();
 		// Generate between 24 and 36 items and add htem to the inventory
 		int item_quantity = rand() % 12 + 24;
 		Item *i;
@@ -191,7 +189,6 @@ void populate_shop_inventory() {
 			i = ItemGenerator::shop_generate();
 			g_weapon_shop_inventory->add_at_first_empty(i);
 			g_equipment_shop_item_values.push_back(get_item_price(i));
-			g_equipment_shop_item_sell_values.push_back(get_item_sell_price(i));
 		}
 		// std::cout << "============================" << std::endl;
 		// std::cout << "The equipment shop contains:" << std::endl;
@@ -199,6 +196,142 @@ void populate_shop_inventory() {
 		// g_weapon_shop_inventory->dump_inventory();
 	}
 }
+
+void buy_item(Item *i, int price) {
+	bool can_buy = true;
+
+	// If the slot is empty, do nothing.
+	if (i == NULL)
+		return;
+
+	// If the player doesn't have enough money, tell the player and return
+	if (g_player.gold < price) {
+		g_text_log.put_line("Sorry, you don't have enough money to buy that.");
+		can_buy = false;
+	}
+
+	// If the player's inventory is full, tell the player and return
+	if (g_inventory->inventory_is_full()) {
+		g_text_log.put_line("Sorry, your inventory is full.  Sell something first.");
+		can_buy = false;
+	}
+
+	if (can_buy) {
+		// If the item can otherwise be bought,
+		// If the item is a mystery item, identify it
+		if (!i->is_identified)
+			i->is_identified = true;
+
+		// Subtract the player's gold
+		g_player.gold -= price;
+
+		// If the item is stackable
+		if (i->can_stack) {
+            int stackable_slot = g_inventory->get_stackable_item_slot(i);
+			//  - if the player has an existing stack, add one to the player's item quantity
+			if (stackable_slot != -1) {
+				Item *stackable_item = g_inventory->get_item_in_slot(stackable_slot);
+				stackable_item->quantity += 1;
+			}
+			//  - if the player does not, add the item itself to the player's inventory
+			else {
+				Item *new_i = new Item(*i);
+				new_i->quantity = 1;
+				g_inventory->add_at_first_empty(new_i);
+			}
+
+			//std::cout << "buy_item: item quantity = " << i->quantity << std::endl;
+
+			//  - If the shopkeeper has more than one, subtract one from the vendor's inventory
+			//  - If the shopkeeper has only one, delete the item
+			if(i->quantity > 0) {
+				i->quantity -= 1;
+			}
+		}
+		else {
+			Item *new_i = new Item(*i);
+			new_i->quantity = 1;
+			i->quantity = 0;
+			g_inventory->add_at_first_empty(new_i);
+
+		}
+	}
+
+	g_state_flags.update_status_dialog = true;
+	g_state_flags.update_status_hp_exp = true;
+	g_state_flags.update_status_elapsed_time = true;
+	g_state_flags.update_shop_inventory_cursor = true;
+	g_state_flags.update_shop_inventory_dialog = true;
+	g_state_flags.update_shop_inventory_description = true;
+	g_state_flags.update_shop_inventory_items = true;
+	g_state_flags.update_text_dialog = true;
+	g_state_flags.update_display = true;
+}
+
+void sell_item(Item *i, Inventory *shop_inv, int value) {
+	bool can_sell = true;
+	// If there's no item, do nothing
+	if (i == NULL)
+		return;
+
+	// If the item is equipped, tell the player and return
+	if (i->is_equipped) {
+		g_text_log.put_line("I can't buy that.  You'll need to unequip it first.");
+		can_sell = false;
+	}
+
+	if (i->item_class == ItemConsts::ARTIFACT_CLASS) {
+		g_text_log.put_line("I can't buy artifacts - those are far more important to you than me.");
+		can_sell = false;
+	}
+
+	if (can_sell) {
+		// If the item is stackable
+		if (i->can_stack) {
+            int stackable_slot = shop_inv->get_stackable_item_slot(i);
+			//  - if the shop has an existing stack, add one to the player's item quantity
+			if (stackable_slot != -1) {
+				Item *stackable_item = shop_inv->get_item_in_slot(stackable_slot);
+				stackable_item->quantity += 1;
+			}
+			//  - if the shop does not, add the item itself to the shop's inventory
+			else {
+				Item *new_i = new Item(*i);
+				new_i->quantity = 1;
+				shop_inv->add_at_first_empty(new_i);
+			}
+
+			// std::cout << "sell_item: item quantity = " << i->quantity << std::endl;
+
+			//  - If the player has more than one, subtract one from their inventory
+			//  - If the player has only one, delete the item
+			if(i->quantity > 0) {
+				i->quantity -= 1;
+			}
+		}
+
+		else {
+			Item *new_i = new Item(*i);
+			new_i->quantity = 1;
+			i->quantity = 0;
+			shop_inv->add_at_first_empty(new_i);
+		}
+
+		g_player.gold += value;
+	}
+
+	// Refresh the screen
+	g_state_flags.update_status_dialog = true;
+	g_state_flags.update_status_hp_exp = true;
+	g_state_flags.update_status_elapsed_time = true;
+	g_state_flags.update_shop_inventory_cursor = true;
+	g_state_flags.update_shop_inventory_dialog = true;
+	g_state_flags.update_shop_inventory_description = true;
+	g_state_flags.update_shop_inventory_items = true;
+	g_state_flags.update_text_dialog = true;
+	g_state_flags.update_display = true;
+}
+
 //----------------------------------------------------------------------------
 // Calculates the amount the vendor will sell an item for
 //
@@ -209,6 +342,10 @@ void populate_shop_inventory() {
 //   The value
 //----------------------------------------------------------------------------
 int get_item_price(Item *i) {
+	// Return 0 if the item is NULL
+	if (i == NULL)
+		return 0;
+
 	float price = 2.0 * (float)(i->value);
 
 	if (i->item_class == ItemConsts::WEAPON_CLASS || i->item_class == ItemConsts::ARMOR_CLASS) {
@@ -236,7 +373,7 @@ int get_item_price(Item *i) {
 			if (i->prefix_id != -1 && i->suffix_id == -1)
 				price = price * 2.0;
 			// suffix, no prefix
-			if (i->prefix_id == -1 && i->suffix_id == -1)
+			if (i->prefix_id == -1 && i->suffix_id != -1)
 				price = price * 2.0;
 			// prefix and suffix
 			if (i->prefix_id != -1 && i->suffix_id != -1)
@@ -251,6 +388,9 @@ int get_item_price(Item *i) {
 		price = price * offset;
 	}
 
+	if (price < 1)
+		price = 1;
+
 	return (int)price;
 }
 
@@ -264,6 +404,10 @@ int get_item_price(Item *i) {
 //   The value
 //----------------------------------------------------------------------------
 int get_item_sell_price(Item *i) {
+	// Return 0 if the item is NULL
+	if (i == NULL)
+		return 0;
+
 	float price = (float)(i->value);
 
 	if (i->item_class == ItemConsts::WEAPON_CLASS || i->item_class == ItemConsts::ARMOR_CLASS) {
@@ -393,5 +537,3 @@ std::map<std::pair<int, int>, int> g_museum_artifacts;
 // Vectors to hold item values for the
 std::vector<int> g_equipment_shop_item_values;
 std::vector<int> g_item_shop_item_values;
-std::vector<int> g_equipment_shop_item_sell_values;
-std::vector<int> g_item_shop_item_sell_values;

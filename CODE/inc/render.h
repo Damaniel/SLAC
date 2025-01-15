@@ -186,7 +186,7 @@ namespace UiConsts {
 	const int INVENTORY_DESC_AREA_Y = INVENTORY_DIALOG_Y + 101;
 
 	const int INVENTORY_DESC_AREA_W = 214;
-	const int INVENTORY_DESC_AREA_H = 38;
+	const int INVENTORY_DESC_AREA_H = 39;
 
 	const int INVENTORY_MENU_Y = 53;
 	const int INVENTORY_MENU_WIDTH = 47;

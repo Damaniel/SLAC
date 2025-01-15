@@ -134,8 +134,6 @@ extern const ArtifactPos g_museum_artifact_list[];
 extern std::map<std::pair<int, int>, int> g_museum_artifacts;
 extern std::vector<int> g_equipment_shop_item_values;
 extern std::vector<int> g_item_shop_item_values;
-extern std::vector<int> g_equipment_shop_item_sell_values;
-extern std::vector<int> g_item_shop_item_sell_values;
 
 void check_and_process_npc_here(int x, int y);
 void check_and_process_town_entrances(int x, int y);
@@ -144,6 +142,9 @@ void enter_dungeon(int floor);
 void unlock_dungeon(int dungeon, bool loading_save);
 void init_museum_artifacts();
 void populate_shop_inventory();
+
+void buy_item(Item *i, int price);
+void sell_item(Item *i, Inventory *shop_inv, int value);
 
 int get_item_price(Item *i);
 int get_item_sell_price(Item *i);

@@ -705,15 +705,21 @@ void Render::render_inventory_content(BITMAP *destination) {
 	bool in_buy_mode;
 
 	// Pick the inventory to draw
-	if (g_state_flags.in_item_shop && g_state_flags.is_shopping && g_state_flags.item_shop_in_buy_mode) {
-		inv = g_item_shop_inventory;
+	if (g_state_flags.in_item_shop && g_state_flags.is_shopping) {
+		if (g_state_flags.item_shop_in_buy_mode)
+			inv = g_item_shop_inventory;
+		else
+			inv = g_inventory;
 		cursor_x = g_ui_globals.shop_inv_cursor_x;
 		cursor_y = g_ui_globals.shop_inv_cursor_y;
 		prev_cursor_x = g_ui_globals.prev_shop_inv_cursor_x;
 		prev_cursor_y = g_ui_globals.prev_shop_inv_cursor_y;
 	}
-	else if (g_state_flags.in_weapon_shop && g_state_flags.is_shopping && g_state_flags.weapon_shop_in_buy_mode) {
-		inv = g_weapon_shop_inventory;
+	else if (g_state_flags.in_weapon_shop && g_state_flags.is_shopping) {
+		if (g_state_flags.weapon_shop_in_buy_mode)
+			inv = g_weapon_shop_inventory;
+		else
+			inv = g_inventory;
 		cursor_x = g_ui_globals.shop_inv_cursor_x;
 		cursor_y = g_ui_globals.shop_inv_cursor_y;
 		prev_cursor_x = g_ui_globals.prev_shop_inv_cursor_x;
@@ -819,7 +825,7 @@ void Render::render_inventory_content(BITMAP *destination) {
 						sprintf(text, "- Buy Price: %d -", price);
 					}
 					else {
-						price = g_equipment_shop_item_sell_values[item_index];
+						price = get_item_sell_price(it);
 						sprintf(text, "+ Sell Price: %d +", price);
 					}
 				}
@@ -829,7 +835,7 @@ void Render::render_inventory_content(BITMAP *destination) {
 						sprintf(text, "- Buy Price: %d -", price);
 					}
 					else {
-						price = g_item_shop_item_sell_values[item_index];
+						price = get_item_sell_price(it);
 						sprintf(text, "+ Sell Price: %d +", price);
 					}
 				}
