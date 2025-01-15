@@ -387,6 +387,7 @@ void update_main_game_display(void) {
 			break;
 		case GAME_SUBSTATE_INVENTORY:
 		case GAME_SUBSTATE_INVENTORY_MENU:
+		case GAME_SUBSTATE_STORE:
 			g_render.render_inventory(g_back_buffer);
 			break;
 		case GAME_SUBSTATE_STATS:
@@ -823,9 +824,10 @@ void initialize_main_game_state(void) {
 	// Increment the current player generation
 	g_game_flags.generation += 1;
 
-	// Reset the item shop reset counters
+	// Reset the item shop counters
 	g_state_flags.turns_until_weapon_shop_reset = 0;
 	g_state_flags.turns_until_item_shop_reset = 0;
+	g_state_flags.is_shopping = false;
 
 	// Clear the player's stats
 	g_player.init(0, 0);
@@ -2114,8 +2116,10 @@ void process_shop_move(std::pair<int, int> proposed_location) {
 			}
 		}
 
+		bool in_shop = false;
+		// If we're touching the weapon shop counter, change to shop mode
 		if (g_state_flags.in_weapon_shop && x == TownConsts::WEAPON_SHOP_NPC_X && y == TownConsts::WEAPON_SHOP_NPC_Y) {
-			g_state_flags.cur_substate = GAME_SUBSTATE_STORE;
+			in_shop = true;
 			g_state_flags.weapon_shop_in_buy_mode = true;
 			if (g_state_flags.turns_until_weapon_shop_reset <= 0) {
 				g_state_flags.turns_until_weapon_shop_reset = UtilConsts::SHOP_RESET_TURNS;
@@ -2124,11 +2128,12 @@ void process_shop_move(std::pair<int, int> proposed_location) {
 				g_weapon_shop_inventory = new Inventory();
 				populate_shop_inventory();
 			}
-			g_text_log.put_line("You're in the weapon shop now.");
+
 		}
 
+		// If we're touching the item shop counter, change to shop mode
 		if (g_state_flags.in_item_shop && x == TownConsts::ITEM_SHOP_NPC_X && y == TownConsts::ITEM_SHOP_NPC_Y) {
-			g_state_flags.cur_substate = GAME_SUBSTATE_STORE;
+			in_shop = true;
 			g_state_flags.item_shop_in_buy_mode = true;
 			if (g_state_flags.turns_until_item_shop_reset <=0) {
 				g_state_flags.turns_until_item_shop_reset = UtilConsts::SHOP_RESET_TURNS;
@@ -2137,8 +2142,21 @@ void process_shop_move(std::pair<int, int> proposed_location) {
 				g_item_shop_inventory = new Inventory();
 				populate_shop_inventory();
 			}
+		}
 
-			g_text_log.put_line("You're in the item shop now.");
+		// If we switched to shop mode, set flags common to both modes and display the shopkeeper message
+		if (in_shop) {
+			g_state_flags.cur_substate = GAME_SUBSTATE_STORE;
+			g_state_flags.is_shopping = true;
+	        g_text_log.put_line("==============================================================================");
+            g_text_log.put_line("Welcome to my shop!  Press Space to switch between the buy and sell windows.");
+            g_text_log.put_line("Press Enter to buy or sell the thing under the cursor.");
+	        g_text_log.put_line("==============================================================================");
+            g_state_flags.update_shop_inventory_dialog = true;
+            g_state_flags.update_shop_inventory_description = true;
+            g_state_flags.update_shop_inventory_items = true;;
+            g_state_flags.update_shop_inventory_cursor = true;
+            g_state_flags.update_display = true;
 		}
 	}
 }

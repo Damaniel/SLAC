@@ -699,12 +699,40 @@ void Render::render_description_fields(BITMAP *destination, Item *it) {
 //   Nothing
 //------------------------------------------------------------------------------
 void Render::render_inventory_content(BITMAP *destination) {
-	if (g_state_flags.update_inventory_items) {
+	Inventory *inv;
+	int cursor_x, cursor_y;
+	int prev_cursor_x, prev_cursor_y;
+	bool in_buy_mode;
+
+	// Pick the inventory to draw
+	if (g_state_flags.in_item_shop && g_state_flags.is_shopping && g_state_flags.item_shop_in_buy_mode) {
+		inv = g_item_shop_inventory;
+		cursor_x = g_ui_globals.shop_inv_cursor_x;
+		cursor_y = g_ui_globals.shop_inv_cursor_y;
+		prev_cursor_x = g_ui_globals.prev_shop_inv_cursor_x;
+		prev_cursor_y = g_ui_globals.prev_shop_inv_cursor_y;
+	}
+	else if (g_state_flags.in_weapon_shop && g_state_flags.is_shopping && g_state_flags.weapon_shop_in_buy_mode) {
+		inv = g_weapon_shop_inventory;
+		cursor_x = g_ui_globals.shop_inv_cursor_x;
+		cursor_y = g_ui_globals.shop_inv_cursor_y;
+		prev_cursor_x = g_ui_globals.prev_shop_inv_cursor_x;
+		prev_cursor_y = g_ui_globals.prev_shop_inv_cursor_y;
+	}
+	else {
+		inv = g_inventory;
+		cursor_x = g_ui_globals.inv_cursor_x;
+		cursor_y = g_ui_globals.inv_cursor_y;
+		prev_cursor_x = g_ui_globals.prev_inv_cursor_x;
+		prev_cursor_y = g_ui_globals.prev_inv_cursor_y;
+	}
+
+	if (g_state_flags.update_inventory_items || g_state_flags.update_shop_inventory_items) {
 		// Draw the items
 		for (int i = 0; i < InventoryConsts::INVENTORY_SIZE; ++i) {
 			int x = i % UiConsts::INVENTORY_ITEMS_PER_ROW;
 			int y = i / UiConsts::INVENTORY_ITEMS_PER_ROW;
-			Item *it = g_inventory->get_item_in_slot(i);
+			Item *it = inv->get_item_in_slot(i);
 			if (it != NULL) {
 				// If a potion or scroll, get the GID from the scrambled
 				// icon table to ensure the correct scrambled icon
@@ -732,30 +760,36 @@ void Render::render_inventory_content(BITMAP *destination) {
 				}
 			}
 		}
-		g_state_flags.update_inventory_items = false;
+		if (g_state_flags.update_inventory_items)
+			g_state_flags.update_inventory_items = false;
+		if (g_state_flags.update_shop_inventory_items)
+			g_state_flags.update_shop_inventory_items = false;
 	}
 
 	// Draw the active item cursor (if any)
-	if (g_state_flags.update_inventory_cursor) {
+	if (g_state_flags.update_inventory_cursor || g_state_flags.update_shop_inventory_cursor) {
 		// Draw a square around the old location in the standard border color
-		int x1 = UiConsts::INVENTORY_ITEMS_X + (g_ui_globals.prev_inv_cursor_x * (UiConsts::INVENTORY_CURSOR_SIZE - 1));
-		int y1 = UiConsts::INVENTORY_ITEMS_Y + (g_ui_globals.prev_inv_cursor_y * (UiConsts::INVENTORY_CURSOR_SIZE - 1));
+		int x1 = UiConsts::INVENTORY_ITEMS_X + (prev_cursor_x * (UiConsts::INVENTORY_CURSOR_SIZE - 1));
+		int y1 = UiConsts::INVENTORY_ITEMS_Y + (prev_cursor_y * (UiConsts::INVENTORY_CURSOR_SIZE - 1));
 		int x2 = x1 + (UiConsts::INVENTORY_CURSOR_SIZE - 1);
 		int y2 = y1 + (UiConsts::INVENTORY_CURSOR_SIZE - 1);
 		rect(destination, x1, y1, x2, y2, 19);
 
 		// Draw a square around the new location in the standard border color
-		x1 = UiConsts::INVENTORY_ITEMS_X + (g_ui_globals.inv_cursor_x * (UiConsts::INVENTORY_CURSOR_SIZE - 1));
-		y1 = UiConsts::INVENTORY_ITEMS_Y + (g_ui_globals.inv_cursor_y * (UiConsts::INVENTORY_CURSOR_SIZE - 1));
+		x1 = UiConsts::INVENTORY_ITEMS_X + (cursor_x * (UiConsts::INVENTORY_CURSOR_SIZE - 1));
+		y1 = UiConsts::INVENTORY_ITEMS_Y + (cursor_y * (UiConsts::INVENTORY_CURSOR_SIZE - 1));
 		x2 = x1 + (UiConsts::INVENTORY_CURSOR_SIZE - 1);
 		y2 = y1 + (UiConsts::INVENTORY_CURSOR_SIZE - 1);
 		rect(destination, x1, y1, x2, y2, 30);
 
-		g_state_flags.update_inventory_cursor = false;
+		if (g_state_flags.update_inventory_cursor)
+			g_state_flags.update_inventory_cursor = false;
+		if (g_state_flags.update_shop_inventory_cursor)
+			g_state_flags.update_shop_inventory_cursor = false;
 	}
 
 	// Draw the active item description
-	if (g_state_flags.update_inventory_description) {
+	if (g_state_flags.update_inventory_description || g_state_flags.update_shop_inventory_description) {
 		// Clear the old description
 		rectfill(destination, UiConsts::INVENTORY_DESC_AREA_X, UiConsts::INVENTORY_DESC_AREA_Y,
 				 UiConsts::INVENTORY_DESC_AREA_X + UiConsts::INVENTORY_DESC_AREA_W - 1,
@@ -763,8 +797,8 @@ void Render::render_inventory_content(BITMAP *destination) {
 				 23);
 
 		// Get the item we are writing the description of
-		int item_index = (g_ui_globals.inv_cursor_y  * UiConsts::INVENTORY_ITEMS_PER_ROW) + g_ui_globals.inv_cursor_x;
-		Item *it = g_inventory->get_item_in_slot(item_index);
+		int item_index = (cursor_y  * UiConsts::INVENTORY_ITEMS_PER_ROW) + cursor_x;
+		Item *it = inv->get_item_in_slot(item_index);
 		if (it != NULL) {
 			// Render the item name
 			render_text(destination, (char *)it->get_full_name().c_str(),
@@ -772,9 +806,46 @@ void Render::render_inventory_content(BITMAP *destination) {
 						FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL,
 						FontConsts::TEXT_LEFT_JUSTIFIED);
 			render_description_fields(destination, it);
+			if (g_state_flags.update_shop_inventory_description) {
+				char text [40];
+				int price;
+				// clear the old buy/sell price
+				rectfill(destination, UiConsts::SHOP_BUY_SELL_AREA_X1, UiConsts::SHOP_BUY_SELL_AREA_Y1,
+				 		 UiConsts::SHOP_BUY_SELL_AREA_X2, UiConsts::SHOP_BUY_SELL_AREA_Y2, 23);
+				// Draw the buy or sell value depending on which tab is open
+				if (g_state_flags.in_weapon_shop) {
+					if (g_state_flags.weapon_shop_in_buy_mode) {
+						price = g_equipment_shop_item_values[item_index];
+						sprintf(text, "- Buy Price: %d -", price);
+					}
+					else {
+						price = g_equipment_shop_item_sell_values[item_index];
+						sprintf(text, "+ Sell Price: %d +", price);
+					}
+				}
+				if (g_state_flags.in_item_shop) {
+					if (g_state_flags.item_shop_in_buy_mode) {
+						price = g_item_shop_item_values[item_index];
+						sprintf(text, "- Buy Price: %d -", price);
+					}
+					else {
+						price = g_item_shop_item_sell_values[item_index];
+						sprintf(text, "+ Sell Price: %d +", price);
+					}
+				}
+				render_text(destination, text,
+		    	        	UiConsts::SHOP_BUY_SELL_TEXT_X, UiConsts::SHOP_BUY_SELL_TEXT_Y,
+							FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL,
+							FontConsts::TEXT_RIGHT_JUSTIFIED);
+			}
 		}
-		g_state_flags.update_inventory_description = false;
+
+		if (g_state_flags.update_inventory_description)
+			g_state_flags.update_inventory_description = false;
+		if (g_state_flags.update_shop_inventory_description)
+			g_state_flags.update_shop_inventory_description = false;
 	}
+
 }
 
 //------------------------------------------------------------------------------
@@ -787,12 +858,10 @@ void Render::render_inventory_content(BITMAP *destination) {
 //   Nothing
 //------------------------------------------------------------------------------
 void Render::render_inventory(BITMAP *destination) {
-	// This used to be drawn as a bitmap, but the UI is now much simpler so
-	// I'm rendering it using graphics primitives.  That makes the code below
-	// look pretty ugly, but I shouldn't have to touch it.
+	char text[40];
 
 	// Draw the background
-	if (g_state_flags.update_inventory_dialog) {
+	if (g_state_flags.update_inventory_dialog || g_state_flags.update_shop_inventory_dialog) {
 		// the main window
 		rectfill(destination, UiConsts::INVENTORY_DIALOG_X + 4, UiConsts::INVENTORY_DIALOG_Y + 4,
 				 UiConsts::INVENTORY_DIALOG_X2 - 4,
@@ -822,9 +891,24 @@ void Render::render_inventory(BITMAP *destination) {
 			  UiConsts::INVENTORY_DIALOG_X2 - 1, 30);
 
 		// The item text
-		render_text(destination, "Inventory", (UiConsts::INVENTORY_DIALOG_X + UiConsts::INVENTORY_DIALOG_X2) / 2,
-					UiConsts::INVENTORY_DIALOG_Y + 7, FontConsts::FONT_YELLOW,
-					FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+		if (g_state_flags.update_inventory_dialog) {
+			render_text(destination, "Inventory", (UiConsts::INVENTORY_DIALOG_X + UiConsts::INVENTORY_DIALOG_X2) / 2,
+						UiConsts::INVENTORY_DIALOG_Y + 7, FontConsts::FONT_YELLOW,
+						FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+		}
+		if (g_state_flags.update_shop_inventory_dialog) {
+			if ((g_state_flags.in_weapon_shop && g_state_flags.weapon_shop_in_buy_mode) ||
+			    (g_state_flags.in_item_shop && g_state_flags.item_shop_in_buy_mode)) {
+				sprintf(text, "Shop Inventory (Buy)");
+			}
+			if ((g_state_flags.in_weapon_shop && !g_state_flags.weapon_shop_in_buy_mode) ||
+			    (g_state_flags.in_item_shop && !g_state_flags.item_shop_in_buy_mode)) {
+				sprintf(text, "Your Inventory (Sell)");
+			}
+			render_text(destination, text, (UiConsts::INVENTORY_DIALOG_X + UiConsts::INVENTORY_DIALOG_X2) / 2,
+						UiConsts::INVENTORY_DIALOG_Y + 7, FontConsts::FONT_YELLOW,
+						FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+		}
 
 		// The item grid
 		rectfill(destination, UiConsts::INVENTORY_ITEMS_X - 1, UiConsts::INVENTORY_ITEMS_Y - 1,
@@ -840,7 +924,11 @@ void Render::render_inventory(BITMAP *destination) {
 			vline(destination, UiConsts::INVENTORY_ITEMS_X + ((UiConsts::INVENTORY_CURSOR_SIZE - 1) * i),
 				  UiConsts::INVENTORY_ITEMS_Y, UiConsts::INVENTORY_ITEMS_Y2, 19);
 		}
-		g_state_flags.update_inventory_dialog = false;
+
+		if (g_state_flags.update_inventory_dialog)
+			g_state_flags.update_inventory_dialog = false;
+		if (g_state_flags.update_shop_inventory_dialog)
+			g_state_flags.update_shop_inventory_dialog = false;
 	}
 
 	render_inventory_content(destination);

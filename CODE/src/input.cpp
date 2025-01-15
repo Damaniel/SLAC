@@ -234,6 +234,52 @@ void process_stats_substate(int key) {
 }
 
 //----------------------------------------------------------------------------
+// Handles common tasks related to moving the shop item cursor around
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void process_store_menu_common_tasks(int key) {
+    // Get the old cursor position
+    g_ui_globals.prev_shop_inv_cursor_x = g_ui_globals.shop_inv_cursor_x;
+    g_ui_globals.prev_shop_inv_cursor_y = g_ui_globals.shop_inv_cursor_y;
+
+    // Set the new cursor position
+    switch (key) {
+        case KEY_UP:
+            g_ui_globals.shop_inv_cursor_y = g_ui_globals.shop_inv_cursor_y - 1;
+            break;
+        case KEY_DOWN:
+            g_ui_globals.shop_inv_cursor_y = g_ui_globals.shop_inv_cursor_y + 1;
+            break;
+        case KEY_LEFT:
+            g_ui_globals.shop_inv_cursor_x = g_ui_globals.shop_inv_cursor_x - 1;
+            break;
+        case KEY_RIGHT:
+            g_ui_globals.shop_inv_cursor_x = g_ui_globals.shop_inv_cursor_x + 1;
+            break;
+    }
+
+    // Wrap the cursor around if necessary
+    if (g_ui_globals.shop_inv_cursor_x < 0)
+        g_ui_globals.shop_inv_cursor_x = UiConsts::INVENTORY_ITEMS_PER_ROW - 1;
+    if (g_ui_globals.shop_inv_cursor_x >= UiConsts::INVENTORY_ITEMS_PER_ROW)
+        g_ui_globals.shop_inv_cursor_x = 0;
+    if (g_ui_globals.shop_inv_cursor_y < 0)
+        g_ui_globals.shop_inv_cursor_y = UiConsts::INVENTORY_ROWS - 1;
+    if (g_ui_globals.shop_inv_cursor_y >= UiConsts::INVENTORY_ROWS)
+        g_ui_globals.shop_inv_cursor_y = 0;
+
+    // Redraw the inventory cursor and description areas
+    g_state_flags.update_shop_inventory_cursor = true;
+    g_state_flags.update_shop_inventory_description = true;
+    g_state_flags.update_display = true;
+}
+
+//----------------------------------------------------------------------------
 // Handles all input for the store substate (that is, when the stats are
 // on screen)
 //
@@ -247,30 +293,26 @@ void process_store_substate(int key) {
     switch(key) {
         case KEY_ESC:
             g_state_flags.cur_substate = GAME_SUBSTATE_DEFAULT;
+            g_state_flags.is_shopping = false;
             break;
         case KEY_UP:
-            break;
         case KEY_DOWN:
-            break;
         case KEY_LEFT:
-            break;
         case KEY_RIGHT:
+            process_store_menu_common_tasks(key);
             break;
-        case KEY_B:
+        case KEY_SPACE:
             if (g_state_flags.in_weapon_shop) {
-                g_state_flags.weapon_shop_in_buy_mode = true;
+                g_state_flags.weapon_shop_in_buy_mode = !g_state_flags.weapon_shop_in_buy_mode;
             }
-            else {
-                g_state_flags.item_shop_in_buy_mode = true;
+            if (g_state_flags.in_item_shop) {
+                g_state_flags.item_shop_in_buy_mode = !g_state_flags.item_shop_in_buy_mode;
             }
-             break;
-        case KEY_S:
-            if (g_state_flags.in_weapon_shop) {
-                g_state_flags.weapon_shop_in_buy_mode = false;
-            }
-            else {
-                g_state_flags.item_shop_in_buy_mode = false;
-            }
+            g_state_flags.update_shop_inventory_dialog = true;
+            g_state_flags.update_shop_inventory_description = true;
+            g_state_flags.update_shop_inventory_items = true;;
+            g_state_flags.update_shop_inventory_cursor = true;
+            g_state_flags.update_display = true;
             break;
         case KEY_ENTER:
             break;
@@ -399,10 +441,6 @@ void process_game_state(int key) {
                     break;
                 case KEY_H:
                     // magic key for testing stuff
-	                g_text_log.put_line("==============================================================================");
-                    g_text_log.put_line("Welcome to my shop!  Press 'B' or 'S' to switch between the buy and sell windows.");
-                    g_text_log.put_line("Press Enter to buy or sell the thing under the cursor.");
-	                g_text_log.put_line("==============================================================================");
                     break;
                 case KEY_S:
                     save_game(SaveLoadConsts::save_file);

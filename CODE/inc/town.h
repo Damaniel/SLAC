@@ -132,6 +132,10 @@ namespace TownConsts {
 
 extern const ArtifactPos g_museum_artifact_list[];
 extern std::map<std::pair<int, int>, int> g_museum_artifacts;
+extern std::vector<int> g_equipment_shop_item_values;
+extern std::vector<int> g_item_shop_item_values;
+extern std::vector<int> g_equipment_shop_item_sell_values;
+extern std::vector<int> g_item_shop_item_sell_values;
 
 void check_and_process_npc_here(int x, int y);
 void check_and_process_town_entrances(int x, int y);

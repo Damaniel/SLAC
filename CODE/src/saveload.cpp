@@ -75,6 +75,7 @@ bool finish_other_load_tasks(void) {
         g_state_flags.in_item_shop = false;
         g_state_flags.in_museum = false;
         g_state_flags.in_weapon_shop = false;
+        g_state_flags.is_shopping = false;
     }
 
     // ensure that the dungeons are unlocked if they should be

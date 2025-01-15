@@ -156,15 +156,19 @@ struct StateFlags {
     // - subscreen dialogs
     bool update_map_dialog;             // Should the map screen be redrawn?
     bool update_inventory_dialog;       // Should the inventory dialog be redrawn?
+    bool update_shop_inventory_dialog;  // Should the shop inventory dialog be redrawn?
 
     // - inventory
-    bool update_inventory_cursor;       // Should the inventory cursor be redrawn?
-    bool update_inventory_description;  // Should the description area be redrawn?
-    bool update_inventory_items;        // Should the inventory items be redrawn?
-    bool update_inventory_submenu;      // Should the inventory submenu be redrawn?
-
+    bool update_inventory_cursor;            // Should the inventory cursor be redrawn?
+    bool update_inventory_description;       // Should the description area be redrawn?
+    bool update_inventory_items;             // Should the inventory items be redrawn?
+    bool update_inventory_submenu;           // Should the inventory submenu be redrawn?
+    bool update_shop_inventory_cursor;       // Should the shop inventory cursor be redrawn?
+    bool update_shop_inventory_description;  // Should the shop inventory description be redrawn?
+    bool update_shop_inventory_items;        // Should the shop inventory items be redrawn?
     // - stats
-    bool update_stats_screen;            // Should the stats screen be displayed
+
+    bool update_stats_screen;                // Should the stats screen be displayed
 
     //--------------------------------------------------------------------------
     // Other data
@@ -188,6 +192,7 @@ struct StateFlags {
     bool in_weapon_shop;
     bool in_item_shop;
     bool in_museum;
+    bool is_shopping;
 
     // - control flags
     bool exit_game;           // Did the player choose to exit the game?

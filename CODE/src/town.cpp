@@ -146,6 +146,8 @@ void unlock_dungeon(int dungeon, bool loading_save) {
 //----------------------------------------------------------------------------
 void populate_shop_inventory() {
 	if (g_state_flags.in_item_shop) {
+		g_item_shop_item_values.clear();
+		g_item_shop_item_sell_values.clear();
 		int item_quantity = rand() % 12 + 24;
 		Item *i;
 		for (int idx = 0; idx < item_quantity; ++idx) {
@@ -169,6 +171,8 @@ void populate_shop_inventory() {
             }
             else {
                 g_item_shop_inventory->add_at_first_empty(i);
+				g_item_shop_item_values.push_back(get_item_price(i));
+				g_item_shop_item_sell_values.push_back(get_item_sell_price(i));
 			}
 		}
 		// std::cout << "=======================" << std::endl;
@@ -178,12 +182,16 @@ void populate_shop_inventory() {
 
 	}
 	if (g_state_flags.in_weapon_shop) {
+		g_equipment_shop_item_values.clear();
+		g_equipment_shop_item_sell_values.clear();
 		// Generate between 24 and 36 items and add htem to the inventory
 		int item_quantity = rand() % 12 + 24;
 		Item *i;
 		for (int idx = 0; idx < item_quantity; ++idx) {
 			i = ItemGenerator::shop_generate();
 			g_weapon_shop_inventory->add_at_first_empty(i);
+			g_equipment_shop_item_values.push_back(get_item_price(i));
+			g_equipment_shop_item_sell_values.push_back(get_item_sell_price(i));
 		}
 		// std::cout << "============================" << std::endl;
 		// std::cout << "The equipment shop contains:" << std::endl;
@@ -381,3 +389,9 @@ const ArtifactPos g_museum_artifact_list[NUM_ARTIFACTS] = {
 // A map of museum artifact positions to the artifact ID.
 // Hopefully this will make searches faster
 std::map<std::pair<int, int>, int> g_museum_artifacts;
+
+// Vectors to hold item values for the
+std::vector<int> g_equipment_shop_item_values;
+std::vector<int> g_item_shop_item_values;
+std::vector<int> g_equipment_shop_item_sell_values;
+std::vector<int> g_item_shop_item_sell_values;

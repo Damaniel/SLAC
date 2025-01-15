@@ -570,6 +570,13 @@ namespace UiConsts {
 	const int CONFIRM_EXIT_NO_TEXT_X = 144;
 	const int CONFIRM_EXIT_OPTION_TEXT_Y = 119;
 
+	const int SHOP_BUY_SELL_TEXT_X = 227;
+	const int SHOP_BUY_SELL_TEXT_Y = 165;
+	const int SHOP_BUY_SELL_AREA_X1 = 115;
+	const int SHOP_BUY_SELL_AREA_Y1 = 165;
+	const int SHOP_BUY_SELL_AREA_X2 = 227;
+	const int SHOP_BUY_SELL_AREA_Y2 = 172;
+
 	// Only consider enemies closer than this when rendering on the screen
 	// from the player to the edge of the screen, plus a little bit more
 	const int MAXIMUM_ENEMY_RENDER_DISTANCE = 18;
