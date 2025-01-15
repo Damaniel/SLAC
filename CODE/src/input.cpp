@@ -337,8 +337,9 @@ void process_store_substate(int key) {
                     //std::cout << "process_store_substate: got item" << std::endl;
                     value = get_item_sell_price(deal_item);
                     sell_item(deal_item, g_item_shop_inventory, value);
-                    if (deal_item != NULL && deal_item->quantity <= 0)
+                    if (deal_item != NULL && deal_item->quantity <= 0) {
                         g_inventory->delete_item_in_slot(item_index);
+                    }
                 }
             }
             if (g_state_flags.in_weapon_shop) {
@@ -354,8 +355,9 @@ void process_store_substate(int key) {
                     deal_item = g_inventory->get_item_in_slot(item_index);
                     value = get_item_sell_price(deal_item);
                     sell_item(deal_item, g_weapon_shop_inventory, value);
-                    if (deal_item != NULL && deal_item->quantity <= 0)
+                    if (deal_item != NULL && deal_item->quantity <= 0) {
                         g_inventory->delete_item_in_slot(item_index);
+                    }
                 }
             }
             break;

@@ -286,37 +286,8 @@ void sell_item(Item *i, Inventory *shop_inv, int value) {
 	}
 
 	if (can_sell) {
-		// If the item is stackable
-		if (i->can_stack) {
-            int stackable_slot = shop_inv->get_stackable_item_slot(i);
-			//  - if the shop has an existing stack, add one to the player's item quantity
-			if (stackable_slot != -1) {
-				Item *stackable_item = shop_inv->get_item_in_slot(stackable_slot);
-				stackable_item->quantity += 1;
-			}
-			//  - if the shop does not, add the item itself to the shop's inventory
-			else {
-				Item *new_i = new Item(*i);
-				new_i->quantity = 1;
-				shop_inv->add_at_first_empty(new_i);
-			}
-
-			// std::cout << "sell_item: item quantity = " << i->quantity << std::endl;
-
-			//  - If the player has more than one, subtract one from their inventory
-			//  - If the player has only one, delete the item
-			if(i->quantity > 0) {
-				i->quantity -= 1;
-			}
-		}
-
-		else {
-			Item *new_i = new Item(*i);
-			new_i->quantity = 1;
-			i->quantity = 0;
-			shop_inv->add_at_first_empty(new_i);
-		}
-
+		// Get rid of one.  If there are zero left after, it will be deleted.
+		i->quantity -= 1;
 		g_player.gold += value;
 	}
 
