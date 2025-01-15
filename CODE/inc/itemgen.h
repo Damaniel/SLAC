@@ -36,7 +36,7 @@ namespace ItemConsts {
     const int BASE_CHANCE_OF_CURSE  = 10;
 
     // The maximum number of attempts to reroll an item aspect to meet the ilevel requirements
-    const int MAX_GENERATOR_REROLLS = 10;
+    const int MAX_GENERATOR_REROLLS = 50;
 
     // The time range which a scroll of recall is set between when used
     const int RECALL_SCROLL_MIN_TURNS = 8;
@@ -155,9 +155,10 @@ namespace ItemConsts {
 // affixes and other modifiers already applied.
 class ItemGenerator {
 private:
-    static void apply_affix(Item *i, int affix_type, int ilevel);
-    static void apply_curse(Item *i, int ilevel);
+    static void apply_affix(Item *i, int affix_type, int affix_chance);
+    static void apply_curse(Item *i, int curse_chance);
     static int generate_base_type(int item_type);
+    static Item *generate_base_item(int item_type, int min_ilevel, int max_ilevel);
     static int get_base_ilevel(int item_type, int item_idx);
 public:
     static Item *generate();

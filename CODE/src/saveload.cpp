@@ -369,6 +369,7 @@ bool process_game_flags(FILE *f) {
 //----------------------------------------------------------------------------
 bool process_potion_scramble_data(FILE *f) {
     char magic[4];
+    int val;
 
     fseek(f, SaveLoadConsts::POTION_SCRAMBLINGS_OFFSET, SEEK_SET);
     fread(&magic, sizeof(char), 4, f);
@@ -377,7 +378,8 @@ bool process_potion_scramble_data(FILE *f) {
     }
 
     for (int i=0; i < ItemConsts::NUM_POTIONS; ++i) {
-        fread(&(g_scrambled_potion_icons[i]), sizeof(int), 1, f);
+        fread(&val, sizeof(int), 1, f);
+        g_scrambled_potion_icons.push_back(val);
     }
 
     return true;
@@ -395,6 +397,7 @@ bool process_potion_scramble_data(FILE *f) {
 //----------------------------------------------------------------------------
 bool process_scroll_scramble_data(FILE *f) {
     char magic[4];
+    int val;
 
     fseek(f, SaveLoadConsts::SCROLL_SCRAMBLINGS_OFFSET, SEEK_SET);
     fread(&magic, sizeof(char), 4, f);
@@ -403,7 +406,8 @@ bool process_scroll_scramble_data(FILE *f) {
     }
 
     for (int i=0; i < ItemConsts::NUM_SCROLLS; ++i) {
-        fread(&(g_scrambled_scroll_icons[i]), sizeof(int), 1, f);
+        fread(&val, sizeof(int), 1, f);
+        g_scrambled_scroll_icons.push_back(val);
     }
 
     return true;
@@ -430,8 +434,8 @@ bool process_ided_potion_data(FILE *f) {
 
     bool b;
     for (int i=0; i < ItemConsts::NUM_POTIONS; ++i) {
-        fwrite(&b, sizeof(bool), 1, f);
-        g_identified_potions[i] = b;
+        fread(&b, sizeof(bool), 1, f);
+        g_identified_potions.push_back(b);
     }
 
     return true;
@@ -458,8 +462,8 @@ bool process_ided_scroll_data(FILE *f) {
 
     bool b;
     for (int i=0; i < ItemConsts::NUM_SCROLLS; ++i) {
-        fwrite(&b, sizeof(bool), 1, f);
-        g_identified_scrolls[i] = b;
+        fread(&b, sizeof(bool), 1, f);
+        g_identified_scrolls.push_back(b);
     }
 
     return true;
@@ -856,6 +860,7 @@ int write_identified_scrolls(FILE *f) {
     fputc('C', f);
     fputc('R', f);
     fputc('I', f);
+
     for (int i=0; i < g_identified_scrolls.size(); ++i) {
         bool b = g_identified_scrolls[i];
         fwrite(&b, sizeof(bool), 1, f);

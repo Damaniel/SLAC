@@ -136,6 +136,101 @@ void unlock_dungeon(int dungeon, bool loading_save) {
 }
 
 //----------------------------------------------------------------------------
+// Calculates the amount the vendor will sell an item for
+//
+// Arguments:
+//   i - the item to calculate value of
+//
+// Returns:
+//   The value
+//----------------------------------------------------------------------------
+int get_item_price(Item *i) {
+	float price = 2.0 * (float)(i->value);
+
+	if (i->item_class == ItemConsts::WEAPON_CLASS || i->item_class == ItemConsts::ARMOR_CLASS) {
+		// Is the item a mystery item?
+		if (!i->is_identified) {
+			price = price * 0.2;
+		}
+		else {
+			// Adjust price based on item ilevel relative to player ilevel
+			int ilevel_diff = i->ilevel - g_game_flags.max_ilevel;
+			if (ilevel_diff <= -16)
+				price = price * 0.2;
+			if (ilevel_diff <= -10 && ilevel_diff >= -15)
+				price = price * 0.5;
+			if (ilevel_diff <= -9 && ilevel_diff >= -5)
+				price = price * 0.8;
+			if (ilevel_diff >= 5 && ilevel_diff <= 9)
+				price = price * 2.0;
+			if (ilevel_diff >= 10 && ilevel_diff <= 15)
+				price = price * 5.0;
+			if (ilevel_diff >= 16)
+				price = price * 10.0;
+
+			// prefix, no suffix
+			if (i->prefix_id != -1 && i->suffix_id == -1)
+				price = price * 2.0;
+			// suffix, no prefix
+			if (i->prefix_id == -1 && i->suffix_id == -1)
+				price = price * 2.0;
+			// prefix and suffix
+			if (i->prefix_id != -1 && i->suffix_id != -1)
+				price = price * 6.0;
+		}
+
+		float offset = 100.0/(float)(rand() % 50 + 75);
+		price = price * offset;
+	}
+	if (i->item_class == ItemConsts::SCROLL_CLASS || i->item_class == ItemConsts::POTION_CLASS) {
+		float offset = 100.0/(float(rand() % 20 + 90));
+		price = price * offset;
+	}
+
+	return (int)price;
+}
+
+//----------------------------------------------------------------------------
+// Calculates the amount the vendor will buy an item for
+//
+// Arguments:
+//   i - the item to calculate value of
+//
+// Returns:
+//   The value
+//----------------------------------------------------------------------------
+int get_item_sell_price(Item *i) {
+	float price = (float)(i->value);
+
+	if (i->item_class == ItemConsts::WEAPON_CLASS || i->item_class == ItemConsts::ARMOR_CLASS) {
+		if (!i->is_identified) {
+			return (int)price;
+		}
+		else if (i->is_identified && i->is_cursed) {
+			return (int)(price / 2);
+		}
+		else if (i->is_identified && i->prefix_id == -1 && i->suffix_id == -1) {
+			return (int)price;
+		}
+		else if (i->is_identified && i->prefix_id == -1 && i->suffix_id != -1) {
+			return (int)(price * 1.5);
+		}
+		else if (i->is_identified && i->prefix_id != -1 && i->suffix_id == -1) {
+			return (int)(price * 1.5);
+		}
+		else {
+			return (int)(price * 2.0);
+		}
+
+	}
+	if (i->item_class == ItemConsts::SCROLL_CLASS || i->item_class == ItemConsts::POTION_CLASS) {
+		return (int)price;
+	}
+
+	return 0;
+}
+
+//----------------------------------------------------------------------------
 // Puts the museum artifacts into a map (for faster access, hopefully)
 //
 // Arguments:

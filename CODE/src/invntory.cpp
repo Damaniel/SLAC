@@ -343,9 +343,9 @@ void Item::dump_item(void) {
     else
         std::cout << "u";
     std::cout << std::endl;
-
     switch (item_class) {
         case ItemConsts::WEAPON_CLASS:
+            std::cout << "id = " << id << ", base_id = " << g_weapon_base_ids[id].type_id << std::endl;
             std::cout << "====== Weapon Specific ===================" << std::endl;
             std::cout << "Type:      " << g_weapon_type_ids[g_weapon_base_ids[id].type_id].name << std::endl;
             std::cout << "Attack:    " << attack << std::endl;
@@ -354,8 +354,9 @@ void Item::dump_item(void) {
             dump_suffix();
             break;
         case ItemConsts::ARMOR_CLASS:
+            std::cout << "id = " << id << ", base_id = " << g_armor_base_ids[id].type_id << std::endl;
             std::cout << "====== Armor Specific ===================" << std::endl;
-            std::cout << "Type:      " << g_armor_type_ids[g_armor_base_ids[id].type_id].name << std::endl;
+            std::cout << "Type:      " << g_armor_type_ids[g_armor_base_ids[id].type_id - 7].name << std::endl;
             std::cout << "Defense:    " << defense << std::endl;
             std::cout << "Cursed:    " << is_cursed << std::endl;
             dump_prefix();

@@ -185,7 +185,6 @@ void shut_down_game() {
 // MAIN
 //----------------------------------------------------------------------------------
 int main(void) {
-
 	std::cout << "Loading game..." << std::endl;
 
 	init_game();

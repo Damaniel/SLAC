@@ -24,6 +24,7 @@
 #ifndef __TOWN_H__
 #define __TOWN_H__
 
+#include "invntory.h"
 #include <string>
 
 typedef struct {
@@ -130,5 +131,8 @@ void check_for_active_area(int x, int y);
 void enter_dungeon(int floor);
 void unlock_dungeon(int dungeon, bool loading_save);
 void init_museum_artifacts();
+
+int get_item_price(Item *i);
+int get_item_sell_price(Item *i);
 
 #endif

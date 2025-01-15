@@ -24,45 +24,6 @@
 #include "globals.h"
 
 //----------------------------------------------------------------------------
-// Generates an item.  This can be anything, weighted by overall item class,
-// item base type and mod types, assuming a max item level of 100
-//
-// Arguments:
-//   None
-//
-// Returns:
-//   A pointer to a randomly generated Item.
-//----------------------------------------------------------------------------
-Item *ItemGenerator::generate() {
-    return ItemGenerator::generate(100);
-}
-
-//----------------------------------------------------------------------------
-// Generates an item based on a specified item level.  Within that constraint,
-// this can be anything, weighted by overall item class, item base type and
-// mod types.
-//
-// Arguments:
-//   ilevel - the target item level to use for item generation
-//
-// Returns:
-//   A pointer to a randomly generated Item.  The memory for this will need
-//   to be freed later since it's heap allocated.
-//----------------------------------------------------------------------------
-Item *ItemGenerator::generate(int ilevel) {
-    Item *i;
-    int item_type = roll_from_pool(ItemConsts::g_item_class_pool,
-                                   ItemConsts::g_item_class_pool_count,
-                                   ItemConsts::g_item_class_pool_entries);
-    i = ItemGenerator::generate(item_type, ilevel);
-
-    // i->dump_item();
-    // std::cout << std::endl;
-
-    return i;
-}
-
-//----------------------------------------------------------------------------
 // Generates an item based on rules for creating items to go into the
 // equipment shop.  Ilevel ranges, adjusted prefix, suffix and curse rates,
 // and identification status are all non-standard compared to the 'usual'
@@ -80,27 +41,71 @@ Item *ItemGenerator::shop_generate() {
     Item *i;
 
     // Determine an ilevel range to roll.  It should be the player's maximum
-    // dungeon ilevel, +/- 20
-    int ilevel_min = g_game_flags.max_ilevel - 20;
-    int ilevel_max = g_game_flags.max_ilevel + 20;
-    int target_ilevel = (rand() % ilevel_min) + (ilevel_max - ilevel_min);
+    // dungeon ilevel, +/- 25
+    int ilevel_min = g_game_flags.max_ilevel - 25;
+    int ilevel_max = g_game_flags.max_ilevel + 25;
+
+    if (ilevel_min < 0)
+        ilevel_min = 0;
+    if (ilevel_max > 100)
+        ilevel_max = 100;
 
     // Generate either a weapon or an armor.  Weapons are slightly more likely
     // on average than an arbitrary piece of armor.  Pick a number from 0-9 -
     // 0-7 generate armor, 8 or 9 generate a weapon
     int equipment_type = rand() % 9;
+    if (equipment_type < 8) {
+        i = ItemGenerator::generate_base_item(ItemConsts::ARMOR_CLASS, ilevel_min, ilevel_max);
+    }
+    else {
+        i = ItemGenerator::generate_base_item(ItemConsts::WEAPON_CLASS, ilevel_min, ilevel_max);
+    }
 
     // With 1 in 4 odds, flag an item as 'mystery'
     bool mystery = false;
-    if (rand() % 4 == 0)
+    if (rand() % 100 < 25)
         mystery = true;
 
+    int curse_chance;
+    int chance_of_affix;
     // If mystery, roll prefixes/suffixes/curse with higher odds
-
+    if (mystery) {
+        curse_chance = (ItemConsts::BASE_CHANCE_OF_CURSE + 5) + (g_game_flags.max_ilevel / 4);
+        chance_of_affix = (ItemConsts::BASE_CHANCE_OF_AFFIX + 15) + (g_game_flags.max_ilevel / 2);
+    }
     // If standard, roll prefixes/suffixes/curses with standard odds
+    else {
+        curse_chance = 0;
+        chance_of_affix = ItemConsts::BASE_CHANCE_OF_AFFIX + (g_game_flags.max_ilevel / 4);
+    }
+
+    // Cap the chance of curse/prefix/suffix, so that some mystery items will always be 'normal'
+    if (curse_chance > 90)
+        curse_chance = 90;
+    if (chance_of_affix > 90)
+        chance_of_affix = 90;
+
+    // Attempt to apply a curse to items that can be.  This will dictate what kinds of affixes can roll.
+    if (i->can_be_cursed) {
+        ItemGenerator::apply_curse(i, curse_chance);
+    }
+    if (i->can_have_prefix) {
+        // std::cout << "generator: attempting to add prefix" << std::endl;
+        ItemGenerator::apply_affix(i, ItemConsts::PREFIX_CLASS, chance_of_affix);
+    }
+    if (i->can_have_suffix) {
+        // std::cout << "generator: attempting to add suffix" << std::endl;
+        ItemGenerator::apply_affix(i, ItemConsts::SUFFIX_CLASS, chance_of_affix);
+    }
 
     // If standard, mark the item as identified.  If mystery, mark as
     // unidentified
+    if (mystery) {
+        i->is_identified = false;
+    }
+    else {
+        i->is_identified = true;
+    }
 
     // return the finished item
     return i;
@@ -179,8 +184,8 @@ int ItemGenerator::get_base_ilevel(int item_type, int item_idx) {
 }
 
 //----------------------------------------------------------------------------
-// Generates an item of a particular item class, weighted by base type and mod
-// types, in a particular base ilevel range
+// Generates an base item of a particular item class (for example, an armor,
+// or a weapon).  This item will have no affixes of any kind.
 //
 // Arguments:
 //   item_type - item to generate
@@ -192,7 +197,7 @@ int ItemGenerator::get_base_ilevel(int item_type, int item_idx) {
 // Valid item types are (WEAPON_CLASS, ARMOR_CLASS, CURRENCY_CLASS,
 // CONSUMABLE_CLASS, ARTIFACT_CLASS).
 //----------------------------------------------------------------------------
-Item *ItemGenerator::generate(int item_type, int min_ilevel, int max_ilevel) {
+Item *ItemGenerator::generate_base_item(int item_type, int min_ilevel, int max_ilevel) {
     Item *i;
     int attempt, base_ilevel;
     int rolled_base_type;
@@ -209,6 +214,7 @@ Item *ItemGenerator::generate(int item_type, int min_ilevel, int max_ilevel) {
     do {
         rolled_base_type = ItemGenerator::generate_base_type(item_type);
         base_ilevel = ItemGenerator::get_base_ilevel(item_type, rolled_base_type);
+
         // If the item is at or below the ilevel as-is, accept it immediately
         if (base_ilevel >= min_ilevel && base_ilevel <= max_ilevel) {
             // std::cout <<  "  generator: item meets ilevel requirements, generating base" << std::endl;
@@ -249,33 +255,45 @@ Item *ItemGenerator::generate(int item_type, int min_ilevel, int max_ilevel) {
         i->init(i->item_class, 0);
     }
 
-    // Attempt to apply a curse to items that can be.  This will dictate what kinds of affixes can roll.
-    if (i->can_be_cursed) {
-        ItemGenerator::apply_curse(i, base_ilevel);
-    }
+    return i;
+}
 
-    // Attempt to add a prefix or suffix to items that can have them
-    if (i->can_have_prefix) {
-        // std::cout << "generator: attempting to add prefix" << std::endl;
-        ItemGenerator::apply_affix(i, ItemConsts::PREFIX_CLASS, base_ilevel);
-    }
-    if (i->can_have_suffix) {
-        // std::cout << "generator: attempting to add suffix" << std::endl;
-        ItemGenerator::apply_affix(i, ItemConsts::SUFFIX_CLASS, base_ilevel);
-    }
+//----------------------------------------------------------------------------
+// Generates an item.  This can be anything, weighted by overall item class,
+// item base type and mod types, assuming a max item level of 100
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   A pointer to a randomly generated Item.
+//----------------------------------------------------------------------------
+Item *ItemGenerator::generate() {
+    return ItemGenerator::generate(100);
+}
 
-    // If the item is cursed but didn't get a prefix or a suffix, demote it back to
-    // a non-cursed item (so we don't end up with a cursed item with no adjusted
-    // stats)
-    if (i->is_cursed && i->prefix_id == -1 && i->suffix_id == -1) {
-        i->is_cursed = false;
-    }
+//----------------------------------------------------------------------------
+// Generates an item based on a specified item level.  Within that constraint,
+// this can be anything, weighted by overall item class, item base type and
+// mod types.
+//
+// Arguments:
+//   ilevel - the target item level to use for item generation
+//
+// Returns:
+//   A pointer to a randomly generated Item.  The memory for this will need
+//   to be freed later since it's heap allocated.
+//----------------------------------------------------------------------------
+Item *ItemGenerator::generate(int ilevel) {
+    Item *i;
+    int item_type = roll_from_pool(ItemConsts::g_item_class_pool,
+                                   ItemConsts::g_item_class_pool_count,
+                                   ItemConsts::g_item_class_pool_entries);
+    i = ItemGenerator::generate(item_type, ilevel);
 
-    // If the item is a potion or scroll and has been previously identified,
-    // mark it as such
-    identify_if_previously_known(i);
-
+    // i->dump_item();
     // std::cout << std::endl;
+
     return i;
 }
 
@@ -297,6 +315,59 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
     return ItemGenerator::generate(item_type, 0, ilevel);
 }
 
+//----------------------------------------------------------------------------
+// Generates an item of a particular item class, weighted by base type and mod
+// types, in a particular base ilevel range
+//
+// Arguments:
+//   item_type - item to generate
+//   min_ilevel, max_ilevel - the target item level range to use for item
+//                            generation
+//
+// Returns:
+//   A pointer to a randomly generated Item of the item type.
+//
+// Valid item types are (WEAPON_CLASS, ARMOR_CLASS, CURRENCY_CLASS,
+// CONSUMABLE_CLASS, ARTIFACT_CLASS).
+//----------------------------------------------------------------------------
+Item *ItemGenerator::generate(int item_type, int min_ilevel, int max_ilevel) {
+    Item *i;
+
+    i = ItemGenerator::generate_base_item(item_type, min_ilevel, max_ilevel);
+
+    int curse_chance = ItemConsts::BASE_CHANCE_OF_CURSE + (g_game_flags.max_ilevel / 10);
+    // Attempt to apply a curse to items that can be.  This will dictate what kinds of affixes can roll.
+    if (i->can_be_cursed) {
+        ItemGenerator::apply_curse(i, curse_chance);
+    }
+
+    // This will generate an affix chance between 10% at ilevel 1 and roughly 35% at iLevel 100
+    int affix_chance = ItemConsts::BASE_CHANCE_OF_AFFIX + (g_game_flags.max_ilevel / 4);
+
+    // Attempt to add a prefix or suffix to items that can have them
+    if (i->can_have_prefix) {
+        // std::cout << "generator: attempting to add prefix" << std::endl;
+        ItemGenerator::apply_affix(i, ItemConsts::PREFIX_CLASS, affix_chance);
+    }
+    if (i->can_have_suffix) {
+        // std::cout << "generator: attempting to add suffix" << std::endl;
+        ItemGenerator::apply_affix(i, ItemConsts::SUFFIX_CLASS, affix_chance);
+    }
+
+    // If the item is cursed but didn't get a prefix or a suffix, demote it back to
+    // a non-cursed item (so we don't end up with a cursed item with no adjusted
+    // stats)
+    if (i->is_cursed && i->prefix_id == -1 && i->suffix_id == -1) {
+        i->is_cursed = false;
+    }
+
+    // If the item is a potion or scroll and has been previously identified,
+    // mark it as such
+    identify_if_previously_known(i);
+
+    // std::cout << std::endl;
+    return i;
+}
 
 //----------------------------------------------------------------------------
 // Generates and applies a random affix to an item, if the item is capable of
@@ -305,17 +376,14 @@ Item *ItemGenerator::generate(int item_type, int ilevel) {
 // Arguments:
 //   i - the Item to augment
 //   affix_type - the type of affix to apply (PREFIX_CLASS or SUFFIX_CLASS)
-//   ilevel - the maximum ilevel to use when pulling from the affix pools
 //
 // Returns:
 //   Nothing
 //----------------------------------------------------------------------------
-void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
-    int roll, rolled_affix_type, attempt, base_ilevel, affix_chance;
+void ItemGenerator::apply_affix(Item *i, int affix_type, int affix_chance) {
+    int roll, rolled_affix_type, attempt, base_ilevel;
     bool generated;
 
-    // This will generate an affix chance between 10% at ilevel 1 and roughly 35% at iLevel 100
-    affix_chance = ItemConsts::BASE_CHANCE_OF_AFFIX + (ilevel / 4);
     roll = rand() % 100;
     if (roll < affix_chance) {
         attempt = 0;
@@ -346,7 +414,7 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
 
             // std::cout << "  generator: ilevel is " << ilevel << ", base ilevel of item is " << base_ilevel << std::endl;
             // if the item level of the affix is lower than the passed in one, we're done
-            if (base_ilevel <= ilevel) {
+            if (base_ilevel <= i->ilevel) {
                 // std::cout <<  "  generator: affix meets ilevel requirements, will apply to item" << std::endl;
                 generated = true;
             }
@@ -354,13 +422,13 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
                 // otherwise, do the same ilevel difference check as for item bases,
                 // and apply the affix if it passes
                 // std::cout << "  generator: affix doesn't meet ilevel requirement, rolling difference" << std::endl;
-                int i = rand() % 100;
-                int ilevel_diff = base_ilevel - ilevel;
+                int ilevel_idx = rand() % 100;
+                int ilevel_diff = base_ilevel - i->ilevel;
                 if (ilevel_diff > 10) {
                     ilevel_diff = 10;
                 }
                 // std::cout << "    generator: level difference is " << ilevel_diff << ", chance of generation is " << (100 - 10 * ilevel_diff) << "%" << std::endl;
-                if (i >= (10 * ilevel_diff)) {
+                if (ilevel_idx >= (10 * ilevel_diff)) {
                     // std::cout << "    generator: level difference override passed, generating affix" << std::endl;
                     generated = true;
                 } else {
@@ -384,7 +452,7 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
             if (affix_type == ItemConsts::PREFIX_CLASS)
                 i->prefix_id = -1;
             if (affix_type == ItemConsts::SUFFIX_CLASS)
-                i->prefix_id = -1;
+                i->suffix_id = -1;
         }
     }
     else
@@ -402,15 +470,15 @@ void ItemGenerator::apply_affix(Item *i, int affix_type, int ilevel) {
 //
 // Arguments:
 //   i - the item to curse
-//
+//   curse_chance - the odds of the item actually being cursed
 // Returns:
 //   Nothing.
 //----------------------------------------------------------------------------
-void ItemGenerator::apply_curse(Item *i, int ilevel) {
+void ItemGenerator::apply_curse(Item *i, int curse_chance) {
     int roll = rand() % 100;
     // The chance of a curse is the base chance plus 1% per 10 ilevels
     // (so an item with ilevel 100 has a 20% chance of being cursed)
-    if (roll < (ItemConsts::BASE_CHANCE_OF_CURSE + (ilevel / 10))) {
+    if (roll < curse_chance) {
         i->is_cursed = true;
         //std::cout << "generator: Item was cursed" << std::endl;
     }

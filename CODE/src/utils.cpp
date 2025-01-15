@@ -39,6 +39,7 @@ void DungeonFloor::clear_lists() {
 	// An iterator for a list in the structure
 	std::list<Item *>::iterator list_it;
 
+	//std::cout << "in clear_lists()" << std::endl;
 	// Iterate through the item map and remove individual sublists found
 	for (it = items.begin(); it != items.end(); ++it) {
 		//std::cout << "Found a list" << std::endl;
@@ -791,23 +792,25 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 //------------------------------------------------------------------------------
 void initialize_main_game_state(void) {
 
-	// Scramble the potions and scrolls
-	scramble_potion_icons();
-	scramble_scroll_icons();
+	// Scramble the potions and scrolls and reset the current dungeon,
+	// but only if we're not loading a new save
+	if (!g_state_flags.save_loaded) {
+		scramble_potion_icons();
+		scramble_scroll_icons();
 
-	g_identified_potions.clear();
-	g_identified_scrolls.clear();
+		g_identified_potions.clear();
+		g_identified_scrolls.clear();
 
-	// Reset the identified state for all scrolls and potions
-	for (int i = 0; i < ItemConsts::NUM_POTIONS; ++i) {
-		g_identified_potions.push_back(false);
+		// Reset the identified state for all scrolls and potions
+		for (int i = 0; i < ItemConsts::NUM_POTIONS; ++i) {
+			g_identified_potions.push_back(false);
+		}
+		for (int i = 0; i < ItemConsts::NUM_SCROLLS; ++i) {
+			g_identified_scrolls.push_back(false);
+		}
+		// The 'default' dungeon is Dusty Tunnels
+		g_dungeon.maze_id = DUSTY_TUNNELS;
 	}
-	for (int i = 0; i < ItemConsts::NUM_SCROLLS; ++i) {
-		g_identified_scrolls.push_back(false);
-	}
-
-	// The 'default' dungeon is Dusty Tunnels
-	g_dungeon.maze_id = DUSTY_TUNNELS;
 
 	// Delete any existing inventory and create a new one
 	if (g_inventory != NULL) {
