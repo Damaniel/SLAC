@@ -25,10 +25,11 @@ This release currently uses a specific ancient version of DJGPP, g++ (2.95.2) an
 
 ## To be added
 
-The game is technically playable from beginning to end, but is still in active development and many features are missing:
+The game is technically playable from beginning to end, but is still in active development.  I'm currently working on:
 
-- Functional shops and museum
 - More balancing.  A lot more balancing.
+- Bug-fixing
+- QOL changes, like letting the player choose what items decurse and identify scrolls can be used on.
 
 ## Screenshots (in DOSBox-X)
 
