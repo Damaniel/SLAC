@@ -327,50 +327,81 @@ int get_item_price(Item *i) {
 	if (i == NULL)
 		return 0;
 
+	//std::cout << "Item name = " << i->get_full_name() << std::endl;
 	float price = 2.0 * (float)(i->value);
+
+	//std::cout << "  Base price = " << price << std::endl;
 
 	if (i->item_class == ItemConsts::WEAPON_CLASS || i->item_class == ItemConsts::ARMOR_CLASS) {
 		// Is the item a mystery item?
 		if (!i->is_identified) {
-			price = price * 0.2;
+			price = price * 0.5;
+			//std::cout << "  Mystery discounted price = " << price << std::endl;
 		}
 		else {
 			// Adjust price based on item ilevel relative to player ilevel
 			int ilevel_diff = i->ilevel - g_game_flags.max_ilevel;
-			if (ilevel_diff <= -16)
+			//std::cout << " - ilevel difference = " << ilevel_diff << std::endl;
+			if (ilevel_diff <= -16) {
 				price = price * 0.2;
-			if (ilevel_diff <= -10 && ilevel_diff >= -15)
+				//std::cout << "   - 80% price reduction" << std::endl;
+			}
+			if (ilevel_diff <= -10 && ilevel_diff >= -15) {
 				price = price * 0.5;
-			if (ilevel_diff <= -9 && ilevel_diff >= -5)
+				//std::cout << "   - 50% price reduction" << std::endl;
+			}
+			if (ilevel_diff <= -9 && ilevel_diff >= -5) {
 				price = price * 0.8;
-			if (ilevel_diff >= 5 && ilevel_diff <= 9)
+				//std::cout << "   - 20% price reduction" << std::endl;
+			}
+			if (ilevel_diff >= 5 && ilevel_diff <= 9) {
 				price = price * 2.0;
-			if (ilevel_diff >= 10 && ilevel_diff <= 15)
+				//std::cout << "   - 2x price increase" << std::endl;
+			}
+			if (ilevel_diff >= 10 && ilevel_diff <= 15) {
 				price = price * 5.0;
-			if (ilevel_diff >= 16)
+				//std::cout << "   - 5x price increase" << std::endl;
+			}
+			if (ilevel_diff >= 16 && ilevel_diff <= 20) {
 				price = price * 10.0;
+				//std::cout << "   - 10x price increase" << std::endl;
+			}
+			if (ilevel_diff > 20) {
+				price = price * 30.0;
+				//std::cout << "   - 30x price increase" << std::endl;
+			}
 
 			// prefix, no suffix
-			if (i->prefix_id != -1 && i->suffix_id == -1)
-				price = price * 2.0;
+			if (i->prefix_id != -1 && i->suffix_id == -1) {
+				price = price * 3.0;
+				//std::cout << "  - prefix, no suffix (3x price increase)" << std::endl;
+			}
 			// suffix, no prefix
-			if (i->prefix_id == -1 && i->suffix_id != -1)
-				price = price * 2.0;
+			if (i->prefix_id == -1 && i->suffix_id != -1) {
+				price = price * 3.0;
+				//std::cout << "  - suffix, no prefix (3x price increase)" << std::endl;
+			}
 			// prefix and suffix
-			if (i->prefix_id != -1 && i->suffix_id != -1)
-				price = price * 6.0;
+			if (i->prefix_id != -1 && i->suffix_id != -1) {
+				price = price * 10.0;
+				//std::cout << "  - both prefix and suffix (10x price increase)" << std::endl;
+			}
 		}
 
 		float offset = 100.0/(float)(rand() % 50 + 75);
+		//std::cout << "  - adjustment multiplier: " << offset << std::endl;
 		price = price * offset;
 	}
 	if (i->item_class == ItemConsts::SCROLL_CLASS || i->item_class == ItemConsts::POTION_CLASS) {
 		float offset = 100.0/(float(rand() % 20 + 90));
 		price = price * offset;
+		//std::cout << "  Item is scroll or potion: offset = " << offset << std::endl;
 	}
 
 	if (price < 1)
 		price = 1;
+
+	//std::cout << "  = Final price = " << (int)price << std::endl;
 
 	return (int)price;
 }

@@ -812,6 +812,9 @@ void initialize_main_game_state(void) {
 		}
 		// The 'default' dungeon is Dusty Tunnels
 		g_dungeon.maze_id = DUSTY_TUNNELS;
+
+		// Reset the max ilevel for this character
+		g_game_flags.max_ilevel = 0;
 	}
 
 	// Delete any existing inventory and create a new one

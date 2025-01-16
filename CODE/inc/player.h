@@ -279,6 +279,11 @@ public:
 	ArtifactEffectFlags effects;	// Artifact effects
 	bool is_alive;					// Is the player still alive
 	bool is_poisoned;				// Is the player poisoned?
+	bool speed_reduced;				// Has the player's speed been reduced?
+	short poison_intensity;			// How strong is the poison
+	short poison_turns_remaining;	// How long will the poison last?
+	short speed_reduction_intensity; 		// How strong is the speed reduction?
+	short speed_reduction_turns_remaining;	// How long will it last?
 	bool is_equip_poisoned; 		// Is cursed equipment poisoning the player
 	PotionEffect potion_effects[ItemConsts::NUM_TURN_POTION_EFFECTS];	// Are these potions active, and for how long?
 

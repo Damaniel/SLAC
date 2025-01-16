@@ -41,9 +41,10 @@ Item *ItemGenerator::shop_generate() {
     Item *i;
 
     // Determine an ilevel range to roll.  It should be the player's maximum
-    // dungeon ilevel, +/- 25
+    // dungeon ilevel, -25, + 15 (mainly because the out of depth check still
+    // exists, creating diminishing returns for rolls of up to +25)
     int ilevel_min = g_game_flags.max_ilevel - 25;
-    int ilevel_max = g_game_flags.max_ilevel + 25;
+    int ilevel_max = g_game_flags.max_ilevel + 15;
 
     if (ilevel_min < 0)
         ilevel_min = 0;
