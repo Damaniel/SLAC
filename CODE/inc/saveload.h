@@ -32,14 +32,14 @@ namespace SaveLoadConsts {
     // In future versions, if these values need to become dynamic,
     // they'll cease to be constants.
     const int PLAYER_DATA_OFFSET = 128;
-    const int INVENTORY_DATA_OFFSET = 418;
-    const int ARTIFACT_DATA_OFFSET = 14294;
-    const int DUNGEON_DATA_OFFSET = 14578;
-    const int GAME_FLAGS_OFFSET = 14606;
-    const int POTION_SCRAMBLINGS_OFFSET = 14644;
-    const int SCROLL_SCRAMBLINGS_OFFSET = 14688;
-    const int ID_POTIONS_OFFSET = 14736;
-    const int ID_SCROLLS_OFFSET = 14750;
+    const int INVENTORY_DATA_OFFSET = 422;
+    const int ARTIFACT_DATA_OFFSET = 14298;
+    const int DUNGEON_DATA_OFFSET = 14582;
+    const int GAME_FLAGS_OFFSET = 14610;
+    const int POTION_SCRAMBLINGS_OFFSET = 14648;
+    const int SCROLL_SCRAMBLINGS_OFFSET = 14692;
+    const int ID_POTIONS_OFFSET = 14740;
+    const int ID_SCROLLS_OFFSET = 14754;
 
     const int INVENTORY_ITEM_SIZE = 289;
 

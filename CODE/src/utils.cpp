@@ -794,8 +794,8 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 //------------------------------------------------------------------------------
 void initialize_main_game_state(void) {
 
-	// Scramble the potions and scrolls and reset the current dungeon,
-	// but only if we're not loading a new save
+	// Do actions unique to each new character that only apply when
+	// we haven't just loaded a save game
 	if (!g_state_flags.save_loaded) {
 		scramble_potion_icons();
 		scramble_scroll_icons();
@@ -815,7 +815,16 @@ void initialize_main_game_state(void) {
 
 		// Reset the max ilevel for this character
 		g_game_flags.max_ilevel = 0;
+
+		// Reset status effects
+		g_player.is_poisoned = false;
+		g_player.is_equip_poisoned = false;
+		g_player.is_speed_reduced = false;
+		g_player.poison_turns_remaining = 0;
+		g_player.speed_reduction_turns_remaining = 0;
 	}
+
+	// Do the rest of the actions common to all new characters
 
 	// Delete any existing inventory and create a new one
 	if (g_inventory != NULL) {
@@ -1903,6 +1912,9 @@ void process_move(std::pair<int, int> proposed_location) {
 
 	// subtract a turn from any active potions
 	g_player.decrement_potion_turn_count();
+
+	// subtract a turn from any active statuses
+	g_player.decrement_status_effect_turn_count();
 
 	// Check to see if any existing shop inventory should be deleted
 	process_shop_reset_logic();

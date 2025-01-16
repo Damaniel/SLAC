@@ -54,7 +54,8 @@ HallOfChampionsEntry g_hall_of_champions[UtilConsts::NUM_HALL_OF_CHAMPIONS_ENTRI
  *============================================================================*/
 void process_per_frame() {
 
-	if (g_state_flags.cur_state == STATE_MAIN_GAME) {
+	if (g_state_flags.cur_state == STATE_MAIN_GAME &&
+	    g_state_flags.cur_substate != GAME_SUBSTATE_PLAYER_JUST_DIED) {
 		g_state_flags.time_to_update_elapsed -= 1;
 		if (g_state_flags.time_to_update_elapsed <= 0) {
 			g_game_flags.elapsed_time += 1;

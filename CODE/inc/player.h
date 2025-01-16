@@ -288,6 +288,7 @@ public:
 	short poison_turns_remaining;	// How long will the poison last?
 	short speed_reduction_intensity; 		// How strong is the speed reduction?
 	short speed_reduction_turns_remaining;	// How long will it last?
+	float original_speed;				    // The pre-reduction speed value
 	PotionEffect potion_effects[ItemConsts::NUM_TURN_POTION_EFFECTS];	// Are these potions active, and for how long?
 
 	// Positional information
@@ -316,6 +317,7 @@ public:
 	void activate_potion_effect(int effect, int duration);
 	void deactivate_potion_effect(int effect);
 	void decrement_potion_turn_count();
+	void decrement_status_effect_turn_count();
 	int num_effect_turns_remaining(int effect);
 	bool is_potion_active(int effect);
 	void add_potion_effects_to_stats();

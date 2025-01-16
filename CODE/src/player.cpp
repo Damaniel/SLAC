@@ -86,9 +86,6 @@ void Player::init(int x, int y) {
 	effects.permanent_discovery = false;
 
 	is_alive = true;
-	is_poisoned = false;
-	is_equip_poisoned = false;
-	is_speed_reduced = false;
 
 	// Set the level 1 base stats
 	init_base_stats();
@@ -192,6 +189,54 @@ void Player::add_gold(int amount) {
 //------------------------------------------------------------------------------
 int Player::get_gold(void) {
 	return gold;
+}
+
+//------------------------------------------------------------------------------
+// Counts down any poison/speed reduction counters
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   None
+//------------------------------------------------------------------------------
+void Player::decrement_status_effect_turn_count(void) {
+	int damage_taken;
+
+	if (poison_turns_remaining > 0) {
+		poison_turns_remaining -= 1;
+		switch(poison_intensity) {
+			case EnemyConsts::POISON_LIGHT:
+				damage_taken = (int)(actual.max_hp / (100.0 / EnemyConsts::LIGHT_POISON_DMG_PER_TURN));
+				break;
+			case EnemyConsts::POISON_MEDIUM:
+				damage_taken = (int)(actual.max_hp / (100.0 / EnemyConsts::MED_POISON_DMG_PER_TURN));
+				break;
+			case EnemyConsts::POISON_HEAVY:
+				damage_taken = (int)(actual.max_hp / (100.0 / EnemyConsts::HEAVY_POISON_DMG_PER_TURN));
+				break;
+		}
+		if (damage_taken < 1)
+			damage_taken  = 1;
+		set_hp(hp - damage_taken);
+		if (poison_turns_remaining <= 0) {
+			is_poisoned = false;
+			poison_turns_remaining = 0;
+			if (hp > 0)
+				g_text_log.put_line("The poison leaves your body.");
+		}
+		g_state_flags.update_status_hp_exp = true;
+		g_state_flags.update_display = true;
+	}
+
+	if (speed_reduction_turns_remaining > 0) {
+		speed_reduction_turns_remaining -= 1;
+		if (speed_reduction_turns_remaining <= 0) {
+			is_speed_reduced = false;
+			speed_reduction_turns_remaining = 0;
+			actual.spd = original_speed;
+		}
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -1021,7 +1066,7 @@ void Player::set_hp(int new_hp) {
 	if (hp > actual.max_hp)
 		hp = (unsigned short)actual.max_hp;
 
-	if (hp < 0) {
+	if (hp <= 0) {
 		is_alive = false;
 		g_state_flags.cur_substate = GAME_SUBSTATE_PLAYER_JUST_DIED;
 		g_text_log.put_line("Alas!  You have died. Press ENTER to continue.");

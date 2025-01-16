@@ -130,6 +130,7 @@ bool process_player_data(FILE *f, int *slots) {
     fread(&(g_player.poison_turns_remaining), sizeof(short), 1, f);
     fread(&(g_player.speed_reduction_intensity), sizeof(short), 1, f);
     fread(&(g_player.speed_reduction_turns_remaining), sizeof(short), 1, f);
+    fread(&(g_player.original_speed), sizeof(float), 1, f);
 
     for (int i = 0; i < ItemConsts::NUM_TURN_POTION_EFFECTS; ++i) {
         fread(&(g_player.potion_effects[i].enabled), sizeof(bool), 1, f);
@@ -580,7 +581,8 @@ int write_player_data(FILE *f) {
     fwrite(&(g_player.poison_turns_remaining), sizeof(short), 1, f);
     fwrite(&(g_player.speed_reduction_intensity), sizeof(short), 1, f);
     fwrite(&(g_player.speed_reduction_turns_remaining), sizeof(short), 1, f);
-    bytes_written += 11;
+    fwrite(&(g_player.original_speed), sizeof(float), 1, f);
+    bytes_written += 15;
 
     // Write the potion effects
     for (int i = 0; i < ItemConsts::NUM_TURN_POTION_EFFECTS; ++i) {
