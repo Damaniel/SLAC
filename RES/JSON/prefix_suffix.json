@@ -126,7 +126,7 @@
                 "description": "+10% ATK",
                 "gid": 0,
                 "rarity": 240,
-                "ilevel": 5, 
+                "ilevel": 5,
                 "modifiers": {
                     "atk": {
                         "modifier_id": 3,
@@ -183,7 +183,7 @@
             "Quick": {
                 "id": 3,
                 "name": "Quick",
-                "description": "+10% SPD",
+                "description": "+3% SPD",
                 "gid": 3,
                 "rarity": 240,
                 "ilevel": 5,
@@ -191,7 +191,7 @@
                     "spd": {
                         "modifier_id": 5,
                         "modifier_mode": 0,
-                        "amount": 1.1,
+                        "amount": 1.03,
                         "secondary_id": 0
                     }
                 }
@@ -199,7 +199,7 @@
             "Speedy": {
                 "id": 4,
                 "name": "Speedy",
-                "description": "+25% SPD, +1 DEX",
+                "description": "+7% SPD, +1 DEX",
                 "gid": 4,
                 "rarity": 128,
                 "ilevel": 20,
@@ -207,7 +207,7 @@
                     "spd": {
                         "modifier_id": 5,
                         "modifier_mode": 0,
-                        "amount": 1.25,
+                        "amount": 1.07,
                         "secondary_id": 0
                     },
                     "dex": {
@@ -221,7 +221,7 @@
             "Supersonic": {
                 "id": 5,
                 "name": "Supersonic",
-                "description": "+50% SPD, +4 DEX",
+                "description": "+12% SPD, +4 DEX",
                 "gid": 5,
                 "rarity": 16,
                 "ilevel": 70,
@@ -229,7 +229,7 @@
                     "spd": {
                         "modifier_id": 5,
                         "modifier_mode": 0,
-                        "amount": 1.5,
+                        "amount": 1.12,
                         "secondary_id": 0
                     },
                     "dex":{
@@ -243,7 +243,7 @@
             "Stout": {
                 "id": 6,
                 "name": "Stout",
-                "description": "+10% DEF",
+                "description": "+5% DEF",
                 "gid": 6,
                 "rarity": 240,
                 "ilevel": 5,
@@ -251,7 +251,7 @@
                     "def": {
                         "modifier_id": 4,
                         "modifier_mode": 0,
-                        "amount": 1.1,
+                        "amount": 1.05,
                         "secondary_id": 0
                     }
                 }
@@ -259,7 +259,7 @@
             "Hardy": {
                 "id": 7,
                 "name": "Hardy",
-                "description": "+25% DEF, +1 CON",
+                "description": "+10% DEF, +1 CON",
                 "gid": 7,
                 "rarity": 128,
                 "ilevel": 20,
@@ -267,7 +267,7 @@
                     "def": {
                         "modifier_id": 4,
                         "modifier_mode": 0,
-                        "amount": 1.25,
+                        "amount": 1.1,
                         "secondary_id": 0
                     },
                     "con": {
@@ -281,7 +281,7 @@
             "Unbreakable": {
                 "id": 8,
                 "name": "Unbreakable",
-                "description": "+50% DEF, +4 CON",
+                "description": "+20% DEF, +4 CON",
                 "gid": 8,
                 "rarity": 16,
                 "ilevel": 70,
@@ -289,7 +289,7 @@
                     "def": {
                         "modifier_id": 4,
                         "modifier_mode": 0,
-                        "amount": 1.5,
+                        "amount": 1.2,
                         "secondary_id": 0
                     },
                     "con": {
@@ -303,10 +303,26 @@
             "Buffed": {
                 "id": 9,
                 "name": "Buffed",
-                "description": "+20% HP",
+                "description": "+10% HP",
                 "gid": 9,
                 "rarity": 128,
                 "ilevel": 25,
+                "modifiers": {
+                    "hp": {
+                        "modifier_id": 13,
+                        "modifier_mode": 0,
+                        "amount": 1.1,
+                        "secondary_id": 0
+                    }
+                }
+            },
+            "Healthy": {
+                "id": 10,
+                "name": "Healthy",
+                "description": "+20% HP",
+                "gid": 10,
+                "rarity": 32,
+                "ilevel": 50,
                 "modifiers": {
                     "hp": {
                         "modifier_id": 13,
@@ -316,26 +332,10 @@
                     }
                 }
             },
-            "Healthy": {
-                "id": 10,
-                "name": "Healthy",
-                "description": "+50% HP",
-                "gid": 10,
-                "rarity": 32,
-                "ilevel": 50,
-                "modifiers": {
-                    "hp": {
-                        "modifier_id": 13,
-                        "modifier_mode": 0,
-                        "amount": 1.5,
-                        "secondary_id": 0
-                    }
-                }
-            },
             "Immortal": {
                 "id": 11,
                 "name": "Immortal",
-                "description": "+100% HP",
+                "description": "+40% HP",
                 "gid": 11,
                 "rarity": 2,
                 "ilevel": 80,
@@ -343,7 +343,7 @@
                     "hp": {
                         "modifier_id": 13,
                         "modifier_mode": 0,
-                        "amount": 2.0,
+                        "amount": 1.4,
                         "secondary_id": 0
                     }
                 }
@@ -389,7 +389,7 @@
             "Infernous": {
                 "id": 14,
                 "name": "Infernous",
-                "description": "+50% of damage as fire",
+                "description": "+25% of damage as fire",
                 "gid": 14,
                 "rarity": 96,
                 "ilevel": 50,
@@ -397,7 +397,7 @@
                     "atk_as_fire": {
                         "modifier_id": 3,
                         "modifier_mode": 2,
-                        "amount": 0.5,
+                        "amount": 0.25,
                         "secondary_id": 6
                     }
                 }
@@ -421,7 +421,7 @@
             "Freezing": {
                 "id": 16,
                 "name": "Freezing",
-                "description": "+50% of damage as ice",
+                "description": "+25% of damage as ice",
                 "gid": 16,
                 "rarity": 96,
                 "ilevel": 50,
@@ -429,7 +429,7 @@
                     "atk_as_ice": {
                         "modifier_id": 3,
                         "modifier_mode": 2,
-                        "amount": 0.5,
+                        "amount": 0.25,
                         "secondary_id": 7
                     }
                 }
@@ -453,7 +453,7 @@
             "Shocking": {
                 "id": 18,
                 "name": "Shocking",
-                "description": "+50% of damage as lightning",
+                "description": "+25% of damage as lightning",
                 "gid": 18,
                 "rarity": 96,
                 "ilevel": 50,
@@ -461,7 +461,7 @@
                     "atk_as_ice": {
                         "modifier_id": 3,
                         "modifier_mode": 2,
-                        "amount": 0.5,
+                        "amount": 0.25,
                         "secondary_id": 8
                     }
                 }
@@ -646,7 +646,7 @@
                         "secondary_id": 0
                     }
                 }
-            }, 
+            },
             "Engulfed": {
                 "id": 28,
                 "name": "Engulfed",
@@ -678,7 +678,7 @@
                         "secondary_id": 0
                     }
                 }
-            }, 
+            },
             "Frozen": {
                 "id": 30,
                 "name": "Chilled",
@@ -694,7 +694,7 @@
                         "secondary_id": 0
                     }
                 }
-            },  
+            },
             "Shocked": {
                 "id": 31,
                 "name": "Shocked",
@@ -710,7 +710,7 @@
                         "secondary_id": 0
                     }
                 }
-            }, 
+            },
             "Electrified": {
                 "id": 32,
                 "name": "Electrified",
