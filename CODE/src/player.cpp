@@ -58,7 +58,7 @@ Player::Player(int x, int y) {
 void Player::init(int x, int y) {
 	x_pos = x;
 	y_pos = y;
-	gold = 0;
+	gold = 100;
 	level = 1;
 	exp = 0;
 	residual_action_points = 0;

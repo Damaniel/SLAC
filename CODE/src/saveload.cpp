@@ -951,6 +951,22 @@ bool load_game(std::string filename) {
         return false;
     }
 
+    // Load the IDed potions (so items can be created)
+    result = process_ided_potion_data(fp);
+    if (!result) {
+        std::cout << "IDed potion data bad" << std::endl;
+        fclose(fp);
+        return false;
+    }
+
+    // Load the IDed scrolls (so items can be created)
+    result = process_ided_scroll_data(fp);
+    if (!result) {
+        std::cout << "IDed potion data bad" << std::endl;
+        fclose(fp);
+        return false;
+    }
+
     // Load the inventory data
     result = process_inventory_data(fp);
     if (!result) {

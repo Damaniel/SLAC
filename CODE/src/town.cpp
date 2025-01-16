@@ -222,6 +222,11 @@ void buy_item(Item *i, int price) {
 		if (!i->is_identified)
 			i->is_identified = true;
 
+		// If the item is a potion or scroll, ensure that future ones are identified
+		if (i->item_class == ItemConsts::POTION_CLASS || i->item_class == ItemConsts::SCROLL_CLASS) {
+			perform_identification_action(i, false);
+		}
+
 		// Subtract the player's gold
 		g_player.gold -= price;
 
