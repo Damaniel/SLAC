@@ -268,6 +268,7 @@ namespace PlayerConsts {
 class Player {
 // For now, all members are public.
 public:
+	// Basic information
 	std::string name;				// The player's name
 	short hp;						// The player's current HP
 	unsigned short level;			// The player's current level
@@ -277,16 +278,19 @@ public:
 	Stats actual;					// The player's fully modified (by gear, items, etc) stats
 	EquipmentSet equipment;			// Equipment
 	ArtifactEffectFlags effects;	// Artifact effects
+
+	// Status effects
 	bool is_alive;					// Is the player still alive
 	bool is_poisoned;				// Is the player poisoned?
-	bool speed_reduced;				// Has the player's speed been reduced?
+	bool is_equip_poisoned; 		// Is cursed equipment poisoning the player (this can't be cured with a cure poison potion)
+	bool is_speed_reduced;				// Has the player's speed been reduced?
 	short poison_intensity;			// How strong is the poison
 	short poison_turns_remaining;	// How long will the poison last?
 	short speed_reduction_intensity; 		// How strong is the speed reduction?
 	short speed_reduction_turns_remaining;	// How long will it last?
-	bool is_equip_poisoned; 		// Is cursed equipment poisoning the player
 	PotionEffect potion_effects[ItemConsts::NUM_TURN_POTION_EFFECTS];	// Are these potions active, and for how long?
 
+	// Positional information
 	int x_pos;				// The position of the player in the current area
 	int y_pos;
 	int last_room_entered;
@@ -298,6 +302,7 @@ public:
 	int recall_count;		// The number of turns until a recall scroll activates
 	bool recall_active;		// Is a scroll of recall active?
 
+	// Combat information
 	int residual_action_points;		// Any action points left after their last turn
 
 	Player();

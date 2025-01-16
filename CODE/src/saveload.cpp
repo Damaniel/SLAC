@@ -125,6 +125,11 @@ bool process_player_data(FILE *f, int *slots) {
     fread(&(g_player.exp), sizeof(int), 1, f);
     fread(&(g_player.is_poisoned), sizeof(bool), 1, f);
     fread(&(g_player.is_equip_poisoned), sizeof(bool), 1, f);
+    fread(&(g_player.is_speed_reduced), sizeof(bool), 1, f);
+    fread(&(g_player.poison_intensity), sizeof(short), 1, f);
+    fread(&(g_player.poison_turns_remaining), sizeof(short), 1, f);
+    fread(&(g_player.speed_reduction_intensity), sizeof(short), 1, f);
+    fread(&(g_player.speed_reduction_turns_remaining), sizeof(short), 1, f);
 
     for (int i = 0; i < ItemConsts::NUM_TURN_POTION_EFFECTS; ++i) {
         fread(&(g_player.potion_effects[i].enabled), sizeof(bool), 1, f);
@@ -565,9 +570,17 @@ int write_player_data(FILE *f) {
     fwrite(&(g_player.level), sizeof(short), 1, f);
     fwrite(&(g_player.gold), sizeof(int), 1, f);
     fwrite(&(g_player.exp), sizeof(int), 1, f);
+    bytes_written += 12;
+
+    // Write the status effect data
     fwrite(&(g_player.is_poisoned), sizeof(bool), 1, f);
     fwrite(&(g_player.is_equip_poisoned), sizeof(bool), 1, f);
-    bytes_written += 14;
+    fwrite(&(g_player.is_speed_reduced), sizeof(bool), 1, f);
+    fwrite(&(g_player.poison_intensity), sizeof(short), 1, f);
+    fwrite(&(g_player.poison_turns_remaining), sizeof(short), 1, f);
+    fwrite(&(g_player.speed_reduction_intensity), sizeof(short), 1, f);
+    fwrite(&(g_player.speed_reduction_turns_remaining), sizeof(short), 1, f);
+    bytes_written += 11;
 
     // Write the potion effects
     for (int i = 0; i < ItemConsts::NUM_TURN_POTION_EFFECTS; ++i) {

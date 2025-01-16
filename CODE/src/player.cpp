@@ -88,6 +88,7 @@ void Player::init(int x, int y) {
 	is_alive = true;
 	is_poisoned = false;
 	is_equip_poisoned = false;
+	is_speed_reduced = false;
 
 	// Set the level 1 base stats
 	init_base_stats();

@@ -25,21 +25,21 @@
 #define __SAVELOAD_H__
 
 namespace SaveLoadConsts {
-    const int FILE_VERSION = 0x01;
+    const int FILE_VERSION = 0x02;
 
     // The save file format uses fixed field sizes for everything
-    // in version 1, so the offsets are fixed and known.
+    // in version 1 and 2, so the offsets are fixed and known.
     // In future versions, if these values need to become dynamic,
     // they'll cease to be constants.
     const int PLAYER_DATA_OFFSET = 128;
-    const int INVENTORY_DATA_OFFSET = 409;
-    const int ARTIFACT_DATA_OFFSET = 14285;
-    const int DUNGEON_DATA_OFFSET = 14569;
-    const int GAME_FLAGS_OFFSET = 14597;
-    const int POTION_SCRAMBLINGS_OFFSET = 14635;
-    const int SCROLL_SCRAMBLINGS_OFFSET = 14679;
-    const int ID_POTIONS_OFFSET = 14727;
-    const int ID_SCROLLS_OFFSET = 14741;
+    const int INVENTORY_DATA_OFFSET = 418;
+    const int ARTIFACT_DATA_OFFSET = 14294;
+    const int DUNGEON_DATA_OFFSET = 14578;
+    const int GAME_FLAGS_OFFSET = 14606;
+    const int POTION_SCRAMBLINGS_OFFSET = 14644;
+    const int SCROLL_SCRAMBLINGS_OFFSET = 14688;
+    const int ID_POTIONS_OFFSET = 14736;
+    const int ID_SCROLLS_OFFSET = 14750;
 
     const int INVENTORY_ITEM_SIZE = 289;
 

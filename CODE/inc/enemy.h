@@ -56,6 +56,34 @@ namespace EnemyConsts {
     const int ID_LORTROX_DRAGON_KNIGHT = 204;
     const int ID_SILANT_ICE_GIANT = 205;
     const int ID_MEGALITH_ARMORED_BEAST = 206;
+
+	enum {
+		POISON_LIGHT,
+		POISON_MEDIUM,
+		POISON_HEAVY
+	};
+
+	enum {
+		SPEED_DOWN_LIGHT,
+		SPEED_DOWN_HEAVY
+	};
+
+	// Poison effects
+	const int LIGHT_POISON_DMG_PER_TURN = 2;
+	const int LIGHT_POISON_DURATION = 10;
+
+	const int MED_POISON_DMG_PER_TURN = 3;
+	const int MED_POISON_DURATION = 25;
+
+	const int HEAVY_POISON_DMG_PER_TURN = 5;
+	const int HEAVY_POISON_DURATION = 50;
+
+	// Speed down effects
+	const int LIGHT_SPEED_DOWN_REDUCTION = 25;
+	const int LIGHT_SPEED_DOWN_DURATION = 15;
+
+	const int HEAVY_SPEED_DOWN_REDUCTION = 50;
+	const int HEAVY_SPEED_DOWN_DURATION = 30;
 }
 
 typedef struct {
