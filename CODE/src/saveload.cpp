@@ -428,7 +428,6 @@ bool process_scroll_scramble_data(FILE *f) {
 bool process_ided_potion_data(FILE *f) {
     char magic[4];
 
-    std::cout << "in process_ided_potion_data" << std::endl;
     g_identified_potions.clear();
 
     fseek(f, SaveLoadConsts::ID_POTIONS_OFFSET, SEEK_SET);

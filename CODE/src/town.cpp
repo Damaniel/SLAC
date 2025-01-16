@@ -39,6 +39,12 @@
 //----------------------------------------------------------------------------
 void check_and_process_town_entrances(int x, int y) {
 	bool enter = false;
+
+	// Only check the following locations if the player is actually in the town proper and
+	// not in a shop
+	if (g_state_flags.in_item_shop || g_state_flags.in_weapon_shop || g_state_flags.in_museum)
+		return;
+
 	if (x == TownConsts::DUSTY_TUNNELS_X && y == TownConsts::DUSTY_TUNNELS_Y)
 	{
 		g_dungeon.maze_id = DUSTY_TUNNELS;

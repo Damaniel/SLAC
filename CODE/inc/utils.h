@@ -116,8 +116,7 @@ namespace UtilConsts {
 
     // How long after a shop inventory is refreshed until it gets
     // deleted
-    // TODO: make this number larger (1000) after testing
-    const int SHOP_RESET_TURNS = 100;
+    const int SHOP_RESET_TURNS = 1000;
 }
 
 // A collection of flags relevant to the game loop.  The game loop will want
