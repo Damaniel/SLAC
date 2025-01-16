@@ -428,9 +428,13 @@ bool process_scroll_scramble_data(FILE *f) {
 bool process_ided_potion_data(FILE *f) {
     char magic[4];
 
+    std::cout << "in process_ided_potion_data" << std::endl;
+    g_identified_potions.clear();
+
     fseek(f, SaveLoadConsts::ID_POTIONS_OFFSET, SEEK_SET);
     fread(&magic, sizeof(char), 4, f);
     if (magic[0] != 'P' || magic[1] != 'O' || magic[2] != 'T' || magic[3] != 'I' ) {
+        std::cout << (int)magic[0] << " " << (int)magic[1] << " " << (int)magic[2] << " " << (int)magic[3] << std::endl;
         return false;
     }
 
@@ -455,6 +459,8 @@ bool process_ided_potion_data(FILE *f) {
 //----------------------------------------------------------------------------
 bool process_ided_scroll_data(FILE *f) {
     char magic[4];
+
+    g_identified_scrolls.clear();
 
     fseek(f, SaveLoadConsts::ID_SCROLLS_OFFSET, SEEK_SET);
     fread(&magic, sizeof(char), 4, f);
@@ -962,7 +968,7 @@ bool load_game(std::string filename) {
     // Load the IDed scrolls (so items can be created)
     result = process_ided_scroll_data(fp);
     if (!result) {
-        std::cout << "IDed potion data bad" << std::endl;
+        std::cout << "IDed scroll data bad" << std::endl;
         fclose(fp);
         return false;
     }

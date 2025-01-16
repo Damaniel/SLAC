@@ -694,6 +694,7 @@ void Item::init(int ic, int idx) {
             can_equip = pb->can_equip;
             can_drop = pb->can_drop;
             can_use = pb->can_use;
+            std::cout << "pot size = " << g_identified_potions.size() << std::endl;
             is_identified = g_identified_potions[id];
             break;
         case ItemConsts::SCROLL_CLASS:
@@ -714,6 +715,7 @@ void Item::init(int ic, int idx) {
             can_equip = sb->can_equip;
             can_drop = sb->can_drop;
             can_use = sb->can_use;
+            std::cout << "scroll size = " << g_identified_scrolls.size() << std::endl;
             is_identified = g_identified_scrolls[id];
             quantity = 1;
             break;

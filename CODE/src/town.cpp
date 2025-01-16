@@ -157,7 +157,6 @@ void populate_shop_inventory() {
 			else {
 				i = ItemGenerator::generate(ItemConsts::SCROLL_CLASS, g_game_flags.max_ilevel);
 			}
-			i->is_identified = true;
 
 			// Determine if there's already one of these in the inventory
             int stackable_slot = g_item_shop_inventory->get_stackable_item_slot(i);
