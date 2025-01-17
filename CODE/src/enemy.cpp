@@ -969,7 +969,7 @@ void perform_enemy_combat(Enemy *e) {
 		// Sum up all damage
 		int total_damage_taken = player_base_damage_taken + player_fire_damage_taken + player_ice_damage_taken + player_lightning_damage_taken;
 		if (attack_crits) {
-			g_text_log.put_line("Critical hit!");
+			g_text_log.put_line(" == Critical hit! ==");
 			int prevent_chance = (int)(g_player.actual.con / 2);
 			if (prevent_chance > 90)
 				prevent_chance = 90;

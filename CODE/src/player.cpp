@@ -1294,9 +1294,18 @@ void Player::dump_stats(Stats *s) {
 void perform_player_combat(Enemy *target) {
 	int total_damage_from_all_attacks = 0;
 	char text[80];
+	int accuracy = (int)(g_player.actual.acc / 5) + PlayerConsts::BASE_ACCURACY;
+	if (accuracy > 100)
+		accuracy = 100;
 
 	for (int attack = 0; attack < g_player.actual.apt; ++attack) {
 		g_text_log.put_line("You attack the " + target->get_name() + "!");
+
+		if ((rand() % 100) >= accuracy) {
+			g_text_log.put_line(" -- The attack misses! --");
+			continue;
+		}
+
 		// Calculate physical base damage
 		int base_physical_damage = (int)((g_player.actual.atk + (0.2 * g_player.actual.str)) * ((rand() % 50) + 75) / 100);
 		//std::cout << "perform_player_combat: player base phys = " << base_physical_damage << std::endl;
@@ -1361,7 +1370,7 @@ void perform_player_combat(Enemy *target) {
 		// Sum up all damage
 		int total_damage_taken = enemy_base_damage_taken + enemy_fire_damage_taken + enemy_ice_damage_taken + enemy_lightning_damage_taken;
 		if (attack_crits) {
-			g_text_log.put_line("Critical hit!");
+			g_text_log.put_line(" -- Critical hit! --");
 			total_damage_taken = total_damage_taken * 2;
 		}
 

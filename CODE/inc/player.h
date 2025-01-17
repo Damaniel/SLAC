@@ -99,6 +99,8 @@ namespace PlayerConsts {
 	const int TOWN_START_X = 4;
 	const int TOWN_START_Y = 32;
 
+	const int BASE_ACCURACY = 80;
+
 	// For the following two tables, the 'n'th entry represents the experience the player
 	// should have and the stats the player should have at level (n+1)
 	//
