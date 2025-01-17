@@ -822,6 +822,8 @@ void initialize_main_game_state(void) {
 		g_player.is_speed_reduced = false;
 		g_player.poison_turns_remaining = 0;
 		g_player.speed_reduction_turns_remaining = 0;
+		g_player.poison_intensity = EnemyConsts::NO_POISON;
+		g_player.speed_reduction_intensity = EnemyConsts::NO_SPEED_DOWN;
 	}
 
 	// Do the rest of the actions common to all new characters

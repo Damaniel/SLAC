@@ -221,6 +221,7 @@ void Player::decrement_status_effect_turn_count(void) {
 		set_hp(hp - damage_taken);
 		if (poison_turns_remaining <= 0) {
 			is_poisoned = false;
+			poison_intensity = EnemyConsts::NO_POISON;
 			poison_turns_remaining = 0;
 			if (hp > 0)
 				g_text_log.put_line("The poison leaves your body.");
@@ -233,6 +234,7 @@ void Player::decrement_status_effect_turn_count(void) {
 		speed_reduction_turns_remaining -= 1;
 		if (speed_reduction_turns_remaining <= 0) {
 			is_speed_reduced = false;
+			speed_reduction_intensity = EnemyConsts::NO_SPEED_DOWN;
 			speed_reduction_turns_remaining = 0;
 			actual.spd = original_speed;
 		}
@@ -667,6 +669,19 @@ void Player::recalculate_actual_stats(void) {
 	// Finally, apply potion effects.  These are multiplicative and so are applied after
 	// all other effects
 	add_potion_effects_to_stats();
+
+	// If the player still has speed reduction from an enemy, reapply it
+	g_player.original_speed = g_player.actual.spd;
+	if (g_player.is_speed_reduced) {
+		switch (g_player.speed_reduction_intensity) {
+			case EnemyConsts::SPEED_DOWN_LIGHT:
+				g_player.actual.spd -= EnemyConsts::LIGHT_SPEED_DOWN_REDUCTION;
+				break;
+			case EnemyConsts::SPEED_DOWN_HEAVY:
+				g_player.actual.spd -= EnemyConsts::HEAVY_SPEED_DOWN_REDUCTION;
+				break;
+		}
+	}
 
 	// Our HP vs max HP may have changed; update the display.
 	g_state_flags.update_status_hp_exp = true;

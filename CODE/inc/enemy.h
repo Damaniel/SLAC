@@ -58,15 +58,36 @@ namespace EnemyConsts {
     const int ID_MEGALITH_ARMORED_BEAST = 206;
 
 	enum {
+        NO_POISON,
 		POISON_LIGHT,
 		POISON_MEDIUM,
 		POISON_HEAVY
 	};
 
 	enum {
+        NO_SPEED_DOWN,
 		SPEED_DOWN_LIGHT,
 		SPEED_DOWN_HEAVY
 	};
+
+    enum {
+        NO_EFFECT,
+        LOW_LIGHT_POISON,
+        MID_LIGHT_POISON,
+        HIGH_LIGHT_POISON,
+        LOW_MED_POISON,
+        MID_MED_POISON,
+        HIGH_MED_POISON,
+        LOW_HEAVY_POISON,
+        MID_HEAVY_POISON,
+        HIGH_HEAVY_POISON,
+        LOW_LIGHT_SPEED_DROP,
+        MID_LIGHT_SPEED_DROP,
+        HIGH_LIGHT_SPEED_DROP,
+        LOW_HEAVY_SPEED_DROP,
+        MID_HEAVY_SPEED_DROP,
+        HIGH_HEAVY_SPEED_DROP
+    };
 
 	// Poison effects
 	const int LIGHT_POISON_DMG_PER_TURN = 2;
@@ -197,5 +218,6 @@ void process_enemy_forgetting_player(std::list<Enemy *> &el);
 void process_enemy_vision(std::list<Enemy *> &el);
 void perform_enemy_combat(Enemy *e);
 void delete_dead_enemies(std::list<Enemy *> &el);
+void apply_enemy_status_effect(Enemy *e);
 
 #endif
