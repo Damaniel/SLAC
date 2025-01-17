@@ -96,10 +96,14 @@ namespace PlayerConsts {
 	// The highest elemental resistance (in percent) the player can have
 	const int MAX_ELEM_DEF = 95;
 
+	// The location in town where the player starts (either as a new character
+	// or after loading when having saved in town)
 	const int TOWN_START_X = 4;
 	const int TOWN_START_Y = 32;
 
-	const int BASE_ACCURACY = 80;
+	// The player's base accuracy at level 1 is 80 (78 + 2 from the 10
+	// initial accuracy points they're given)
+	const int BASE_ACCURACY = 78;
 
 	// For the following two tables, the 'n'th entry represents the experience the player
 	// should have and the stats the player should have at level (n+1)

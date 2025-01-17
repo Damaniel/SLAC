@@ -2021,6 +2021,8 @@ void Render::render_confirm_exit_dialog(BITMAP *destination) {
 //   Nothing
 //----------------------------------------------------------------------------------
 void Render::render_title_menu(BITMAP *destination) {
+	char name[11];
+
 	// Draw the menu box
 	rectfill(destination, UiConsts::TITLE_MENU_BOX_X1, UiConsts::TITLE_MENU_BOX_Y1,
 	         UiConsts::TITLE_MENU_BOX_X2, UiConsts::TITLE_MENU_BOX_Y2, 16);
@@ -2096,8 +2098,11 @@ void Render::render_title_menu(BITMAP *destination) {
 		render_text(destination, "Press ENTER when done",
 	            	UiConsts::TITLE_MENU_NEW_X, UiConsts::TITLE_MENU_NEW_LINE_2_Y,
 					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
-		render_text(destination, g_state_flags.character_name,
-	            	UiConsts::TITLE_MENU_NEW_X, UiConsts::TITLE_MENU_NEW_NAME_Y,
+		if (g_state_flags.new_game_char_text_index < 10)
+			sprintf(name, "%s_", g_state_flags.character_name);
+		else
+			sprintf(name, "%s", g_state_flags.character_name);
+		render_text(destination, name, UiConsts::TITLE_MENU_NEW_X, UiConsts::TITLE_MENU_NEW_NAME_Y,
 					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
 
 	}
