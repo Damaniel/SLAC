@@ -10,7 +10,7 @@ Secret Legacy of the Ancient Caves (SLAC) is a roguelike for MS-DOS computers.  
 - 3 different dungeons
 - 7 bosses
 - 200 different enemies
-- A side variety of items (scrolls, potions, equipment)
+- A wide variety of items (scrolls, potions, equipment)
 - Everything outside of town is procedurally generated, so every game (and every generation!) is different
 
 ## Requirements
