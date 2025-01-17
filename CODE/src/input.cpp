@@ -33,36 +33,48 @@
 // Returns:
 //   Nothing
 //----------------------------------------------------------------------------
-void process_inventory_common_tasks(int key) {
+void process_inventory_common_tasks(int key, bool select_for_use) {
+    int *cur_x, *cur_y;
+
     // Get the old cursor position
-    g_ui_globals.prev_inv_cursor_x = g_ui_globals.inv_cursor_x;
-    g_ui_globals.prev_inv_cursor_y = g_ui_globals.inv_cursor_y;
+    if (select_for_use) {
+        g_ui_globals.prev_inv_use_on_cursor_x = g_ui_globals.inv_use_on_cursor_x;
+        g_ui_globals.prev_inv_use_on_cursor_y = g_ui_globals.inv_use_on_cursor_y;
+        cur_x = &(g_ui_globals.inv_use_on_cursor_x);
+        cur_y = &(g_ui_globals.inv_use_on_cursor_y);
+    }
+    else {
+        g_ui_globals.prev_inv_cursor_x = g_ui_globals.inv_cursor_x;
+        g_ui_globals.prev_inv_cursor_y = g_ui_globals.inv_cursor_y;
+        cur_x = &(g_ui_globals.inv_cursor_x);
+        cur_y = &(g_ui_globals.inv_cursor_y);
+    }
 
     // Set the new cursor position
     switch (key) {
         case KEY_UP:
-            g_ui_globals.inv_cursor_y = g_ui_globals.inv_cursor_y - 1;
+            *cur_y = *cur_y - 1;
             break;
         case KEY_DOWN:
-            g_ui_globals.inv_cursor_y = g_ui_globals.inv_cursor_y + 1;
+            *cur_y = *cur_y + 1;
             break;
         case KEY_LEFT:
-            g_ui_globals.inv_cursor_x = g_ui_globals.inv_cursor_x - 1;
+            *cur_x = *cur_x - 1;
             break;
         case KEY_RIGHT:
-            g_ui_globals.inv_cursor_x = g_ui_globals.inv_cursor_x + 1;
+            *cur_x = *cur_x + 1;
             break;
     }
 
     // Wrap the cursor around if necessary
-    if (g_ui_globals.inv_cursor_x < 0)
-        g_ui_globals.inv_cursor_x = UiConsts::INVENTORY_ITEMS_PER_ROW - 1;
-    if (g_ui_globals.inv_cursor_x >= UiConsts::INVENTORY_ITEMS_PER_ROW)
-        g_ui_globals.inv_cursor_x = 0;
-    if (g_ui_globals.inv_cursor_y < 0)
-        g_ui_globals.inv_cursor_y = UiConsts::INVENTORY_ROWS - 1;
-    if (g_ui_globals.inv_cursor_y >= UiConsts::INVENTORY_ROWS)
-        g_ui_globals.inv_cursor_y = 0;
+    if (*cur_x < 0)
+        *cur_x = UiConsts::INVENTORY_ITEMS_PER_ROW - 1;
+    if (*cur_x >= UiConsts::INVENTORY_ITEMS_PER_ROW)
+        *cur_x = 0;
+    if (*cur_y < 0)
+        *cur_y = UiConsts::INVENTORY_ROWS - 1;
+    if (*cur_y >= UiConsts::INVENTORY_ROWS)
+        *cur_y = 0;
 
     // Redraw the inventory cursor and description areas
     g_state_flags.update_inventory_cursor = true;
@@ -101,11 +113,7 @@ void process_inventory_menu_substate(int key) {
             // If 'Close' is selected, exit the inventory menu
             if (g_ui_globals.sel_item_option == UiConsts::NUM_ITEM_OPTIONS - 1) {
                 g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY;
-                g_state_flags.update_inventory_dialog = true;
-                g_state_flags.update_inventory_cursor = true;
-                g_state_flags.update_inventory_items = true;
-                g_state_flags.update_inventory_description = true;
-                g_state_flags.update_display = true;
+                update_inventory_display_flags();
             }
             else {
                 // Do the thing that the selected menu option does, if valid
@@ -114,21 +122,46 @@ void process_inventory_menu_substate(int key) {
                 // main inventory screen
                 if (g_state_flags.cur_substate == GAME_SUBSTATE_INVENTORY_MENU) {
                     g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY;
-                    g_state_flags.update_inventory_dialog = true;
-                    g_state_flags.update_inventory_cursor = true;
-                    g_state_flags.update_inventory_items = true;
-                    g_state_flags.update_inventory_description = true;
-                    g_state_flags.update_display = true;
+                    // refresh as usual
+                    update_inventory_display_flags();
                 }
             }
             break;
         case KEY_ESC:
             g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY;
-            g_state_flags.update_inventory_dialog = true;
-            g_state_flags.update_inventory_cursor = true;
-            g_state_flags.update_inventory_items = true;
-            g_state_flags.update_inventory_description = true;
-            g_state_flags.update_display = true;
+            update_inventory_display_flags();
+            break;
+    }
+}
+
+void process_use_on_item_substate(int key) {
+    switch (key) {
+        case KEY_UP:
+        case KEY_DOWN:
+        case KEY_LEFT:
+        case KEY_RIGHT:
+            process_inventory_common_tasks(key, true);
+            break;
+        case KEY_ENTER:
+            do_use_on_item();
+            g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY;
+            // Move the inventory cursor to where the use item cursor currently is
+            g_ui_globals.inv_cursor_x = g_ui_globals.inv_use_on_cursor_x;
+            g_ui_globals.inv_cursor_y = g_ui_globals.inv_use_on_cursor_y;
+            g_ui_globals.prev_inv_cursor_x = g_ui_globals.prev_inv_use_on_cursor_x;
+            g_ui_globals.prev_inv_cursor_y = g_ui_globals.prev_inv_use_on_cursor_y;
+            update_inventory_display_flags();
+            break;
+        case KEY_ESC:
+            // Go back to the inventory substate, not the inventory menu
+            g_text_log.put_line("You change your mind about using the scroll.");
+            g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY;
+            // Move the inventory cursor to where the use item cursor currently is
+            g_ui_globals.inv_cursor_x = g_ui_globals.inv_use_on_cursor_x;
+            g_ui_globals.inv_cursor_y = g_ui_globals.inv_use_on_cursor_y;
+            g_ui_globals.prev_inv_cursor_x = g_ui_globals.prev_inv_use_on_cursor_x;
+            g_ui_globals.prev_inv_cursor_y = g_ui_globals.prev_inv_use_on_cursor_y;
+            update_inventory_display_flags();
             break;
     }
 }
@@ -150,7 +183,7 @@ void process_inventory_substate(int key) {
         case KEY_DOWN:
         case KEY_LEFT:
         case KEY_RIGHT:
-            process_inventory_common_tasks(key);
+            process_inventory_common_tasks(key, false);
             break;
         // If Enter is pressed, bring up the inventory submenu, but only if there's an item
         // in the slot.
@@ -407,6 +440,9 @@ void process_game_state(int key) {
         case GAME_SUBSTATE_INVENTORY_MENU:
             process_inventory_menu_substate(key);
             break;
+        case GAME_SUBSTATE_USE_ON_ITEM:
+            process_use_on_item_substate(key);
+            break;
         case GAME_SUBSTATE_STATS:
             process_stats_substate(key);
             break;
@@ -503,11 +539,7 @@ void process_game_state(int key) {
                     // Change to the inventory substate
                     g_state_flags.cur_substate = GAME_SUBSTATE_INVENTORY;
                     // Update the graphics
-                    g_state_flags.update_inventory_dialog = true;
-                    g_state_flags.update_inventory_cursor = true;
-                    g_state_flags.update_inventory_description = true;
-                    g_state_flags.update_inventory_items = true;
-                    g_state_flags.update_display = true;
+                    update_inventory_display_flags();
                     break;
                 case KEY_G:
                     if (g_state_flags.in_dungeon) {

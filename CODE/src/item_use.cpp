@@ -59,7 +59,7 @@ void heal_player(int amount)
 }
 
 //----------------------------------------------------------------------------
-// Identifies the first inventory item that hasn't been identfied yet
+// Identifies the item
 //
 // Arguments:
 //   log - should the identified item be displayed in the log?
@@ -72,20 +72,18 @@ void heal_player(int amount)
 //----------------------------------------------------------------------------
 bool identify_item(bool log)
 {
-    Item *i;
-    int count = 0;
+	int slot = g_ui_globals.inv_use_on_cursor_y * UiConsts::INVENTORY_ITEMS_PER_ROW + g_ui_globals.inv_use_on_cursor_x;
+    Item *i = g_inventory->get_item_in_slot(slot);
 
-    while (count < InventoryConsts::INVENTORY_SIZE) {
-        i = g_inventory->get_item_in_slot(count);
-        if (i != NULL) {
-            if (!i->is_identified) {
-                perform_identification_action(i, log);
-                return true;
-            }
+    if (i != NULL) {
+        if (!i->is_identified) {
+            perform_identification_action(i, log);
+            return true;
         }
-        ++count;
+        else {
+            return false;
+        }
     }
-    return false;
 }
 
 //----------------------------------------------------------------------------
@@ -136,24 +134,21 @@ int identify_all(void)
 //----------------------------------------------------------------------------
 bool decurse_item(bool log)
 {
-    Item *i;
-    int count = 0;
+	int slot = g_ui_globals.inv_use_on_cursor_y * UiConsts::INVENTORY_ITEMS_PER_ROW + g_ui_globals.inv_use_on_cursor_x;
+    Item *i = g_inventory->get_item_in_slot(slot);
     char text[80];
 
-    while (count < InventoryConsts::INVENTORY_SIZE) {
-        i = g_inventory->get_item_in_slot(count);
-        if (i != NULL) {
-            if (i->is_cursed) {
-                i->is_cursed = false;
-                if (log) {
-                    sprintf(text, "%s was decursed.", i->get_full_name().c_str());
-                    g_text_log.put_line(text);
-                }
-                return true;
+    if (i != NULL) {
+        if (i->is_cursed) {
+            i->is_cursed = false;
+            if (log) {
+                sprintf(text, "%s was decursed.", i->get_full_name().c_str());
+                g_text_log.put_line(text);
             }
+            return true;
         }
-        ++count;
     }
+
     return false;
 }
 
@@ -546,7 +541,7 @@ void use_scroll_action(int id) {
         case ItemConsts::SCROLL_OF_IDENT:     // Scroll of identify
             result = identify_item(true);
             if (result == false) {
-                g_text_log.put_line("You have no unidentified items.");
+                g_text_log.put_line("This item is already identified.");
             }
             break;
         case ItemConsts::SCROLL_OF_IDENT_ALL:     // scroll of identify all
@@ -563,7 +558,7 @@ void use_scroll_action(int id) {
         case ItemConsts::SCROLL_OF_DECURSE:
             result = decurse_item(true);
             if (result == false) {
-                g_text_log.put_line("You have no cursed items.");
+                g_text_log.put_line("This item isn't cursed.");
             }
             break;
         case ItemConsts::SCROLL_OF_DECURSE_ALL:

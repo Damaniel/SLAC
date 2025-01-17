@@ -727,10 +727,18 @@ void Render::render_inventory_content(BITMAP *destination) {
 	}
 	else {
 		inv = g_inventory;
-		cursor_x = g_ui_globals.inv_cursor_x;
-		cursor_y = g_ui_globals.inv_cursor_y;
-		prev_cursor_x = g_ui_globals.prev_inv_cursor_x;
-		prev_cursor_y = g_ui_globals.prev_inv_cursor_y;
+		if (g_state_flags.cur_substate == GAME_SUBSTATE_USE_ON_ITEM) {
+			cursor_x = g_ui_globals.inv_use_on_cursor_x;
+			cursor_y = g_ui_globals.inv_use_on_cursor_y;
+			prev_cursor_x = g_ui_globals.prev_inv_use_on_cursor_x;
+			prev_cursor_y = g_ui_globals.prev_inv_use_on_cursor_y;
+		}
+		else {
+			cursor_x = g_ui_globals.inv_cursor_x;
+			cursor_y = g_ui_globals.inv_cursor_y;
+			prev_cursor_x = g_ui_globals.prev_inv_cursor_x;
+			prev_cursor_y = g_ui_globals.prev_inv_cursor_y;
+		}
 	}
 
 	if (g_state_flags.update_inventory_items || g_state_flags.update_shop_inventory_items) {
@@ -2197,6 +2205,23 @@ int Render::get_prop_text_width(char *text, int style) {
 	}
 
 	return width;
+}
+
+//------------------------------------------------------------------------------
+// Sets all the flags for an on-screen update of the inventory
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void update_inventory_display_flags(void) {
+    g_state_flags.update_inventory_dialog = true;
+    g_state_flags.update_inventory_cursor = true;
+    g_state_flags.update_inventory_items = true;
+    g_state_flags.update_inventory_description = true;
+    g_state_flags.update_display = true;
 }
 
 //------------------------------------------------------------------------------

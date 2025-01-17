@@ -24,9 +24,10 @@
 #ifndef __INPUT_H__
 #define __INPUT_H__
 
-void process_inventory_common_tasks(int key);
+void process_inventory_common_tasks(int key, bool select_for_use);
 void process_store_menu_common_tasks(int key);
 void process_inventory_substate(int key);
+void process_use_on_item_substate(int key);
 void process_map_substate(int key);
 void process_confirm_exit_substate(int key);
 void process_game_state(int key);

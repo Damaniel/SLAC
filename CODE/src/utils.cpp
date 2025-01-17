@@ -388,6 +388,7 @@ void update_main_game_display(void) {
 		case GAME_SUBSTATE_INVENTORY:
 		case GAME_SUBSTATE_INVENTORY_MENU:
 		case GAME_SUBSTATE_STORE:
+		case GAME_SUBSTATE_USE_ON_ITEM:
 			g_render.render_inventory(g_back_buffer);
 			break;
 		case GAME_SUBSTATE_STATS:
@@ -1108,6 +1109,10 @@ void perform_inventory_menu_action(void) {
 	int slot = g_ui_globals.inv_cursor_y * UiConsts::INVENTORY_ITEMS_PER_ROW + g_ui_globals.inv_cursor_x;
     Item *i = g_inventory->get_item_in_slot(slot);
 
+	std::cout << "perform_inventory_menu_action: item slot is " << slot << std::endl;
+	std::cout << "Item to act upon:" << std::endl;
+	i->dump_item();
+
 	// Determine if the action can be done by the item
 	switch (g_ui_globals.sel_item_option) {
 		case UiConsts::ITEM_OPTION_USE:
@@ -1121,13 +1126,30 @@ void perform_inventory_menu_action(void) {
 				if (g_identified_scrolls[i->id] == false && i->item_class == ItemConsts::SCROLL_CLASS)
 					perform_identification_action(i, true);
 
-				// Use the item.  Take one from the stack, or delete the item if there was only 1
-				i->use();
-				i->quantity -= 1;
-				if (i->quantity <= 0) {
-					// The item was used and there are none left, get rid of it
-					//std::cout << "perform_inventory_menu_action: stack is depleted, deleting item" << std::endl;
-					g_inventory->delete_item_in_slot(slot);
+				// If the item was specifically a identify or decurse scroll, switch to the
+				// relevant substate
+				if (i->item_class == ItemConsts::SCROLL_CLASS &&
+				    (i->id == ItemConsts::SCROLL_OF_IDENT || i->id == ItemConsts::SCROLL_OF_DECURSE)) {
+					g_ui_globals.inv_use_on_cursor_x = g_ui_globals.inv_cursor_x;
+					g_ui_globals.inv_use_on_cursor_y = g_ui_globals.inv_cursor_y;
+
+					if (i->id == ItemConsts::SCROLL_OF_IDENT)
+						g_text_log.put_line("Select the item to identify and press Enter.");
+					else
+						g_text_log.put_line("Select the item to decurse and press Enter.");
+
+					g_state_flags.cur_substate = GAME_SUBSTATE_USE_ON_ITEM;
+					update_inventory_display_flags();
+				}
+				else {
+					// Use the item.  Take one from the stack, or delete the item if there was only 1
+					i->use();
+					i->quantity -= 1;
+					if (i->quantity <= 0) {
+						// The item was used and there are none left, get rid of it
+						//std::cout << "perform_inventory_menu_action: stack is depleted, deleting item" << std::endl;
+						g_inventory->delete_item_in_slot(slot);
+					}
 				}
 			}
 			break;
@@ -1164,6 +1186,29 @@ void perform_inventory_menu_action(void) {
 			break;
 		default:
 			break;
+	}
+}
+
+//----------------------------------------------------------------------------
+// Use the item under the 'use item' cursor
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+void do_use_on_item(void) {
+	// Get the item under the cursor (i.e. the scroll that we originally activated)
+	int slot = g_ui_globals.inv_cursor_y * UiConsts::INVENTORY_ITEMS_PER_ROW + g_ui_globals.inv_cursor_x;
+    Item *i = g_inventory->get_item_in_slot(slot);
+
+	i->use();
+	i->quantity -= 1;
+	if (i->quantity <= 0) {
+		// The item was used and there are none left, get rid of it
+		//std::cout << "perform_inventory_menu_action: stack is depleted, deleting item" << std::endl;
+		g_inventory->delete_item_in_slot(slot);
 	}
 }
 

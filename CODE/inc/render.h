@@ -730,12 +730,20 @@ typedef struct {
 	int inv_cursor_x;
     int inv_cursor_y;
 
-	// Is the context menu active?
-	bool inv_menu_active;
-
 	// The place where the cursor was before it was last moved
     int prev_inv_cursor_x;
     int prev_inv_cursor_y;
+
+	// Is the context menu active?
+	bool inv_menu_active;
+
+	// The current location of the 'item to <x>' cursor in the inventory
+	int inv_use_on_cursor_x;
+	int inv_use_on_cursor_y;
+
+	// The previous location of the 'item to <x>' cursor in the inventory
+	int prev_inv_use_on_cursor_x;
+	int prev_inv_use_on_cursor_y;
 
 	// The location of the inventory cursor in the shop the player is currently in
 	int shop_inv_cursor_x;
@@ -794,5 +802,6 @@ class Render {
 };
 
 void force_update_screen(void);
+void update_inventory_display_flags(void);
 
 #endif

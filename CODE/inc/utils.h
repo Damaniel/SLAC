@@ -275,6 +275,7 @@ void scramble_scroll_icons(void);
 int roll_from_pool(const int *pool, int pool_size, int max_val);
 void process_enemy_item_drop(Enemy *e);
 int get_complete_artifact_quantity(int artifact_id);
+void do_use_on_item(void);
 
 // Miscellaneous enemy functions
 void mark_boss_as_defeated(int id);
