@@ -1109,10 +1109,6 @@ void perform_inventory_menu_action(void) {
 	int slot = g_ui_globals.inv_cursor_y * UiConsts::INVENTORY_ITEMS_PER_ROW + g_ui_globals.inv_cursor_x;
     Item *i = g_inventory->get_item_in_slot(slot);
 
-	std::cout << "perform_inventory_menu_action: item slot is " << slot << std::endl;
-	std::cout << "Item to act upon:" << std::endl;
-	i->dump_item();
-
 	// Determine if the action can be done by the item
 	switch (g_ui_globals.sel_item_option) {
 		case UiConsts::ITEM_OPTION_USE:
