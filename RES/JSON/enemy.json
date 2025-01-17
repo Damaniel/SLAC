@@ -239,7 +239,7 @@
             "brown_worm": {
                 "id": 9,
                 "name": "brown worm",
-                "bid": 0,
+                "bid": 1,
                 "gid": 9,
                 "hp": 22,
                 "str": 15,
@@ -262,7 +262,7 @@
             "slug": {
                 "id": 10,
                 "name": "slug",
-                "bid": 0,
+                "bid": 1,
                 "gid": 10,
                 "hp": 24,
                 "str": 15,
@@ -308,7 +308,7 @@
             "putrid_pup": {
                 "id": 12,
                 "name": "putrid pup",
-                "bid": 0,
+                "bid": 1,
                 "gid": 12,
                 "hp": 35,
                 "str": 18,
@@ -423,7 +423,7 @@
             "sprite": {
                 "id": 17,
                 "name": "sprite",
-                "bid": 0,
+                "bid": 10,
                 "gid": 17,
                 "hp": 60,
                 "str": 19,
@@ -492,7 +492,7 @@
             "small_gray_bat": {
                 "id": 20,
                 "name": "small gray bat",
-                "bid": 0,
+                "bid": 10,
                 "gid": 20,
                 "hp": 75,
                 "str": 22,
@@ -515,7 +515,7 @@
             "small_blue_bat": {
                 "id": 21,
                 "name": "small blue bat",
-                "bid": 0,
+                "bid": 10,
                 "gid": 21,
                 "hp": 77,
                 "str": 15,
@@ -791,7 +791,7 @@
             "flipper": {
                 "id": 33,
                 "name": "flipper",
-                "bid": 0,
+                "bid": 11,
                 "gid": 33,
                 "hp": 90,
                 "str": 40,
@@ -837,7 +837,7 @@
             "blue_jelly": {
                 "id": 35,
                 "name": "blue jelly",
-                "bid": 0,
+                "bid": 10,
                 "gid": 35,
                 "hp": 90,
                 "str": 40,
@@ -883,7 +883,7 @@
             "blue_fungus": {
                 "id": 37,
                 "name": "blue fungus",
-                "bid": 0,
+                "bid": 2,
                 "gid": 37,
                 "hp": 70,
                 "str": 25,
@@ -906,7 +906,7 @@
             "brown_fungus": {
                 "id": 38,
                 "name": "brown fungus",
-                "bid": 0,
+                "bid": 1,
                 "gid": 38,
                 "hp": 110,
                 "str": 37,
@@ -929,7 +929,7 @@
             "spirit": {
                 "id": 39,
                 "name": "spirit",
-                "bid": 0,
+                "bid": 12,
                 "gid": 39,
                 "hp": 110,
                 "str": 37,
@@ -1044,7 +1044,7 @@
             "feline_thief": {
                 "id": 44,
                 "name": "feline thief",
-                "bid": 0,
+                "bid": 12,
                 "gid": 44,
                 "hp": 130,
                 "str": 42,
@@ -1067,7 +1067,7 @@
             "zombie": {
                 "id": 45,
                 "name": "zombie",
-                "bid": 0,
+                "bid": 1,
                 "gid": 45,
                 "hp": 130,
                 "str": 42,
@@ -1136,7 +1136,7 @@
             "bleached_skeleton": {
                 "id": 48,
                 "name": "bleached skeleton",
-                "bid": 0,
+                "bid": 1,
                 "gid": 48,
                 "hp": 130,
                 "str": 50,
@@ -1228,7 +1228,7 @@
             "tick": {
                 "id": 52,
                 "name": "tick",
-                "bid": 0,
+                "bid": 5,
                 "gid": 52,
                 "hp": 100,
                 "str": 55,
@@ -1366,7 +1366,7 @@
             "mudman": {
                 "id": 58,
                 "name": "mudman",
-                "bid": 0,
+                "bid": 13,
                 "gid": 58,
                 "hp": 200,
                 "str": 67,
@@ -1435,7 +1435,7 @@
             "snake": {
                 "id": 61,
                 "name": "snake",
-                "bid": 0,
+                "bid": 5,
                 "gid": 61,
                 "hp": 230,
                 "str": 75,
@@ -1458,7 +1458,7 @@
             "black_snake": {
                 "id": 62,
                 "name": "black_snake",
-                "bid": 0,
+                "bid": 2,
                 "gid": 62,
                 "hp": 240,
                 "str": 80,
@@ -1481,7 +1481,7 @@
             "green_snake": {
                 "id": 63,
                 "name": "green snake",
-                "bid": 0,
+                "bid": 2,
                 "gid": 63,
                 "hp": 220,
                 "str": 80,
@@ -1573,7 +1573,7 @@
             "flying_snake": {
                 "id": 67,
                 "name": "flying snake",
-                "bid": 0,
+                "bid": 12,
                 "gid": 67,
                 "hp": 250,
                 "str": 90,
@@ -1665,7 +1665,7 @@
             "gorgon": {
                 "id": 71,
                 "name": "gorgon",
-                "bid": 0,
+                "bid": 13,
                 "gid": 71,
                 "hp": 250,
                 "str": 40,
@@ -1688,7 +1688,7 @@
             "shambling_dead": {
                 "id": 72,
                 "name": "shambling dead",
-                "bid": 0,
+                "bid": 2,
                 "gid": 72,
                 "hp": 210,
                 "str": 90,
@@ -1895,7 +1895,7 @@
             "large_flea": {
                 "id": 81,
                 "name": "large flea",
-                "bid": 0,
+                "bid": 5,
                 "gid": 81,
                 "hp": 250,
                 "str": 100,
@@ -1941,7 +1941,7 @@
             "flapper": {
                 "id": 83,
                 "name": "flapper",
-                "bid": 0,
+                "bid": 14,
                 "gid": 83,
                 "hp": 350,
                 "str": 95,
@@ -1987,7 +1987,7 @@
             "yellow_fungus": {
                 "id": 85,
                 "name": "yellow fungus",
-                "bid": 0,
+                "bid": 4,
                 "gid": 85,
                 "hp": 400,
                 "str": 120,
@@ -2033,7 +2033,7 @@
             "brown_spider": {
                 "id": 87,
                 "name": "brown spider",
-                "bid": 0,
+                "bid": 3,
                 "gid": 87,
                 "hp": 350,
                 "str": 125,
@@ -2217,7 +2217,7 @@
             "moss_man": {
                 "id": 95,
                 "name": "moss man",
-                "bid": 0,
+                "bid": 4,
                 "gid": 95,
                 "hp": 420,
                 "str": 140,
@@ -2424,7 +2424,7 @@
             "rabid_squirrel": {
                 "id": 104,
                 "name": "rabid squirrel",
-                "bid": 0,
+                "bid": 3,
                 "gid": 104,
                 "hp": 500,
                 "str": 141,
@@ -2447,7 +2447,7 @@
             "fairy": {
                 "id": 105,
                 "name": "fairy",
-                "bid": 0,
+                "bid": 13,
                 "gid": 105,
                 "hp": 340,
                 "str": 30,
@@ -2470,7 +2470,7 @@
             "gray_bat": {
                 "id": 106,
                 "name": "gray bat",
-                "bid": 0,
+                "bid": 13,
                 "gid": 106,
                 "hp": 540,
                 "str": 120,
@@ -2562,7 +2562,7 @@
             "toxic_rat": {
                 "id": 110,
                 "name": "toxic rat",
-                "bid": 0,
+                "bid": 3,
                 "gid": 110,
                 "hp": 520,
                 "str": 120,
@@ -2677,7 +2677,7 @@
             "rotten_dog": {
                 "id": 115,
                 "name": "rotten dog",
-                "bid": 0,
+                "bid": 5,
                 "gid": 115,
                 "hp": 550,
                 "str": 155,
@@ -2700,7 +2700,7 @@
             "toxic_skeleton": {
                 "id": 116,
                 "name": "toxic skeleton",
-                "bid": 0,
+                "bid": 6,
                 "gid": 116,
                 "hp": 560,
                 "str": 160,
@@ -2838,7 +2838,7 @@
             "giant_toad": {
                 "id": 122,
                 "name": "giant toad",
-                "bid": 0,
+                "bid": 5,
                 "gid": 122,
                 "hp": 610,
                 "str": 180,
@@ -2930,7 +2930,7 @@
             "basilisk": {
                 "id": 126,
                 "name": "basilisk",
-                "bid": 0,
+                "bid": 7,
                 "gid": 126,
                 "hp": 680,
                 "str": 180,
@@ -2953,7 +2953,7 @@
             "red_basilisk": {
                 "id": 127,
                 "name": "red basilisk",
-                "bid": 0,
+                "bid": 8,
                 "gid": 127,
                 "hp": 680,
                 "str": 100,
@@ -2976,7 +2976,7 @@
             "rabid_gray_squirrel": {
                 "id": 128,
                 "name": "rabid gray squirrel",
-                "bid": 0,
+                "bid": 7,
                 "gid": 128,
                 "hp": 690,
                 "str": 180,
@@ -3137,7 +3137,7 @@
             "turtle": {
                 "id": 135,
                 "name": "turtle",
-                "bid": 0,
+                "bid": 13,
                 "gid": 135,
                 "hp": 550,
                 "str": 200,
@@ -3229,7 +3229,7 @@
             "giant_snail": {
                 "id": 139,
                 "name": "giant snail",
-                "bid": 0,
+                "bid": 7,
                 "gid": 139,
                 "hp": 720,
                 "str": 210,
@@ -3252,7 +3252,7 @@
             "giant_fly": {
                 "id": 140,
                 "name": "giant fly",
-                "bid": 0,
+                "bid": 13,
                 "gid": 140,
                 "hp": 650,
                 "str": 190,
@@ -3298,7 +3298,7 @@
             "scorpion": {
                 "id": 142,
                 "name": "scorpion",
-                "bid": 0,
+                "bid": 6,
                 "gid": 142,
                 "hp": 750,
                 "str": 125,
@@ -3551,7 +3551,7 @@
             "stone_scorpion": {
                 "id": 153,
                 "name": "stone scorpion",
-                "bid": 0,
+                "bid": 8,
                 "gid": 153,
                 "hp": 750,
                 "str": 200,
@@ -3804,7 +3804,7 @@
             "orange_fungus": {
                 "id": 164,
                 "name": "orange fungus",
-                "bid": 0,
+                "bid": 8,
                 "gid": 164,
                 "hp": 850,
                 "str": 160,
@@ -4356,7 +4356,7 @@
             "faded_fungus": {
                 "id": 188,
                 "name": "faded fungus",
-                "bid": 0,
+                "bid": 15,
                 "gid": 188,
                 "hp": 1050,
                 "str": 260,
@@ -4402,7 +4402,7 @@
             "shade": {
                 "id": 190,
                 "name": "shade",
-                "bid": 0,
+                "bid": 9,
                 "gid": 190,
                 "hp": 800,
                 "str": 255,
@@ -4425,7 +4425,7 @@
             "shrouded_one": {
                 "id": 191,
                 "name": "shrouded one",
-                "bid": 0,
+                "bid": 14,
                 "gid": 191,
                 "hp": 1100,
                 "str": 140,
@@ -4448,7 +4448,7 @@
             "zealot": {
                 "id": 192,
                 "name": "zealot",
-                "bid": 0,
+                "bid": 14,
                 "gid": 192,
                 "hp": 1100,
                 "str": 200,
@@ -4540,7 +4540,7 @@
             "elder_dragon": {
                 "id": 196,
                 "name": "elder dragon",
-                "bid": 0,
+                "bid": 15,
                 "gid": 196,
                 "hp": 1250,
                 "str": 260,
@@ -4563,7 +4563,7 @@
             "vampire": {
                 "id": 197,
                 "name": "vampire",
-                "bid": 0,
+                "bid": 9,
                 "gid": 197,
                 "hp": 1200,
                 "str": 100,
@@ -4632,7 +4632,7 @@
             "prang_war_elephant": {
                 "id": 200,
                 "name": "Prang, war elephant",
-                "bid": 0,
+                "bid": 11,
                 "gid": 200,
                 "hp": 200,
                 "str": 35,
@@ -4655,7 +4655,7 @@
             "steenkey_elder_naga": {
                 "id": 201,
                 "name": "Steenkey, elder naga",
-                "bid": 0,
+                "bid": 4,
                 "gid": 201,
                 "hp": 350,
                 "str": 40,
@@ -4678,7 +4678,7 @@
             "nameless_black_orc": {
                 "id": 202,
                 "name": "Nameless, black orc",
-                "bid": 0,
+                "bid": 13,
                 "gid": 202,
                 "hp": 530,
                 "str": 100,
@@ -4701,7 +4701,7 @@
             "groz_goblin_king": {
                 "id": 203,
                 "name": "Groz, goblin king",
-                "bid": 0,
+                "bid": 6,
                 "gid": 203,
                 "hp": 1000,
                 "str": 190,
@@ -4724,7 +4724,7 @@
             "lortrox_dragon_knight": {
                 "id": 204,
                 "name": "Lortrox, dragon knight",
-                "bid": 0,
+                "bid": 14,
                 "gid": 204,
                 "hp": 800,
                 "str": 160,
@@ -4747,7 +4747,7 @@
             "silant_ice_giant": {
                 "id": 205,
                 "name": "Silant, ice giant",
-                "bid": 0,
+                "bid": 15,
                 "gid": 205,
                 "hp": 1400,
                 "str": 160,
@@ -4770,7 +4770,7 @@
             "megalith_armored_beast": {
                 "id": 206,
                 "name": "Megalith, armored beast",
-                "bid": 0,
+                "bid": 9,
                 "gid": 206,
                 "hp": 3500,
                 "str": 255,

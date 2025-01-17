@@ -1201,9 +1201,7 @@ void Player::decrement_potion_turn_count() {
 			// Process poison for this turn
 			if (i == ItemConsts::EFFECT_POISON) {
 				// Drain is set to 1% of the player's max hp (minimum 1)
-				int drain = (int)(actual.max_hp / 100);
-				if (drain < 1)
-					drain = 1;
+				int drain = EnemyConsts::MED_POISON_DMG_PER_TURN;
 				// Set the new HP value
 				g_player.set_hp(g_player.hp - drain);
 				g_state_flags.update_status_hp_exp = true;

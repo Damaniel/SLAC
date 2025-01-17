@@ -89,6 +89,11 @@ namespace EnemyConsts {
         HIGH_HEAVY_SPEED_DROP
     };
 
+    // odds
+    const int LOW_ODDS = 5;
+    const int MED_ODDS = 10;
+    const int HIGH_ODDS = 20;
+
 	// Poison effects
 	const int LIGHT_POISON_DMG_PER_TURN = 2;
 	const int LIGHT_POISON_DURATION = 10;

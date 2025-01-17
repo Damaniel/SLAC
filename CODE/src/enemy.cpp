@@ -752,6 +752,13 @@ void perform_enemy_action(Enemy *e) {
 //
 // Returns:
 //   Nothing.
+//
+// Notes:
+//   The code currently won't apply stronger poison/speed effects if the
+//   player is already poisoned or slowed.  Fixing that would add a lot of
+//   complexity, but I could see some strategy used here (like using a
+//   potion of poison, which applies medium poison, to 'cure' heavy poison
+//   when a potion of cure poison isn't available) so I'm keeping it as-is
 //----------------------------------------------------------------------------
 void apply_enemy_status_effect(Enemy *e) {
 	int poison_odds = rand() % 100;
@@ -764,88 +771,90 @@ void apply_enemy_status_effect(Enemy *e) {
 
 	switch (e->get_bid()) {
 		case EnemyConsts::LOW_LIGHT_POISON:
-			if (poison_odds < 1)
+			if (poison_odds < EnemyConsts::LOW_ODDS)
 				apply_light_poison = true;
 			break;
 		case EnemyConsts::MID_LIGHT_POISON:
-			if (poison_odds < 5)
+			if (poison_odds < EnemyConsts::MED_ODDS)
 				apply_light_poison = true;
 			break;
 		case EnemyConsts::HIGH_LIGHT_POISON:
-			if (poison_odds < 10)
+			if (poison_odds < EnemyConsts::HIGH_ODDS)
 				apply_light_poison = true;
 			break;
 		case EnemyConsts::LOW_MED_POISON:
-			if (poison_odds < 1)
+			if (poison_odds < EnemyConsts::LOW_ODDS)
 				apply_med_poison = true;
 			break;
 		case EnemyConsts::MID_MED_POISON:
-			if (poison_odds < 5)
+			if (poison_odds < EnemyConsts::MED_ODDS)
 				apply_med_poison = true;
 			break;
 		case EnemyConsts::HIGH_MED_POISON:
-			if (poison_odds < 10)
+			if (poison_odds < EnemyConsts::HIGH_ODDS)
 				apply_med_poison = true;
 			break;
 		case EnemyConsts::LOW_HEAVY_POISON:
-			if (poison_odds < 1)
+			if (poison_odds < EnemyConsts::LOW_ODDS)
 				apply_heavy_poison = true;
 			break;
 		case EnemyConsts::MID_HEAVY_POISON:
-			if (poison_odds < 5)
+			if (poison_odds < EnemyConsts::MED_ODDS)
 				apply_heavy_poison = true;
 			break;
 		case EnemyConsts::HIGH_HEAVY_POISON:
-			if (poison_odds < 10)
+			if (poison_odds < EnemyConsts::HIGH_ODDS)
 				apply_heavy_poison = true;
 			break;
 		case EnemyConsts::LOW_LIGHT_SPEED_DROP:
-			if (slow_odds < 1)
+			if (slow_odds < EnemyConsts::LOW_ODDS)
 				apply_light_speed_drop = true;
 			break;
 		case EnemyConsts::MID_LIGHT_SPEED_DROP:
-			if (slow_odds < 5)
+			if (slow_odds < EnemyConsts::MED_ODDS)
 				apply_light_speed_drop = true;
 			break;
 		case EnemyConsts::HIGH_LIGHT_SPEED_DROP:
-			if (slow_odds < 10)
+			if (slow_odds < EnemyConsts::HIGH_ODDS)
 				apply_light_speed_drop = true;
 			break;
 		case EnemyConsts::LOW_HEAVY_SPEED_DROP:
-			if (slow_odds < 1)
+			if (slow_odds < EnemyConsts::LOW_ODDS)
 				apply_heavy_speed_drop = true;
 			break;
 		case EnemyConsts::MID_HEAVY_SPEED_DROP:
-			if (slow_odds < 5)
+			if (slow_odds < EnemyConsts::MED_ODDS)
 				apply_heavy_speed_drop = true;
 			break;
 		case EnemyConsts::HIGH_HEAVY_SPEED_DROP:
-			if (slow_odds < 10)
+			if (slow_odds < EnemyConsts::HIGH_ODDS)
 				apply_heavy_speed_drop = true;
 			break;
 	}
 
 	if (apply_light_poison) {
-		g_player.is_poisoned = true;
-		if (g_player.poison_intensity != EnemyConsts::POISON_MEDIUM && g_player.poison_intensity != EnemyConsts::POISON_HEAVY)
+		if (!g_player.is_poisoned) {
+			g_player.is_poisoned = true;
 			g_player.poison_intensity = EnemyConsts::POISON_LIGHT;
-		if (g_player.poison_turns_remaining <= EnemyConsts::LIGHT_POISON_DURATION)
 			g_player.poison_turns_remaining = EnemyConsts::LIGHT_POISON_DURATION;
-		g_text_log.put_line("You've been poisoned!");
+			g_text_log.put_line("You've been poisoned!");
+		}
 	}
 	if (apply_med_poison) {
-		g_player.is_poisoned = true;
-		if (g_player.poison_intensity != EnemyConsts::POISON_HEAVY)
+		if (!g_player.is_poisoned) {
+			g_player.is_poisoned = true;
 			g_player.poison_intensity = EnemyConsts::POISON_MEDIUM;
-		if (g_player.poison_turns_remaining <= EnemyConsts::MED_POISON_DURATION)
 			g_player.poison_turns_remaining = EnemyConsts::MED_POISON_DURATION;
-		g_text_log.put_line("You've been heavily poisoned!");
+			g_text_log.put_line("You've been heavily poisoned!");
+		}
 	}
 	if (apply_heavy_poison) {
-		g_player.is_poisoned = true;
-		g_player.poison_intensity = EnemyConsts::POISON_HEAVY;
-		g_player.poison_turns_remaining = EnemyConsts::HEAVY_POISON_DURATION;
-		g_text_log.put_line("You've been mortally poisoned!");
+		if (!g_player.is_poisoned) {
+			g_player.is_poisoned = true;
+			g_player.poison_intensity = EnemyConsts::POISON_HEAVY;
+			g_player.poison_turns_remaining = EnemyConsts::HEAVY_POISON_DURATION;
+			g_text_log.put_line("You've been mortally poisoned!");
+		}
 	}
 	if (apply_light_speed_drop) {
 		// If the player isn't already slow, make them slow and set the speed
@@ -853,19 +862,10 @@ void apply_enemy_status_effect(Enemy *e) {
 			g_player.is_speed_reduced = true;
 			g_player.original_speed = g_player.actual.spd;
 			g_player.actual.spd -= EnemyConsts::LIGHT_SPEED_DOWN_REDUCTION;
-		}
-
-		// Whether the player was already slow or not, change the intensity
-		// if the player isn't already heavily slowed down (stronger takes
-		// precedence)
-		if (g_player.speed_reduction_intensity != EnemyConsts::SPEED_DOWN_HEAVY)
 			g_player.speed_reduction_intensity = EnemyConsts::SPEED_DOWN_LIGHT;
-
-		// reset turns to the longer of the existing duration or the new duration
-		if (g_player.speed_reduction_turns_remaining <= EnemyConsts::LIGHT_SPEED_DOWN_DURATION)
 			g_player.speed_reduction_turns_remaining = EnemyConsts::LIGHT_SPEED_DOWN_DURATION;
-
-		g_text_log.put_line("You feel somewhat slower.");
+			g_text_log.put_line("You feel somewhat slower.");
+		}
 	}
 	if (apply_heavy_speed_drop) {
 		// If the player isn't already slow, make them slow and set the speed
@@ -873,13 +873,10 @@ void apply_enemy_status_effect(Enemy *e) {
 			g_player.is_speed_reduced = true;
 			g_player.original_speed = g_player.actual.spd;
 			g_player.actual.spd -= EnemyConsts::HEAVY_SPEED_DOWN_REDUCTION;
+			g_player.speed_reduction_intensity = EnemyConsts::SPEED_DOWN_HEAVY;
+			g_player.speed_reduction_turns_remaining = EnemyConsts::HEAVY_SPEED_DOWN_DURATION;
+			g_text_log.put_line("You feel significantly slower.");
 		}
-
-		// Whether the player was already slow or not, change the intensity and duration
-		g_player.speed_reduction_intensity = EnemyConsts::SPEED_DOWN_HEAVY;
-		g_player.speed_reduction_turns_remaining = EnemyConsts::HEAVY_SPEED_DOWN_DURATION;
-
-		g_text_log.put_line("You feel significantly slower.");
 	}
 }
 

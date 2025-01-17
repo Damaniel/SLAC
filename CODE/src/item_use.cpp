@@ -509,8 +509,13 @@ void use_potion_action(int id) {
             g_text_log.put_line("You feel extra proficient with your weapon!");
             break;
         case ItemConsts::POT_OF_POISON:
-            g_player.activate_potion_effect(ItemConsts::EFFECT_POISON, 20);
-            g_text_log.put_line("You suddenly feel very ill.");
+            // Apply the equivalent of medium poison to the player
+    		if (!g_player.is_poisoned) {
+	    		g_player.is_poisoned = true;
+			    g_player.poison_intensity = EnemyConsts::POISON_MEDIUM;
+			    g_player.poison_turns_remaining = EnemyConsts::MED_POISON_DURATION;
+			    g_text_log.put_line("You've been heavily poisoned!");
+		    }
             break;
         case ItemConsts::POT_OF_DEATH:
             g_player.hp = 0;
