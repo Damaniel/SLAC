@@ -1535,6 +1535,7 @@ void Render::render_world_at_player(BITMAP *destination, DungeonFloor *f, int ma
 void Render::render_town_at(BITMAP *destination, int x, int y) {
 	int num_y_tiles;
 	std::map<std::pair<int, int>, int>::iterator it;
+	BITMAP *bmp;
 
 	if (g_state_flags.text_log_extended) {
 		num_y_tiles = UiConsts::PLAY_AREA_TILE_HEIGHT - UiConsts::TEXT_AREA_EXT_MAZE_ROWS_OBSCURED;
@@ -1576,7 +1577,32 @@ void Render::render_town_at(BITMAP *destination, int x, int y) {
 				int tile_offset_x = tile_index_to_render % UiConsts::TOWN_TILE_ENTRY_WIDTH;
 				int tile_offset_y = tile_index_to_render / UiConsts::TOWN_TILE_ENTRY_WIDTH;
 
-				blit((BITMAP *)g_game_data[tile_block].dat,
+				// If the player has an active town portal, render the relevant portal in a different color to
+				// show that it's active
+				if (tile_to_render_x == TownConsts::DT_RECALL_X && tile_to_render_y == TownConsts::DT_RECALL_Y &&
+				    g_dungeon.maze_id == DUSTY_TUNNELS && g_player.recall_active) {
+						bmp = (BITMAP *)g_game_data[DAMRL_PORTALS].dat;
+						tile_offset_x = 1;
+						tile_offset_y = 0;
+				}
+				else if (tile_to_render_x == TownConsts::MH_RECALL_X && tile_to_render_y == TownConsts::MH_RECALL_Y &&
+				    g_dungeon.maze_id == MARBLE_HALLS && g_player.recall_active) {
+						bmp = (BITMAP *)g_game_data[DAMRL_PORTALS].dat;
+						tile_offset_x = 0;
+						tile_offset_y = 0;
+				}
+				else if (tile_to_render_x == TownConsts::CD_RECALL_X && tile_to_render_y == TownConsts::CD_RECALL_Y &&
+				    g_dungeon.maze_id == CRYSTAL_DEPTHS && g_player.recall_active) {
+						bmp = (BITMAP *)g_game_data[DAMRL_PORTALS].dat;
+						tile_offset_x = 2;
+						tile_offset_y = 0;
+				}
+				else {
+					bmp = (BITMAP *)g_game_data[tile_block].dat;
+					tile_offset_x = tile_index_to_render % UiConsts::TOWN_TILE_ENTRY_WIDTH;
+					tile_offset_y = tile_index_to_render / UiConsts::TOWN_TILE_ENTRY_WIDTH;
+				}
+				blit(bmp,
 		     		destination,
 	    	 		tile_offset_x * UiConsts::TILE_PIXEL_WIDTH,
 		 			tile_offset_y * UiConsts::TILE_PIXEL_HEIGHT,
@@ -2098,6 +2124,8 @@ void Render::render_title_menu(BITMAP *destination) {
 		render_text(destination, "Press ENTER when done",
 	            	UiConsts::TITLE_MENU_NEW_X, UiConsts::TITLE_MENU_NEW_LINE_2_Y,
 					FontConsts::FONT_YELLOW, FontConsts::FONT_NARROW_PROPORTIONAL, FontConsts::TEXT_CENTERED);
+		// Draw a cursor at the end of the character name if the player can still enter more
+		// characters
 		if (g_state_flags.new_game_char_text_index < 10)
 			sprintf(name, "%s_", g_state_flags.character_name);
 		else

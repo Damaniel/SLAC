@@ -302,9 +302,6 @@ public:
 	int y_pos;
 	int last_room_entered;
 
-	int recall_x_pos;		// The place in the dungeon where a recall scroll activated
-	int recall_y_pos;		// (and where the player will return when moving back to
-							// the recall point)
 	int recall_floor;       // The floor the recall scroll was used from
 	int recall_count;		// The number of turns until a recall scroll activates
 	bool recall_active;		// Is a scroll of recall active?

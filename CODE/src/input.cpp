@@ -446,6 +446,19 @@ void process_game_state(int key) {
         case GAME_SUBSTATE_STATS:
             process_stats_substate(key);
             break;
+        case GAME_SUBSTATE_CONFIRM_REENTER:
+            switch (key) {
+                case KEY_Y:
+                    g_state_flags.cur_substate = GAME_SUBSTATE_DEFAULT;
+		            enter_dungeon(1);
+                    break;
+                case KEY_N:
+                case KEY_ESC:
+                    g_state_flags.cur_substate = GAME_SUBSTATE_DEFAULT;
+                    g_text_log.put_line("You change your mind about trying to enter here.");
+                    break;
+            }
+            break;
         case GAME_SUBSTATE_PLAYER_JUST_DIED:
             switch (key) {
                 case KEY_ENTER:
@@ -465,7 +478,6 @@ void process_game_state(int key) {
                     break;
             }
             break;
-
         case GAME_SUBSTATE_DEFAULT:
             // Only process lighting if the player is in the dungeon
             if (g_state_flags.in_dungeon) {

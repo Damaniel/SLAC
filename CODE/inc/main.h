@@ -54,6 +54,7 @@ enum {
 enum {
     GAME_SUBSTATE_DEFAULT,
     GAME_SUBSTATE_MAP,
+    GAME_SUBSTATE_CONFIRM_REENTER,       // Confirm the player wants to enter the dungeon from the entrance if recall active
     GAME_SUBSTATE_INVENTORY,
     GAME_SUBSTATE_INVENTORY_MENU,        // The item context menu
     GAME_SUBSTATE_USE_ON_ITEM,           // Used when selecting an item to use another item on

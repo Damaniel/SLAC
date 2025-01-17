@@ -45,20 +45,62 @@ void check_and_process_town_entrances(int x, int y) {
 	if (g_state_flags.in_item_shop || g_state_flags.in_weapon_shop || g_state_flags.in_museum)
 		return;
 
+	// Return the player to the dungeon if they're on the appropriate circle with a scroll active
+	if (g_player.recall_active) {
+		if (x == TownConsts::DT_RECALL_X && y == TownConsts::DT_RECALL_Y && g_dungeon.maze_id == DUSTY_TUNNELS)
+			enter = true;
+		if (x == TownConsts::MH_RECALL_X && y == TownConsts::MH_RECALL_Y && g_dungeon.maze_id == MARBLE_HALLS)
+			enter = true;
+		if (x == TownConsts::CD_RECALL_X && y == TownConsts::CD_RECALL_Y && g_dungeon.maze_id == CRYSTAL_DEPTHS)
+			enter = true;
+		if (enter) {
+			g_text_log.put_line("You re-enter the dungeon as the magic fades away...");
+			enter_dungeon(g_player.recall_floor);
+			return;
+		}
+	}
+
 	if (x == TownConsts::DUSTY_TUNNELS_X && y == TownConsts::DUSTY_TUNNELS_Y)
 	{
-		g_dungeon.maze_id = DUSTY_TUNNELS;
-		enter = true;
+		// If the player has a recall portal active, confirm they want to re-enter
+		// through the entrance instead of the portal
+		if (g_dungeon.maze_id == DUSTY_TUNNELS && g_player.recall_active) {
+			g_state_flags.cur_substate = GAME_SUBSTATE_CONFIRM_REENTER;
+			g_text_log.put_line("-- You have a portal active.  Entering here will reset your current floor.");
+			g_text_log.put_line("-- Are you sure you want to do that (Y/N)?");
+		}
+		else {
+			g_dungeon.maze_id = DUSTY_TUNNELS;
+			enter = true;
+		}
 	}
 	if (x == TownConsts::MARBLE_HALLS_X && y == TownConsts::MARBLE_HALLS_Y)
 	{
-		g_dungeon.maze_id = MARBLE_HALLS;
-		enter = true;
+		// If the player has a recall portal active, confirm they want to re-enter
+		// through the entrance instead of the portal
+		if (g_dungeon.maze_id == MARBLE_HALLS && g_player.recall_active) {
+			g_state_flags.cur_substate = GAME_SUBSTATE_CONFIRM_REENTER;
+			g_text_log.put_line("-- You have a portal active.  Entering here will reset your current floor.");
+			g_text_log.put_line("-- Are you sure you want to do that (Y/N)?");
+		}
+		else {
+			g_dungeon.maze_id = MARBLE_HALLS;
+			enter = true;
+		}
 	}
 	if (x == TownConsts::CRYSTAL_DEPTHS_X && y == TownConsts::CRYSTAL_DEPTHS_Y)
 	{
-		g_dungeon.maze_id = CRYSTAL_DEPTHS;
-		enter = true;
+		// If the player has a recall portal active, confirm they want to re-enter
+		// through the entrance instead of the portal
+		if (g_dungeon.maze_id == CRYSTAL_DEPTHS && g_player.recall_active) {
+			g_state_flags.cur_substate = GAME_SUBSTATE_CONFIRM_REENTER;
+			g_text_log.put_line("-- You have a portal active.  Entering here will reset your current floor.");
+			g_text_log.put_line("-- Are you sure you want to do that (Y/N)?");
+		}
+		else {
+			g_dungeon.maze_id = CRYSTAL_DEPTHS;
+			enter = true;
+		}
 	}
 
 	// If entering a dungeon, generate a new floor and turn off any active

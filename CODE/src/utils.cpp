@@ -825,6 +825,8 @@ void initialize_main_game_state(void) {
 		g_player.speed_reduction_turns_remaining = 0;
 		g_player.poison_intensity = EnemyConsts::NO_POISON;
 		g_player.speed_reduction_intensity = EnemyConsts::NO_SPEED_DOWN;
+
+		g_player.recall_active = false;
 	}
 
 	// Do the rest of the actions common to all new characters
@@ -2067,20 +2069,6 @@ void process_orb_logic(void) {
 //----------------------------------------------------------------------------
 void check_for_active_area(int x, int y) {
 	bool enter = false;
-	// Return the player to the dungeon if they step on the appropriate circle with a scroll active
-	if (g_player.recall_active) {
-		if (x == TownConsts::DT_RECALL_X && y == TownConsts::DT_RECALL_Y && g_dungeon.maze_id == DUSTY_TUNNELS)
-			enter = true;
-		if (x == TownConsts::MH_RECALL_X && y == TownConsts::MH_RECALL_Y && g_dungeon.maze_id == MARBLE_HALLS)
-			enter = true;
-		if (x == TownConsts::CD_RECALL_X && y == TownConsts::CD_RECALL_Y && g_dungeon.maze_id == CRYSTAL_DEPTHS)
-			enter = true;
-		if (enter) {
-			g_text_log.put_line("You re-enter the dungeon as the magic fades away...");
-			enter_dungeon(g_player.recall_floor);
-		}
-	}
-
 	// Check to see if the player is on the weapon shop
 	if (x == TownConsts::WEAPON_SHOP_X && y == TownConsts::WEAPON_SHOP_Y) {
 		if (!g_state_flags.in_weapon_shop && !g_state_flags.in_item_shop && !g_state_flags.in_museum) {
