@@ -25,11 +25,10 @@ This release currently uses a specific ancient version of DJGPP, g++ (2.95.2) an
 
 ## To be added
 
-The game is technically playable from beginning to end, but is still in active development.  I'm currently working on:
+The game is playable from beginning to end and all major features are implemented, but the game is still in active development.  I'm currently working on:
 
 - More balancing.  A lot more balancing.
 - Bug-fixing
-- QOL changes, like letting the player choose what items decurse and identify scrolls can be used on.
 
 ## Screenshots (in DOSBox-X)
 
@@ -38,6 +37,7 @@ The game is technically playable from beginning to end, but is still in active d
 ![inventory](https://github.com/Damaniel/SLAC/blob/e4051db73e167a9445f58a05d92c9d190dbbed1f/RES/IMAGES/screenshots/screen3.jpg)
 ![map](https://github.com/Damaniel/SLAC/blob/e4051db73e167a9445f58a05d92c9d190dbbed1f/RES/IMAGES/screenshots/screen4.jpg)
 ![death screen](https://github.com/Damaniel/SLAC/blob/e4051db73e167a9445f58a05d92c9d190dbbed1f/RES/IMAGES/screenshots/screen5.jpg)
+![the in-town equipment shop](https://github.com/Damaniel/SLAC/blob/99669e36cdcde8c0490c6380cba4c6015d414ebd/RES/IMAGES/screenshots/screen6.jpg)
 
 ## License and attributions
 
