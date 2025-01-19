@@ -143,6 +143,9 @@ void init_game() {
 	g_game_flags.elapsed_time = 0;
 	g_state_flags.time_to_update_elapsed = FRAME_RATE;
 
+	// Initialize the tile cache
+	g_tile_cache.initialize();
+
 	// Check to see if the hall of champions file exists
 	// If not, blank out the data
 	if (slac_file_exists(SaveLoadConsts::hoc_file)) {

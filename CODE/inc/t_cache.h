@@ -24,9 +24,10 @@
 #ifndef __T_CACHE_H__
 #define __T_CACHE_H__
 
+struct TileCache;
+
 #include "globals.h"
 #include "render.h"
-
 
 struct TileCache {
 	bool valid;

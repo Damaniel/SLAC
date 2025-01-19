@@ -24,6 +24,7 @@
 #include "globals.h"
 
 UiGlobals g_ui_globals;
+TileCache g_tile_cache;
 
 //------------------------------------------------------------------------------
 // Render::Render
