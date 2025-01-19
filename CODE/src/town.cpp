@@ -148,7 +148,7 @@ void enter_dungeon(int floor) {
 
 	// Make a new dungeon floor
 	generate_new_dungeon_floor(g_dungeon, floor, MazeConsts::STAIRS_DOWN);
-	force_update_screen();
+	//force_update_screen();
 }
 
 //----------------------------------------------------------------------------

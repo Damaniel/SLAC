@@ -654,9 +654,6 @@ void perform_enemy_action(Enemy *e) {
 	int px = g_player.get_x_pos();
 	int py = g_player.get_y_pos();
 
-	// Add the enemy's current position to the dirty list
-	g_dirty_squares.push_back(std::make_pair<short, short>(x, y));
-
 	// If the enemy is 0 or 1 away from the player in both the x and y direction, they're 'adjacent',
 	// and should attack the player
 	//std::cout << "perform_enemy_action: abs(px-x) = " << abs(px-x) << ", abs(py-y) = " << abs(py-y) << std::endl;
@@ -743,13 +740,6 @@ void perform_enemy_action(Enemy *e) {
 		default:
 			//std::cout << "  Enemy doesn't move" << std::endl;
 			break;
-	}
-
-	int new_x = e->get_x_pos();
-	int new_y = e->get_y_pos();
-	if (new_x != x || new_y != y) {
-		// Add the enemy's new position to the dirty list if different
-		g_dirty_squares.push_back(std::make_pair<short, short>(new_x, new_y));
 	}
 }
 

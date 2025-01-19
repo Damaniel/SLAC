@@ -1434,7 +1434,7 @@ void Render::render_world_at(BITMAP *destination, DungeonFloor *f, int maze_x, i
 	//   cause a problem.  If weird crashes happen, try looking here.
 	int num_y_tiles;
 
-	std::cout << "In render_world_at" << std::endl;
+	std::cout << "In render_world_at, position " << maze_x << ", " << maze_y << std::endl;
 
 	// If the extended text dialog is up, don't draw the last 3 rows of tiles
 	if (g_state_flags.text_log_extended) {
@@ -1444,23 +1444,32 @@ void Render::render_world_at(BITMAP *destination, DungeonFloor *f, int maze_x, i
 		num_y_tiles = UiConsts::PLAY_AREA_TILE_HEIGHT;
 	}
 
-		for (int screen_y = 0; screen_y < num_y_tiles; screen_y++) {
-			for (int screen_x = 0; screen_x < UiConsts::PLAY_AREA_TILE_WIDTH; screen_x++) {
-			std::cout << g_new_tile_data[screen_x][screen_y] << " ";
-			render_base_tile(destination, g_new_tile_data[screen_x][screen_y], g_dungeon.maze_id, screen_x, screen_y);
-			// Get any items at the location and draw the first on the list
-			int num_items_here = f->get_num_items_at(screen_x + maze_x, screen_y + maze_y);
-			int tid = g_new_tile_data[screen_x][screen_y];
-			if (num_items_here > 0 && (tid == UiConsts::TILE_FLOOR || tid == UiConsts::TILE_FLOOR_TOP_HIGHLIGHT ||
-			                           tid == UiConsts::TILE_FLOOR_LEFT_HIGHLIGHT || tid == UiConsts::TILE_FLOOR_BOTH_HIGHLIGHT) ) {
-					std::list<Item *> items = f->get_items_at(screen_x + maze_x, screen_y + maze_y);
-					Item *it = items.back();
-					int gid = get_tile_to_render(it);
-					render_item(destination, gid, screen_x, screen_y);
+	for (int screen_y = 0; screen_y < num_y_tiles; screen_y++) {
+		for (int screen_x = 0; screen_x < UiConsts::PLAY_AREA_TILE_WIDTH; screen_x++) {
+			if (g_old_tile_data[screen_x][screen_y] == g_new_tile_data[screen_x][screen_y] && g_old_tile_data[screen_x][screen_y] != -1) {
+			}
+			else {
+				render_base_tile(destination, g_new_tile_data[screen_x][screen_y], g_dungeon.maze_id, screen_x, screen_y);
 			}
 		}
-		std::cout << std::endl;
 	}
+	// Draw the dirty squares
+	for (int i = 0; i < g_dirty_squares.size(); ++i) {
+		render_base_tile(destination, g_old_tile_data[g_dirty_squares[i].first - maze_x][g_dirty_squares[i].second - maze_y],
+		                 g_dungeon.maze_id, g_dirty_squares[i].first - maze_x, g_dirty_squares[i].second - maze_y);
+
+	}
+
+			// // Get any items at the location and draw the first on the list
+			// int num_items_here = f->get_num_items_at(screen_x + maze_x, screen_y + maze_y);
+			// int tid = g_new_tile_data[screen_x][screen_y];
+			// if (num_items_here > 0 && (tid == UiConsts::TILE_FLOOR || tid == UiConsts::TILE_FLOOR_TOP_HIGHLIGHT ||
+			//                            tid == UiConsts::TILE_FLOOR_LEFT_HIGHLIGHT || tid == UiConsts::TILE_FLOOR_BOTH_HIGHLIGHT) ) {
+			// 		std::list<Item *> items = f->get_items_at(screen_x + maze_x, screen_y + maze_y);
+			// 		Item *it = items.back();
+			// 		int gid = get_tile_to_render(it);
+			// 		render_item(destination, gid, screen_x, screen_y);
+			// }
 
 	// Render the player and any enemies
 	render_actors(destination, maze_x, maze_y);
@@ -2285,7 +2294,7 @@ void populate_dungeon_position_data(DungeonFloor *f, int x, int y) {
 	std::cout << "========= populate ================" << std::endl;
 	for (int j=0 ; j < UiConsts::PLAY_AREA_TILE_HEIGHT; j++) {
 		for (int i = 0; i < UiConsts::PLAY_AREA_TILE_WIDTH; ++i) {
-			std::cout << g_new_tile_data[i][j] << " ";
+			std::cout << g_old_tile_data[i][j] << " ";
 		}
 		std::cout << std::endl;
 	}
@@ -2320,6 +2329,7 @@ void update_inventory_display_flags(void) {
 //   Nothing
 //------------------------------------------------------------------------------
 void force_update_screen(void) {
+	std::cout << "in force_update_screen" << std::endl;
 	g_state_flags.update_maze_area = true;
 	g_state_flags.update_text_dialog = true;
 	g_state_flags.update_status_dialog = true;

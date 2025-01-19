@@ -742,7 +742,7 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 		stairLoc = d.maze->get_random_stair(MazeConsts::STAIRS_DOWN);
 
 	// Place the player at the stair location
-	g_player.set_position(stairLoc.first, stairLoc.second);
+	g_player.set_pos(stairLoc.first, stairLoc.second);
 
 	// Light the room and mark it as visited
 	int initial_room = d.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos());
@@ -753,6 +753,11 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 	}
 
 	// Update position data (including lighting)
+	for(int i = 0; i < UiConsts::PLAYER_PLAY_AREA_X; ++i) {
+		for (int j= 0; j < UiConsts::PLAYER_PLAY_AREA_Y; ++j) {
+			g_new_tile_data[i][j] = -1;
+		}
+	}
 	populate_dungeon_position_data(&g_dungeon, stairLoc.first - UiConsts::PLAYER_PLAY_AREA_X, stairLoc.second - UiConsts::PLAYER_PLAY_AREA_Y);
 
 	// Update the distance from the player to each enemy and sort
@@ -2388,6 +2393,10 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 		++enemy_it;
 	}
 
+	// Add all enemies' current positions to the dirty square list (whether they move or not)
+	for (int i = 0; i < enemies.size(); ++i)
+		g_dirty_squares.push_back(std::make_pair<short, short>(enemies[i]->get_x_pos(), enemies[i]->get_y_pos()));
+
 	//std::cout << "process_move: " << enemies.size() << " enemies are being processed" << std::endl;
 
 	// Assemble the queue
@@ -2522,12 +2531,17 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 				// Subtract the action points from the player
 				g_player.set_action_residual(g_player.get_action_residual() - 100);
 				//std::cout << "    process_move: player residual is now " << g_player.get_action_residual() << std::endl;
+				for (int idx=0; idx < enemies.size(); ++idx)
+					g_dirty_squares.push_back(std::make_pair<short, short>(enemies[idx]->get_x_pos() - g_state_flags.player_pos_dx, enemies[idx]->get_y_pos() - g_state_flags.player_pos_dy));
 			}
 
 		}
 		// If an enemy action, do the enemy thing for the current enemy
 		if (act == UtilConsts::ACTION_ENEMY || act == UtilConsts::ACTION_ENEMY_DEFER_SPEED) {
 			Enemy *e = enemies[target];
+			int ox = e->get_x_pos();
+			int oy = e->get_y_pos();
+			g_dirty_squares.push_back(std::make_pair<short, short>(ox, oy));
 			// The enemy only gets to go if it hasn't been killed yet
 			if (e->is_it_alive() == true) {
 				if (e->get_action_residual() >= 100) {
@@ -2536,6 +2550,9 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 					e->set_action_residual(e->get_action_residual() - 100);
 					//std::cout << "    process_move: enemy residual is now " << e->get_action_residual() << std::endl;
 				}
+			}
+			if (e->get_x_pos() != ox || e->get_y_pos() != oy) {
+				g_dirty_squares.push_back(std::make_pair<short, short>(e->get_x_pos(), e->get_y_pos()));
 			}
 		}
 
