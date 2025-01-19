@@ -37,16 +37,23 @@ struct TileCache {
 	std::vector<std::pair<short, short> > dirty;
 
 	// Functions
+    TileCache();
 	void initialize();
 	void invalidate();
-	void update();
-	std::pair<short, short>get_old_maze_position(int screen_x, int screen_y);
-	std::pair<short, short>get_new_maze_position(int screen_x, int screen_y);
-	std::pair<short, short>get_old_screen_position(int maze_x, int maze_y);
-	std::pair<short, short>get_new_screen_position(int maze_x, int maze_y);
-	void add_dirty(int maze_x, int maze_y);
+    void set_valid();
+	void update(short **tile_data, int world_x, int world_y);
+	std::pair<short, short>get_old_world_position(int screen_x, int screen_y);
+	std::pair<short, short>get_new_world_position(int screen_x, int screen_y);
+	std::pair<short, short>get_old_screen_position(int world_x, int world_y);
+	std::pair<short, short>get_new_screen_position(int world_x, int world_y);
+    void clear_dirty();
+	void add_dirty(int world_x, int world_y);
 	bool is_tile_same(int screen_x, int screen_y);
-	bool is_location_on_screen(int maze_x, int maze_y);
+	bool is_old_location_on_screen(int world_x, int world_y);
+    bool is_new_location_on_screen(int world_x, int world_y);
+    void dump_old_tiles();
+    void dump_new_tiles();
+    void dump_dirty_squares();
 };
 
 #endif
