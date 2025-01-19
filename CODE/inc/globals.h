@@ -48,6 +48,7 @@
 // Other includes
 #include "town.h"
 #include "input.h"
+#include "t_cache.h"
 #include "textlog.h"
 #include "invntory.h"
 #include "player.h"

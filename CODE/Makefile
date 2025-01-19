@@ -19,12 +19,12 @@ CFLAGS=-O2 -Iinc
 LIBS=-lalleg -lm
 
 TARGET=slac.exe
-OBJS=obj/gen_data.o obj/tiledata.o obj/utils.o obj/town.o obj/textlog.o obj/maze.o obj/render.o obj/player.o obj/enemy.o obj/saveload.o obj/invntory.o obj/itemgen.o obj/item_use.o obj/input.o obj/main.o 
+OBJS=obj/gen_data.o obj/tiledata.o obj/utils.o obj/town.o obj/textlog.o obj/maze.o obj/render.o obj/t_cache.o obj/player.o obj/enemy.o obj/saveload.o obj/invntory.o obj/itemgen.o obj/item_use.o obj/input.o obj/main.o
 
 $(TARGET): $(OBJS)
 	$(CC) -o $(TARGET) $(OBJS) $(LIBS)
-	
-prod: $(TARGET) 
+
+prod: $(TARGET)
 	strip $(TARGET)
 	upx $(TARGET)
 
@@ -37,7 +37,10 @@ obj/saveload.o: src/saveload.cpp inc/globals.h
 obj/town.o: src/town.cpp inc/town.h
 	$(CC) -c $(CFLAGS) -o obj/town.o src/town.cpp
 
-obj/input.o: src/input.cpp inc/input.h 
+obj/t_cache.o: src/t_cache.cpp inc/t_cache.h inc/render.h
+	$(CC) -c $(CFLAGS) -o obj/t_cache.o src/t_cache.cpp
+
+obj/input.o: src/input.cpp inc/input.h
 	$(CC) -c $(CFLAGS) -o obj/input.o src/input.cpp
 
 obj/itemgen.o: src/itemgen.cpp inc/itemgen.h inc/invntory.h
@@ -64,7 +67,7 @@ obj/render.o: src/render.cpp inc/render.h inc/globals.h inc/maze.h inc/textlog.h
 obj/player.o: src/player.cpp inc/player.h inc/invntory.h
 	$(CC) -c $(CFLAGS) -o obj/player.o src/player.cpp
 
-obj/enemy.o: src/enemy.cpp inc/enemy.h 
+obj/enemy.o: src/enemy.cpp inc/enemy.h
 	$(CC) -c $(CFLAGS) -o obj/enemy.o src/enemy.cpp
 
 obj/invntory.o: src/invntory.cpp inc/invntory.h inc/invntory.h inc/gen_data.h
@@ -72,9 +75,8 @@ obj/invntory.o: src/invntory.cpp inc/invntory.h inc/invntory.h inc/gen_data.h
 
 obj/main.o: src/main.cpp inc/main.h inc/utils.h inc/render.h inc/player.h inc/maze.h inc/invntory.h inc/itemgen.h
 	$(CC) -c $(CFLAGS) -o obj/main.o src/main.cpp
-	
+
 clean:
 	@echo Removing files...
 	@rm -f obj/*.o
 	@rm -f $(TARGET)
-	
