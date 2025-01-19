@@ -149,6 +149,7 @@ int Player::get_y_pos() {
 //   Nothing
 //------------------------------------------------------------------------------
 void Player::set_x_pos(int pos) {
+	g_state_flags.player_pos_dx = pos - x_pos;
 	x_pos = pos;
 }
 
@@ -162,7 +163,23 @@ void Player::set_x_pos(int pos) {
 //   Nothing
 //------------------------------------------------------------------------------
 void Player::set_y_pos(int pos) {
+	g_state_flags.player_pos_dx = pos - y_pos;
 	y_pos = pos;
+}
+
+//------------------------------------------------------------------------------
+// Sets the player's position
+//
+// Arguments:
+//   pos - the position to set to
+//
+// Returns:
+//   Nothing
+//------------------------------------------------------------------------------
+void Player::set_pos(int x, int y) {
+	set_x_pos(x);
+	set_y_pos(y);
+	adjust_player_lighting_at(x, y);
 }
 
 //------------------------------------------------------------------------------

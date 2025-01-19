@@ -333,6 +333,7 @@ public:
 	void set_action_residual(int amount) { residual_action_points = amount; }
 	void set_x_pos(int pos);
 	void set_y_pos(int pos);
+	void set_pos(int x, int y);
 	void add_gold(int amount);
 	int get_gold();
 	void set_hp(int new_hp);

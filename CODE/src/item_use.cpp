@@ -255,8 +255,7 @@ void teleport_player() {
         return;
     }
 
-    g_player.set_x_pos(new_x);
-    g_player.set_y_pos(new_y);
+    g_player.set_pos(new_x, new_y);
 
     // If the player was teleported into a room, light it
 	int room_id = g_dungeon.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos());

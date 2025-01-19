@@ -804,5 +804,6 @@ class Render {
 
 void force_update_screen(void);
 void update_inventory_display_flags(void);
+void populate_dungeon_position_data(DungeonFloor *f, int x, int y);
 
 #endif

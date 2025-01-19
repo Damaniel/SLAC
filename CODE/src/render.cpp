@@ -25,6 +25,10 @@
 
 UiGlobals g_ui_globals;
 
+std::vector<std::pair<short, short> > g_dirty_squares;
+short g_old_tile_data[UiConsts::PLAY_AREA_TILE_WIDTH][UiConsts::PLAY_AREA_TILE_HEIGHT];
+short g_new_tile_data[UiConsts::PLAY_AREA_TILE_WIDTH][UiConsts::PLAY_AREA_TILE_HEIGHT];
+
 //------------------------------------------------------------------------------
 // Render::Render
 //
@@ -1430,6 +1434,8 @@ void Render::render_world_at(BITMAP *destination, DungeonFloor *f, int maze_x, i
 	//   cause a problem.  If weird crashes happen, try looking here.
 	int num_y_tiles;
 
+	std::cout << "In render_world_at" << std::endl;
+
 	// If the extended text dialog is up, don't draw the last 3 rows of tiles
 	if (g_state_flags.text_log_extended) {
 		num_y_tiles = UiConsts::PLAY_AREA_TILE_HEIGHT - UiConsts::TEXT_AREA_EXT_MAZE_ROWS_OBSCURED;
@@ -1438,66 +1444,22 @@ void Render::render_world_at(BITMAP *destination, DungeonFloor *f, int maze_x, i
 		num_y_tiles = UiConsts::PLAY_AREA_TILE_HEIGHT;
 	}
 
-	for (int screen_x = 0; screen_x < UiConsts::PLAY_AREA_TILE_WIDTH; screen_x++) {
 		for (int screen_y = 0; screen_y < num_y_tiles; screen_y++) {
-			int tile_to_render_x = maze_x + screen_x;
-			int tile_to_render_y = maze_y + screen_y;
-			int tile_to_use;
-			bool carved_left = f->maze->is_carved(tile_to_render_x -1, tile_to_render_y);
-			bool carved_up = f->maze->is_carved(tile_to_render_x, tile_to_render_y - 1);
-
-			if(tile_to_render_x >=0 && tile_to_render_y >=0 && tile_to_render_x < f->maze->get_width() && tile_to_render_y < f->maze->get_height()) {
-				int stairs = f->maze->stairs_here(tile_to_render_x, tile_to_render_y);
-				// Before checking any other status, draw darkness if the square isn't lit
-				if (f->maze->is_square_lit(tile_to_render_x, tile_to_render_y) == false) {
-					// If the square has previously been seen and isn't carved, draw a darker wall
-					if (f->maze->is_carved(tile_to_render_x, tile_to_render_y) == false && f->maze->was_seen(tile_to_render_x, tile_to_render_y) == true) {
-						render_base_tile(destination, UiConsts::TILE_DARKER_WALL, g_dungeon.maze_id, screen_x, screen_y);
-					} else {
-						// Otherwise, draw darkness
-						render_base_tile(destination, UiConsts::TILE_DARK, g_dungeon.maze_id, screen_x, screen_y);
-					}
-				}
-				// Render stairs if present
-				else if (stairs == MazeConsts::STAIRS_UP) {
-					render_base_tile(destination, UiConsts::TILE_UP_STAIRS, g_dungeon.maze_id, screen_x, screen_y);
-				}
-				else if (stairs == MazeConsts::STAIRS_DOWN) {
-					render_base_tile(destination, UiConsts::TILE_DOWN_STAIRS, g_dungeon.maze_id, screen_x, screen_y);
-				}
-				// Render floor if present.  There are 4 different floor tiles - one with no
-				// highlighting and 3 with different types of highlighting
-				// If the location is a wall, render that instead.
-				else if (f->maze->is_carved(tile_to_render_x, tile_to_render_y) == true) {
-					if (carved_left == false && carved_up == true) {
-						tile_to_use = UiConsts::TILE_FLOOR_LEFT_HIGHLIGHT;
-					}
-					else if (carved_left == true && carved_up == false) {
-						tile_to_use = UiConsts::TILE_FLOOR_TOP_HIGHLIGHT;
-					}
-					else if (carved_left == false && carved_up == false) {
-						tile_to_use = UiConsts::TILE_FLOOR_BOTH_HIGHLIGHT;
-					}
-					else {
-						tile_to_use = UiConsts::TILE_FLOOR;
-					}
-					render_base_tile(destination, tile_to_use, g_dungeon.maze_id, screen_x, screen_y);
-					// Get any items at the location and draw the first on the list
-					int num_items_here = f->get_num_items_at(tile_to_render_x, tile_to_render_y);
-					if (num_items_here > 0) {
-						std::list<Item *> items = f->get_items_at(tile_to_render_x, tile_to_render_y);
-						Item *it = items.back();
-						int gid = get_tile_to_render(it);
-						render_item(destination, gid, screen_x, screen_y);
-					}
-				} else {
-					render_base_tile(destination, UiConsts::TILE_WALL, g_dungeon.maze_id, screen_x, screen_y);
-				}
-			} else {
-				// Draw an empty space since it's outside of the map
-				render_base_tile(destination, UiConsts::TILE_DARK, g_dungeon.maze_id, screen_x, screen_y);
+			for (int screen_x = 0; screen_x < UiConsts::PLAY_AREA_TILE_WIDTH; screen_x++) {
+			std::cout << g_new_tile_data[screen_x][screen_y] << " ";
+			render_base_tile(destination, g_new_tile_data[screen_x][screen_y], g_dungeon.maze_id, screen_x, screen_y);
+			// Get any items at the location and draw the first on the list
+			int num_items_here = f->get_num_items_at(screen_x + maze_x, screen_y + maze_y);
+			int tid = g_new_tile_data[screen_x][screen_y];
+			if (num_items_here > 0 && (tid == UiConsts::TILE_FLOOR || tid == UiConsts::TILE_FLOOR_TOP_HIGHLIGHT ||
+			                           tid == UiConsts::TILE_FLOOR_LEFT_HIGHLIGHT || tid == UiConsts::TILE_FLOOR_BOTH_HIGHLIGHT) ) {
+					std::list<Item *> items = f->get_items_at(screen_x + maze_x, screen_y + maze_y);
+					Item *it = items.back();
+					int gid = get_tile_to_render(it);
+					render_item(destination, gid, screen_x, screen_y);
 			}
 		}
+		std::cout << std::endl;
 	}
 
 	// Render the player and any enemies
@@ -2238,6 +2200,97 @@ int Render::get_prop_text_width(char *text, int style) {
 	}
 
 	return width;
+}
+
+//------------------------------------------------------------------------------
+// Populates dungeon position data
+//
+// Arguments:
+//   f - the dungeon
+//   x, y - the position of the upper left corner of the region
+//
+// Returns:
+//	 Nothing
+//------------------------------------------------------------------------------
+void populate_dungeon_position_data(DungeonFloor *f, int x, int y) {
+	int tile_to_render_x, tile_to_render_y;
+	bool carved_left, carved_up;
+	int stairs;
+
+	std::cout << "populate_dungeon_position_data: x = " << x << ", y = " << y << std::endl;
+
+	for (int i = 0; i < UiConsts::PLAY_AREA_TILE_WIDTH; ++i) {
+		for (int j = 0; j < UiConsts::PLAY_AREA_TILE_HEIGHT; ++j) {
+			g_old_tile_data[i][j] = g_new_tile_data[i][j];
+			tile_to_render_x = i + x;
+			tile_to_render_y = j + y;
+			carved_left = f->maze->is_carved(tile_to_render_x -1, tile_to_render_y);
+			carved_up = f->maze->is_carved(tile_to_render_x, tile_to_render_y - 1);
+ 			if (tile_to_render_x >=0 && tile_to_render_y >=0 && tile_to_render_x < f->maze->get_width() && tile_to_render_y < f->maze->get_height()) {
+ 				stairs = f->maze->stairs_here(tile_to_render_x, tile_to_render_y);
+ 				if (!(f->maze->is_square_lit(tile_to_render_x, tile_to_render_y))) {
+ 					if (!(f->maze->is_carved(tile_to_render_x, tile_to_render_y)) && f->maze->was_seen(tile_to_render_x, tile_to_render_y)) {
+						g_new_tile_data[i][j] = UiConsts::TILE_DARKER_WALL;
+					}
+					else {
+						g_new_tile_data[i][j] = UiConsts::TILE_DARK;
+					}
+				}
+ 				else if (stairs == MazeConsts::STAIRS_UP) {
+					g_new_tile_data[i][j] = UiConsts::TILE_UP_STAIRS;
+				}
+ 				else if (stairs == MazeConsts::STAIRS_DOWN) {
+					g_new_tile_data[i][j] = UiConsts::TILE_DOWN_STAIRS;
+ 				}
+				else if (f->maze->is_carved(tile_to_render_x, tile_to_render_y) ) {
+					if (carved_left == false && carved_up == true) {
+						g_new_tile_data[i][j] = UiConsts::TILE_FLOOR_LEFT_HIGHLIGHT;
+					}
+					else if (carved_left == true && carved_up == false) {
+						g_new_tile_data[i][j] = UiConsts::TILE_FLOOR_TOP_HIGHLIGHT;
+					}
+					else if (carved_left == false && carved_up == false) {
+						g_new_tile_data[i][j] = UiConsts::TILE_FLOOR_BOTH_HIGHLIGHT;
+					}
+					else {
+						g_new_tile_data[i][j] = UiConsts::TILE_FLOOR;
+					}
+				} else {
+					g_new_tile_data[i][j] = UiConsts::TILE_WALL;
+ 				}
+ 			} else {
+				g_new_tile_data[i][j] = UiConsts::TILE_DARK;
+ 			}
+		}
+	}
+
+	// Add the areas around the player to the map bitmap
+	//std::cout << "update_display: adding area to map bitmap" << std::endl;
+	g_render.add_area_to_map_bitmap(f, g_player.get_x_pos(), g_player.get_y_pos());
+	// Light the space around the player
+	f->maze->change_lit_status_around(g_player.get_x_pos(), g_player.get_y_pos(), true);
+
+	// Check what room the player is in, if any
+	int room_to_light = f->maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos());
+	int last_player_room = g_player.get_last_room_entered();
+	if(last_player_room != -1 && room_to_light == -1) {
+		f->maze->change_room_lit_status(last_player_room, false);
+	}
+	// If the player wasn't in a room but now is, then light up the room
+	if(last_player_room == -1 && room_to_light != -1) {
+		f->maze->change_room_lit_status(room_to_light, true);
+		f->maze->set_room_entered_state(room_to_light, true);
+	}
+
+	std::cout << "========= populate ================" << std::endl;
+	for (int j=0 ; j < UiConsts::PLAY_AREA_TILE_HEIGHT; j++) {
+		for (int i = 0; i < UiConsts::PLAY_AREA_TILE_WIDTH; ++i) {
+			std::cout << g_new_tile_data[i][j] << " ";
+		}
+		std::cout << std::endl;
+	}
+	std::cout << "========= populate ================" << std::endl;
+
 }
 
 //------------------------------------------------------------------------------

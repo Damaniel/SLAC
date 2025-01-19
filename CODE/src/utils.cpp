@@ -320,28 +320,7 @@ void update_main_game_display(void) {
 	if (g_state_flags.update_maze_area == true) {
 		if (g_state_flags.in_dungeon) {
 			// Add the areas around the player to the map bitmap
-			//std::cout << "update_display: adding area to map bitmap" << std::endl;
 			g_render.add_area_to_map_bitmap(&g_dungeon, g_player.get_x_pos(), g_player.get_y_pos());
-			//std::cout << "update_display: Added area to map bitmap" << std::endl;
-			// Light the space around the player
-			g_dungeon.maze->change_lit_status_around(g_player.get_x_pos(), g_player.get_y_pos(), true);
-			//std::cout << "update_display: Changed lit status" << std::endl;
-			// Check what room the player is in, if any
-			int room_to_light = g_dungeon.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos());
-			int last_player_room = g_player.get_last_room_entered();
-			//std::cout << "update_display: Got last room player was in" << std::endl;
-			// If the player was in a room but no longer is, then darken the room
-			if(last_player_room != -1 && room_to_light == -1) {
-				g_dungeon.maze->change_room_lit_status(last_player_room, false);
-			}
-			// If the player wasn't in a room but now is, then light up the room
-			if(last_player_room == -1 && room_to_light != -1) {
-				g_dungeon.maze->change_room_lit_status(room_to_light, true);
-				// Mark the room itself as visited so rendering the map will
-				// show the room even at the start of the game
-				g_dungeon.maze->set_room_entered_state(room_to_light, true);
-			}
-			//std::cout << "update_display: Finished processing lighting" << std::endl;
 
 			// Draw the world display area
 			g_render.render_world_at_player(g_back_buffer, &g_dungeon, g_player.get_x_pos(), g_player.get_y_pos());
@@ -351,6 +330,11 @@ void update_main_game_display(void) {
 			// Draw the appropriate part of the town
 			g_render.render_town_at_player(g_back_buffer, g_player.get_x_pos(), g_player.get_y_pos());
 		}
+
+		// Clear the dirty squares list now that everything is drawn
+		g_dirty_squares.clear();
+
+		// Mark drawing as done
 		g_state_flags.update_maze_area = false;
 	}
 
@@ -767,6 +751,9 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 		//d.maze->change_room_lit_status(initial_room, false);
 		d.maze->change_room_lit_status(initial_room, true);
 	}
+
+	// Update position data (including lighting)
+	populate_dungeon_position_data(&g_dungeon, stairLoc.first - UiConsts::PLAYER_PLAY_AREA_X, stairLoc.second - UiConsts::PLAYER_PLAY_AREA_Y);
 
 	// Update the distance from the player to each enemy and sort
 	get_enemy_distances(d.enemies, g_player.get_x_pos(), g_player.get_y_pos());
@@ -2073,8 +2060,7 @@ void check_for_active_area(int x, int y) {
 	if (x == TownConsts::WEAPON_SHOP_X && y == TownConsts::WEAPON_SHOP_Y) {
 		if (!g_state_flags.in_weapon_shop && !g_state_flags.in_item_shop && !g_state_flags.in_museum) {
 			g_state_flags.in_weapon_shop = true;
-			g_player.set_x_pos(TownConsts::WEAPON_SHOP_EXIT_X);
-			g_player.set_y_pos(TownConsts::WEAPON_SHOP_EXIT_Y);
+			g_player.set_pos(TownConsts::WEAPON_SHOP_EXIT_X, TownConsts::WEAPON_SHOP_EXIT_Y);
 			force_update_screen();
 		}
 	}
@@ -2083,8 +2069,7 @@ void check_for_active_area(int x, int y) {
 	if (x == TownConsts::ITEM_SHOP_X && y == TownConsts::ITEM_SHOP_Y) {
 		if (!g_state_flags.in_weapon_shop && !g_state_flags.in_item_shop && !g_state_flags.in_museum) {
 			g_state_flags.in_item_shop = true;
-			g_player.set_x_pos(TownConsts::ITEM_SHOP_EXIT_X);
-			g_player.set_y_pos(TownConsts::ITEM_SHOP_EXIT_Y);
+			g_player.set_pos(TownConsts::ITEM_SHOP_EXIT_X, TownConsts::ITEM_SHOP_EXIT_Y);
 			force_update_screen();
 		}
 	}
@@ -2093,8 +2078,7 @@ void check_for_active_area(int x, int y) {
 	if (x == TownConsts::MUSEUM_X && y == TownConsts::MUSEUM_Y) {
 		if (!g_state_flags.in_weapon_shop && !g_state_flags.in_item_shop && !g_state_flags.in_museum) {
 			g_state_flags.in_museum = true;
-			g_player.set_x_pos(TownConsts::MUSEUM_EXIT_X);
-			g_player.set_y_pos(TownConsts::MUSEUM_EXIT_Y);
+			g_player.set_pos(TownConsts::MUSEUM_EXIT_X, TownConsts::MUSEUM_EXIT_Y);
 			force_update_screen();
 		}
 	}
@@ -2126,26 +2110,22 @@ void process_shop_move(std::pair<int, int> proposed_location) {
 	}
 
 	if (passable == 1) {
-		g_player.set_x_pos(x);
-		g_player.set_y_pos(y);
+		g_player.set_pos(x, y);
 		// If we've stepped on an exit tile (or the tile below) for a shop or the museum, exit
 		if (g_state_flags.in_weapon_shop && x == TownConsts::WEAPON_SHOP_EXIT_X &&
 		    (y == TownConsts::WEAPON_SHOP_EXIT_Y || y == TownConsts::WEAPON_SHOP_EXIT_Y +1)) {
 			g_state_flags.in_weapon_shop = false;
-			g_player.set_x_pos(TownConsts::WEAPON_SHOP_X);
-			g_player.set_y_pos(TownConsts::WEAPON_SHOP_Y + 1);
+			g_player.set_pos(TownConsts::WEAPON_SHOP_X, TownConsts::WEAPON_SHOP_Y + 1);
 		}
 		if (g_state_flags.in_item_shop && x == TownConsts::ITEM_SHOP_EXIT_X &&
 		    (y == TownConsts::ITEM_SHOP_EXIT_Y || y == TownConsts::ITEM_SHOP_EXIT_Y + 1)) {
 			g_state_flags.in_item_shop = false;
-			g_player.set_x_pos(TownConsts::ITEM_SHOP_X);
-			g_player.set_y_pos(TownConsts::ITEM_SHOP_Y + 1);
+			g_player.set_pos(TownConsts::ITEM_SHOP_X, TownConsts::ITEM_SHOP_Y + 1);
 		}
 		if (g_state_flags.in_museum && x == TownConsts::MUSEUM_EXIT_X &&
 		    (y == TownConsts::MUSEUM_EXIT_Y || y == TownConsts::MUSEUM_EXIT_Y + 1)) {
 			g_state_flags.in_museum = false;
-			g_player.set_x_pos(TownConsts::MUSEUM_X);
-			g_player.set_y_pos(TownConsts::MUSEUM_Y + 1);
+			g_player.set_pos(TownConsts::MUSEUM_X, TownConsts::MUSEUM_Y + 1);
 		}
 		g_state_flags.update_maze_area = true;
 		g_state_flags.update_text_dialog = true;
@@ -2289,8 +2269,7 @@ void process_town_move(std::pair<int, int> proposed_location) {
 	int y = proposed_location.second;
 	int passable = g_town_movability[y * TownConsts::TOWN_SIZE + x];
 	if (passable == 1) {
-		g_player.set_x_pos(x);
-		g_player.set_y_pos(y);
+		g_player.set_pos(x, y);
 		g_state_flags.update_maze_area = true;
 		g_state_flags.update_text_dialog = true;
 		g_state_flags.update_display = true;
@@ -2523,8 +2502,8 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 				}
     			else if (g_dungeon.maze->is_carved(x, y)) {
 					// Move the player
-					g_player.set_x_pos(x);
-					g_player.set_y_pos(y);
+					g_player.set_pos(x, y);
+					populate_dungeon_position_data(&g_dungeon, x - UiConsts::PLAYER_PLAY_AREA_X, y - UiConsts::PLAYER_PLAY_AREA_Y);
 
     				// Identify known (but not yet identified) potions and scrolls on the ground
     				// to ensure any stragglers on the current floor are dealt with
@@ -2573,6 +2552,15 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 
 	// Update whether enemies remember the player or not
 	process_enemy_forgetting_player(g_dungeon.enemies);
+
+	if (g_dirty_squares.size() != 0) {
+	 	std::cout << "=================================================" << std::endl;
+		std::cout << "The g_dirty_squares list contains:" << std::endl;
+		// Draw the contents of the dirty list
+		for (int i = 0; i < g_dirty_squares.size(); ++i) {
+			std::cout << "  (" << g_dirty_squares[i].first << ", " << g_dirty_squares[i].second << ")" << std::endl;
+		}
+	}
 
 	// If the player has a scroll of recall active, subtract the count and if the count
 	// becomes zero, send the player to town
@@ -2685,6 +2673,26 @@ void describe_artifact(int artifact_id) {
 	else {
 		g_text_log.put_line("Whatever this display is supposed to hold, you haven't found one yet.");
 		g_state_flags.update_display = true;
+	}
+}
+
+void adjust_player_lighting_at(int x, int y) {
+	if (!g_state_flags.in_dungeon)
+		return;
+
+	// Light the space around the player
+	g_dungeon.maze->change_lit_status_around(x, y, true);
+
+	// Check what room the player is in, if any
+	int room_to_light = g_dungeon.maze->get_room_id_at(x, y);
+	int last_player_room = g_player.get_last_room_entered();
+	if(last_player_room != -1 && room_to_light == -1) {
+		g_dungeon.maze->change_room_lit_status(last_player_room, false);
+	}
+	// If the player wasn't in a room but now is, then light up the room
+	if(last_player_room == -1 && room_to_light != -1) {
+		g_dungeon.maze->change_room_lit_status(room_to_light, true);
+		g_dungeon.maze->set_room_entered_state(room_to_light, true);
 	}
 }
 

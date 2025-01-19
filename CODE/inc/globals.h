@@ -103,4 +103,8 @@ extern unsigned char g_museum_movability[TownConsts::MUSEUM_WIDTH * TownConsts::
 extern unsigned short g_shops_tile_data[TownConsts::SHOPS_WIDTH * TownConsts::SHOPS_HEIGHT];
 extern unsigned char g_shops_movability[TownConsts::SHOPS_WIDTH * TownConsts::SHOPS_HEIGHT];
 
+extern std::vector<std::pair<short, short> > g_dirty_squares;
+extern short g_old_tile_data[UiConsts::PLAY_AREA_TILE_WIDTH][UiConsts::PLAY_AREA_TILE_HEIGHT];
+extern short g_new_tile_data[UiConsts::PLAY_AREA_TILE_WIDTH][UiConsts::PLAY_AREA_TILE_HEIGHT];
+
 #endif

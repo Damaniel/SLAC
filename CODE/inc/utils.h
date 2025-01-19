@@ -220,6 +220,10 @@ struct StateFlags {
     bool recently_died;
     bool save_loaded;
 
+    // optimization flags
+    int player_pos_dx;
+    int player_pos_dy;
+
 };
 
 // A collection of flags related to game progression
@@ -257,6 +261,7 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from);
 void use_stairs(int x, int y);
 void exit_dungeon(bool used_recall);
 void add_new_enemy_to_area();
+void adjust_player_lighting_at(int x, int y);
 
 // Text log functions
 void add_items_at_player_to_log(void);
