@@ -1445,12 +1445,13 @@ void Render::render_world_at(BITMAP *destination, DungeonFloor *f, int maze_x, i
 	for (int i = 0; i < g_tile_cache.dirty.size(); ++i) {
 		if (g_tile_cache.is_old_location_on_screen(g_tile_cache.dirty[i].first, g_tile_cache.dirty[i].second)) {
 			std::pair<short,short> pos = g_tile_cache.get_old_screen_position(g_tile_cache.dirty[i].first, g_tile_cache.dirty[i].second);
-			//std::cout << "Covering a tile at (" << pos.first << ", " << pos.second << ")" << std::endl;
 			render_base_tile(destination, g_tile_cache.new_tiles[pos.first][pos.second], g_dungeon.maze_id, pos.first, pos.second);
-			pos = g_tile_cache.get_new_screen_position(g_tile_cache.dirty[i].first, g_tile_cache.dirty[i].second);
-			//std::cout << "Covering a tile at (" << pos.first << ", " << pos.second << ")" << std::endl;
+			tiles_saved -= 1;
+		}
+		if (g_tile_cache.is_new_location_on_screen(g_tile_cache.dirty[i].first, g_tile_cache.dirty[i].second)) {
+			std::pair<short, short>pos = g_tile_cache.get_new_screen_position(g_tile_cache.dirty[i].first, g_tile_cache.dirty[i].second);
 			render_base_tile(destination, g_tile_cache.new_tiles[pos.first][pos.second], g_dungeon.maze_id, pos.first, pos.second);
-			tiles_saved -= 2;
+			tiles_saved -= 1;
 		}
 	}
 

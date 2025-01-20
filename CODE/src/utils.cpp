@@ -390,12 +390,20 @@ void populate_maze_tile_cache(int world_x, int world_y) {
 				else {
 					data[screen_x][screen_y] = UiConsts::TILE_DARK;
 				}
+			}
+		}
+	}
 
-				// Get item quantities.  If any items are on the square, mark it as dirty
-				int num_items_here = g_dungeon.get_num_items_at(offset_x, offset_y);
-				if (num_items_here > 0) {
-					g_tile_cache.add_dirty(offset_x, offset_y);
-				}
+	// Check for items up to one square away from the edges of the screen since they may not be on the
+	// screen anymore when we do the dirty check.
+	for (int screen_y = 0; screen_y <= UiConsts::PLAY_AREA_TILE_HEIGHT; screen_y++ ) {
+		for (int screen_x = 0; screen_x <= UiConsts::PLAY_AREA_TILE_WIDTH; screen_x++) {
+			offset_x = screen_x + world_x;
+			offset_y = screen_y + world_y;
+			// Get item quantities.  If any items are on the square, mark it as dirty
+			int num_items_here = g_dungeon.get_num_items_at(offset_x, offset_y);
+			if (num_items_here > 0) {
+				g_tile_cache.add_dirty(offset_x, offset_y);
 			}
 		}
 	}
