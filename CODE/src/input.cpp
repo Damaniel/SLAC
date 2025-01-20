@@ -595,6 +595,7 @@ void process_game_state(int key) {
                     g_state_flags.update_status_hp_exp = true;
                     g_state_flags.update_status_elapsed_time = true;
 		            g_state_flags.update_display = true;
+                    force_update_screen();
                     break;
 	        }
             break;
