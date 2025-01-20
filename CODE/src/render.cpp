@@ -1482,7 +1482,7 @@ void Render::render_world_at(BITMAP *destination, DungeonFloor *f, int maze_x, i
 	// Clear the dirty cache
 	g_tile_cache.clear_dirty();
 
-	std::cout << "Tiles saved: " << tiles_saved << std::endl;
+	//std::cout << "Tiles saved (world) = " << tiles_saved << std::endl;
 
 	// Render the player and any enemies
 	render_actors(destination, maze_x, maze_y);
@@ -1551,13 +1551,27 @@ void Render::render_town_at(BITMAP *destination, int x, int y) {
 		tile_index_data = g_town_tile_data;
 	}
 
+	int tiles_saved = 0;
+
 	for (int screen_x = 0; screen_x < UiConsts::PLAY_AREA_TILE_WIDTH; screen_x++) {
 		for (int screen_y = 0; screen_y < num_y_tiles; screen_y++) {
 			int tile_to_render_x = x + screen_x;
 			int tile_to_render_y = y + screen_y;
 
+			if(g_tile_cache.valid && g_tile_cache.is_tile_same(screen_x, screen_y)) {
+				tiles_saved += 1;
+				continue;
+			}
+
 			if (tile_to_render_x >=0 && tile_to_render_y >=0 && tile_to_render_x < x_limit && tile_to_render_y < y_limit) {
 				int tile_index_to_render = tile_index_data[tile_to_render_y * x_limit + tile_to_render_x];
+
+				// If the index is -1, this part is outside of the screen area and should be drawn as darkness
+				if (tile_index_to_render == -1) {
+					render_base_tile(destination, UiConsts::TILE_DARK, g_dungeon.maze_id, screen_x, screen_y);
+					continue;
+				}
+
 				int tile_offset_x = tile_index_to_render % UiConsts::TOWN_TILE_ENTRY_WIDTH;
 				int tile_offset_y = tile_index_to_render / UiConsts::TOWN_TILE_ENTRY_WIDTH;
 
@@ -1617,6 +1631,8 @@ void Render::render_town_at(BITMAP *destination, int x, int y) {
 			}
 		}
 	}
+
+	//std::cout << "Tiles saved (town) = " << tiles_saved << std::endl;
 
 	// Draw the player
 	render_player(destination);
@@ -2251,6 +2267,9 @@ void update_inventory_display_flags(void) {
 //   Nothing
 //------------------------------------------------------------------------------
 void force_update_screen(void) {
+	populate_maze_tile_cache(g_player.x_pos - UiConsts::PLAYER_PLAY_AREA_X, g_player.y_pos - UiConsts::PLAYER_PLAY_AREA_Y);
+	g_tile_cache.invalidate();
+
 	g_state_flags.update_maze_area = true;
 	g_state_flags.update_text_dialog = true;
 	g_state_flags.update_status_dialog = true;

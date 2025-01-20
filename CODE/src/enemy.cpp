@@ -659,7 +659,7 @@ void perform_enemy_action(Enemy *e) {
 	//std::cout << "perform_enemy_action: abs(px-x) = " << abs(px-x) << ", abs(py-y) = " << abs(py-y) << std::endl;
 	if (abs(px-x) <= 1 && abs(py-y) <= 1) {
 		// Add the current position to the dirty list
-		std::cout << "Adding dirty at (" << e->get_x_pos() << ", " << e->get_y_pos() << ") - enemy attacking" << std::endl;
+		//std::cout << "Adding dirty at (" << e->get_x_pos() << ", " << e->get_y_pos() << ") - enemy attacking" << std::endl;
 		g_tile_cache.add_dirty(e->get_x_pos(), e->get_y_pos());
 		perform_enemy_combat(e);
 		return;
@@ -746,7 +746,7 @@ void perform_enemy_action(Enemy *e) {
 	}
 
 	// Add the current position to the dirty list
-	std::cout << "Adding dirty at (" << e->get_x_pos() << ", " << e->get_y_pos() << ") - enemy moved here" << std::endl;
+	//std::cout << "Adding dirty at (" << e->get_x_pos() << ", " << e->get_y_pos() << ") - enemy moved here" << std::endl;
 	g_tile_cache.add_dirty(e->get_x_pos(), e->get_y_pos());
 }
 

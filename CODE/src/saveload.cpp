@@ -385,6 +385,8 @@ bool process_potion_scramble_data(FILE *f) {
         return false;
     }
 
+    g_scrambled_potion_icons.clear();
+
     for (int i=0; i < ItemConsts::NUM_POTIONS; ++i) {
         fread(&val, sizeof(int), 1, f);
         g_scrambled_potion_icons.push_back(val);
@@ -412,6 +414,8 @@ bool process_scroll_scramble_data(FILE *f) {
     if (magic[0] != 'S' || magic[1] != 'C' || magic[2] != 'R' || magic[3] != 'S' ) {
         return false;
     }
+
+    g_scrambled_scroll_icons.clear();
 
     for (int i=0; i < ItemConsts::NUM_SCROLLS; ++i) {
         fread(&val, sizeof(int), 1, f);
@@ -821,6 +825,8 @@ int write_potion_scramble_data(FILE *f) {
         fwrite(&(g_scrambled_potion_icons[i]), sizeof(int), 1, f);
     }
 
+    //std::cout << "Potion scramble data size = " << g_scrambled_potion_icons.size() << std::endl;
+
     return g_scrambled_potion_icons.size() * sizeof(int) + 4;
 }
 
@@ -841,6 +847,8 @@ int write_scroll_scramble_data(FILE *f) {
     for (int i=0; i < g_scrambled_scroll_icons.size(); ++i) {
         fwrite(&(g_scrambled_scroll_icons[i]), sizeof(int), 1, f);
     }
+
+    //std::cout << "Scroll scramble data size = " << g_scrambled_scroll_icons.size() << std::endl;
 
     return g_scrambled_scroll_icons.size() * sizeof(int) + 4;
 }
@@ -865,6 +873,8 @@ int write_identified_potions(FILE *f) {
         fwrite(&b, sizeof(bool), 1, f);
     }
 
+    //std::cout << "IDed potion data size = " << g_identified_potions.size() << std::endl;
+
     return g_identified_potions.size() * sizeof(bool) + 4;
 }
 
@@ -887,6 +897,8 @@ int write_identified_scrolls(FILE *f) {
         bool b = g_identified_scrolls[i];
         fwrite(&b, sizeof(bool), 1, f);
     }
+
+    //std::cout << "IDed scroll data size = " << g_identified_scrolls.size() << std::endl;
 
     return g_identified_scrolls.size() * sizeof(bool) + 4;
 }

@@ -318,51 +318,84 @@ void DungeonFloor::remove_item_from_end_at(int x, int y) {
 void populate_maze_tile_cache(int world_x, int world_y) {
 	short data[UiConsts::PLAY_AREA_TILE_WIDTH][UiConsts::PLAY_AREA_TILE_HEIGHT];
 	int offset_x, offset_y;
+	int limit_x, limit_y;
+	unsigned short *tile_data;
 
-	for (int screen_y = 0; screen_y < UiConsts::PLAY_AREA_TILE_HEIGHT; screen_y++) {
-		for (int screen_x = 0; screen_x < UiConsts::PLAY_AREA_TILE_WIDTH; screen_x++) {
-			offset_x = screen_x + world_x;
-			offset_y = screen_y + world_y;
-			bool carved_left = g_dungeon.maze->is_carved(offset_x - 1, offset_y);
-			bool carved_up = g_dungeon.maze->is_carved(offset_x, offset_y - 1);
-			if (offset_x >=0 && offset_y >=0 && offset_x < g_dungeon.maze->get_width() && offset_y < g_dungeon.maze->get_height()) {
-				int stairs = g_dungeon.maze->stairs_here(offset_x, offset_y);
-				if (!(g_dungeon.maze->is_square_lit(offset_x, offset_y))) {
-					if (!(g_dungeon.maze->is_carved(offset_x, offset_y)) && g_dungeon.maze->was_seen(offset_x, offset_y)) {
-						data[screen_x][screen_y] = UiConsts::TILE_DARKER_WALL;
-					}
-					else {
-						data[screen_x][screen_y] = UiConsts::TILE_DARK;
-					}
-				}
-				else if (stairs == MazeConsts::STAIRS_UP) {
-					data[screen_x][screen_y] = UiConsts::TILE_UP_STAIRS;
-				}
-				else if (stairs == MazeConsts::STAIRS_DOWN) {
-					data[screen_x][screen_y] = UiConsts::TILE_DOWN_STAIRS;
-				}
-				else if (g_dungeon.maze->is_carved(offset_x, offset_y)) {
-					if (!carved_left && carved_up)
-						data[screen_x][screen_y] = UiConsts::TILE_FLOOR_LEFT_HIGHLIGHT;
-					else if (carved_left && !carved_up)
-						data[screen_x][screen_y] = UiConsts::TILE_FLOOR_TOP_HIGHLIGHT;
-					else if (!carved_left && !carved_up)
-						data[screen_x][screen_y] = UiConsts::TILE_FLOOR_BOTH_HIGHLIGHT;
-					else
-						data[screen_x][screen_y] = UiConsts::TILE_FLOOR;
+	if (!g_state_flags.in_dungeon) {
+		if (g_state_flags.in_weapon_shop || g_state_flags.in_item_shop) {
+			limit_x = TownConsts::SHOPS_WIDTH;
+			limit_y = TownConsts::SHOPS_HEIGHT;
+			tile_data = g_shops_tile_data;
+		}
+		else if (g_state_flags.in_museum) {
+			limit_x = TownConsts::MUSEUM_WIDTH;
+			limit_y = TownConsts::MUSEUM_HEIGHT;
+			tile_data = g_museum_tile_data;
+		}
+		else {
+			limit_x = TownConsts::TOWN_SIZE;
+			limit_y = TownConsts::TOWN_SIZE;
+			tile_data = g_town_tile_data;
+		}
+		for (int screen_y = 0; screen_y < UiConsts::PLAY_AREA_TILE_HEIGHT; screen_y++) {
+			for (int screen_x = 0; screen_x < UiConsts::PLAY_AREA_TILE_WIDTH; screen_x++) {
+				int offset_x = screen_x + world_x;
+				int offset_y = screen_y + world_y;
+				if (offset_x >=0 && offset_y >= 0 && offset_x < limit_x && offset_y < limit_y) {
+					data[screen_x][screen_y] = tile_data[offset_y * limit_x + offset_x];
 				}
 				else {
-					data[screen_x][screen_y] = UiConsts::TILE_WALL;
+					data[screen_x][screen_y] = -1;
 				}
 			}
-			else {
-				data[screen_x][screen_y] = UiConsts::TILE_DARK;
-			}
+		}
+	}
+	else {
+		for (int screen_y = 0; screen_y < UiConsts::PLAY_AREA_TILE_HEIGHT; screen_y++) {
+			for (int screen_x = 0; screen_x < UiConsts::PLAY_AREA_TILE_WIDTH; screen_x++) {
+				offset_x = screen_x + world_x;
+				offset_y = screen_y + world_y;
+				bool carved_left = g_dungeon.maze->is_carved(offset_x - 1, offset_y);
+				bool carved_up = g_dungeon.maze->is_carved(offset_x, offset_y - 1);
+				if (offset_x >=0 && offset_y >=0 && offset_x < g_dungeon.maze->get_width() && offset_y < g_dungeon.maze->get_height()) {
+					int stairs = g_dungeon.maze->stairs_here(offset_x, offset_y);
+					if (!(g_dungeon.maze->is_square_lit(offset_x, offset_y))) {
+						if (!(g_dungeon.maze->is_carved(offset_x, offset_y)) && g_dungeon.maze->was_seen(offset_x, offset_y)) {
+							data[screen_x][screen_y] = UiConsts::TILE_DARKER_WALL;
+						}
+						else {
+							data[screen_x][screen_y] = UiConsts::TILE_DARK;
+						}
+					}
+					else if (stairs == MazeConsts::STAIRS_UP) {
+						data[screen_x][screen_y] = UiConsts::TILE_UP_STAIRS;
+					}
+					else if (stairs == MazeConsts::STAIRS_DOWN) {
+						data[screen_x][screen_y] = UiConsts::TILE_DOWN_STAIRS;
+					}
+					else if (g_dungeon.maze->is_carved(offset_x, offset_y)) {
+						if (!carved_left && carved_up)
+							data[screen_x][screen_y] = UiConsts::TILE_FLOOR_LEFT_HIGHLIGHT;
+						else if (carved_left && !carved_up)
+							data[screen_x][screen_y] = UiConsts::TILE_FLOOR_TOP_HIGHLIGHT;
+						else if (!carved_left && !carved_up)
+							data[screen_x][screen_y] = UiConsts::TILE_FLOOR_BOTH_HIGHLIGHT;
+						else
+							data[screen_x][screen_y] = UiConsts::TILE_FLOOR;
+					}
+					else {
+						data[screen_x][screen_y] = UiConsts::TILE_WALL;
+					}
+				}
+				else {
+					data[screen_x][screen_y] = UiConsts::TILE_DARK;
+				}
 
-			// Get item quantities.  If any items are on the square, mark it as dirty
-			int num_items_here = g_dungeon.get_num_items_at(offset_x, offset_y);
-			if (num_items_here > 0) {
-				g_tile_cache.add_dirty(offset_x, offset_y);
+				// Get item quantities.  If any items are on the square, mark it as dirty
+				int num_items_here = g_dungeon.get_num_items_at(offset_x, offset_y);
+				if (num_items_here > 0) {
+					g_tile_cache.add_dirty(offset_x, offset_y);
+				}
 			}
 		}
 	}
@@ -823,9 +856,9 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 	// Clear the map bitmap
 	g_render.initialize_map_bitmap(&g_dungeon);
 
-	// Populate the tile cache
-	populate_maze_tile_cache(g_player.x_pos - UiConsts::PLAYER_PLAY_AREA_X, g_player.y_pos - UiConsts::PLAYER_PLAY_AREA_Y);
-	g_tile_cache.invalidate();
+	// // Populate the tile cache
+	// populate_maze_tile_cache(g_player.x_pos - UiConsts::PLAYER_PLAY_AREA_X, g_player.y_pos - UiConsts::PLAYER_PLAY_AREA_Y);
+	// g_tile_cache.invalidate();
 
 	// Force an explicit display update so the user can see the world right away
 	force_update_screen();
@@ -1366,6 +1399,10 @@ void exit_dungeon(bool used_recall) {
 			}
 			break;
 	}
+
+	// populate_maze_tile_cache(g_player.x_pos - UiConsts::PLAYER_PLAY_AREA_X, g_player.y_pos - UiConsts::PLAYER_PLAY_AREA_Y);
+	// g_tile_cache.invalidate();
+
 	force_update_screen();
 }
 
@@ -2338,6 +2375,7 @@ void process_town_move(std::pair<int, int> proposed_location) {
 	if (passable == 1) {
 		g_player.set_x_pos(x);
 		g_player.set_y_pos(y);
+		populate_maze_tile_cache(x - UiConsts::PLAYER_PLAY_AREA_X, y - UiConsts::PLAYER_PLAY_AREA_Y);
 		g_state_flags.update_maze_area = true;
 		g_state_flags.update_text_dialog = true;
 		g_state_flags.update_display = true;
@@ -2508,7 +2546,7 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 
 	// For each enemy in the queue, place their current position in the dirty squares list
 	for (int i = 0; i < enemies.size(); ++i) {
-		std::cout << "Adding dirty at (" << enemies[i]->get_x_pos() << ", " << enemies[i]->get_y_pos() << ") - enemy here at start of turn" << std::endl;
+		//std::cout << "Adding dirty at (" << enemies[i]->get_x_pos() << ", " << enemies[i]->get_y_pos() << ") - enemy here at start of turn" << std::endl;
 		g_tile_cache.add_dirty(enemies[i]->get_x_pos(), enemies[i]->get_y_pos());
 	}
 
@@ -2571,7 +2609,7 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 						}
 						g_player.apply_experience(exp);
 						// Add the defeated enemy to the dirty tile cache
-						std::cout << "Adding dirty at (" << x << ", " << y << ") - defeated enemy here" << std::endl;
+						//std::cout << "Adding dirty at (" << x << ", " << y << ") - defeated enemy here" << std::endl;
 						g_tile_cache.add_dirty(x, y);
 
 						process_enemy_item_drop(to_attack);
@@ -2747,7 +2785,15 @@ void describe_artifact(int artifact_id) {
 	}
 }
 
-
+//----------------------------------------------------------------------------
+// Updates the lighting around the player
+//
+// Arguments:
+//   None
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
 void update_lighting() {
 	// Light the space around the player
 	g_dungeon.maze->change_lit_status_around(g_player.get_x_pos(), g_player.get_y_pos(), true);

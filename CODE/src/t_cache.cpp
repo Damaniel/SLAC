@@ -100,7 +100,7 @@ void TileCache::update(short tile_data[UiConsts::PLAY_AREA_TILE_WIDTH][UiConsts:
     new_x = world_x;
     new_y = world_y;
 
-    std::cout << "update: old position is (" << old_x << ", " << old_y << "), new position is (" << new_x << ", " << new_y << ")" << std::endl;
+    //std::cout << "update: old position is (" << old_x << ", " << old_y << "), new position is (" << new_x << ", " << new_y << ")" << std::endl;
 
     for (int i = 0; i < UiConsts::PLAY_AREA_TILE_WIDTH; ++i) {
         for (int j = 0; j < UiConsts::PLAY_AREA_TILE_HEIGHT; ++j) {
