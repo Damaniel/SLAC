@@ -1169,6 +1169,7 @@ void pick_up_item_at(int x, int y) {
 		// Also, update the map to remove the item from it
         if (picked_up) {
             g_dungeon.remove_item_from_end_at(x, y);
+			g_tile_cache.add_dirty(x, y);
             g_text_log.put_line("Picked up " + item_name + ".");
             g_state_flags.update_maze_area = true;
             g_state_flags.update_display = true;
@@ -1876,7 +1877,7 @@ int roll_from_pool(const int *pool, int pool_size, int max_val) {
 //   The distance
 //----------------------------------------------------------------------------
 int get_diagonal_distance_between(int x1, int y1, int x2, int y2) {
-	return max(abs(x2 - x1), abs(y2 - y1));
+	return std::max(abs(x2 - x1), abs(y2 - y1));
 }
 
 //----------------------------------------------------------------------------
