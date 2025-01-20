@@ -383,6 +383,7 @@ void update_main_game_display(void) {
 	// Update the maze area if requested
 	if (g_state_flags.update_maze_area == true) {
 		if (g_state_flags.in_dungeon) {
+			update_lighting();
 			// Add the area around the player to the map
 			g_render.add_area_to_map_bitmap(&g_dungeon, g_player.get_x_pos(), g_player.get_y_pos());
 			// Draw the world display area
@@ -2745,6 +2746,7 @@ void describe_artifact(int artifact_id) {
 		g_state_flags.update_display = true;
 	}
 }
+
 
 void update_lighting() {
 	// Light the space around the player
