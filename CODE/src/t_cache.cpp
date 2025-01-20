@@ -46,7 +46,7 @@ void TileCache::initialize() {
     for (int i=0; i < UiConsts::PLAY_AREA_TILE_WIDTH; ++i) {
         for (int j = 0; j < UiConsts::PLAY_AREA_TILE_HEIGHT; ++j) {
             old_tiles[i][j] = -1;
-            new_tiles[i][j] = UiConsts::TILE_DARK;
+            new_tiles[i][j] = -1;
         }
     }
 
@@ -94,11 +94,14 @@ void TileCache::set_valid() {
 // Returns:
 //   Nothing
 //------------------------------------------------------------------------------
-void TileCache::update(short **tile_data, int world_x, int world_y) {
+void TileCache::update(short tile_data[UiConsts::PLAY_AREA_TILE_WIDTH][UiConsts::PLAY_AREA_TILE_HEIGHT], int world_x, int world_y) {
     old_x = new_x;
     old_y = new_y;
     new_x = world_x;
     new_y = world_y;
+
+    std::cout << "update: old position is (" << old_x << ", " << old_y << "), new position is (" << new_x << ", " << new_y << ")" << std::endl;
+
     for (int i = 0; i < UiConsts::PLAY_AREA_TILE_WIDTH; ++i) {
         for (int j = 0; j < UiConsts::PLAY_AREA_TILE_HEIGHT; ++j) {
             old_tiles[i][j] = new_tiles[i][j];

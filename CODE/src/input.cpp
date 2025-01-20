@@ -521,12 +521,14 @@ void process_game_state(int key) {
                     process_move(std::make_pair(g_player.get_x_pos(), g_player.get_y_pos()));
                     break;
                 case KEY_C:
+                    g_tile_cache.invalidate();
                     g_state_flags.cur_substate = GAME_SUBSTATE_STATS;
                     g_state_flags.update_stats_screen = true;
                     g_state_flags.update_display = true;
                     break;
 	            case KEY_M:
                     if (g_state_flags.in_dungeon) {
+                        g_tile_cache.invalidate();
                         g_state_flags.cur_substate = GAME_SUBSTATE_MAP;
                         g_state_flags.update_map_dialog = true;
 	        	        g_state_flags.update_display = true;
@@ -544,6 +546,7 @@ void process_game_state(int key) {
                     break;
                 case KEY_I:
                     // Reset the cursor position to the top left
+                    g_tile_cache.invalidate();
                     g_ui_globals.inv_cursor_x = 0;
                     g_ui_globals.inv_cursor_y = 0;
                     g_ui_globals.inv_menu_active = false;

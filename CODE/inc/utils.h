@@ -305,4 +305,8 @@ void process_orb_logic(void);
 void process_shop_reset_logic(void);
 void check_and_process_endgame(int x, int y);
 
+// Caching functions
+void populate_maze_tile_cache(int world_x, int world_y);
+void update_lighting();
+
 #endif

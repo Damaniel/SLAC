@@ -1439,67 +1439,50 @@ void Render::render_world_at(BITMAP *destination, DungeonFloor *f, int maze_x, i
 		num_y_tiles = UiConsts::PLAY_AREA_TILE_HEIGHT;
 	}
 
+	int tiles_saved = 0;
+
+	// follow up with the dirty tiles
+	for (int i = 0; i < g_tile_cache.dirty.size(); ++i) {
+		if (g_tile_cache.is_old_location_on_screen(g_tile_cache.dirty[i].first, g_tile_cache.dirty[i].second)) {
+			std::pair<short,short> pos = g_tile_cache.get_old_screen_position(g_tile_cache.dirty[i].first, g_tile_cache.dirty[i].second);
+			//std::cout << "Covering a tile at (" << pos.first << ", " << pos.second << ")" << std::endl;
+			render_base_tile(destination, g_tile_cache.new_tiles[pos.first][pos.second], g_dungeon.maze_id, pos.first, pos.second);
+			pos = g_tile_cache.get_new_screen_position(g_tile_cache.dirty[i].first, g_tile_cache.dirty[i].second);
+			//std::cout << "Covering a tile at (" << pos.first << ", " << pos.second << ")" << std::endl;
+			render_base_tile(destination, g_tile_cache.new_tiles[pos.first][pos.second], g_dungeon.maze_id, pos.first, pos.second);
+			tiles_saved -= 2;
+		}
+	}
+
 	for (int screen_x = 0; screen_x < UiConsts::PLAY_AREA_TILE_WIDTH; screen_x++) {
 		for (int screen_y = 0; screen_y < num_y_tiles; screen_y++) {
-			int tile_to_render_x = maze_x + screen_x;
-			int tile_to_render_y = maze_y + screen_y;
-			int tile_to_use;
-			bool carved_left = f->maze->is_carved(tile_to_render_x -1, tile_to_render_y);
-			bool carved_up = f->maze->is_carved(tile_to_render_x, tile_to_render_y - 1);
-
-			if(tile_to_render_x >=0 && tile_to_render_y >=0 && tile_to_render_x < f->maze->get_width() && tile_to_render_y < f->maze->get_height()) {
-				int stairs = f->maze->stairs_here(tile_to_render_x, tile_to_render_y);
-				// Before checking any other status, draw darkness if the square isn't lit
-				if (f->maze->is_square_lit(tile_to_render_x, tile_to_render_y) == false) {
-					// If the square has previously been seen and isn't carved, draw a darker wall
-					if (f->maze->is_carved(tile_to_render_x, tile_to_render_y) == false && f->maze->was_seen(tile_to_render_x, tile_to_render_y) == true) {
-						render_base_tile(destination, UiConsts::TILE_DARKER_WALL, g_dungeon.maze_id, screen_x, screen_y);
-					} else {
-						// Otherwise, draw darkness
-						render_base_tile(destination, UiConsts::TILE_DARK, g_dungeon.maze_id, screen_x, screen_y);
-					}
-				}
-				// Render stairs if present
-				else if (stairs == MazeConsts::STAIRS_UP) {
-					render_base_tile(destination, UiConsts::TILE_UP_STAIRS, g_dungeon.maze_id, screen_x, screen_y);
-				}
-				else if (stairs == MazeConsts::STAIRS_DOWN) {
-					render_base_tile(destination, UiConsts::TILE_DOWN_STAIRS, g_dungeon.maze_id, screen_x, screen_y);
-				}
-				// Render floor if present.  There are 4 different floor tiles - one with no
-				// highlighting and 3 with different types of highlighting
-				// If the location is a wall, render that instead.
-				else if (f->maze->is_carved(tile_to_render_x, tile_to_render_y) == true) {
-					if (carved_left == false && carved_up == true) {
-						tile_to_use = UiConsts::TILE_FLOOR_LEFT_HIGHLIGHT;
-					}
-					else if (carved_left == true && carved_up == false) {
-						tile_to_use = UiConsts::TILE_FLOOR_TOP_HIGHLIGHT;
-					}
-					else if (carved_left == false && carved_up == false) {
-						tile_to_use = UiConsts::TILE_FLOOR_BOTH_HIGHLIGHT;
-					}
-					else {
-						tile_to_use = UiConsts::TILE_FLOOR;
-					}
-					render_base_tile(destination, tile_to_use, g_dungeon.maze_id, screen_x, screen_y);
-					// Get any items at the location and draw the first on the list
-					int num_items_here = f->get_num_items_at(tile_to_render_x, tile_to_render_y);
-					if (num_items_here > 0) {
-						std::list<Item *> items = f->get_items_at(tile_to_render_x, tile_to_render_y);
-						Item *it = items.back();
-						int gid = get_tile_to_render(it);
-						render_item(destination, gid, screen_x, screen_y);
-					}
-				} else {
-					render_base_tile(destination, UiConsts::TILE_WALL, g_dungeon.maze_id, screen_x, screen_y);
-				}
-			} else {
-				// Draw an empty space since it's outside of the map
-				render_base_tile(destination, UiConsts::TILE_DARK, g_dungeon.maze_id, screen_x, screen_y);
+			if (g_tile_cache.valid && g_tile_cache.is_tile_same(screen_x, screen_y)) {
+				// do nothing for now
+				//std::cout << "Skipping tile at (" << screen_x << ", " << screen_y << ")" << std::endl;
+				tiles_saved += 1;
+			}
+			else {
+				//std::cout << "Rendering tile " << g_tile_cache.new_tiles[screen_x][screen_y] << " at (" << screen_x << ", " << screen_y << ")" << std::endl;
+				render_base_tile(destination, g_tile_cache.new_tiles[screen_x][screen_y],
+				                 g_dungeon.maze_id, screen_x, screen_y);
+			}
+			// Check for items here and draw them
+			int off_x = screen_x + maze_x;
+			int off_y = screen_y + maze_y;
+			int num_items_here = f->get_num_items_at(off_x, off_y);
+			if (num_items_here > 0 && f->maze->is_square_lit(off_x, off_y)) {
+				std::list<Item *> items = f->get_items_at(off_x, off_y);
+				Item *it = items.back();
+				int gid = get_tile_to_render(it);
+				render_item(destination, gid, screen_x, screen_y);
 			}
 		}
 	}
+
+	// Clear the dirty cache
+	g_tile_cache.clear_dirty();
+
+	std::cout << "Tiles saved: " << tiles_saved << std::endl;
 
 	// Render the player and any enemies
 	render_actors(destination, maze_x, maze_y);

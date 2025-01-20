@@ -307,6 +307,70 @@ void DungeonFloor::remove_item_from_end_at(int x, int y) {
 }
 
 //------------------------------------------------------------------------------
+// Loads the tile cache with current maze data
+//
+// Arguments:
+//   world_x, world_y - the top left corner of the area to capture
+//
+// Returns:
+//   nothing
+//------------------------------------------------------------------------------
+void populate_maze_tile_cache(int world_x, int world_y) {
+	short data[UiConsts::PLAY_AREA_TILE_WIDTH][UiConsts::PLAY_AREA_TILE_HEIGHT];
+	int offset_x, offset_y;
+
+	for (int screen_y = 0; screen_y < UiConsts::PLAY_AREA_TILE_HEIGHT; screen_y++) {
+		for (int screen_x = 0; screen_x < UiConsts::PLAY_AREA_TILE_WIDTH; screen_x++) {
+			offset_x = screen_x + world_x;
+			offset_y = screen_y + world_y;
+			bool carved_left = g_dungeon.maze->is_carved(offset_x - 1, offset_y);
+			bool carved_up = g_dungeon.maze->is_carved(offset_x, offset_y - 1);
+			if (offset_x >=0 && offset_y >=0 && offset_x < g_dungeon.maze->get_width() && offset_y < g_dungeon.maze->get_height()) {
+				int stairs = g_dungeon.maze->stairs_here(offset_x, offset_y);
+				if (!(g_dungeon.maze->is_square_lit(offset_x, offset_y))) {
+					if (!(g_dungeon.maze->is_carved(offset_x, offset_y)) && g_dungeon.maze->was_seen(offset_x, offset_y)) {
+						data[screen_x][screen_y] = UiConsts::TILE_DARKER_WALL;
+					}
+					else {
+						data[screen_x][screen_y] = UiConsts::TILE_DARK;
+					}
+				}
+				else if (stairs == MazeConsts::STAIRS_UP) {
+					data[screen_x][screen_y] = UiConsts::TILE_UP_STAIRS;
+				}
+				else if (stairs == MazeConsts::STAIRS_DOWN) {
+					data[screen_x][screen_y] = UiConsts::TILE_DOWN_STAIRS;
+				}
+				else if (g_dungeon.maze->is_carved(offset_x, offset_y)) {
+					if (!carved_left && carved_up)
+						data[screen_x][screen_y] = UiConsts::TILE_FLOOR_LEFT_HIGHLIGHT;
+					else if (carved_left && !carved_up)
+						data[screen_x][screen_y] = UiConsts::TILE_FLOOR_TOP_HIGHLIGHT;
+					else if (!carved_left && !carved_up)
+						data[screen_x][screen_y] = UiConsts::TILE_FLOOR_BOTH_HIGHLIGHT;
+					else
+						data[screen_x][screen_y] = UiConsts::TILE_FLOOR;
+				}
+				else {
+					data[screen_x][screen_y] = UiConsts::TILE_WALL;
+				}
+			}
+			else {
+				data[screen_x][screen_y] = UiConsts::TILE_DARK;
+			}
+
+			// Get item quantities.  If any items are on the square, mark it as dirty
+			int num_items_here = g_dungeon.get_num_items_at(offset_x, offset_y);
+			if (num_items_here > 0) {
+				g_tile_cache.add_dirty(offset_x, offset_y);
+			}
+		}
+	}
+
+	g_tile_cache.update(data, world_x, world_y);
+}
+
+//------------------------------------------------------------------------------
 // Updates the main display for the main game state
 //
 // Arguments:
@@ -319,30 +383,8 @@ void update_main_game_display(void) {
 	// Update the maze area if requested
 	if (g_state_flags.update_maze_area == true) {
 		if (g_state_flags.in_dungeon) {
-			// Add the areas around the player to the map bitmap
-			//std::cout << "update_display: adding area to map bitmap" << std::endl;
+			// Add the area around the player to the map
 			g_render.add_area_to_map_bitmap(&g_dungeon, g_player.get_x_pos(), g_player.get_y_pos());
-			//std::cout << "update_display: Added area to map bitmap" << std::endl;
-			// Light the space around the player
-			g_dungeon.maze->change_lit_status_around(g_player.get_x_pos(), g_player.get_y_pos(), true);
-			//std::cout << "update_display: Changed lit status" << std::endl;
-			// Check what room the player is in, if any
-			int room_to_light = g_dungeon.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos());
-			int last_player_room = g_player.get_last_room_entered();
-			//std::cout << "update_display: Got last room player was in" << std::endl;
-			// If the player was in a room but no longer is, then darken the room
-			if(last_player_room != -1 && room_to_light == -1) {
-				g_dungeon.maze->change_room_lit_status(last_player_room, false);
-			}
-			// If the player wasn't in a room but now is, then light up the room
-			if(last_player_room == -1 && room_to_light != -1) {
-				g_dungeon.maze->change_room_lit_status(room_to_light, true);
-				// Mark the room itself as visited so rendering the map will
-				// show the room even at the start of the game
-				g_dungeon.maze->set_room_entered_state(room_to_light, true);
-			}
-			//std::cout << "update_display: Finished processing lighting" << std::endl;
-
 			// Draw the world display area
 			g_render.render_world_at_player(g_back_buffer, &g_dungeon, g_player.get_x_pos(), g_player.get_y_pos());
 			//std::cout << "update_display: rendered world" << std::endl;
@@ -779,6 +821,10 @@ void generate_new_dungeon_floor(DungeonFloor &d, int level, int stairs_from) {
 
 	// Clear the map bitmap
 	g_render.initialize_map_bitmap(&g_dungeon);
+
+	// Populate the tile cache
+	populate_maze_tile_cache(g_player.x_pos - UiConsts::PLAYER_PLAY_AREA_X, g_player.y_pos - UiConsts::PLAYER_PLAY_AREA_Y);
+	g_tile_cache.invalidate();
 
 	// Force an explicit display update so the user can see the world right away
 	force_update_screen();
@@ -2459,6 +2505,12 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 		}
 	}
 
+	// For each enemy in the queue, place their current position in the dirty squares list
+	for (int i = 0; i < enemies.size(); ++i) {
+		std::cout << "Adding dirty at (" << enemies[i]->get_x_pos() << ", " << enemies[i]->get_y_pos() << ") - enemy here at start of turn" << std::endl;
+		g_tile_cache.add_dirty(enemies[i]->get_x_pos(), enemies[i]->get_y_pos());
+	}
+
 	// Execute the queue
 	// For each entry in the queue
 	//  - If non-deferred, add the total SPD to the entity's residual
@@ -2517,6 +2569,10 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 							exp = (int)(ceil((float)exp * adj));
 						}
 						g_player.apply_experience(exp);
+						// Add the defeated enemy to the dirty tile cache
+						std::cout << "Adding dirty at (" << x << ", " << y << ") - defeated enemy here" << std::endl;
+						g_tile_cache.add_dirty(x, y);
+
 						process_enemy_item_drop(to_attack);
 						mark_boss_as_defeated(to_attack->get_id());
 					}
@@ -2525,6 +2581,9 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 					// Move the player
 					g_player.set_x_pos(x);
 					g_player.set_y_pos(y);
+
+					update_lighting();
+					populate_maze_tile_cache(x - UiConsts::PLAYER_PLAY_AREA_X, y - UiConsts::PLAYER_PLAY_AREA_Y);
 
     				// Identify known (but not yet identified) potions and scrolls on the ground
     				// to ensure any stragglers on the current floor are dealt with
@@ -2559,7 +2618,6 @@ void process_dungeon_move(std::pair<int, int> proposed_location) {
 				}
 			}
 		}
-
 	}
 
 	// For any enemies marked as dead this turn, delete them.
@@ -2685,6 +2743,28 @@ void describe_artifact(int artifact_id) {
 	else {
 		g_text_log.put_line("Whatever this display is supposed to hold, you haven't found one yet.");
 		g_state_flags.update_display = true;
+	}
+}
+
+void update_lighting() {
+	// Light the space around the player
+	g_dungeon.maze->change_lit_status_around(g_player.get_x_pos(), g_player.get_y_pos(), true);
+			//std::cout << "update_display: Changed lit status" << std::endl;
+			// Check what room the player is in, if any
+	int room_to_light = g_dungeon.maze->get_room_id_at(g_player.get_x_pos(), g_player.get_y_pos());
+	int last_player_room = g_player.get_last_room_entered();
+
+	// If the player was in a room but no longer is, then darken the room
+	if(last_player_room != -1 && room_to_light == -1) {
+		g_dungeon.maze->change_room_lit_status(last_player_room, false);
+	}
+
+	// If the player wasn't in a room but now is, then light up the room
+	if(last_player_room == -1 && room_to_light != -1) {
+		g_dungeon.maze->change_room_lit_status(room_to_light, true);
+		// Mark the room itself as visited so rendering the map will
+		// show the room even at the start of the game
+		g_dungeon.maze->set_room_entered_state(room_to_light, true);
 	}
 }
 

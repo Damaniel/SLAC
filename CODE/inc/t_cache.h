@@ -42,7 +42,7 @@ struct TileCache {
 	void initialize();
 	void invalidate();
     void set_valid();
-	void update(short **tile_data, int world_x, int world_y);
+	void update(short tile_data[UiConsts::PLAY_AREA_TILE_WIDTH][UiConsts::PLAY_AREA_TILE_HEIGHT], int world_x, int world_y);
 	std::pair<short, short>get_old_world_position(int screen_x, int screen_y);
 	std::pair<short, short>get_new_world_position(int screen_x, int screen_y);
 	std::pair<short, short>get_old_screen_position(int world_x, int world_y);
