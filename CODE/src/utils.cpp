@@ -233,7 +233,18 @@ void DungeonFloor::generate_items(int min_items, int max_items) {
 //------------------------------------------------------------------------------
 void DungeonFloor::add_item(int x, int y, Item *i) {
 	std::pair<int, int> p = std::make_pair(x, y);
+	if (items[p].size() > 0) {
+ 		for(std::list<Item*>::iterator it = items[p].begin(); it != items[p].end(); ++it) {
+			if ((i->item_class == ItemConsts::SCROLL_CLASS || i->item_class == ItemConsts::POTION_CLASS) &&
+			    ((*it)->gid == i->gid)) {
+					(*it)->quantity += i->quantity;
+					delete i;
+					return;
+				}
+		}
+	}
 	items[p].push_back(i);
+
 }
 
 //------------------------------------------------------------------------------
@@ -1083,14 +1094,29 @@ void display_hall_of_champions_log() {
 void add_items_at_player_to_log(void) {
 	int item_count = g_dungeon.get_num_items_at(g_player.get_x_pos(), g_player.get_y_pos());
 	int idx = 0;
+	char text[80];
 
 	if (item_count > 0) {
 		std::list<Item *> items = g_dungeon.get_items_at(g_player.get_x_pos(), g_player.get_y_pos());
 		for (std::list<Item *>::iterator it = items.begin(); it != items.end(); ++ it) {
-			if (idx == 0)
-				g_text_log.put_line("You see " + (*it)->get_full_name() + ".");
-			else
-				g_text_log.put_line("You also see " + (*it)->get_full_name() + ".");
+			if (idx == 0) {
+				if ((*it)->quantity > 1) {
+					sprintf(text, "You see %d %s.", (*it)->quantity, (*it)->get_full_name().c_str());
+					g_text_log.put_line(text);
+				}
+				else {
+					g_text_log.put_line("You see " + (*it)->get_full_name() + ".");
+				}
+			}
+			else {
+				if ((*it)->quantity > 1) {
+					sprintf(text, "You also see %d %s.", (*it)->quantity, (*it)->get_full_name().c_str());
+					g_text_log.put_line(text);
+				}
+				else {
+					g_text_log.put_line("You also see " + (*it)->get_full_name() + ".");
+				}
+			}
 			++idx;
 		}
 	}
@@ -1112,6 +1138,7 @@ void add_items_at_player_to_log(void) {
 void pick_up_item_at(int x, int y) {
     bool picked_up = false;
     std::string item_name;
+	int quantity;
 
     // Check for items.  Only do something if there are.
     if (g_dungeon.get_num_items_at(x, y) <= 0) {
@@ -1128,6 +1155,7 @@ void pick_up_item_at(int x, int y) {
         //trying to blit a deleted item.
         Item *i = items.back();
         item_name = i->get_full_name();
+		quantity = i->quantity;
 
         // For currency, add the value to the player's gold directly
         // Also, delete the currency item because it's going away
@@ -1178,7 +1206,14 @@ void pick_up_item_at(int x, int y) {
         if (picked_up) {
             g_dungeon.remove_item_from_end_at(x, y);
 			g_tile_cache.add_dirty(x, y);
-            g_text_log.put_line("Picked up " + item_name + ".");
+			if (quantity > 1) {
+				char text[80];
+				sprintf(text, "Picked up %d %s.", quantity, item_name.c_str());
+				g_text_log.put_line(text);
+			}
+			else {
+	            g_text_log.put_line("Picked up " + item_name + ".");
+			}
             g_state_flags.update_maze_area = true;
             g_state_flags.update_display = true;
         }

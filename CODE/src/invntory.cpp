@@ -850,13 +850,19 @@ void identify_previously_known_items_at_player() {
 //----------------------------------------------------------------------------
 void drop_item_at(Item *i, int x, int y) {
 	bool dropped = false;
-
+    char text[80];
 	if(g_dungeon.maze->stairs_here(x, y) != MazeConsts::NO_STAIRS) {
 		g_text_log.put_line("Unable to drop an item onto stairs.");
 	}
 	else {
 		if (i != NULL) {
-			g_text_log.put_line("Dropped the " + i->get_full_name() + ".");
+            if (i->quantity > 1) {
+                sprintf(text, "Dropped %d %s.", i->quantity, i->get_full_name().c_str());
+                g_text_log.put_line(text);
+            }
+            else {
+    			g_text_log.put_line("Dropped the " + i->get_full_name() + ".");
+            }
 			g_dungeon.add_item(x, y, i);
 			g_state_flags.update_inventory_items = true;
 			g_state_flags.update_inventory_items = true;
