@@ -756,6 +756,19 @@ void Render::render_inventory_content(BITMAP *destination) {
 				int tilex = gid % UiConsts::ITEM_TILE_ENTRY_WIDTH;
 				int tiley = gid / UiConsts::ITEM_TILE_ENTRY_WIDTH;
 
+				// If the item is unidentified, blit the 'unidentified' underlay
+				if (!it->is_identified) {
+					masked_blit((BITMAP *)g_game_data[DAMRL_UNIDED].dat,
+	     			    		destination,
+	     						0,
+		 						0,
+		 						(x * (UiConsts::TILE_PIXEL_WIDTH + 1)) + UiConsts::INVENTORY_ITEMS_X + 1,
+		 						(y * (UiConsts::TILE_PIXEL_HEIGHT + 1)) + UiConsts::INVENTORY_ITEMS_Y + 1,
+		 						UiConsts::TILE_PIXEL_WIDTH,
+		 						UiConsts::TILE_PIXEL_HEIGHT);
+				}
+
+				// Draw the item itself
 				masked_blit((BITMAP *)g_game_data[DAMRL_ITEMS].dat,
 	     			    	destination,
 	     					tilex * UiConsts::TILE_PIXEL_WIDTH,
@@ -764,14 +777,43 @@ void Render::render_inventory_content(BITMAP *destination) {
 		 					(y * (UiConsts::TILE_PIXEL_HEIGHT + 1)) + UiConsts::INVENTORY_ITEMS_Y + 1,
 		 					UiConsts::TILE_PIXEL_WIDTH,
 		 					UiConsts::TILE_PIXEL_HEIGHT);
+
+				// If the item is identifed, draw the appropriate notch in the corner depending on the item type
+				if (it->is_identified && (it->item_class == ItemConsts::WEAPON_CLASS || it->item_class == ItemConsts::ARMOR_CLASS)) {
+					int notch_index = -1;
+					if (it->is_cursed) {
+						notch_index = 3;
+					}
+					else {
+						if(it->prefix_id == -1 && it->suffix_id == -1)		// Regular item
+							notch_index = 0;
+						else if(it->prefix_id == -1 && it->suffix_id != -1)	// Item with suffix, no prefix
+							notch_index = 1;
+						else if(it->prefix_id != -1 && it->suffix_id == -1)	// Item with prefix, no suffix
+							notch_index = 1;
+						else											// Item with both a prefix and suffix
+							notch_index = 2;
+					}
+					if (notch_index >= 0) {
+						masked_blit((BITMAP *)g_game_data[DAMRL_EQUIP_TYPES].dat,
+	    	 				    	destination,
+	     							notch_index * UiConsts::EQUIP_NOTCH_SIZE,
+									0,
+		 							(x * (UiConsts::TILE_PIXEL_WIDTH + 1)) + UiConsts::INVENTORY_ITEMS_X + 1,
+		 							(y * (UiConsts::TILE_PIXEL_HEIGHT + 1)) + UiConsts::INVENTORY_ITEMS_Y + 1,
+		 							UiConsts::EQUIP_NOTCH_SIZE,
+		 							UiConsts::EQUIP_NOTCH_SIZE);
+					}
+				}
+
 				// Draw the equipped icon if the item is equipped
 				if (it->is_equipped) {
 					masked_blit((BITMAP *)g_game_data[DAMRL_EQUIPPED].dat,
 								destination,
 								0, 0,
-								(x * (UiConsts::TILE_PIXEL_WIDTH + 1)) + UiConsts::INVENTORY_ITEMS_X + 13,
-		 					    (y * (UiConsts::TILE_PIXEL_HEIGHT + 1)) + UiConsts::INVENTORY_ITEMS_Y + 11,
-								3, 5);
+								(x * (UiConsts::TILE_PIXEL_WIDTH + 1)) + UiConsts::INVENTORY_ITEMS_X + 12,
+		 					    (y * (UiConsts::TILE_PIXEL_HEIGHT + 1)) + UiConsts::INVENTORY_ITEMS_Y + 10,
+								5, 7);
 				}
 			}
 		}

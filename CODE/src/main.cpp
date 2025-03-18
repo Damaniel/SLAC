@@ -131,7 +131,7 @@ void init_game() {
 	// Create the player
 	g_player = Player();
 
-	// Make the game loop until 'done' (right now, mainly by pressing ESC)
+	// Make the game loop until 'done'
 	g_state_flags.exit_game = false;
 
 	g_state_flags.loading_save = false;

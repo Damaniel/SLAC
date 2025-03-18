@@ -649,7 +649,7 @@ void process_title_screen_menu_substate(int key) {
                         change_state(STATE_MAIN_GAME);
                         load_game(SaveLoadConsts::save_file);
                         g_state_flags.save_loaded = false;
-                        g_text_log.put_line("Welcome back to Secret Legacy of the Ancient caves!");
+                        g_text_log.put_line("Welcome back to Secret Legacy of the Ancient Caves!");
                         force_update_screen();
                     }
                     break;

@@ -1,0 +1,111 @@
+Save format
+
+Header
+
+Name                 Size                   Data
+Magic                   4                 "SLAC"
+Version                 1                      1
+Player data offset      4				  <the offset to the player data>
+Inventory data offset   4				  <the offset to the inventory data>
+Artifact data offset    4                 <the offset to the artifact data>
+Dungeon data offset     4                 <the offset to the dungeon data>
+Game flags offset       4                 <the offset to the game flags>
+Potion scramblings      4                 <the offset to the potion scramblings>
+Scroll scramblings      4                 <the offset to the scroll scramblings>
+identified potions      4                 <the offset to the identified potion flags>
+identified scrolls      4                 <the offset to the identified scroll flags>
+Padding 			   87				  blank (to bring the total header to 128 bytes)
+
+Player data
+--------------
+Magic					4				  "PLAY"
+Name				   16                 <player name>
+HP					    2				  <player hp>
+Level					2                 <player level>
+Gold                    4                 <player gold>
+Exp                     4                 <player exp>
+Poisoned                1                 1 = poisoned, 0 = not
+Equip poisoned          1                 1 = poisoned, 0 = not
+Potion effects         10                 (for each of 5 potions)
+                                             - 1 byte: 1 = enabled, 0 = disabled
+                                             - 1 byte: duration in turns
+Base stats             96				  Contents of the player's 'base' stats field
+Actual stats           96                 Contents of the player's 'actual' stats field
+Recall active           1                 1 = recall active, 0 = recall not active
+Recall floor			4                 The floor that the recall scroll will return to
+										  (only applies if the player saved in town)
+Artifact effect flags   4                 contents of the player's ArtifactEffectFlags structure
+Equipment              36                 The inventory slot of each equipped item (or -1)
+                   
+Inventory data
+--------------
+Magic				    4				  "ITEM"
+Inventory slots        7632                For each slot:
+                                            - Is an item present (1 byte - 1 if present, 0 if not)
+											- id (2 bytes)
+											- quantity (2 bytes)
+											- name (128 bytes)
+											- description (128 bytes)
+											- gid (2 bytes)
+											- type_id (2 bytes)
+											- rarity (1 byte)
+											- ilevel (1 byte)
+											- value (2 bytes)
+											- item class (4 bytes)
+											- base boolean flags (8 bytes)
+											- prefix id (2 bytes, -1 if no prefix)
+											- suffix id (2 bytes, -1 if no suffix)
+											- is cursed? (1 byte, 1 = yes, 0 = no)
+											- is equipped(1 byte, 1 = yes, 0 = no)
+											- attack (2 bytes, -1 if not a weapon)
+											- defense (2 bytes, -1 if not armor)
+											
+Artifact data
+-------------
+Magic                   4                  "ARTI"
+collected_artifacts    140                 contents of g_collected_artifacts
+active_artifacts       140                 contents of g_active_artifacts
+
+Dungeon data
+------------
+Magic                   4                  "DUNG"
+maze id                 4                  maze id
+depth                   4                  depth
+max_depth               4                  max depth
+ilevel                  4                  ilevel
+width                   4                  width
+height                  4                  height
+
+Game flags
+------------
+Magic                   4                 "FLAG"
+extended text log       1                 1 if extended, 0 if standard
+in dungeon              1                 0 in dungeon, 1 if in town
+other game flags       19                 contents of GameFlags
+
+scramblings
+------------
+Magic                   4                 "POTS"
+Potion scramblings     40                 g_scrambled_potion_icons
+
+Magic                   4                 "SCRS"
+scroll scramblings     44                 g_scrambled_scroll_icons
+
+Identified stuff
+----------------
+Magic                   4                 "POTI"
+identified potions     10                 g_identified_potions
+
+Magic                   4                 "SCRI"
+identified scrolls     11                 g_identified_scrolls
+
+
+Notes:
+ - recall_floor only matters if the player is in town when they saved
+ - if the player uses the recall portal after loading a save, they'll be
+   returned to the floor they were on, but on a random set of up stairs
+   rather than the x,y coordinates of where they used the scroll
+   
+   
+no items : 13972
+one item : 13970

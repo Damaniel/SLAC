@@ -1184,7 +1184,7 @@ void pick_up_item_at(int x, int y) {
             // item in the existing slot, then delete the picked up one
             if (stackable_slot != -1) {
                 Item *si = g_inventory->get_item_in_slot(stackable_slot);
-                si->quantity += 1;
+                si->quantity += i->quantity;
                 delete i;
                 picked_up = true;
             }
@@ -1443,9 +1443,6 @@ void exit_dungeon(bool used_recall) {
 			}
 			break;
 	}
-
-	// populate_maze_tile_cache(g_player.x_pos - UiConsts::PLAYER_PLAY_AREA_X, g_player.y_pos - UiConsts::PLAYER_PLAY_AREA_Y);
-	// g_tile_cache.invalidate();
 
 	force_update_screen();
 }
@@ -2451,15 +2448,6 @@ void process_town_move(std::pair<int, int> proposed_location) {
 //   Nothing.  This function directly moves the player/enemies.
 //----------------------------------------------------------------------------
 void process_dungeon_move(std::pair<int, int> proposed_location) {
-	// Eventually:
-	//  - Put together a queue of enemy and player actions based
-	//    on relative speed
-	//  - Execute each action (move, attack) in turn
-	//  - Store any fractions of a turn not executed in the
-	//    enemy or player structure
-	//  - If the player moved, describe items on the ground
-	//  - Mark things to be updated
-
 	// Relative speed:
 	//   The player's and enemy's speed is a value (100 by default for the player but
 	//   can increase or decrease with gear; varied by enemy) that determines how

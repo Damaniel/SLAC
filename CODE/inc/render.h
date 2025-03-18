@@ -86,6 +86,9 @@ namespace UiConsts {
 	const int TILE_PIXEL_WIDTH = 16;
 	const int TILE_PIXEL_HEIGHT	= 16;
 
+	// The size of the 'item type' notch in the inventory screen
+	const int EQUIP_NOTCH_SIZE = 4;
+
 	// The number of tiles in a row of the item spritesheet
 	const int ITEM_TILE_ENTRY_WIDTH = 32;
 
