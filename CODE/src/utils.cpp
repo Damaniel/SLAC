@@ -1100,7 +1100,7 @@ void add_items_at_player_to_log(void) {
 		std::list<Item *> items = g_dungeon.get_items_at(g_player.get_x_pos(), g_player.get_y_pos());
 		for (std::list<Item *>::iterator it = items.begin(); it != items.end(); ++ it) {
 			if (idx == 0) {
-				if ((*it)->quantity > 1) {
+				if ((*it)->item_class != ItemConsts::CURRENCY_CLASS && (*it)->quantity > 1) {
 					sprintf(text, "You see %d %s.", (*it)->quantity, (*it)->get_full_name().c_str());
 					g_text_log.put_line(text);
 				}
@@ -1109,7 +1109,7 @@ void add_items_at_player_to_log(void) {
 				}
 			}
 			else {
-				if ((*it)->quantity > 1) {
+				if ((*it)->item_class != ItemConsts::CURRENCY_CLASS && (*it)->quantity > 1) {
 					sprintf(text, "You also see %d %s.", (*it)->quantity, (*it)->get_full_name().c_str());
 					g_text_log.put_line(text);
 				}
@@ -1206,7 +1206,7 @@ void pick_up_item_at(int x, int y) {
         if (picked_up) {
             g_dungeon.remove_item_from_end_at(x, y);
 			g_tile_cache.add_dirty(x, y);
-			if (quantity > 1) {
+			if (i->item_class != ItemConsts::CURRENCY_CLASS && quantity > 1) {
 				char text[80];
 				sprintf(text, "Picked up %d %s.", quantity, item_name.c_str());
 				g_text_log.put_line(text);
