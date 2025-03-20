@@ -268,7 +268,12 @@ void teleport_player() {
 
     g_text_log.put_line("You are whisked away to somewhere new...");
 
+    // Update everything needed to ensure the tile cache is up to date and that
+    // lighting is correct
+    update_lighting();
     item_use_update_screen_flags();
+    force_update_screen();
+
 }
 
 //----------------------------------------------------------------------------
