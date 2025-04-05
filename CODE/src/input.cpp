@@ -536,9 +536,6 @@ void process_game_state(int key) {
                     break;
                 case KEY_H:
                     // magic key for testing stuff
-                    g_player.is_poisoned = true;
-                    g_player.poison_intensity = EnemyConsts::POISON_MEDIUM;
-                    g_player.poison_turns_remaining = EnemyConsts::MED_POISON_DURATION;
                     break;
                 case KEY_S:
                     save_game(SaveLoadConsts::save_file);

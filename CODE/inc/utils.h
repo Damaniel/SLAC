@@ -273,6 +273,7 @@ void pick_up_item_at(int x, int y);
 void scramble_potion_icons(void);
 void scramble_scroll_icons(void);
 int roll_from_pool(const int *pool, int pool_size, int max_val);
+bool is_suitable_item_drop_location(int x, int y);
 void process_enemy_item_drop(Enemy *e);
 int get_complete_artifact_quantity(int artifact_id);
 void do_use_on_item(void);

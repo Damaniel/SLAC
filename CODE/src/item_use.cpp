@@ -515,6 +515,10 @@ void use_potion_action(int id) {
 			    g_player.poison_intensity = EnemyConsts::POISON_MEDIUM;
 			    g_player.poison_turns_remaining = EnemyConsts::MED_POISON_DURATION;
 			    g_text_log.put_line("You've been heavily poisoned!");
+                g_state_flags.update_status_dialog = true;
+                g_state_flags.update_status_hp_exp = true;
+                g_state_flags.update_status_elapsed_time = true;
+                g_state_flags.update_display = true;
 		    }
             break;
         case ItemConsts::POT_OF_DEATH:

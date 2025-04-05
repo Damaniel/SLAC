@@ -5,3 +5,4 @@ CODE/*.SAV
 RES/TOOLS/SLACedit/__pycache__
 CODE/HOC.DAT
 *.SAV
+BUILD/

@@ -1025,7 +1025,7 @@ void Render::render_ui_box(BITMAP *destination, int x1, int y1, int x2, int y2) 
 //------------------------------------------------------------------------------
 void Render::render_hp_exp_bar(BITMAP *destination) {
 	int width;
-
+	int color;
 	// HP bar
 	// clear the entire bar
 	rectfill(destination, UiConsts::HP_BAR_X + 3, UiConsts::HP_BAR_Y + 5,
@@ -1035,8 +1035,13 @@ void Render::render_hp_exp_bar(BITMAP *destination) {
 	// fill in the HP bar
 	width = (int)(((float)g_player.hp / (float)g_player.actual.max_hp) * (UiConsts::HP_EXP_BAR_WIDTH));
 	if (width > 0) {
+		color = 22;
+		// Draw the player's health bar in green (idx 27) instead of red (idx 22) if poisoned
+		if (g_player.is_poisoned || g_player.is_equip_poisoned) {
+			color = 27;
+		}
 		rectfill(destination, UiConsts::HP_BAR_X + 3, UiConsts::HP_BAR_Y + 5,
-				 UiConsts::HP_BAR_X + 3 + width - 1, UiConsts::HP_BAR_Y + UiConsts::HP_EXP_BAR_HEIGHT - 1, 22);
+				 UiConsts::HP_BAR_X + 3 + width - 1, UiConsts::HP_BAR_Y + UiConsts::HP_EXP_BAR_HEIGHT - 1, color);
 	}
 
 	// EXP bar

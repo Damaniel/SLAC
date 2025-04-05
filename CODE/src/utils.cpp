@@ -1987,6 +1987,26 @@ void add_new_enemy_to_area() {
 }
 
 //----------------------------------------------------------------------------
+// Checks whether an item drop location is suitable
+//
+// Arguments:
+//	 e - the enemy that was defeated
+//
+// Returns:
+//   Nothing
+//----------------------------------------------------------------------------
+bool is_suitable_item_drop_location(int x, int y) {
+	if (!g_dungeon.maze->is_carved(x, y))
+		return false;
+	if (g_dungeon.maze->stairs_here(x, y))
+		return false;
+	if (g_player.x_pos == x && g_player.y_pos == y)
+		return false;
+
+	return true;
+}
+
+//----------------------------------------------------------------------------
 // Process the dropping of item(s) from a defeated enemy
 //
 // Arguments:
@@ -2013,6 +2033,7 @@ void process_enemy_item_drop(Enemy *e) {
 			int e_x = e->get_x_pos();
 			int e_y = e->get_y_pos();
 			int i_x, i_y;
+			bool skip_item = false;
 			// First item drop always goes where enemy was
 			if (i == 0) {
 				i_x = e_x;
@@ -2046,7 +2067,33 @@ void process_enemy_item_drop(Enemy *e) {
 				}
 				//std::cout << "process_enemy_item_drop: direction is " << direction << std::endl;
 			}
-			if (g_dungeon.maze->is_carved(i_x, i_y) && !(i_x == g_player.x_pos && i_y == g_player.y_pos)) {
+
+			// Check to see if the item location is suitable for a drop (not on stairs, not on the player).
+			// If not, pick one of the adjacent spots instead.  One of them will be suitable.  If not,
+			// don't drop the item.
+			if (!is_suitable_item_drop_location(i_x, i_y)) {
+				if (is_suitable_item_drop_location(i_x - 1, i_y)) {
+					i_x = i_x -1;
+					i_y = i_y;
+				}
+				else if (is_suitable_item_drop_location(i_x + 1, i_y)) {
+					i_x = i_x + 1;
+					i_y = i_y;
+				}
+				else if (is_suitable_item_drop_location(i_x, i_y - 1)) {
+					i_x = i_x;
+					i_y = i_y - 1;
+				}
+				else if (is_suitable_item_drop_location(i_x, i_y + 1)) {
+					i_x = i_x;
+					i_y = i_y + 1;
+				}
+				else {
+					// No suitable location, don't drop this item
+					skip_item = true;
+				}
+			}
+			if (!skip_item) {
 				//std::cout << "process_enemy_item_drop: generating item" << std::endl;
 				Item *i = ItemGenerator::generate(e->get_ilevel());
 				//std::cout << "  - item generated was " << i->get_full_name() << std::endl;

@@ -863,6 +863,15 @@ void apply_enemy_status_effect(Enemy *e) {
 			g_text_log.put_line("You've been mortally poisoned!");
 		}
 	}
+
+	// If one of the poison states was applied, update the hitpoint bar so it will be green.
+	if(apply_light_poison || apply_med_poison || apply_heavy_poison) {
+        g_state_flags.update_status_dialog = true;
+        g_state_flags.update_status_hp_exp = true;
+        g_state_flags.update_status_elapsed_time = true;
+        g_state_flags.update_display = true;
+	}
+
 	if (apply_light_speed_drop) {
 		// If the player isn't already slow, make them slow and set the speed
 		if (!g_player.is_speed_reduced) {
