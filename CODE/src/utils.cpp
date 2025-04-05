@@ -1234,6 +1234,7 @@ void perform_inventory_menu_action(void) {
 	// Get the item under the cursor
 	int slot = g_ui_globals.inv_cursor_y * UiConsts::INVENTORY_ITEMS_PER_ROW + g_ui_globals.inv_cursor_x;
     Item *i = g_inventory->get_item_in_slot(slot);
+	int dropped;
 
 	// Determine if the action can be done by the item
 	switch (g_ui_globals.sel_item_option) {
@@ -1294,8 +1295,11 @@ void perform_inventory_menu_action(void) {
 			// If the item can be dropped, and currently isn't equipped, drop it on the ground
 			if (g_state_flags.in_dungeon && i->can_drop && !i->is_equipped) {
 				//std::cout << "perform_inventory_menu_action: dropping item" << std::endl;
-				drop_item_at(i, g_player.get_x_pos(), g_player.get_y_pos());
-				g_inventory->remove_item_in_slot(slot);
+				dropped = drop_item_at(i, g_player.get_x_pos(), g_player.get_y_pos());
+				// If the item was actually dropped (i.e. the player didn't try to drop it on the stairs), then remove it.
+				if (dropped) {
+					g_inventory->remove_item_in_slot(slot);
+				}
 			}
 			break;
 		case UiConsts::ITEM_OPTION_DESTROY:
