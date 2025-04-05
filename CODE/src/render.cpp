@@ -289,7 +289,7 @@ void Render::add_area_to_map_bitmap(DungeonFloor *f, int x, int y) {
 	if(room != -1) {
 		Room r = f->maze->get_room(room);
 		//std::cout << "  add_area_to_map_bitmap: Got room" << std::endl;
-		if (r.has_been_entered == false) {
+		if (r.has_been_mapped == false) {
 			for(int i = r.x - 1; i < r.x + r.w + 1; i++) {
 				for (int j = r.y - 1; j < r.y + r.h + 1; j++) {
 					//std::cout << "  add_area_to_map_bitmap: Processing room at (" << i << ", " << j << ")" << std::endl;
@@ -314,6 +314,7 @@ void Render::add_area_to_map_bitmap(DungeonFloor *f, int x, int y) {
 					}
 				}
 			}
+			r.has_been_mapped = true;
 		}
 	} else {
 		//std::cout << "  add_area_to_map_bitmap: not in a room" << std::endl;

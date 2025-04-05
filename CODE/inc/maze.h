@@ -114,8 +114,10 @@ struct Room {
 	int w;
 	int h;
 	bool has_been_entered;
+	bool has_been_mapped;
 	Room(int id, int x, int y, int w, int h) : id(id), x(x), y(y), w(w), h(h) {
 		has_been_entered = false;
+		has_been_mapped = false;
 	}
 };
 
