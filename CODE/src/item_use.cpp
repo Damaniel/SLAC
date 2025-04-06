@@ -304,12 +304,16 @@ void expose_map() {
         }
     }
 
+    g_tile_cache.invalidate();
+    g_dungeon.maze->change_lit_status_around(g_player.x_pos, g_player.y_pos, true);
+
     // Draw it all on the map
     g_render.fill_in_entire_map(&g_dungeon);
 
     g_text_log.put_line("The walls of the dungeon are revealed.");
 
     item_use_update_screen_flags();
+    force_update_screen();
 }
 
 //----------------------------------------------------------------------------
@@ -559,10 +563,12 @@ void use_scroll_action(int id) {
             g_text_log.put_line(text);
             break;
         case ItemConsts::SCROLL_OF_MAGIC_MAP:
-            if (g_state_flags.in_dungeon)
+            if (g_state_flags.in_dungeon) {
                 expose_map();
-            else
+            }
+            else {
                 g_text_log.put_line("This scroll does nothing here.");
+            }
             break;
         case ItemConsts::SCROLL_OF_DECURSE:
             result = decurse_item(true);

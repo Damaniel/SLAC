@@ -2126,19 +2126,21 @@ void process_move(std::pair<int, int> current_location, std::pair<int, int> prop
 		// If potentially moving, clear out any light tiles at the outer edges of the player's directional line of sight
 		int x = current_location.first;
 		int y = current_location.second;
-		if (x - 2 >= 0 && g_dungeon.maze->get_room_id_at(x - 2, y) == -1 && g_dungeon.maze->is_carved(x - 2, y)) {
+		int room = g_dungeon.maze->get_room_id_at(x, y);
+
+		if (x - 2 >= 0 && g_dungeon.maze->get_room_id_at(x - 2, y) != room && g_dungeon.maze->is_carved(x - 2, y)) {
 			g_dungeon.maze->change_lit_status_at(x - 2, y, false);
 			g_tile_cache.add_dirty(x - 2, y);
 		}
-		if (x + 2 < g_dungeon.maze->get_width() && g_dungeon.maze->get_room_id_at(x + 2, y) == -1 && g_dungeon.maze->is_carved(x + 2, y)) {
+		if (x + 2 < g_dungeon.maze->get_width() && g_dungeon.maze->get_room_id_at(x + 2, y) != room && g_dungeon.maze->is_carved(x + 2, y)) {
 			g_dungeon.maze->change_lit_status_at(x + 2, y, false);
 			g_tile_cache.add_dirty(x + 2, y);
 		}
-		if (y -2 >= 0 && g_dungeon.maze->get_room_id_at(x, y - 2) == -1 && g_dungeon.maze->is_carved(x, y - 2)) {
+		if (y -2 >= 0 && g_dungeon.maze->get_room_id_at(x, y - 2) != room && g_dungeon.maze->is_carved(x, y - 2)) {
 			g_dungeon.maze->change_lit_status_at(x, y-2, false);
 			g_tile_cache.add_dirty(x, y - 2);
 		}
-		if (y + 2 < g_dungeon.maze->get_height() && g_dungeon.maze->get_room_id_at(x, y + 2) == -1 && g_dungeon.maze->is_carved(x, y + 2)) {
+		if (y + 2 < g_dungeon.maze->get_height() && g_dungeon.maze->get_room_id_at(x, y + 2) != room && g_dungeon.maze->is_carved(x, y + 2)) {
 			g_dungeon.maze->change_lit_status_at(x, y+2, false);
 			g_tile_cache.add_dirty(x, y + 2);
 		}
