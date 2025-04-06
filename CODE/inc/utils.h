@@ -296,7 +296,7 @@ int get_manhattan_distance_between(int x1, int y1, int x2, int y2);
 int get_distance_between(int x1, int y1, int x2, int y2);
 
 // Action functions
-void process_move(std::pair<int, int> proposed_location);
+void process_move(std::pair<int, int> current_location, std::pair<int, int> proposed_location);
 void process_town_move(std::pair<int, int> proposed_location);
 void process_shop_move(std::pair<int, int> proposed_location);
 void process_dungeon_move(std::pair<int, int> proposed_location);

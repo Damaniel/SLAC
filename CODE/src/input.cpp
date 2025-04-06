@@ -494,31 +494,31 @@ void process_game_state(int key) {
                     g_state_flags.update_display = true;
                     break;
                 case KEY_LEFT:
-                    process_move(std::make_pair(g_player.get_x_pos() - 1, g_player.get_y_pos()));
+                    process_move(std::make_pair(g_player.get_x_pos(), g_player.get_y_pos()), std::make_pair(g_player.get_x_pos() - 1, g_player.get_y_pos()));
                     break;
 	            case KEY_RIGHT:
-                    process_move(std::make_pair(g_player.get_x_pos() + 1, g_player.get_y_pos()));
+                    process_move(std::make_pair(g_player.get_x_pos(), g_player.get_y_pos()), std::make_pair(g_player.get_x_pos() + 1, g_player.get_y_pos()));
                     break;
     	        case KEY_UP:
-                    process_move(std::make_pair(g_player.get_x_pos(), g_player.get_y_pos() - 1));
+                    process_move(std::make_pair(g_player.get_x_pos(), g_player.get_y_pos()), std::make_pair(g_player.get_x_pos(), g_player.get_y_pos() - 1));
                     break;
                 case KEY_DOWN:
-                    process_move(std::make_pair(g_player.get_x_pos(), g_player.get_y_pos() + 1));
+                    process_move(std::make_pair(g_player.get_x_pos(), g_player.get_y_pos()), std::make_pair(g_player.get_x_pos(), g_player.get_y_pos() + 1));
                     break;
                 case KEY_HOME:   // Up and left
-                    process_move(std::make_pair(g_player.get_x_pos() - 1, g_player.get_y_pos() - 1));
+                    process_move(std::make_pair(g_player.get_x_pos(), g_player.get_y_pos()), std::make_pair(g_player.get_x_pos() - 1, g_player.get_y_pos() - 1));
                     break;
                 case KEY_PGUP:   // Up and right
-                    process_move(std::make_pair(g_player.get_x_pos() + 1, g_player.get_y_pos() - 1));
+                    process_move(std::make_pair(g_player.get_x_pos(), g_player.get_y_pos()), std::make_pair(g_player.get_x_pos() + 1, g_player.get_y_pos() - 1));
                     break;
                 case KEY_END:   // Down and left
-                    process_move(std::make_pair(g_player.get_x_pos() - 1, g_player.get_y_pos() + 1));
+                    process_move(std::make_pair(g_player.get_x_pos(), g_player.get_y_pos()), std::make_pair(g_player.get_x_pos() - 1, g_player.get_y_pos() + 1));
                     break;
                 case KEY_PGDN:  // Down and right
-                    process_move(std::make_pair(g_player.get_x_pos() + 1, g_player.get_y_pos() + 1));
+                    process_move(std::make_pair(g_player.get_x_pos(), g_player.get_y_pos()), std::make_pair(g_player.get_x_pos() + 1, g_player.get_y_pos() + 1));
                     break;
                 case KEY_DEL: // Do nothing (sit in place)
-                    process_move(std::make_pair(g_player.get_x_pos(), g_player.get_y_pos()));
+                    process_move(std::make_pair(g_player.get_x_pos(), g_player.get_y_pos()), std::make_pair(g_player.get_x_pos(), g_player.get_y_pos()));
                     break;
                 case KEY_C:
                     g_tile_cache.invalidate();
