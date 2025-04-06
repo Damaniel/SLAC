@@ -730,14 +730,14 @@ void Maze::change_lit_status_around(int x, int y, bool lit) {
 
 	// Adjust one additional square in each cardinal direction, as long
 	// as the square adjacent to the player in that direction is not a wall
-	if (is_carved(x-1, y) && (x-2) >= 0)
-		change_lit_status_at(x-2, y, lit);
-	if (is_carved(x+1, y) && (x+2) < get_width())
-		change_lit_status_at(x+2, y, lit);
-	if (is_carved(x, y-1) && (y-2) >= 0)
-		change_lit_status_at(x, y-2, lit);
-	if (is_carved(x, y+1) && (y+2) < get_height())
-		change_lit_status_at(x, y+2, lit);
+	// if (is_carved(x-1, y) && (x-2) >= 0)
+	// 	change_lit_status_at(x-2, y, lit);
+	// if (is_carved(x+1, y) && (x+2) < get_width())
+	// 	change_lit_status_at(x+2, y, lit);
+	// if (is_carved(x, y-1) && (y-2) >= 0)
+	// 	change_lit_status_at(x, y-2, lit);
+	// if (is_carved(x, y+1) && (y+2) < get_height())
+	// 	change_lit_status_at(x, y+2, lit);
 
 
 }
