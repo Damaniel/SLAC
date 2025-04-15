@@ -15,10 +15,23 @@
 # distribution, but the package is available in the v2gnu/ directory.
 #==================================================================================
 CC=gpp
-CFLAGS=-O2 -Iinc
-LIBS=-lalleg -lm
 
+# The default is to build with 386-specific instructions.  If running on an emulator
+# target (i.e. DOSBox), building with HIGH_END set will enable Pentium-specific
+# instructions.  Standard builds will include (for now) softfloat support - eventually,
+# fixed point code will be dropped in as a replacement.
+ifdef HIGH_END
+ARCH=-march=pentium
+EMU=
+else
+ARCH=-march=i386
+EMU=-lemu
+endif
+
+CFLAGS=-O2 -Iinc $(ARCH)
+LIBS=-lalleg -lm $(EMU)
 TARGET=slac.exe
+
 OBJS=obj/gen_data.o obj/tiledata.o obj/utils.o obj/town.o obj/textlog.o obj/maze.o obj/render.o obj/t_cache.o obj/player.o obj/enemy.o obj/saveload.o obj/invntory.o obj/itemgen.o obj/item_use.o obj/input.o obj/main.o
 
 $(TARGET): $(OBJS)
